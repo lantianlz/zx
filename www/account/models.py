@@ -22,7 +22,6 @@ class Profile(models.Model):
     auto_id = models.AutoField(primary_key=True)
     id = models.CharField(max_length=32, unique=True)
     nick = models.CharField(max_length=32, unique=True)
-    # domain = models.CharField(max_length=32, unique=True)
 
     birthday = models.DateField(default='2000-01-01', db_index=True)
     gender = models.IntergerField(default=0, choices=gender_choices, db_index=True)
@@ -34,7 +33,7 @@ class Profile(models.Model):
     create_time = models.DateTimeField(db_index=True)
 
 
-class ChangeLog(models.Model):
+class UserChangeLog(models.Model):
     change_type_choices = ((0, u'密码'), (1, u'邮箱'), (2, u'手机'))
     change_type = models.IntergerField(choices=change_type_choices)
     before = models.CharField(max_length=64, db_index=True)
