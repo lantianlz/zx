@@ -4,7 +4,8 @@ from django.db import models
 
 
 class User(models.Model):
-    state_choices = ((0, u'无效用户'), (1, u'有效用户'))
+    state_choices = ((0, u'无效用户'), (1, u'有效用户'), (2, u'内部成员'))
+
     auto_id = models.AutoField(primary_key=True)
     id = models.CharField(max_length=32, unique=True)
     email = models.CharField(max_length=64, unique=True)
@@ -35,6 +36,7 @@ class Profile(models.Model):
 
 class UserChangeLog(models.Model):
     change_type_choices = ((0, u'密码'), (1, u'邮箱'), (2, u'手机'))
+
     change_type = models.IntergerField(choices=change_type_choices)
     before = models.CharField(max_length=64, db_index=True)
     to = models.CharField(max_length=64, db_index=True)
