@@ -38,8 +38,8 @@ class UserChangeLog(models.Model):
     change_type_choices = ((0, u'密码'), (1, u'邮箱'), (2, u'手机'))
 
     change_type = models.IntergerField(choices=change_type_choices)
-    before = models.CharField(max_length=64, db_index=True)
-    to = models.CharField(max_length=64, db_index=True)
+    befor = models.CharField(max_length=64, db_index=True)
+    after = models.CharField(max_length=64, db_index=True)
     ip = models.CharField(max_length=32)
     create_time = models.DateTimeField(db_index=True)
 

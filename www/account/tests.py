@@ -11,6 +11,7 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
 os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 from django.test import TestCase
+from common import utils
 
 
 class SimpleTest(TestCase):
@@ -37,3 +38,4 @@ if __name__ == '__main__':
     st = SimpleTest()
     # print st.test_basic_addition()
     print st.test()
+    print utils.uuid_without_dash()
