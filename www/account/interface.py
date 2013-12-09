@@ -31,13 +31,22 @@ class UserBase(object):
         self.password = self.hasher.make_password(raw_password)
         return self.password
 
-    def check_password(self, raw_password):
-        return self.hasher.check_password(raw_password, self.password)
+    def check_password(self, raw_password, password):
+        return self.hasher.check_password(raw_password, getattr(self, 'password', password))
 
     def set_profile_login_att(self, profile, user):
-        for key in ['email', 'mobilenumber', 'username', 'last_login']:
+        for key in ['email', 'mobilenumber', 'username', 'last_login', 'password']:
             setattr(profile, key, getattr(user, key))
-        
+
+    def get_user_by_id(self, id):
+        try:
+            profile = Profile.objects.get(id=id)
+            user = User.objects.get(id=profile.id)
+            self.set_profile_login_att(profile, user)
+            return profile
+        except (Profile.DoesNotExist, User.DoesNotExist):
+            return None
+
     def get_user_by_nick(self, nick):
         try:
             profile = Profile.objects.get(nick=nick)

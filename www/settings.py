@@ -93,9 +93,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     # 'django.contrib.messages.middleware.MessageMiddleware',
+    'www.middleware.user_middleware.UserMiddware'
 )
 
-ROOT_URLCONF = 'gzc.urls'
+ROOT_URLCONF = 'www.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -111,19 +112,15 @@ INSTALLED_APPS = (
     # 'django.contrib.sites',
     # 'django.contrib.messages',
     # 'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
     'www.account',
 )
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
+AUTHENTICATION_BACKENDS = ('www.middleware.user_backend.AuthBackend',)
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -142,7 +139,9 @@ LOGGING = {
     }
 }
 
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 10
 SESSION_COOKIE_HTTPONLY = True
+
 import logging
 logging.basicConfig(format='%(asctime)s %(message)s ---------- %(pathname)s:%(module)s.%(funcName)s Line:%(lineno)d',
-                    datefmt='%Y-%m-%d %H:%M:%S', level=logging.WARNING)
+                    datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
