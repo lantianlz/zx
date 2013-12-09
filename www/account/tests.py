@@ -12,6 +12,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 from django.test import TestCase
 from common import utils
+from django.utils.encoding import smart_str
 
 
 class SimpleTest(TestCase):
@@ -27,15 +28,22 @@ class SimpleTest(TestCase):
     def runTest(self):
         pass
 
-    def test(self):
+    def test_regist(self):
         from www.account import interface
         ub = interface.UserBase()
-        print ub.set_password(raw_password='123')
-        print ub.check_password(raw_password='123')
+        # print ub.set_password(raw_password='123')
+        # print ub.check_password(raw_password='123')
+        flag, result =  ub.regist_user(email='lantian-lz@163.com', nick='simplejoy', password='851129', ip='127.0.0.1')
+        if not flag:
+            print result.__repr__()
+            print result.encode('utf-8')
+        else:
+            print result
+        return 'ok'
 
 
 if __name__ == '__main__':
     st = SimpleTest()
     # print st.test_basic_addition()
-    print st.test()
-    print utils.uuid_without_dash()
+    # print utils.uuid_without_dash()
+    print st.test_regist()

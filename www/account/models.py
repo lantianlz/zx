@@ -13,7 +13,7 @@ class User(models.Model):
     username = models.CharField(max_length=32, null=True, unique=True)
     password = models.CharField(max_length=128)
 
-    state = models.IntergerField(default=1, choices=state_choices, db_index=True)
+    state = models.IntegerField(default=1, choices=state_choices, db_index=True)
     last_login = models.DateTimeField(db_index=True)
     create_time = models.DateTimeField(db_index=True)
 
@@ -25,11 +25,11 @@ class Profile(models.Model):
     nick = models.CharField(max_length=32, unique=True)
 
     birthday = models.DateField(default='2000-01-01', db_index=True)
-    gender = models.IntergerField(default=0, choices=gender_choices, db_index=True)
+    gender = models.IntegerField(default=0, choices=gender_choices, db_index=True)
     avatar = models.CharField(max_length=256, default='')
-    email_verified = models.BoolField(default=False)
-    mobile_verified = models.BoolField(default=False)
-    ip = models.CharField(max_length=32)
+    email_verified = models.BooleanField(default=False)
+    mobile_verified = models.BooleanField(default=False)
+    ip = models.CharField(max_length=32, null=True)
 
     create_time = models.DateTimeField(db_index=True)
 
@@ -37,10 +37,10 @@ class Profile(models.Model):
 class UserChangeLog(models.Model):
     change_type_choices = ((0, u'密码'), (1, u'邮箱'), (2, u'手机'))
 
-    change_type = models.IntergerField(choices=change_type_choices)
+    change_type = models.IntegerField(choices=change_type_choices)
     befor = models.CharField(max_length=64, db_index=True)
     after = models.CharField(max_length=64, db_index=True)
-    ip = models.CharField(max_length=32)
+    ip = models.CharField(max_length=32, null=True)
     create_time = models.DateTimeField(db_index=True)
 
 
