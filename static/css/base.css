@@ -1,0 +1,146 @@
+@charset "utf-8";
+/*-----------------------------------reset part-----------------------------------*/
+html,body{_width: 100%; background-color:#FFF;}
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, p, form, fieldset, legend, input, textarea, blockquote, th, td{margin:0; padding:0;}
+a{outline: none;}
+table{border-collapse:collapse; border-spacing:0;}
+fieldset, img{border:0;}
+address, caption, cite, code, dfn, px, strong, th, var{font-style:normal; font-weight:normal;}
+li{list-style:none;}
+caption, th{text-align:left;}
+h1, h2, h3, h4, h5, h6{font-size:100%; font-weight:normal;}
+q:before, q:after{content:'';}
+abbr, acronym{border:0; font-variant:normal;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+input, textarea, select{font-family:inherit; font-size:inherit; font-weight:inherit;}
+legend{color:#000;}
+textarea{overflow:auto;}
+div {text-align:left;line-height:160%;}
+input,select{vertical-align:middle;}
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {cursor: pointer;-webkit-appearance: button;}
+/*-----------------------------------base part-----------------------------------*/
+/*定位*/
+.hidden{visibility:hidden}
+.none{display:none}
+.block{display:block;}
+.tl{text-align:left}
+.tc{text-align:center}
+.tr{text-align:right}
+.cb{clear:both}
+.cl{clear:left}
+.cr{clear:right}
+.bc{margin-left:auto;margin-right:auto;}
+.fl{float:left;}
+.fr{float:right;}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.clearfix{display:inline-block}* html .clearfix{height:1%}.clearfix{display:block}
+.vm{vertical-align:middle}
+.pr{position:relative}
+.pa{position:absolute}
+.abs-right{position:absolute;right:0}
+.zoom{zoom:1}
+
+/*文字排版*/
+.fb{font-weight:bold}
+.fn{font-weight:normal}
+.unl{text-decoration:underline}
+.no_unl{text-decoration:none}
+
+.f10{font-size:10px}
+.f12{font-size:12px}
+.f13{font-size:13px}
+.f14{font-size:14px}
+.f16{font-size:16px}
+.f18{font-size:18px}
+.f20{font-size:20px}
+.f22 {font-size:22px}
+.f24{font-size:22px}
+.f30{font-size:30px;}
+
+.lh150{line-height:150%}
+.lh180{line-height:180%}
+.lh200{line-height:200%}
+
+
+/*长度高度*/
+.w{width:100%}
+.h{height:100%}
+
+/*边距*/
+.m0{margin:0}
+.p0{padding:0}
+
+/*间隔*/
+.clear  {height:0px;clear:both;font-size:0;overflow:hidden;}
+.blank0 {height:0;clear:both;font-size:0px;overflow:hidden;}
+.blank1 {height:1px;clear:both;font-size:0px;overflow:hidden;}
+.blank2 {height:2px;clear:both;font-size:0px;overflow:hidden;}
+.blank4 {height:4px;clear:both;font-size:0px;overflow:hidden;}
+.blank5 {height:5px;clear:both;font-size:0px;overflow:hidden;}
+.blank10 {height:10px;clear:both;font-size:0px;overflow:hidden;}
+.blank15 {height:15px;clear:both;font-size:0px;overflow:hidden;}
+.blank20 {height:20px;clear:both;font-size:0px;overflow:hidden;}
+.blank30 {height:30px;clear:both;font-size:0px;overflow:hidden;}
+.blank40 {height:40px;clear:both;font-size:0px;overflow:hidden;}
+
+.mart0{margin-top:0px;}
+.mart5{margin-top:5px;}
+.mart10{margin-top:10px;}
+.mart15{margin-top:15px;}
+.marr0{margin-right:0px;}
+.marr5{margin-right:5px;}
+.marr10{margin-right:10px;}
+.marr15{margin-right:15px;}
+.marl0{margin-left:0px;}
+.marl5{margin-left:5px;}
+.marl10{margin-left:10px;}
+.marl15{margin-left:15px;}
+.marb0{margin-bottom:0px;}
+.marb5{margin-bottom:5px;}
+.marb10{margin-bottom:10px;}
+.marb15{margin-bottom:15px;}
+
+.padr0{padding-right:0px;}
+.padrr5{padding-right:5px;}
+.padrr6{padding-right:6px;}
+.padrr10{padding-right:10px;}
+.padrr15{padding-right:15px;}
+.padrl0{padding-left:0px;}
+.padrl5{padding-left:5px;}
+.padl10{padding-left:10px;}
+.padl15{padding-left:15px;}
+
+.m_tc{margin:0 auto;}
+/*链接和常用文字颜色*/
+.cl_white{color:#fff;}
+.cl_black{color:#000;}
+.cl_gray{color:gray;}
+.cl_red{color:red;}
+.co1{color: #919191;}
+.co2{color:#545454;}
+.co3{color:#fff;}
+.co4{color:#699000;}
+.co5{color:#000000;}
+.co6{color:#666666;}
+.co7{color:#59bedc;}
+.co8{color:#999999;}
+.co9{color:#f79700;}
+.co10{color:#b3d193;}
+.co11{color:#ffa200;}
+.co12{color:#92b452;}
+.co13{color:#e0b02e;}
+.co14{color:#333333;}
+.co15{color:#ff6600;}
+.co16{color:red;}
+
+.textindent2{text-indent:32px;}
+.textindent0{text-indent: 0;}
+
+/*鼠标悬停形状*/
+.curMove{cursor:move}
+.pointer{cursor:pointer}
+.fixline{border-bottom:1px solid #EEEEEE; width: 100%;height:1px;}

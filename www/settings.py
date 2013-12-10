@@ -54,8 +54,8 @@ LANGUAGE_CODE = 'zh-cn'
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
-MEDIA_ROOT = ''
-MEDIA_URL = ''
+MEDIA_ROOT = os.path.abspath(os.path.join(SITE_ROOT, '../static'))
+MEDIA_URL = '/static'
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
@@ -82,9 +82,10 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     # "django.core.context_processors.debug",
     # "django.core.context_processors.i18n",
-    # "django.core.context_processors.media",
-    "django.core.context_processors.static",
+    "django.core.context_processors.media",
+    # "django.core.context_processors.static",
     "django.core.context_processors.request",
+    "www.misc.context_processors.config",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,6 +116,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # 'django.contrib.admindocs',
 
+    'www.custom_tags',
     'www.account',
 )
 

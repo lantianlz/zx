@@ -1,0 +1,5 @@
+@charset "utf-8";
+body {padding-top: 60px; padding-bottom: 40px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif}
+
+.popmsg{position: absolute; min-width: 200px; text-align: center; font-weight: bold; z-index: 9999;}
+.textp{text-indent: 32px; font-size: 16px; line-height: 28px; margin-bottom: 10px;}

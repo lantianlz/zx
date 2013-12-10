@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+
+{% block title %}登录{% endblock %}
+
+{% block header %}
+<style type="text/css">
+	.advert_ul li {line-height: 30px; }
+</style>
+{% endblock %}
+
+
+{% block container %}
+<p>博主卑鄙，竟然还有广告。以下为淘宝联盟推广链接，大家不要被误导哦</p>
+<div class="blank10"></div>
+<ul class="advert_ul">
+	{% for ai in lst_advert_info %}
+	<li><a target="_blank" href="{{ai.url}}">{{ai.name}}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}
+
+
