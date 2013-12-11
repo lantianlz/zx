@@ -1,5 +1,25 @@
 @charset "utf-8";
-body {padding-top: 60px; padding-bottom: 40px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif}
+body {padding-top: 60px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;}
 
-.popmsg{position: absolute; min-width: 200px; text-align: center; font-weight: bold; z-index: 9999;}
-.textp{text-indent: 32px; font-size: 16px; line-height: 28px; margin-bottom: 10px;}
+
+.footer {
+	font-size: 12px;
+	margin-top:50px;
+    background: none repeat scroll 0 0 #2F2F2F;
+    color: #989898;
+    line-height: 20px;
+    padding: 30px 0;
+    text-align: center;
+}
+.footer-center-container {
+    margin: auto;
+    text-align: center;
+    width: 1000px;
+}
+.footer-center-container a {
+    color: #989898;
+    padding: 8px;
+}
+.footer-center-container a:hover {
+    color: #2498EF;
+}

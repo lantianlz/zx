@@ -67,10 +67,11 @@ class UserBase(object):
 
     def get_user_by_mobilenumber(self, mobilenumber):
         try:
-            user = User.objects.get(mobilenumber=mobilenumber)
-            profile = Profile.objects.get(id=user.id)
-            self.set_profile_login_att(profile, user)
-            return profile
+            if mobilenumber:
+                user = User.objects.get(mobilenumber=mobilenumber)
+                profile = Profile.objects.get(id=user.id)
+                self.set_profile_login_att(profile, user)
+                return profile
         except (Profile.DoesNotExist, User.DoesNotExist):
             return None
 

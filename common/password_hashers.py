@@ -13,11 +13,11 @@ class MD5PasswordHasher(object):
         return settings.SECRET_KEY
 
     def encode(self, password):
-        assert password
+        # assert password
         return hashlib.md5(self.salt() + password).hexdigest()
 
     def make_password(self, password):
-        assert password
+        # assert password
         return self.encode(smart_str(password))
 
     def check_password(self, password, encoded):

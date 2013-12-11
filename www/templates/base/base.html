@@ -6,7 +6,7 @@
 		<title>{% block title %}{% endblock title %} - 智选网</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="author" content="simplejoy">
-		<meta name="keywords" content="simplejoy 智选网" />
+		<meta name="keywords" content="股票问答 智选网" />
 		<meta name="description" content="智选网">
 		<link rel="shortcut icon" href="{{MEDIA_URL}}/img/favicon.ico">
 
@@ -26,37 +26,22 @@
 	</head>
 	
 	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="navbar-inner">
-                <div class="container">
-					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</a>
-					<a class="brand" href="/">simplejoy</a>
-					<div class="nav-collapse">
-					</div>
-
-					<div class="fr" style="padding:4px 0;">
-						<a href="/feed" target="_blank" title="订阅，欢迎"><img src="{{MEDIA_URL}}/img/rss{{RSS_IMG}}.png" /></a>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		
-		<div class="container" style="min-height:460px;" id="content_container_id">
+        {% block container_head %}
+        {% endblock container_head %}
+        
+        <div class="container" style="min-height:475px;" id="content_container_id">
+            <div class="alert alert-success popmsg none" id="divSuccess">ok</div>
+            {% if error_msg %}
+            <div class="alert alert-error popmsg" id="divError">
+                <button onclick="$('#divError').hide();" class="close" type="button">×</button>
+                <span>{{error_msg}}</span>
+            </div>
+            {% endif %}
             {% block container %}{% endblock container %}
-		</div>
-		
-		{% include "include/_footer.html" %}
+        </div>
+        
+        {% include "include/_footer.html" %}
 
-		<div class="alert alert-success popmsg none" id="divSuccess">ok</div>
-		<div class="alert alert-error popmsg none" id="divError">
-			<button onclick="$('#divError').hide();" class="close" type="button">×</button>
-			<span>error</span>
-		</div>
 		
 		{% block body_tail %}{% endblock body_tail %}
 		{% include "include/_tongji.html" %}

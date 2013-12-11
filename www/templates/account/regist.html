@@ -1,0 +1,46 @@
+{% extends "base/base_welcome.html" %}
+
+{% block title %}注册{% endblock %}
+
+{% block header %}
+<link href="{{MEDIA_URL}}/css/login.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block container %}
+<div class="bd">
+	<form novalidate="" data-remote="true" method="post" action="/regist" class="form">
+		<div class="form-item">
+			<div class="form-field">
+				<input type="email" autofocus="" data-validate-msg="你的登录邮箱" data-validate="required;email" placeholder="你的登录邮箱" id="email" name="email" tabindex="1" value="{{email}}"></div>
+		</div>
+
+		<div class="form-item">
+			<div class="form-field">
+				<input class="marb10" style="color: #555555;" type="input" autofocus="" data-validate-msg="你的姓名或者昵称" data-validate="required;length:2" placeholder="你的姓名或者昵称" id="nick" name="nick" tabindex="2" value="{{nick}}"></div>
+		</div>
+
+		<div class="form-item">
+			<div class="form-field">
+				<input type="password" data-validate-msg="设置一个密码" data-validate="required;length:6" placeholder="设置一个密码" name="password" tabindex="3"></div>
+		</div>
+
+		<div class="form-item sign-in-btn">
+			<button data-goto="/launchpad/" data-disable-with="正在注册..." class="btn btn-primary btn-submit" id="btn-signin" tabindex="3" type="submit">注册</button>
+			<div class="desc">
+				<span class="forgot-pw">
+					点击注册表示您已阅读并同意
+					<a href="/agreement/">《智选网 服务条款》</a>
+				</span>
+			</div>
+		</div>
+
+	</form>
+	<div class="sign-nav">
+		已有帐号？
+		<span>
+			<a href="/regist">立即登录 →</a>
+		</span>
+	</div>
+</div>
+{% endblock %}
