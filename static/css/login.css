@@ -123,3 +123,13 @@ body {
     margin: 50px 0 0;
     padding: 20px 0;
 }
+
+.hd .logo, .sign-page .hd .logo {
+    background: url("../img/logo.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 56px;
+    margin: 0 auto 50px;
+    overflow: hidden;
+    width: 190px;
+    font-size: 36px;
+    color: #83A097;
+}

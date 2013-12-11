@@ -2,11 +2,6 @@
 
 {% block title %}注册{% endblock %}
 
-{% block header %}
-<link href="{{MEDIA_URL}}/css/login.css" rel="stylesheet">
-{% endblock %}
-
-
 {% block container %}
 <div class="bd">
 	<form novalidate="" data-remote="true" method="post" action="/regist" class="form">
@@ -39,7 +34,7 @@
 	<div class="sign-nav">
 		已有帐号？
 		<span>
-			<a href="/regist">立即登录 →</a>
+			<a href="/login">立即登录 →</a>
 		</span>
 	</div>
 </div>
