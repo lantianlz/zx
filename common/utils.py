@@ -75,3 +75,16 @@ def send_email(emails, title, content, type='text'):
         msg.content_subtype = "html"  # Main content is now text/html
         msg.send()
     return 0
+
+
+def get_next_url(request):
+    from django.conf import settings
+    next_url = request.REQUEST.get('next_url')
+    if not next_url:
+        referrer = request.META.get('HTTP_REFERER')
+        if referrer and referrer.startswith(settings.MAIN_DOMAIN):
+            referrer = referrer.replace(settings.MAIN_DOMAIN, '').split('?', 1)[0]
+            if referrer != request.path and referrer not in ('/regist', ):
+                next_url = referrer
+    print next_url
+    return next_url or '/home'

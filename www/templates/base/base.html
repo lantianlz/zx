@@ -28,8 +28,7 @@
 	<body>
         {% block container_head %}
         {% endblock container_head %}
-        
-        <div class="container" style="min-height:475px;" id="content_container_id">
+        <div class="container" style="min-height:360px;" id="content_container_id">
             <div class="alert alert-success popmsg none" id="divSuccess">ok</div>
             {% if error_msg %}
             <div class="alert alert-error popmsg" id="divError">
@@ -41,9 +40,7 @@
         </div>
         
         {% include "include/_footer.html" %}
-
-		
+        {% include "include/_tongji.html" %}
 		{% block body_tail %}{% endblock body_tail %}
-		{% include "include/_tongji.html" %}
 	</body>
 </html>

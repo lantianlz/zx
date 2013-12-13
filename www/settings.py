@@ -17,7 +17,7 @@ SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 
 SERVER_NAME = 'WEB0'
-SERVER_DOMAIN = 'gzc.me'
+SERVER_DOMAIN = 'a.com'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
 
 NOTIFICATION_EMAIL = 'lantian-lz@163.com'
