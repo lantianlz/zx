@@ -84,7 +84,6 @@ def get_next_url(request):
         referrer = request.META.get('HTTP_REFERER')
         if referrer and referrer.startswith(settings.MAIN_DOMAIN):
             referrer = referrer.replace(settings.MAIN_DOMAIN, '').split('?', 1)[0]
-            if referrer != request.path and referrer not in ('/regist', ):
+            if referrer != request.path and referrer not in ('/regist', '/'):
                 next_url = referrer
-    print next_url
     return next_url or '/home'

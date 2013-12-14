@@ -1,5 +1,5 @@
 @charset "utf-8";
-body {padding-top: 60px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;}
+body {padding-top: 10px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;}
 
 
 .footer {
@@ -22,4 +22,33 @@ body {padding-top: 60px; font-family: "微软雅黑","Helvetica Neue",Helvetica,
 }
 .footer-center-container a:hover {
     color: #2498EF;
+}
+
+.container {
+    width: 1000px;
+}
+.use {
+    display: inline;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+}
+.use a {
+    background: url("../img/common/sprites.png") no-repeat scroll -97px -260px rgba(0, 0, 0, 0);
+    display: inline;
+    float: left;
+    height: 40px;
+    margin-right: 20px;
+    text-align: center;
+    width: 94px;
+}
+.use a.current, .use a:hover {
+    background-position: 0 -260px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.container_content{
+    background-color: #FFF;
+    min-height: 470px;
 }

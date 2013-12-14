@@ -8,8 +8,9 @@ from django.conf import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-                       url(r'^$', 'www.account.views.login'),
+                       url(r'^$', 'www.account.views.show_index'),
                        url(r'^login$', 'www.account.views.login'),
+                       url(r'^logout$', 'www.account.views.logout'),
                        url(r'^regist$', 'www.account.views.regist'),
                        url(r'^home$', 'www.account.views.home'),
                        # Examples:

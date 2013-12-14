@@ -12,13 +12,16 @@ from www.account.interface import UserBase
 from www.misc.decorators import member_required
 
 
+def show_index(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/home')
+    else:
+        return HttpResponseRedirect('/login')
+
+
 def login(request, template_name='account/login.html'):
     email = request.POST.get('email', '').strip()
     password = request.POST.get('password', '').strip()
-    # 从REUQEST中或者HTTP_REFERER中获取
-    next_url = utils.get_next_url(request)
-    if next_url:
-        request.session['next_url'] = urllib.unquote_plus(next_url)
 
     if request.POST:
         user = auth.authenticate(username=email, password=password)
@@ -29,6 +32,11 @@ def login(request, template_name='account/login.html'):
             return HttpResponseRedirect(next_url)
         else:
             error_msg = u'用户名或者密码错误'
+    else:
+        # 从REUQEST中或者HTTP_REFERER中获取
+        next_url = utils.get_next_url(request)
+        if next_url:
+            request.session['next_url'] = urllib.unquote_plus(next_url)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -52,5 +60,12 @@ def regist(request, template_name='account/regist.html'):
 
 @member_required
 def home(request, template_name='account/home.html'):
+    #todo 更新最后活跃时间
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
     # return HttpResponse(u'user is %s:%s' % (request.user.nick, request.user.email))
+
+
+@member_required
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect('/home')

@@ -2,30 +2,27 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
     <head>
-		<meta charset="utf-8">
-		<title>{% block title %}{% endblock title %} - 智选网</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="author" content="simplejoy">
-		<meta name="keywords" content="股票问答 智选网" />
-		<meta name="description" content="智选网">
-		<link rel="shortcut icon" href="{{MEDIA_URL}}/img/favicon.ico">
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock title %} - 智选网</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="simplejoy">
+        <meta name="keywords" content="股票问答 智选网" />
+        <meta name="description" content="智选网">
+        <link rel="shortcut icon" href="{{MEDIA_URL}}/img/common/favicon.ico">
 
-		<link href="{{MEDIA_URL}}/css/bootstrap.min.css" rel="stylesheet">
-		<link href="{{MEDIA_URL}}/css/base.css" rel="stylesheet">
-		<link href="{{MEDIA_URL}}/css/site.css" rel="stylesheet">
+        <link href="{{MEDIA_URL}}/css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{MEDIA_URL}}/css/base.css" rel="stylesheet">
+        <link href="{{MEDIA_URL}}/css/site.css" rel="stylesheet">
 
-		<script src="{{MEDIA_URL}}/js/jquery-1.7.min.js"></script>
-		<script src="{{MEDIA_URL}}/js/bootstrap.min.js"></script>
-		<script src="{{MEDIA_URL}}/js/common.js?v={{MEDIA_VERSION}}"></script>
-		<script src="{{MEDIA_URL}}/js/site.js?v={{MEDIA_VERSION}}"></script>
-		<script type="text/javascript">
-			var media = '{{ MEDIA_URL }}';
-		</script>
+        <script src="{{MEDIA_URL}}/js/jquery-1.7.min.js"></script>
+        <script src="{{MEDIA_URL}}/js/bootstrap.min.js"></script>
+        <script src="{{MEDIA_URL}}/js/common.js?v={{MEDIA_VERSION}}"></script>
+        <script src="{{MEDIA_URL}}/js/site.js?v={{MEDIA_VERSION}}"></script>
+        <script type="text/javascript">var media = '{{ MEDIA_URL }}';</script>
+        {% block bheader %}{% endblock bheader %}
+    </head>
 
-		{% block bheader %}{% endblock bheader %}
-	</head>
-	
-	<body>
+    <body>
         {% block container_head %}
         {% endblock container_head %}
         <div class="container" style="min-height:360px;" id="content_container_id">
@@ -38,9 +35,8 @@
             {% endif %}
             {% block container %}{% endblock container %}
         </div>
-        
         {% include "include/_footer.html" %}
         {% include "include/_tongji.html" %}
-		{% block body_tail %}{% endblock body_tail %}
-	</body>
+        {% block body_tail %}{% endblock body_tail %}
+    </body>
 </html>
