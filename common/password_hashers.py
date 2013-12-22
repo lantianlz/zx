@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
-
 import hashlib
+
+from django.conf import settings
 from django.utils.crypto import constant_time_compare  # , get_random_string
 from django.utils.encoding import smart_str
 

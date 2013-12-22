@@ -16,6 +16,7 @@ class AuthBackend(object):
         if not user:
             user = ub.get_user_by_mobilenumber(username)
         if user and ub.check_password(password, user.password):
+            # todo 更新最后登录时间
             user.save = _save
             return user
 
