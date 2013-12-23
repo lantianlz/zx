@@ -101,7 +101,8 @@ class UserBase(object):
                 transaction.rollback(using=ACCOUNT_DB)
                 return False, dict_err.get(998)
 
-            flag, result = self.check_user_info(email, nick, password, mobilenumber)
+            flag, result = self.check_user_info(email, nick, password, 
+                mobilenumber)
             if not flag:
                 transaction.rollback(using=ACCOUNT_DB)
                 return flag, result
@@ -109,10 +110,11 @@ class UserBase(object):
             id = utils.uuid_without_dash()
             now = datetime.datetime.now()
 
-            user = User.objects.create(id=id, email=email, mobilenumber=mobilenumber,
-                                       password=self.set_password(password),
-                                       last_login=now, create_time=now)
-            profile = Profile.objects.create(id=id, nick=nick, ip=ip, create_time=now)
+            user = User.objects.create(
+                id=id, email=email, mobilenumber=mobilenumber, last_login=now, 
+                password=self.set_password(password)
+            )
+            profile = Profile.objects.create(id=id, nick=nick, ip=ip)
             transaction.commit(using=ACCOUNT_DB)
 
             # 发送验证邮件和通知邮件
