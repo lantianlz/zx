@@ -45,9 +45,18 @@ DATABASES = {
         'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     },
+    'question': {
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'question',                      # Or path to database file if using sqlite3.
+        'USER': DB_USER,                      # Not used with sqlite3.
+        'PASSWORD': DB_PWD,                  # Not used with sqlite3.
+        'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    },
 }
 
-DATABASE_ROUTERS = ['www.account.router.AccountRouter', ]
+DATABASE_ROUTERS = ['www.account.router.AccountRouter', 'www.question.router.QuestionRouter']
+
 
 TIME_ZONE = 'Asia/Shanghai'
 LANGUAGE_CODE = 'zh-cn'
@@ -118,6 +127,7 @@ INSTALLED_APPS = (
 
     'www.custom_tags',
     'www.account',
+    'www.question',
 )
 
 AUTHENTICATION_BACKENDS = ('www.middleware.user_backend.AuthBackend',)
