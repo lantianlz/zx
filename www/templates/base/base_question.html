@@ -9,14 +9,15 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     width: 600px; 
     min-height: 470px; 
     float: left;
-    margin-left: 35px;
+    margin-left: 25px;
+    padding-right: 20px;
 }
 
 .zx-container-main .search-bar{
     float: left; 
-    height: 100px; 
+    height: 85px; 
     width: 100%; 
-    padding: 25px;
+    padding: 20px;
     background-color: #e7ecef;
     margin-top: 25px;
     border-radius: 5px;
@@ -182,17 +183,62 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     line-height: 25px;
 }
 
+.zx-container-main .replay-main .vote{
+    padding-left: 30px;
+}
+
 .zx-container-main .btn-default .badge{
     background-color: lightgray;
 }
+
 .zx-container-right{
     width: 300px; min-height: 470px; float: left;
+}
+
+.zx-container-right .ask-question{
+    margin-top: 25px;
+    margin-right: 25px;
+}
+
+.zx-container-right .top5{
+    margin-top: 10px;
+    margin-right: 25px;
+}
+
+.zx-container-right .top5 .list-group-item{
+    border: 0;
+}
+
+.zx-container-right .top-num{
+    float: left; 
+    margin-right: 20px; 
+    width: 25px; 
+    height: 25px; 
+    background-color: #224e76; 
+    color: white; 
+    text-align: center; 
+    margin-top: 8px;
+    border-radius: 3px;
+}
+
+.zx-container-right .top-avatar{
+    float: left; 
+}
+
+.zx-container-right .top-info a{
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.zx-container-right .top-info span{
+    font-size: 12px;
+    margin-left: 10px;
 }
 </style>
 {% endblock %}
 
 {% block container_content %}
-<!--右侧主体开始-->
+<!--左侧主体开始-->
 <div class="zx-container-main">
     <!--查询框开始-->
     <div class="search-bar">
@@ -207,11 +253,89 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     
     {% block question_main%}{% endblock %}
 </div>
-<!--右侧主体结束-->
+<!--左侧主体结束-->
 
-<!--左侧主体开始-->
+<!--右侧主体开始-->
 <div class="zx-container-right">
+    <div class="ask-question well">
+        <div class="row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary btn-lg">我要提问</button>
+            </div>
+            <div class="col-md-6">
+                <div><span class="text-danger">125895 </span> 个问题</div>
+                <div><span class="text-danger">56325 </span> 人参与</div>
+            </div>
+        </div>
+    </div>
     
+    <div class="top5 panel panel-default">
+      <div class="panel-heading">用户排行榜</div>
+      <div class="panel-body">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="top-num" style="">1</div>
+            <div class="top-avatar">
+                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
+            </div>
+            <div class="top-info">
+                <a href="#">lei286394973</a>
+                <br>
+                <span>被赞1320</span>
+                <span>回复365</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="top-num" style="">2</div>
+            <div class="top-avatar">
+                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
+            </div>
+            <div class="top-info">
+                <a href="#">stranger</a>
+                <br>
+                <span>被赞998</span>
+                <span>回复269</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="top-num" style="">3</div>
+            <div class="top-avatar">
+                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
+            </div>
+            <div class="top-info">
+                <a href="#">半夜没事瞎溜达</a>
+                <br>
+                <span>被赞885</span>
+                <span>回复203</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="top-num" style="">4</div>
+            <div class="top-avatar">
+                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
+            </div>
+            <div class="top-info">
+                <a href="#">jack</a>
+                <br>
+                <span>被赞758</span>
+                <span>回复145</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="top-num" style="">5</div>
+            <div class="top-avatar">
+                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
+            </div>
+            <div class="top-info">
+                <a href="#">rose</a>
+                <br>
+                <span>被赞562</span>
+                <span>回复96</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
 </div>
-<!--左侧主体开始-->
+<!--右侧主体开始-->
 {% endblock container_content %}
