@@ -243,16 +243,13 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     <!--查询框开始-->
     <div class="search-bar">
         <div class="input-group input-group-lg">
-          <input type="text" placeholder="各种问题..." class="form-control">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">搜索</button>
-          </span>
+            <input type="text" placeholder="各种问题..." class="form-control">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">搜索</button>
+            </span>
         </div>
     </div>
-    <!--查询框结束-->
-    
-    {% block question_main%}{% endblock %}
-</div>
+    <!--查询框结束-->{% block question_main%}{% endblock %}</div>
 <!--左侧主体结束-->
 
 <!--右侧主体开始-->
@@ -263,78 +260,94 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
                 <button type="button" class="btn btn-primary btn-lg">我要提问</button>
             </div>
             <div class="col-md-6">
-                <div><span class="text-danger">125895 </span> 个问题</div>
-                <div><span class="text-danger">56325 </span> 人参与</div>
+                <div>
+                    <span class="text-danger">125895</span>
+                    个问题
+                </div>
+                <div>
+                    <span class="text-danger">56325</span>
+                    人参与
+                </div>
             </div>
         </div>
     </div>
-    
+
     <div class="top5 panel panel-default">
-      <div class="panel-heading">用户排行榜</div>
-      <div class="panel-body">
-        <ul class="list-group">
-          <li class="list-group-item">
-            <div class="top-num" style="">1</div>
-            <div class="top-avatar">
-                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
-            </div>
-            <div class="top-info">
-                <a href="#">lei286394973</a>
-                <br>
-                <span>被赞1320</span>
-                <span>回复365</span>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="top-num" style="">2</div>
-            <div class="top-avatar">
-                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
-            </div>
-            <div class="top-info">
-                <a href="#">stranger</a>
-                <br>
-                <span>被赞998</span>
-                <span>回复269</span>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="top-num" style="">3</div>
-            <div class="top-avatar">
-                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
-            </div>
-            <div class="top-info">
-                <a href="#">半夜没事瞎溜达</a>
-                <br>
-                <span>被赞885</span>
-                <span>回复203</span>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="top-num" style="">4</div>
-            <div class="top-avatar">
-                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
-            </div>
-            <div class="top-info">
-                <a href="#">jack</a>
-                <br>
-                <span>被赞758</span>
-                <span>回复145</span>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="top-num" style="">5</div>
-            <div class="top-avatar">
-                <a href="#"><img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" /></a>
-            </div>
-            <div class="top-info">
-                <a href="#">rose</a>
-                <br>
-                <span>被赞562</span>
-                <span>回复96</span>
-            </div>
-          </li>
-        </ul>
-      </div>
+        <div class="panel-heading">用户排行榜</div>
+        <div class="panel-body">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="top-num" style="">1</div>
+                    <div class="top-avatar">
+                        <a href="#">
+                            <img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" />
+                        </a>
+                    </div>
+                    <div class="top-info">
+                        <a href="#">lei286394973</a>
+                        <br>
+                        <span>被赞1320</span>
+                        <span>回复365</span>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="top-num" style="">2</div>
+                    <div class="top-avatar">
+                        <a href="#">
+                            <img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" />
+                        </a>
+                    </div>
+                    <div class="top-info">
+                        <a href="#">stranger</a>
+                        <br>
+                        <span>被赞998</span>
+                        <span>回复269</span>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="top-num" style="">3</div>
+                    <div class="top-avatar">
+                        <a href="#">
+                            <img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" />
+                        </a>
+                    </div>
+                    <div class="top-info">
+                        <a href="#">半夜没事瞎溜达</a>
+                        <br>
+                        <span>被赞885</span>
+                        <span>回复203</span>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="top-num" style="">4</div>
+                    <div class="top-avatar">
+                        <a href="#">
+                            <img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" />
+                        </a>
+                    </div>
+                    <div class="top-info">
+                        <a href="#">jack</a>
+                        <br>
+                        <span>被赞758</span>
+                        <span>回复145</span>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="top-num" style="">5</div>
+                    <div class="top-avatar">
+                        <a href="#">
+                            <img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" />
+                        </a>
+                    </div>
+                    <div class="top-info">
+                        <a href="#">rose</a>
+                        <br>
+                        <span>被赞562</span>
+                        <span>回复96</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <!--右侧主体开始-->
