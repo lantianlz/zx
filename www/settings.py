@@ -115,9 +115,9 @@ INSTALLED_APPS = (
     # 'django.contrib.staticfiles',
     # 'django.contrib.admin',
     # 'django.contrib.admindocs',
-
-    'www.custom_tags',
-    'www.account',
+    'www',
+    'custom_tags',
+    'account',
 )
 
 AUTHENTICATION_BACKENDS = ('www.middleware.user_backend.AuthBackend',)

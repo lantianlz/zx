@@ -1,0 +1,217 @@
+{% extends "base/base_home.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block bheader %}
+<style type="text/css">
+body {background-color: #F0F4F7; font-family: "微软雅黑";}
+.zx-container-main{
+    width: 600px; 
+    min-height: 470px; 
+    float: left;
+    margin-left: 35px;
+}
+
+.zx-container-main .search-bar{
+    float: left; 
+    height: 100px; 
+    width: 100%; 
+    padding: 25px;
+    background-color: #e7ecef;
+    margin-top: 25px;
+    border-radius: 5px;
+}
+
+.zx-container-main .question-list{
+    float: left; 
+    min-height: 370px; 
+    width: 100%; 
+    padding-top: 25px;
+}
+
+.zx-container-main .question-list .list-group-item:first-child{
+    border-top: 0px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 0px;
+}
+
+.zx-container-main .question-list .list-group-item .item-container{
+    width: 100%; 
+}
+
+.zx-container-main .question-list .list-group-item .item-question-title{
+    width: 100%; 
+    margin: 15px 0 0 0;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-title a{
+    cursor: pointer;
+    color: black;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-title a:hover{
+    text-decoration: none;
+    color: #349cd8;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-content{
+    width: 100%; 
+    color: #69737b;
+    margin: 10px 0 0 0;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-tags{
+    width: 100%; 
+    margin: 10px 0 0 0;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile{
+    width: 100%; 
+    margin: 12px 0 15px 0;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile a{
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile a:hover{
+    text-decoration: none;
+}
+
+.zx-container-main .avatar{
+    min-width: 22px;
+    min-height: 22px;
+    margin-right: 10px;
+    float: left;
+}
+
+.zx-container-main .avatar img{
+    width: 22px;
+    height: 22px;
+}
+
+.zx-container-main  .user-name{
+    display: inline;
+    color: #224e73;
+    font-size: 12px;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile .statistic{
+    font-size: 12px;
+    display: inline;
+    margin-left: 15px;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile .answers{
+    display: inline;
+    margin-left: 8px;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile .answers a{
+    color: #a1acb4;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile .views{
+    display: inline;
+    margin-left: 8px;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile .views a{
+    color: #a1acb4;
+}
+
+.zx-container-main .question-list .list-group-item .item-question-profile .last-replay{
+    color: #69737b;
+    display: inline;
+    font-size: 12px;
+    float: right;
+}
+
+.zx-container-main .question-entry{
+    float: left;
+    padding-top: 25px;
+    width: 100%;
+}
+
+.zx-container-main .question-entry .topic-title{
+    
+}
+
+.zx-container-main .question-entry .topic-content{
+    padding-top: 25px;
+    font-size: 13px;
+    color: #475058;
+}
+
+.zx-container-main .question-entry .topic-footer{
+    padding-top: 25px;
+}
+
+.zx-container-main .question-entry .question-date{
+    float: right;
+    font-size: 12px;
+    color: #475058;
+}
+
+.zx-container-main .replaies{
+    float: left;
+    width: 100%;
+    padding-top: 25px;
+}
+
+.zx-container-main .replaies .list-group-item:first-child{
+    border-top: 0px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 0px;
+}
+
+.zx-container-main .replay-header{
+    padding: 15px 5px 5px 5px;
+}
+
+
+.zx-container-main .replay-header .user-name a{
+    color: #224e73;
+    font-size: 12px;
+}
+
+.zx-container-main .replay-content{
+    font-size: 13px;
+    color: #475058;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    line-height: 25px;
+}
+
+.zx-container-main .btn-default .badge{
+    background-color: lightgray;
+}
+.zx-container-right{
+    width: 300px; min-height: 470px; float: left;
+}
+</style>
+{% endblock %}
+
+{% block container_content %}
+<!--右侧主体开始-->
+<div class="zx-container-main">
+    <!--查询框开始-->
+    <div class="search-bar">
+        <div class="input-group input-group-lg">
+          <input type="text" placeholder="各种问题..." class="form-control">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">搜索</button>
+          </span>
+        </div>
+    </div>
+    <!--查询框结束-->
+    
+    {% block question_main%}{% endblock %}
+</div>
+<!--右侧主体结束-->
+
+<!--左侧主体开始-->
+<div class="zx-container-right">
+    
+</div>
+<!--左侧主体开始-->
+{% endblock container_content %}
