@@ -18,7 +18,7 @@ def member_required(func):
     @date: 2013-12-10
     """
     def _decorator(request, *args, **kwargs):
-        if not (hasattr(request, 'user') and request.user.is_authenticated):
+        if not (hasattr(request, 'user') and request.user.is_authenticated()):
             if request.is_ajax():
                 return HttpResponse('need_login')
             else:
