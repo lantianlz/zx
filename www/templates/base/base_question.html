@@ -187,12 +187,85 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     padding-left: 30px;
 }
 
+.zx-container-main .replay-main .vote .btn-group-vertical{
+    width: 90%;
+}
+
 .zx-container-main .btn-default .badge{
     background-color: lightgray;
 }
 
+.zx-container-main .user-profile{
+    padding-top: 25px;
+    float: left;
+    width: 100%;
+}
+
+.zx-container-main .user-profile .big-avatar img{
+    width: 110px;
+    height: 110px;
+}
+
+.zx-container-main .user-profile-left{
+    min-height: 450px;
+    margin-bottom: 30px;
+    padding: 0 0 0 15px;
+}
+
+.zx-container-main .user-profile-right{
+    border-left: solid 1px lightgray;
+    margin-bottom: 25px;
+}
+
+.zx-container-main .user-profile-left .list-group{
+    padding-top: 30px;
+}
+
+.zx-container-main .user-profile-left .list-group .active{
+    background-color: lightgray;
+    border-color: lightgray;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.zx-container-main .user-profile-left .list-group-item{
+    border: 0;
+}
+
+.zx-container-main .user-profile-right-top .list-group{
+    padding-top: 10px;
+}
+
+.zx-container-main .user-profile-right-top .list-group-item{
+    border-top: solid 1px lightgray;
+    border-left: 0px; 
+    border-right: 0px;
+    border-bottom: 0px;
+    padding: 20px 15px;
+}
+
+.zx-container-main .user-profile-right-top .list-group-item:first-child{
+    border-top: 0px;
+}
+
+.zx-container-main .user-profile-right-top .list-group-item:last-child{
+    border-bottom: solid 1px lightgray;
+}
+
+.zx-container-main .list-questions .list-group-item{
+    border: 0;
+}
+
+.zx-container-main .list-questions a{
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .zx-container-right{
-    width: 300px; min-height: 470px; float: left;
+    width: 300px; 
+    min-height: 470px; 
+    float: left;
 }
 
 .zx-container-right .ask-question{
@@ -279,12 +352,12 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
                 <li class="list-group-item">
                     <div class="top-num" style="">1</div>
                     <div class="top-avatar">
-                        <a href="#">
+                        <a href="/user_profile/">
                             <img style="width: 42px;" src="{{MEDIA_URL}}img/common/default.png" />
                         </a>
                     </div>
                     <div class="top-info">
-                        <a href="#">lei286394973</a>
+                        <a href="/user_profile/">lei286394973</a>
                         <br>
                         <span>被赞1320</span>
                         <span>回复365</span>

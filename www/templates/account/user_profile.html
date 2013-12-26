@@ -1,0 +1,68 @@
+{% extends "base/base_question.html" %}
+
+{% block title %}问答详细{% endblock %}
+
+{% block question_main%}
+<div class="user-profile row">
+	<div class="user-profile-left col-md-3">
+		<div class="big-avatar">
+			<img src="{{MEDIA_URL}}img/common/default.png">
+		</div>
+		<div class="list-group">
+		    <a href="#" class="list-group-item active">
+		        <div>问题<span class="badge">23</span></div>
+		    </a>
+		    <a href="#" class="list-group-item">
+		        <div>回复<span class="badge">286</span></div>
+		    </a>
+		</div>
+	</div>
+	<div class="user-profile-right col-md-9">
+	    <ul class="user-profile-right-top list-group">
+		    <li class="list-group-item">
+		        <div>lei286394973</div>
+		    </li>
+		    <li class="list-group-item">
+		        <div class="row">
+		            <div class="col-md-6">注册于 - 02/11/2013</div>
+		            <div class="col-md-6">最后在线于 - 26/12/2013</div>
+		        </div>
+		    </li>
+		    <li class="list-group-item">
+		        <div>最近发起的问题</div>
+		    </li>
+		</ul>
+		<ul class="list-questions list-group">
+		    <li class="list-group-item">
+		        <div><a href="">在有利网投资安全吗？有利网为什么能让网友借出资金</a></div>
+		    </li>
+		    <li class="list-group-item">
+		        <div><a href="">想请教下 这个是怎么计算</a></div>
+		    </li>
+		    <li class="list-group-item">
+		        <div><a href="">充值、提现需要手续费吗？有利网理财开白多长时间了</a></div>
+		    </li>
+		    <li class="list-group-item">
+		        <div><a href="">今天上午提现收不到手机验证码？咋体现啊？</a></div>
+		    </li>
+		    <li class="list-group-item">
+		        <div><a href="">修改密保问题</a></div>
+		    </li>
+		    <li class="list-group-item">
+		        <div><a href="">为什么我的手机一直验证不了？试了几次了</a></div>
+		    </li>
+		</ul>
+		<div class="pagebar text-center">
+          <ul class="pagination pagination-sm">
+            <li class="disabled"><a href="#">&laquo;</a></li>
+            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">&raquo;</a></li>
+          </ul>
+        </div>
+	</div>
+</div>
+{% endblock %}

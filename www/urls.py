@@ -14,6 +14,7 @@ urlpatterns = patterns('',
                        url(r'^regist$', 'www.account.views.regist'),
                        url(r'^home$', 'www.account.views.home'),
                        url(r'^question_detail', 'www.account.views.question_detail'),
+                       url(r'^user_profile', 'www.account.views.user_profile'),
                        # Examples:
                        # url(r'^$', 'www.views.home', name='home'),
                        # url(r'^www/', include('www.foo.urls')),
