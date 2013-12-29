@@ -1,0 +1,126 @@
+{% extends "base/base_question.html" %}
+
+{% block title %}问答首页{% endblock %}
+
+{% block question_main%}
+    <!--问题列表开始-->
+    <div class="question-list">
+        <!--选项卡开始-->
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#">所有问题</a></li>
+          <li><a href="#">待回答问题<span class="badge pull-right">42</span></a></li>
+        </ul>
+        <!--选项卡结束-->
+        <!--列表开始-->
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="item-container">
+              <div class="item-question-title">
+                <a href="/question/question_detail"><h4><strong>咱们这网如讲风险最达的风险是什么?我能投入个人资产的多少份额在这呢!</strong></h4></a>
+              </div>
+              <div class="item-question-content">
+                咱们这网如讲风险最达的风险是什么?我能投入个人资产的多少份额在这呢!...
+              </div>
+              <div class="item-question-tags">
+              </div>
+              <div class="item-question-profile">
+                <a href="#">
+                  <div class="avatar">
+                    <img src="{{MEDIA_URL}}img/common/default.png" />
+                  </div>
+                </a>
+                <a href="#">
+                  <div class="user-name">
+                    lei286394973
+                  </div>
+                </a>
+                <div class="statistic">
+                    <div class="answers"><a href="#">回答 29</a></div>
+                    <div class="views"><a href="#">浏览 274</a></div>
+                </div>
+                <div class="last-replay">
+                    13分钟前
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="item-container">
+              <div class="item-question-title">
+                <a href="/question/question_detail"><h4><strong>昨天晚上投资的定存宝，为什么投资率为0%？</strong></h4></a>
+              </div>
+              <div class="item-question-content">
+                昨天晚上投资的定存宝，为什么投资率为0%？...
+              </div>
+              <div class="item-question-tags">
+              </div>
+              <div class="item-question-profile">
+                <a href="#">
+                  <div class="avatar">
+                    <img src="{{MEDIA_URL}}img/common/default.png" />
+                  </div>
+                </a>
+                <a href="#">
+                  <div class="user-name">
+                    lei286394973
+                  </div>
+                </a>
+                <div class="statistic">
+                    <div class="answers"><a href="#">回答 29</a></div>
+                    <div class="views"><a href="#">浏览 274</a></div>
+                </div>
+                <div class="last-replay">
+                    34分钟前
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="item-container">
+              <div class="item-question-title">
+                <a href="/question/question_detail"><h4><strong>固定日还款项目是什么意思 谁能给我解释下</strong></h4></a>
+              </div>
+              <div class="item-question-content">
+                是这种项目不能复投 是吗？ 必须每个月取一部分？...
+              </div>
+              <div class="item-question-tags">
+              </div>
+              <div class="item-question-profile">
+                <a href="#">
+                  <div class="avatar">
+                    <img src="{{MEDIA_URL}}img/common/default.png" />
+                  </div>
+                </a>
+                <a href="#">
+                  <div class="user-name">
+                    lei286394973
+                  </div>
+                </a>
+                <div class="statistic">
+                    <div class="answers"><a href="#">回答 29</a></div>
+                    <div class="views"><a href="#">浏览 274</a></div>
+                </div>
+                <div class="last-replay">
+                    45分钟前
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="pagebar text-center">
+              <ul class="pagination pagination-sm">
+                <li class="disabled"><a href="#">&laquo;</a></li>
+                <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">&raquo;</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <!--列表结束-->
+    </div>
+    <!--问题列表结束-->
+{% endblock %}
