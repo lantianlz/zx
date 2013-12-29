@@ -11,7 +11,7 @@
             <li>
                 <a class="img-logo" href="/"><img title="智选网" alt="智选网" src="{{MEDIA_URL}}img/common/logo.png"></a>
             </li>
-            <li {% if '/' == request.path %} class="active" {% endif %}>
+            <li {% if '/home' == request.path %} class="active" {% endif %}>
                 <a href="/">首页</a>
             </li>
             <li {% if 'question' in request.path %} class="active" {% endif %}>
@@ -45,7 +45,7 @@
                 <a href="#">账号设置</a>
             </li>
             <li>
-                <a href="#/logout">退出</a>
+                <a href="/logout">退出</a>
             </li>
         </ul>
     </div>
