@@ -2,34 +2,44 @@
 
 {% block title %}登录{% endblock %}
 
+{% block bheader %}
+<style type="text/css">
+.login-main{
+    margin-top: 100px;
+}
+
+.login-main .form-control{
+    
+    height: 42px;
+}
+
+.login-main .form-group{
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
+
 {% block container %}
-<div class="bd">
-	<form novalidate="" data-remote="true" method="post" action="/login" class="form">
-		<div class="form-item">
-			<div class="form-field">
-				<input type="email" autofocus="" data-validate-msg="请填写您的登录邮箱" data-validate="required;email" placeholder="登录邮箱" id="email" name="email" tabindex="1" value="{{email}}"></div>
-		</div>
-
-		<div class="form-item">
-			<div class="form-field">
-				<input type="password" data-validate-msg="请填写您的登录密码" data-validate="required;length:6" placeholder="密码" name="password" tabindex="2"></div>
-		</div>
-
-		<div class="form-item sign-in-btn">
-			<button data-goto="/launchpad/" data-disable-with="正在登录..." class="btn btn-primary btn-submit" id="btn-signin" tabindex="3" type="submit">登录</button>
-			<div class="desc">
-				<span class="forgot-pw">
-					<a tabindex="5" href="/user/forgot_password">忘记密码了？</a>
-				</span>
-			</div>
-		</div>
-
-	</form>
-	<div class="sign-nav">
-		没有帐号？
-		<span>
-			<a href="/regist">免费注册 →</a>
-		</span>
-	</div>
+<div class="row login-main">
+    <div class="col-md-4 col-md-offset-4">
+        <div class="text-center"><h1>智选网</h1></div>
+        <form class="form-horizontal" role="form" method="post" action="/login">
+            <div class="form-group">
+                <div class="col-md-offset-1">
+                    <input type="text" name="email" class="form-control" placeholder="登录邮箱">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-1">
+                    <input type="password" name="password" class="form-control" placeholder="密码">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-1">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">登录</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

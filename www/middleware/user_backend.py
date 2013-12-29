@@ -21,6 +21,7 @@ class AuthBackend(object):
             return user
 
     def get_user(self, user_id):
+        print '============>', user_id
         user = UserBase().get_user_by_id(user_id)
         if user:
             setattr(user, "is_authenticated", lambda: True)

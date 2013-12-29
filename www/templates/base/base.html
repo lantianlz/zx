@@ -11,14 +11,24 @@
         <link rel="shortcut icon" href="{{MEDIA_URL}}/img/common/favicon.ico">
 
         <link href="{{MEDIA_URL}}/css/bootstrap.min.css" rel="stylesheet">
-        <link href="{{MEDIA_URL}}/css/base.css" rel="stylesheet">
-        <link href="{{MEDIA_URL}}/css/site.css" rel="stylesheet">
+        <!--link href="{{MEDIA_URL}}/css/base.css" rel="stylesheet"-->
+        <!--link href="{{MEDIA_URL}}/css/site.css" rel="stylesheet"-->
 
         <script src="{{MEDIA_URL}}/js/jquery-1.7.min.js"></script>
         <script src="{{MEDIA_URL}}/js/bootstrap.min.js"></script>
         <script src="{{MEDIA_URL}}/js/common.js?v={{MEDIA_VERSION}}"></script>
         <script src="{{MEDIA_URL}}/js/site.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript">var media = '{{ MEDIA_URL }}';</script>
+        
+        <style>
+        .container{
+            width: 1000px;
+            min-width: 1000px;
+        }
+        .footer{
+            font-size: 12px;
+        }
+        </style>
         {% block bheader %}{% endblock bheader %}
     </head>
 
@@ -26,7 +36,7 @@
         {% block container_head %}
         {% endblock container_head %}
         <div class="container" style="min-height:360px;" id="content_container_id">
-            <div class="alert alert-success popmsg none" id="divSuccess">ok</div>
+            <div class="alert alert-success popmsg hide" id="divSuccess">ok</div>
             {% if error_msg %}
             <div class="alert alert-error popmsg" id="divError">
                 <button onclick="$('#divError').hide();" class="close" type="button">×</button>

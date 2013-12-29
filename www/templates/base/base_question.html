@@ -5,16 +5,20 @@
 {% block bheader %}
 <style type="text/css">
 body {background-color: #F0F4F7; font-family: "微软雅黑";}
+.container_content{
+    background-color: white;
+    border-radius: 5px;
+    border: solid 1px lightgray;
+    padding-bottom: 20px;
+}
+
 .zx-container-main{
-    width: 600px; 
+    /*width: 700px; */
     min-height: 470px; 
-    float: left;
-    margin-left: 25px;
-    padding-right: 20px;
+    /*padding-right: 30px;*/
 }
 
 .zx-container-main .search-bar{
-    float: left; 
     height: 85px; 
     width: 100%; 
     padding: 20px;
@@ -263,9 +267,9 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
 }
 
 .zx-container-right{
-    width: 300px; 
+    /*width: 400px; */
     min-height: 470px; 
-    float: left;
+    /*padding-right: 60px;*/
 }
 
 .zx-container-right .ask-question{
@@ -312,7 +316,7 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
 
 {% block container_content %}
 <!--左侧主体开始-->
-<div class="zx-container-main">
+<div class="zx-container-main col-md-7">
     <!--查询框开始-->
     <div class="search-bar">
         <div class="input-group input-group-lg">
@@ -326,11 +330,11 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
 <!--左侧主体结束-->
 
 <!--右侧主体开始-->
-<div class="zx-container-right">
+<div class="zx-container-right col-md-5">
     <div class="ask-question well">
         <div class="row">
             <div class="col-md-6">
-                <button type="button" class="btn btn-primary btn-lg">我要提问</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button>
             </div>
             <div class="col-md-6">
                 <div>
