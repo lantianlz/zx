@@ -38,6 +38,7 @@ class Profile(models.Model):
         (const.MALE, u'男'),
         (const.FEMALE, u'女'),
     )
+    source_choices = ((0, u'web'), (1, u'weibo'))
 
     auto_id = models.AutoField(primary_key=True)
     id = models.CharField(max_length=32, unique=True)
@@ -48,6 +49,7 @@ class Profile(models.Model):
     email_verified = models.BooleanField(verbose_name=u'邮箱是否验证过', default=False)
     mobile_verified = models.BooleanField(verbose_name=u'手机是否验证过', default=False)
     ip = models.CharField(verbose_name=u'登陆ip', max_length=32, null=True)
+    source = models.IntegerField(default=0, choices=source_choices)
     create_time = models.DateTimeField(verbose_name=u'创建时间', db_index=True, default=datetime.datetime.now)
 
 
