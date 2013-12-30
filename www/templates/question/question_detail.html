@@ -2,6 +2,68 @@
 
 {% block title %}问答详细{% endblock %}
 
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+  var editor;
+  KindEditor.ready(function(K) {
+    editor = K.create('textarea[name="answer_content"]', {
+      resizeType : 1,
+      width: '100%',
+      height: '260',
+      allowPreviewEmoticons : false,
+      allowImageUpload : false,
+      themesPath: "{{MEDIA_URL}}css/kindeditor/themes/",
+      pluginsPath: "{{MEDIA_URL}}js/kindeditor/plugins/",
+      langPath: "{{MEDIA_URL}}js/kindeditor/",
+      items : [
+        'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+        'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+        'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+    });
+  });
+
+});
+</script>
+{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.answer-title{
+  border-bottom: solid 1px #e6e6e6;
+}
+
+.answer-main{
+  margin-top: 15px;
+  border: solid 1px #e6e6e6;
+  border-radius: 5px;
+}
+
+.not-login{
+  font-size: 12px;
+}
+
+.not-login .title{
+  font-size: 12px;
+  padding: 25px 0 15px 0;
+}
+
+.not-login .content{
+  font-size: 12px;
+  padding-bottom: 15px;
+  line-height: 22px;
+}
+
+.not-login .links{
+  margin-bottom: 20px;
+}
+
+.not-login .lock{
+  padding: 15px 0 0 30px;
+}
+</style>
+{% endblock %}
+
 {% block question_main%}
 <div class="question-entry">
   <div class="topic">
@@ -122,6 +184,36 @@
         </div>
       </li>
     </ul>
+  </div>
+
+  <!-- 回复块 -->
+  <div class="answer">
+    <div class="answer-title">
+      <h3>您可以在下面添加您的回答</h3>
+    </div>
+    
+    <div class="answer-main">
+      {% if request.user.is_authenticated %}
+      <form role="form">
+        <div class="form-group">
+          <textarea name="answer_content" class="form-control" rows="6"></textarea>
+        </div>
+        <div class="form-group pull-right">
+          <button type="submit" class="btn btn-primary">提交您的回答</button>
+        </div>
+      </form>
+      {% else %}
+      <div class="not-login row">
+        <div class="col-md-2 lock"><img src="{{MEDIA_URL}}img/common/icon-locked.png"></div>
+        <div class="col-md-10">
+          <div class="title">回复前请登录</div>
+          <div class="content">须登录后才能发表您的回复，点击下面的登录按钮进行登录，如果您还没有成为我们的会员，请点击下面的注册按钮进行新用户注册</div>
+          <div class="col-md-6 links"><a href="/login"><button type="button" class="btn btn-primary btn-lg">立即登录</button></a></div>
+          <div class="col-md-6 links"><a href="/regist"><button type="button" class="btn btn-primary btn-lg">免费注册</button></a></div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
   </div>
 </div>
 {% endblock %}
