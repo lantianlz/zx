@@ -317,6 +317,8 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     margin-left: 10px;
 }
 </style>
+{% block javascript %}{% endblock %}
+{% block css %}{% endblock %}
 {% endblock %}
 
 {% block container_content %}
@@ -331,7 +333,9 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
             </span>
         </div>
     </div>
-    <!--查询框结束-->{% block question_main%}{% endblock %}</div>
+    <!--查询框结束-->
+    {% block question_main%}{% endblock %}
+</div>
 <!--左侧主体结束-->
 
 <!--右侧主体开始-->
@@ -339,7 +343,7 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     <div class="ask-question well">
         <div class="row">
             <div class="col-md-6">
-                <button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button>
+                <a href="/question/ask_question"><button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button></a>
             </div>
             <div class="col-md-6">
                 <div>
