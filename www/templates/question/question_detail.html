@@ -39,6 +39,14 @@ $(document).ready(function(){
   border-radius: 5px;
 }
 
+.answer-main .editor{
+  margin-bottom: 0px;
+}
+
+.answer-main button{
+  margin-top: 15px;
+}
+
 .not-login{
   font-size: 12px;
 }
@@ -195,7 +203,7 @@ $(document).ready(function(){
     <div class="answer-main">
       {% if request.user.is_authenticated %}
       <form role="form">
-        <div class="form-group">
+        <div class="form-group editor">
           <textarea name="answer_content" class="form-control" rows="6"></textarea>
         </div>
         <div class="form-group pull-right">
