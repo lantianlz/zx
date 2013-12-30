@@ -1,0 +1,56 @@
+{% extends "base/base_question.html" %}
+
+{% block title %}我要提问{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+		editor = K.create('textarea[name="question_content"]', {
+			resizeType : 1,
+			width: '100%',
+			height: '260',
+			allowPreviewEmoticons : false,
+			allowImageUpload : false,
+			themesPath: "{{MEDIA_URL}}css/kindeditor/themes/",
+			pluginsPath: "{{MEDIA_URL}}js/kindeditor/plugins/",
+			langPath: "{{MEDIA_URL}}js/kindeditor/",
+			items : [
+				'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+				'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+				'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+		});
+	});
+
+});
+</script>
+{% endblock %}
+{% block css %}
+<style type="text/css">
+.ask-title{
+	border-bottom: solid 1px #e6e6e6;
+}
+
+.ask-main{
+	margin-top: 35px;
+}
+</style>
+{% endblock %}
+{% block question_main%}
+<div class="ask-title">
+	<h2>问个问题</h2>
+</div>
+
+<div class="ask-main">
+	<form role="form">
+		<div class="form-group">
+			<input type="text" class="form-control input-lg" name="question_title" placeholder="您有什么想问的？"></div>
+		<div class="form-group">
+			<textarea name="question_content" class="form-control" rows="6"></textarea>
+		</div>
+		<div class="form-group pull-right">
+			<button type="submit" class="btn btn-primary">提交</button>
+		</div>
+	</form>
+</div>
+{% endblock %}
