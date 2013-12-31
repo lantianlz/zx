@@ -1,0 +1,55 @@
+{% extends "base/base_home.html" %}
+{% block bheader %}
+<style type="text/css">
+.zx-settings-left .list-group-item{
+	border-left: 0px;
+	border-radius: 0px;
+	border-right: 0px;
+}
+
+.zx-settings-left .list-group-item:first-child{
+	border-top: 0px;
+}
+
+.zx-settings-main{
+	min-height: 450px;
+	border-left: 1px solid #ddd;
+}
+
+.zx-settings-main .form-group:first-child{
+	border-top: 0px;
+}
+</style>
+{% block css %}{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% endblock %}
+{% block container_content %}
+<div class="zx-settings">
+	<div class="zx-settings-left col-md-3">
+		<a class="list-group-item {% if '/account/user_settings' == request.path %} active {% endif %}" href="/account/user_settings">
+			{% if '/account/user_settings' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+			帐号设置
+		</a>
+		<a class="list-group-item {% if '/account/user_settings/change_pwd' == request.path %} active {% endif %}" href="/account/user_settings/change_pwd">
+			{% if '/account/user_settings/change_pwd' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+			修改登录密码
+		</a>
+		<a class="list-group-item {% if '/account/user_settings/change_email' == request.path %} active {% endif %}" href="/account/user_settings/change_email">
+			{% if '/account/user_settings/change_email' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+			修改绑定邮箱
+		</a>
+		<a class="list-group-item {% if '/account/user_settings/bind_mobile' == request.path %} active {% endif %}" href="/account/user_settings/bind_mobile">
+			{% if '/account/user_settings/bind_mobile' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+			绑定手机
+		</a>
+		<a class="list-group-item {% if '/account/user_settings/security_question' == request.path %} active {% endif %}" href="/account/user_settings/security_question">
+			{% if '/account/user_settings/security_question' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+			设置安全问题
+		</a>
+	</div>
+	<div class="zx-settings-main col-md-9">
+		{% block settings_main %}{% endblock %}
+	</div>
+</div>
+{% endblock %}

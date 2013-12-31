@@ -1,0 +1,42 @@
+{% extends "base/base_settings.html" %}
+
+{% block title %}修改登录密码{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.zx-settings-main .form-group{
+	border-top: solid 1px #f2f2f2;
+	margin-left: 10px;
+	padding: 10px 0;
+}
+</style>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block settings_main %}
+<form class="form-horizontal" role="form">
+	<div class="form-group">
+		<label class="col-sm-2 control-label">当前密码</label>
+		<div class="col-sm-5">
+			<input type="password" class="form-control" placeholder="请输入您的旧密码">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">新的密码</label>
+		<div class="col-sm-5">
+			<input type="password" class="form-control" placeholder="请输入您的新密码">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">确认密码</label>
+		<div class="col-sm-5">
+			<input type="password" class="form-control" placeholder="请确认您的新密码">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<button type="submit" class="btn btn-primary">提交您的修改</button>
+		</div>
+	</div>
+</form>
+{% endblock %}

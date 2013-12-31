@@ -1,0 +1,48 @@
+{% extends "base/base_settings.html" %}
+
+{% block title %}设置安全问题{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.zx-settings-main .form-group{
+	border-top: solid 1px #f2f2f2;
+	margin-left: 10px;
+	padding: 10px 0;
+}
+</style>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block settings_main %}
+<form class="form-horizontal" role="form">
+	<div class="form-group">
+		<label class="col-sm-2 control-label">选择安全问题</label>
+		<div class="col-sm-5">
+			<select class="form-control">
+				  <option>您父亲的名字?</option>
+				  <option>您母亲的名字?</option>
+				  <option>您的出生日期?</option>
+				  <option>您的户口所在地?</option>
+				  <option>您小学的名称？</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">您的回答</label>
+		<div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="输入您的正确答案">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">登录密码</label>
+		<div class="col-sm-5">
+			<input type="password" class="form-control" placeholder="请确认您的登录密码">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<button type="submit" class="btn btn-primary">提交您的修改</button>
+		</div>
+	</div>
+</form>
+{% endblock %}
