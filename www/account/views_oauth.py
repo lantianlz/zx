@@ -1,22 +1,47 @@
 # -*- coding: utf-8 -*-
 
-import urllib
 from pprint import pprint
-from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import auth
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import utils
+from www.misc.oauth2.qq import Consumer
+from www.misc.oauth2 import format_external_user_info
 from www.account.interface import UserBase
 
 
 def oauth_qq(request):
-    authorize_url = 'https://graph.qq.com/oauth2.0/authorize'
-    response_type = 'code'
-    client_id = '1101146433'
-    redirect_uri = urllib.quote_plus('http://www.zhixg.com/account/oauth/qq')
-    state = 'state'
+    client = Consumer()
 
-    return HttpResponseRedirect('%s?response_type=%s&client_id=%s&redirect_uri=%s&state=%s'
-                                % (authorize_url, response_type, client_id, redirect_uri, state))
+    code = request.REQUEST.get('code')
+    if not code:
+        return HttpResponseRedirect(client.authorize())
+    else:
+        # 获取access_token
+        dict_result = client.token(code)
+        access_token = dict_result.get('access_token')
+
+        # 获取用户信息
+        openid = client.get_openid(access_token)
+        user_info = client.request_api(access_token, '/user/get_user_info', data=dict(access_token=access_token, openid=openid))
+        user_info = format_external_user_info(user_info, 'qq')
+        pprint(user_info)
+
+        flag, result = UserBase().get_user_by_external_info(source='qq', access_token=access_token, external_user_id=openid,
+                                                            refresh_token=dict_result['refresh_token'], nick=user_info['nick'],
+                                                            ip=utils.get_clientip(request), expire_time=dict_result['expires_in'],
+                                                            user_url=user_info['url'], gender=user_info['gender'])
+        if flag:
+            user = result
+            user.backend = 'www.middleware.user_backend.AuthBackend'
+            auth.login(request, user)
+            next_url = request.session.get('next_url') or '/home'
+            request.session.update(dict(next_url=''))
+            return HttpResponseRedirect(next_url)
+        else:
+            error_msg = result or u'qq账号登陆失败，请重试'
+            return render_to_response('account/login.html', locals(), context_instance=RequestContext(request))
+
+        return HttpResponse(u'code is %s' % code)

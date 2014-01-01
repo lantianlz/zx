@@ -22,9 +22,9 @@ def vlen(s, min_l, max_l):
 
 
 def vemail(s, min_len=3, max_len=50):
-    regexStr = ur"^[-_A-Za-z0-9\.]+@([_A-Za-z0-9]+\.)+[A-Za-z0-9]{2,32}$"
+    re_str = ur"^[-_A-Za-z0-9\.]+@([_A-Za-z0-9]+\.)+[A-Za-z0-9]{2,32}$"
     vlen(s, min_len, max_len)
-    if not re.match(regexStr, s):
+    if not re.match(re_str, s):
         raise VerifyError, u"邮箱格式不正确"
 
 
@@ -37,8 +37,8 @@ def vnick(value, min_len=2, max_len=12):
         if key in value:
             raise VerifyError, u"昵称不能含有关键字%s！" % key
 
-    regexStr = u'^[\w\-\_\u4e00-\u9fa5]{%s,%s}$' % (min_len, max_len)
-    if not re.match(regexStr, value):
+    re_str = u'^[\w\-\_\u4e00-\u9fa5]{%s,%s}$' % (min_len, max_len)
+    if not re.match(re_str, value):
         raise VerifyError, u"昵称只能是%s~%s位中文、字母、数字、下划线或减号！" % (min_len, max_len)
 
 

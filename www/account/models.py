@@ -69,3 +69,20 @@ class UserChangeLog(models.Model):
 
 class LastActive(models.Model):
     pass
+
+
+class ExternalToken(models.Model):
+    user_id = models.CharField(max_length=32, db_index=True)
+    source = models.CharField(max_length=16, db_index=True)
+    access_token = models.CharField(max_length=128, db_index=True)
+    external_user_id = models.CharField(max_length=64, db_index=True)
+    refresh_token = models.CharField(max_length=128, db_index=True)
+    nick = models.CharField(max_length=64, null=True)
+    user_url = models.CharField(max_length=128, null=True)
+    expire_time = models.DateTimeField()
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+    state = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = [("source", "access_token"), ("source", "external_user_id")]

@@ -42,8 +42,17 @@ class SimpleTest(TestCase):
         return 'ok'
 
 
+    def re_test(self):
+        # a = 'callback( {"client_id":"YOUR_APPID","openid":"YOUR_OPENID"} );'
+        # import re
+        # regexStr = u'"openid":"(.+)"'
+        # print re.findall(regexStr, a)
+        import urllib
+        print urllib.urlencode(dict(a=1, b=2))
+
 if __name__ == '__main__':
     st = SimpleTest()
     # print st.test_basic_addition()
     # print utils.uuid_without_dash()
-    print st.test_regist()
+    # print st.test_regist()
+    st.re_test()
