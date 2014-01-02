@@ -12,4 +12,5 @@ urlpatterns = patterns('',
 	url(r'^user_settings/change_email$', 'www.account.views.change_email'),
 	url(r'^user_settings/bind_mobile$', 'www.account.views.bind_mobile'),
 	url(r'^user_settings/security_question$', 'www.account.views.security_question'),
+	url(r'^user_settings/bind_community$', 'www.account.views.bind_community'),
 )

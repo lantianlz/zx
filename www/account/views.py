@@ -95,6 +95,11 @@ def security_question(request, template_name='account/security_question.html'):
 
 
 @member_required
+def bind_community(request, template_name='account/bind_community.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    
+
+@member_required
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect('/home')

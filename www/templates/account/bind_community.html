@@ -1,0 +1,39 @@
+{% extends "base/base_settings.html" %}
+
+{% block title %}社区绑定{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.zx-settings-main .form-group{
+	border-top: solid 1px #f2f2f2;
+	margin-left: 10px;
+	padding: 10px 0;
+}
+
+.zx-comminity .xlwb{
+    background: url({{MEDIA_URL}}img/common/is.png) no-repeat;
+    background-position: 0 -120px!important;
+    padding-left: 27px;
+}
+
+.zx-comminity .txqq{
+    background: url({{MEDIA_URL}}img/common/is.png) no-repeat;
+    background-position: 0 -2234px!important;
+    padding-left: 27px;
+}
+</style>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block settings_main %}
+<div class="zx-comminity">
+	<form class="form-horizontal" role="form">
+		<div class="form-group">
+			<a class="xlwb" href="">绑定新浪微博帐号</a>
+		</div>
+		<div class="form-group">
+			<a class="txqq" href="#"></a>已绑定腾讯 QQ 帐号，286394973 <a href="#">取消绑定</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

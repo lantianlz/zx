@@ -13,7 +13,7 @@ from pprint import pprint
 CLIENT_ID = '100588921'
 CLIENT_SECRET = 'c3ada24be18f2e86e99dd086884d0bab'
 API_URL = 'https://graph.qq.com'
-REDIRECT_URI = 'http://www.a.com/account/oauth/qq'
+REDIRECT_URI = 'http://www.a.com:8000/account/oauth/qq'
 
 
 class Consumer(object):

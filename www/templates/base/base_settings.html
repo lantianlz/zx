@@ -1,5 +1,5 @@
 {% extends "base/base_home.html" %}
-{% block bheader %}
+{% block cheader %}
 <style type="text/css">
 .zx-settings-left .list-group-item{
 	border-left: 0px;
@@ -39,13 +39,17 @@
 			{% if '/account/user_settings/change_email' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
 			修改绑定邮箱
 		</a>
-		<a class="list-group-item {% if '/account/user_settings/bind_mobile' == request.path %} active {% endif %}" href="/account/user_settings/bind_mobile">
+		<a class="hide list-group-item {% if '/account/user_settings/bind_mobile' == request.path %} active {% endif %}" href="/account/user_settings/bind_mobile">
 			{% if '/account/user_settings/bind_mobile' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
 			绑定手机
 		</a>
-		<a class="list-group-item {% if '/account/user_settings/security_question' == request.path %} active {% endif %}" href="/account/user_settings/security_question">
+		<a class="hide list-group-item {% if '/account/user_settings/security_question' == request.path %} active {% endif %}" href="/account/user_settings/security_question">
 			{% if '/account/user_settings/security_question' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
 			设置安全问题
+		</a>
+		<a class="list-group-item {% if '/account/user_settings/bind_community' == request.path %} active {% endif %}" href="/account/user_settings/bind_community">
+			{% if '/account/user_settings/bind_community' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+			社区绑定
 		</a>
 	</div>
 	<div class="zx-settings-main col-md-9">

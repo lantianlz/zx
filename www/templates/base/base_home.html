@@ -1,7 +1,13 @@
 {% extends "base/base.html" %}
 
 {% block bheader %}
-<style type="text/css">body {background-color: #F0F4F7}</style>
+<style type="text/css">
+body {background-color: #F0F4F7}
+.zx-nav .un-login-user a{
+    text-decoration: none;
+}
+</style>
+{% block cheader %}{% endblock %}
 {% endblock %}
 
 {% block container %}
@@ -26,7 +32,7 @@
         </ul>
     </div>
     <div class="col-md-2 login-user text-right">
-
+        {% if request.user.is_authenticated %}
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             {{ request.user.nick }}
             <span class="caret"></span>
@@ -48,6 +54,12 @@
                 <a href="/logout">退出</a>
             </li>
         </ul>
+        {% else %}
+        <div class="un-login-user">
+            <a href="/regist">免费注册</a>
+            <a href="/login">立即登录</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 

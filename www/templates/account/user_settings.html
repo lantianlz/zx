@@ -9,16 +9,33 @@
 	margin-left: 10px;
 	padding: 10px 0;
 }
+
+.zx-settings-main .avatar img{
+	width: 300px;
+}
 </style>
 {% endblock %}
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#birthday-id').datetimepicker({
+    	format: 'yyyy-mm-dd',
+    	language: 'zh-CN',
+    	minView: 2,
+    	autoclose: true
+	});
+})
+</script>
+{% endblock %}
 
 {% block settings_main %}
 <form class="form-horizontal" role="form">
 	<div class="form-group">
 		<label class="col-sm-2 control-label">头像</label>
 		<div class="col-sm-10">
-			<p class="form-control-static"><img src="{{MEDIA_URL}}{{request.user.avatar|default:'img/common/default.png'}}"></p>
+			<p class="form-control-static avatar">
+				<img src="{{MEDIA_URL}}{{request.user.avatar|default:'img/common/default.png'}}">
+			</p>
 			<div class="blank10"></div>
 			<input type="file"/>
 		</div>
@@ -36,14 +53,30 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label class="col-sm-2 control-label">性别</label>
+		<div class="col-sm-3">
+			<select name="gender" class="form-control">
+				  <option>保密</option>
+				  <option>男</option>
+				  <option>女</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">出生日期</label>
+		<div class="col-sm-3">
+			<input type="text" name="birthday" id="birthday-id" class="form-control" placeholder="" readonly>
+		</div>
+	</div>
+	<div class="form-group hide">
 		<label for="inputPassword" class="col-sm-2 control-label">个性网址</label>
 		<div class="col-sm-10">
-			<input type="password" class="form-control" placeholder="个性网址">
+			<input type="text" class="form-control" placeholder="个性网址">
 		</div>
 	</div>
 	<div class="form-group">
 		<div class="col-sm-12">
-			<button type="submit" class="btn btn-primary">提交您的修改</button>
+			<button type="submit" class="btn btn-primary">提交你的修改</button>
 		</div>
 	</div>
 </form>
