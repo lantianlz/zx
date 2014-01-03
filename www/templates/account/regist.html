@@ -1,7 +1,7 @@
 {% extends "base/base_welcome.html" %}
 
 {% block title %}注册{% endblock %}
-{% block bheader %}
+{% block css %}
 <style type="text/css">
 .regist-main{
 	font-size: 12px;
@@ -23,6 +23,32 @@
 }
 </style>
 {% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+    function setContainerHeight(){
+        var footer = $('.footer'),
+        footerMarginTop = parseInt(footer.css('margin-top').replace('px', '')),
+        footerPaddingTop = parseInt(footer.css('padding-top').replace('px', '')),
+        footerMarginBottom = parseInt(footer.css('margin-bottom').replace('px', '')),
+        footerPaddingBottom = parseInt(footer.css('padding-bottom').replace('px', '')),
+        footerHeight = $('.footer').height(),
+        tempHeight = footerMarginTop + footerPaddingTop + footerMarginBottom + footerPaddingBottom + footerHeight;
+        $('.container').css('height', $(window).height() - tempHeight);
+    }
+
+    $(window).resize(function() {
+        setContainerHeight();
+    });
+
+    setContainerHeight();
+    
+});
+</script>
+{% endblock %}
+
 {% block container %}
 <div class="row regist-main">
 	<div class="col-md-4 col-md-offset-4">
