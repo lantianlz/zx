@@ -34,7 +34,7 @@ class Profile(models.Model):
     用户扩展信息
     '''
     gender_choices = (
-        (const.UNKNOWN, u'未知'),
+        (const.UNKNOWN, u'未设置'),
         (const.MALE, u'男'),
         (const.FEMALE, u'女'),
     )

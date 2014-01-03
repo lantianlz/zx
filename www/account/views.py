@@ -60,7 +60,7 @@ def regist(request, template_name='account/regist.html'):
 
 @member_required
 def home(request, template_name='account/home.html'):
-    #todo 更新最后活跃时间
+    # todo 更新最后活跃时间
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -71,6 +71,17 @@ def user_profile(request, template_name='account/user_profile.html'):
 
 @member_required
 def user_settings(request, template_name='account/user_settings.html'):
+    if request.POST:
+        nick = request.POST.get('nick')
+        gender = request.POST.get('gender')
+        birthday = request.POST.get('birthday')
+        ub = UserBase()
+        flag, result = ub.change_profile(request.user, nick, gender, birthday)
+        if not flag:
+            error_msg = result
+        else:
+            success_msg = u'修改资料成功'
+            request.user = result
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -97,7 +108,7 @@ def security_question(request, template_name='account/security_question.html'):
 @member_required
 def bind_community(request, template_name='account/bind_community.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-    
+
 
 @member_required
 def logout(request):

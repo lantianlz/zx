@@ -35,7 +35,9 @@
         {% block container_head %}
         {% endblock container_head %}
         <div class="container" style="min-height:360px;" id="content_container_id">
-            <div class="alert alert-success popmsg hide" id="divSuccess">ok</div>
+            {% if success_msg %}
+            <div class="alert alert-success popmsg" id="divSuccess">{{success_msg}}</div>
+            {% endif %}
             {% if error_msg %}
             <div class="alert alert-danger alert-dismissable">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

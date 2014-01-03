@@ -14,6 +14,8 @@ dict_err = {
     100: u'邮箱重复',
     101: u'昵称重复',
     102: u'手机号重复',
+    103: u'被逮到了，无效的性别值',
+    104: u'这么奇葩的生日怎么可能',
 
     998: u'参数缺失',
     999: u'系统错误',
@@ -90,6 +92,20 @@ class UserBase(object):
             return False, dict_err.get(101)
         if self.get_user_by_mobilenumber(mobilenumber):
             return False, dict_err.get(102)
+        return True, dict_err.get(000)
+
+    def check_gender(self, gender):
+        if not str(gender) in ('0', '1', '2'):
+            return False, dict_err.get(103)
+        return True, dict_err.get(000)
+
+    def check_birthday(self, birthday):
+        try:
+            birthday = datetime.datetime.strptime(birthday, '%Y-%m-%d')
+            now = datetime.datetime.now()
+            assert (now + datetime.timedelta(days=100 * 365)) > birthday > (now - datetime.timedelta(days=100 * 365))
+        except:
+            return False, dict_err.get(104)
         return True, dict_err.get(000)
 
     @transaction.commit_manually(using=ACCOUNT_DB)
@@ -181,6 +197,39 @@ class UserBase(object):
                     et.save()
         return et
 
+    def change_profile(self, user, nick, gender, birthday):
+        '''
+        @note: 资料修改
+        '''
+        user_id = user.id
+        if not (user_id and nick and gender and birthday):
+            return False, dict_err.get(998)
+
+        try:
+            validators.vnick(nick)
+        except Exception, e:
+            return False, smart_unicode(e)
+
+        if user.nick != nick and self.get_user_by_nick(nick):
+            return False, dict_err.get(101)
+
+        flag, result = self.check_gender(gender)
+        if not flag:
+            return flag, result
+
+        flag, result = self.check_birthday(birthday)
+        if not flag:
+            return flag, result
+
+        user = self.get_user_by_id(user_id)
+        user.nick = nick
+        user.gender = int(gender)
+        user.birthday = birthday
+        user.save()
+
+        # 触发时间，比如清除缓存等
+        return True, user
+
 
 
     # 生成验证码
@@ -199,6 +248,5 @@ class UserBase(object):
 
     # 邮箱修改
 
-    # 资料修改
 
     # 获取用户

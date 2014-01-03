@@ -60,6 +60,8 @@ DATABASE_ROUTERS = ['www.account.router.AccountRouter', 'www.question.router.Que
 
 TIME_ZONE = 'Asia/Shanghai'
 LANGUAGE_CODE = 'zh-cn'
+DATE_FORMAT='Y-m-d'
+DATETIME_FORMAT='Y-m-d H:M:S'
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True

@@ -10,6 +10,7 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
                  ])
 os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
+import datetime
 from django.test import TestCase
 from common import utils
 from django.utils.encoding import smart_str
@@ -43,12 +44,10 @@ class SimpleTest(TestCase):
 
 
     def re_test(self):
-        # a = 'callback( {"client_id":"YOUR_APPID","openid":"YOUR_OPENID"} );'
-        # import re
-        # regexStr = u'"openid":"(.+)"'
-        # print re.findall(regexStr, a)
-        import urllib
-        print urllib.urlencode(dict(a=1, b=2))
+        birthay = '2013-12-01'
+        birthay = datetime.datetime.strptime(birthay, '%Y-%m-%d')
+        now = datetime.datetime.now()
+        assert (now + datetime.timedelta(days=100*365)) > birthay > (now - datetime.timedelta(days=100*365))
 
 if __name__ == '__main__':
     st = SimpleTest()
