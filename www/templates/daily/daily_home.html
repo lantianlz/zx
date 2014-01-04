@@ -1,0 +1,82 @@
+{% extends "base/base_daily.html" %}
+
+{% block title %}每日精华{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.daily_main{
+	margin-top: 30px;
+}
+
+.daily-title h4{
+	color: #475058;
+}
+
+.daily-profile{
+	color: #999;
+	font-size: 12px;
+}
+
+.daily-content{
+	padding-top: 8px;
+	color: #475058;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block daily_main %}
+<ul class="list-group daily_main">
+	<li class="list-group-item">
+		<div class='daily-item'>
+			<div class='daily-title'>
+				<a href="/daily/daily_detail"><h4>支付是互联网金融的基础工具</h4></a>
+			</div>
+			<div class='daily-main row'>
+				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
+				<div class='daily-right col-md-10'>
+					<div class='daily-profile'>时间：2013-11-19  来源：有利网   作者：中华浔</div>
+					<div class='daily-content'>
+						上篇中华浔讲到互联网金融是如何火起来的，兴起来之后，每一位行业者都会想互联网金融都包括些什么。接下来，就从互联网金融最早兴起的几种形式，P2P、第三方支付、众筹是其中三种。...
+					</div>
+				</div>
+			</div>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class='daily-item'>
+			<div class='daily-title'>
+				<a href="/daily/daily_detail"><h4>中国网络借贷模式大起底</h4></a>
+			</div>
+			<div class='daily-main row'>
+				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
+				<div class='daily-right col-md-10'>
+					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：史晨昱</div>
+					<div class='daily-content'>
+						相对于第三方支付和网络销售，网络借贷因为涉及到借贷关系，成为公众更为关注的互联网金融模式。网络借贷是指民间出资人通过网络平台在收取一定利息的前提下，...
+					</div>
+				</div>
+			</div>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class='daily-item'>
+			<div class='daily-title'>
+				<a href="/daily/daily_detail"><h4>互联网金融是怎么火起来的？</h4></a>
+			</div>
+			<div class='daily-main row'>
+				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
+				<div class='daily-right col-md-10'>
+					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>
+					<div class='daily-content'>
+						今年，是互联网金融的元年。很多人都不知道， 它究意是怎么火起来的。 最近，热炒的是百度的百发，这是百度与华夏共同推出的， 能够带给用户8％的收益，这被看做是推翻余额宝的一个重磅产品。...
+					</div>
+				</div>
+			</div>
+		</div>
+	</li>
+</ul>
+
+{% endblock %}
