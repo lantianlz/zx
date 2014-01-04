@@ -15,6 +15,9 @@
 		<label class="col-sm-2 control-label">当前邮箱</label>
 		<div class="col-sm-5">
 			<p class="form-control-static">{{request.user.email}}</p>
+			{% if not request.user.email_verified %}
+			<span>邮箱未验证，</span><a href="/account/user_settings/verify_email">立即验证邮箱</a>
+			{% endif %}
 		</div>
 	</div>
 	<div class="form-group">

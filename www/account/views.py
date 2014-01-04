@@ -115,6 +115,23 @@ def change_email(request, template_name='account/change_email.html'):
 
 
 @member_required
+def verify_email(request, template_name='account/change_email.html'):
+    code = request.GET.get('code')
+    ub = UserBase()
+    if not code:
+        ub.send_confirm_email(request.user)
+        success_msg = u'验证邮件发送成功，请登陆邮箱操作'
+    else:
+        flag, result = ub.check_email_confim_code(request.user, code)
+        if flag:
+            request.user = result
+            success_msg = u'邮箱验证成功'
+        else:
+            error_msg = result
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@member_required
 def bind_community(request, template_name='account/bind_community.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 

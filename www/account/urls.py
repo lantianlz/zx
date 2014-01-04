@@ -11,6 +11,8 @@ urlpatterns = patterns('www.account.views',
                        url(r'^user_settings/bind_mobile$', 'bind_mobile'),
                        url(r'^user_settings/security_question$', 'security_question'),
                        url(r'^user_settings/bind_community$', 'bind_community'),
+
+                       url(r'^user_settings/verify_email$', 'verify_email'),
                        )
 
 urlpatterns += patterns('www.account.views_oauth',

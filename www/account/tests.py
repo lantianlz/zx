@@ -44,10 +44,8 @@ class SimpleTest(TestCase):
 
 
     def re_test(self):
-        birthay = '2013-12-01'
-        birthay = datetime.datetime.strptime(birthay, '%Y-%m-%d')
-        now = datetime.datetime.now()
-        assert (now + datetime.timedelta(days=100*365)) > birthay > (now - datetime.timedelta(days=100*365))
+        from www.tasks import async_send_email
+        async_send_email('286394973@qq.com', 'test', 'content')
 
 if __name__ == '__main__':
     st = SimpleTest()

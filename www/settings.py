@@ -20,7 +20,12 @@ SERVER_NAME = 'WEB0'
 SERVER_DOMAIN = 'a.com'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
 
-NOTIFICATION_EMAIL = 'lantian-lz@163.com'
+EMAIL_FROM = u'"智选网" <service@zhixuan.com>'
+EMAIL_HOST_USER = 'service@zhixuan.com'
+EMAIL_HOST_PASSWORD = 'zhixuan2013'
+EMAIL_HOST = 'smtp.exmail.qq.com'
+EMAIL_PORT = '25'
+NOTIFICATION_EMAIL = ['lantian-lz@163.com', '286394973@qq.com']   # todo 替换成webteam
 
 if DEBUG:
     DB_USER, DB_PWD, DB_HOST = 'root', '851129', '127.0.0.1'
@@ -60,8 +65,8 @@ DATABASE_ROUTERS = ['www.account.router.AccountRouter', 'www.question.router.Que
 
 TIME_ZONE = 'Asia/Shanghai'
 LANGUAGE_CODE = 'zh-cn'
-DATE_FORMAT='Y-m-d'
-DATETIME_FORMAT='Y-m-d H:M:S'
+DATE_FORMAT = 'Y-m-d'
+DATETIME_FORMAT = 'Y-m-d H:M:S'
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True

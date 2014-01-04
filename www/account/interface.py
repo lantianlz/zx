@@ -6,7 +6,7 @@ from django.db import transaction
 from django.utils.encoding import smart_unicode
 from django.conf import settings
 
-from common import utils, debug, validators
+from common import utils, debug, validators, cache
 from www.account.models import User, Profile, ExternalToken
 
 
@@ -21,6 +21,7 @@ dict_err = {
     107: u'新密码和老密码不能相同',
     108: u'登陆密码验证失败',
     109: u'新邮箱和老邮箱不能相同',
+    110: u'邮箱验证码错误或者已过期，请重新验证',
 
     998: u'参数缺失',
     999: u'系统错误',
@@ -290,15 +291,47 @@ class UserBase(object):
         user_login = self.get_user_login_by_id(user.id)
         user_login.email = email
         user_login.save()
+
+        # todo发送验证邮件
         return True, dict_err.get(000)
 
+    def send_confirm_email(self, user):
+        '''
+        @note: 发送验证邮件
+        '''
+        cache_obj = cache.Cache()
+        key = u'confirm_email_code_%s' % user.id
+        code = cache_obj.get(key)
+        if not code:
+            code = utils.uuid_without_dash()
+            cache_obj.set(key, code, time_out=1800)
+
+        if not cache_obj.get_time_is_locked(key, 60):
+            from www.tasks import async_send_email
+            content = '''
+            请点击链接进行验证，%s/account/user_settings/verify_email?code=%s
+            如果无法点击，请复制到浏览器中
+            ''' % (settings.MAIN_DOMAIN, code)
+            async_send_email(user.email, u'智选网邮箱验证', content)
+
+    def check_email_confim_code(self, user, code):
+        '''
+        @note: 确认邮箱
+        '''
+        if not code:
+            return False, dict_err.get(998)
+
+        cache_obj = cache.Cache()
+        key = u'confirm_email_code_%s' % user.id
+        cache_code = cache_obj.get(key)
+
+        if cache_code != code:
+            return False, dict_err.get(110)
+
+        user.email_verified = True
+        user.save()
+        return True, user
 
 
-
-    # 生成验证码
-
-    # 发送验证邮件
-
-    # 确认邮箱
 
     # 忘记密码
