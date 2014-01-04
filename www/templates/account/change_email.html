@@ -14,7 +14,7 @@
 {% block javascript %}{% endblock %}
 
 {% block settings_main %}
-<form class="form-horizontal" role="form">
+<form class="form-horizontal" role="form" method='post' action="/account/user_settings/change_email">
 	<div class="form-group">
 		<label class="col-sm-2 control-label">当前邮箱</label>
 		<div class="col-sm-5">
@@ -22,15 +22,15 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-2 control-label">登录密码</label>
+		<label class="col-sm-2 control-label">新的邮箱</label>
 		<div class="col-sm-5">
-			<input type="password" class="form-control" placeholder="请输入你的登录密码">
+			<input type="email" name='email' class="form-control" placeholder="请确认你的新邮箱地址" value='{{email}}'>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-2 control-label">新的邮箱</label>
+		<label class="col-sm-2 control-label">登录密码</label>
 		<div class="col-sm-5">
-			<input type="email" class="form-control" placeholder="请确认你的新邮箱地址">
+			<input name='password' type="password" class="form-control" placeholder="请输入你的登录密码">
 		</div>
 	</div>
 	<div class="form-group">

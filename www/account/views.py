@@ -102,6 +102,20 @@ def change_pwd(request, template_name='account/change_pwd.html'):
 
 @member_required
 def change_email(request, template_name='account/change_email.html'):
+    if request.POST:
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        ub = UserBase()
+        flag, result = ub.change_email(request.user, email, password)
+        if not flag:
+            error_msg = result
+        else:
+            success_msg = u'邮箱修改成功'
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@member_required
+def bind_community(request, template_name='account/bind_community.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -112,11 +126,6 @@ def bind_mobile(request, template_name='account/bind_mobile.html'):
 
 @member_required
 def security_question(request, template_name='account/security_question.html'):
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-
-
-@member_required
-def bind_community(request, template_name='account/bind_community.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

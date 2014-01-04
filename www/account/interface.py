@@ -19,6 +19,8 @@ dict_err = {
     105: u'两次输入密码不相同',
     106: u'当前密码错误',
     107: u'新密码和老密码不能相同',
+    108: u'登陆密码验证失败',
+    109: u'新邮箱和老邮箱不能相同',
 
     998: u'参数缺失',
     999: u'系统错误',
@@ -264,6 +266,32 @@ class UserBase(object):
         user_login.save()
         return True, dict_err.get(000)
 
+    def change_email(self, user, email, password):
+        '''
+        @note: 邮箱修改
+        '''
+        if not all((email, password)):
+            return False, dict_err.get(998)
+
+        if not self.check_password(password, user.password):
+            return False, dict_err.get(108)
+
+        if user.email == email:
+            return False, dict_err.get(109)
+
+        try:
+            validators.vemail(email)
+        except Exception, e:
+            return False, smart_unicode(e)
+
+        if user.email != email and self.get_user_by_email(email):
+            return False, dict_err.get(100)
+
+        user_login = self.get_user_login_by_id(user.id)
+        user_login.email = email
+        user_login.save()
+        return True, dict_err.get(000)
+
 
 
 
@@ -273,14 +301,4 @@ class UserBase(object):
 
     # 确认邮箱
 
-    # 登陆
-
-    # 注销
-
-
     # 忘记密码
-
-    # 邮箱修改
-
-
-    # 获取用户
