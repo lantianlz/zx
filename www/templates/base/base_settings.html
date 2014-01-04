@@ -1,6 +1,16 @@
 {% extends "base/base_home.html" %}
 {% block cheader %}
 <style type="text/css">
+.container_content{
+	background-color: white;
+	border-radius: 5px;
+	border: solid 1px lightgray;
+}
+
+.zx-settings-left{
+	padding-top: 10px;
+}
+
 .zx-settings-left .list-group-item{
 	border-left: 0px;
 	border-radius: 0px;
@@ -14,6 +24,15 @@
 .zx-settings-main{
 	min-height: 450px;
 	border-left: 1px solid #ddd;
+	margin-bottom: 20px;
+	/*padding-top: 10px;*/
+}
+
+.zx-settings-main .form-group{
+	padding-top: 20px;
+	margin-right: 10px;
+	border-top: solid 1px #f2f2f2;
+	margin-left: 10px;
 }
 
 .zx-settings-main .form-group:first-child{

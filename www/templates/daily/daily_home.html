@@ -4,8 +4,12 @@
 
 {% block css %}
 <style type="text/css">
-.daily_main{
+.daily-main{
 	margin-top: 30px;
+}
+
+.daily-main-row{
+	padding-bottom: 15px;
 }
 
 .daily-title h4{
@@ -20,6 +24,7 @@
 .daily-content{
 	padding-top: 8px;
 	color: #475058;
+	line-height: 24px;
 }
 </style>
 {% endblock %}
@@ -28,13 +33,13 @@
 {% endblock %}
 
 {% block daily_main %}
-<ul class="list-group daily_main">
+<ul class="list-group daily-main">
 	<li class="list-group-item">
 		<div class='daily-item'>
 			<div class='daily-title'>
 				<a href="/daily/daily_detail"><h4>支付是互联网金融的基础工具</h4></a>
 			</div>
-			<div class='daily-main row'>
+			<div class='daily-main-row row'>
 				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
 				<div class='daily-right col-md-10'>
 					<div class='daily-profile'>时间：2013-11-19  来源：有利网   作者：中华浔</div>
@@ -50,7 +55,7 @@
 			<div class='daily-title'>
 				<a href="/daily/daily_detail"><h4>中国网络借贷模式大起底</h4></a>
 			</div>
-			<div class='daily-main row'>
+			<div class='daily-main-row row'>
 				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
 				<div class='daily-right col-md-10'>
 					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：史晨昱</div>
@@ -66,7 +71,7 @@
 			<div class='daily-title'>
 				<a href="/daily/daily_detail"><h4>互联网金融是怎么火起来的？</h4></a>
 			</div>
-			<div class='daily-main row'>
+			<div class='daily-main-row row'>
 				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
 				<div class='daily-right col-md-10'>
 					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>

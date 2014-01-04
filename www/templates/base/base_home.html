@@ -4,7 +4,16 @@
 <style type="text/css">
 body {background-color: #F0F4F7}
 .zx-nav .un-login-user a{
-    text-decoration: none;
+    /*text-decoration: none;*/
+}
+
+.un-login-user .regist{
+    color: #fc8936;
+    margin-right: 10px;
+}
+
+.un-login-user .login{
+    color: #428bca;
 }
 </style>
 {% block cheader %}{% endblock %}
@@ -53,8 +62,8 @@ body {background-color: #F0F4F7}
         </ul>
         {% else %}
         <div class="un-login-user">
-            <a href="/regist">免费注册</a>
-            <a href="/login">立即登录</a>
+            <a class='regist' href="/regist">免费注册</a>
+            <a class='login' href="/login">立即登录</a>
         </div>
         {% endif %}
     </div>

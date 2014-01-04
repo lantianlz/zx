@@ -1,10 +1,21 @@
 {% extends "base/base_home.html" %}
 {% block cheader %}
 <style type="text/css">
+
+.container_content{
+	background-color: white;
+	border-radius: 5px;
+	border: solid 1px lightgray;
+}
+
 .zx-static-left .list-group-item{
 	border-left: 0px;
 	border-radius: 0px;
 	border-right: 0px;
+}
+
+.zx-static-left{
+	padding-top: 10px;
 }
 
 .zx-static-left .list-group-item:first-child{
@@ -14,6 +25,9 @@
 .zx-static-main{
 	min-height: 450px;
 	border-left: 1px solid #ddd;
+	padding-right: 25px;
+	margin-bottom: 20px;
+	padding-top: 10px;
 }
 </style>
 {% block css %}{% endblock %}
