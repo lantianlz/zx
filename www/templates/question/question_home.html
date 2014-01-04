@@ -1,18 +1,32 @@
 {% extends "base/base_question.html" %}
 
 {% block title %}问答首页{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.nav-tabs a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
 
+    $('#ul_question_list').hide('fast').show('fast');
+  })
+});
+</script>
+{% endblock %}
 {% block question_main%}
     <!--问题列表开始-->
     <div class="question-list">
         <!--选项卡开始-->
         <ul class="nav nav-tabs">
           <li class="active"><a href="#">所有问题</a></li>
-          <li><a href="#">待回答问题<span class="badge pull-right">42</span></a></li>
+          <li><a href="#">大盘<span class="badge pull-right">16</span></a></li>
+          <li><a href="#">个股<span class="badge pull-right">26</span></a></li>
+          <li><a href="#">债券<span class="badge pull-right">19</span></a></li>
+          <li><a href="#">期权<span class="badge pull-right">8</span></a></li>
         </ul>
         <!--选项卡结束-->
         <!--列表开始-->
-        <ul class="list-group">
+        <ul class="list-group" id="ul_question_list">
           <li class="list-group-item">
             <div class="item-container">
               <div class="item-question-title">

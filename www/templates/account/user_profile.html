@@ -2,6 +2,21 @@
 
 {% block title %}问答详细{% endblock %}
 
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.user-profile-left a').bind('click', function(e){
+		e.preventDefault();
+		$('.user-profile-left a').removeClass('active');
+
+		$(this).addClass('active');
+
+		$('.user-profile .list-questions').hide('fast').show('fast');
+	})
+});
+</script>
+{% endblock %}
+
 {% block question_main%}
 <div class="user-profile row">
 	<div class="user-profile-left col-md-3">
