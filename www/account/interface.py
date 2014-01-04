@@ -16,6 +16,9 @@ dict_err = {
     102: u'手机号重复',
     103: u'被逮到了，无效的性别值',
     104: u'这么奇葩的生日怎么可能',
+    105: u'两次输入密码不相同',
+    106: u'当前密码错误',
+    107: u'新密码和老密码不能相同',
 
     998: u'参数缺失',
     999: u'系统错误',
@@ -31,6 +34,7 @@ class UserBase(object):
         self.hasher = password_hashers.MD5PasswordHasher()
 
     def set_password(self, raw_password):
+        assert raw_password
         self.password = self.hasher.make_password(raw_password)
         return self.password
 
@@ -40,6 +44,13 @@ class UserBase(object):
     def set_profile_login_att(self, profile, user):
         for key in ['email', 'mobilenumber', 'username', 'last_login', 'password']:
             setattr(profile, key, getattr(user, key))
+
+    def get_user_login_by_id(self, id):
+        try:
+            user = User.objects.get(id=id)
+            return user
+        except User.DoesNotExist:
+            return None
 
     def get_user_by_id(self, id):
         try:
@@ -227,8 +238,32 @@ class UserBase(object):
         user.birthday = birthday
         user.save()
 
-        # 触发时间，比如清除缓存等
+        # todo:触发事件，比如清除缓存等
         return True, user
+
+    def change_pwd(self, user, old_password, new_password_1, new_password_2):
+        '''
+        @note: 密码修改
+        '''
+        if not all((old_password, new_password_1, new_password_2)):
+            return False, dict_err.get(998)
+
+        if new_password_1 != new_password_2:
+            return False, dict_err.get(105)
+        if not self.check_password(old_password, user.password):
+            return False, dict_err.get(106)
+        if old_password == new_password_1:
+            return False, dict_err.get(107)
+        try:
+            validators.vpassword(new_password_1)
+        except Exception, e:
+            return False, smart_unicode(e)
+
+        user_login = self.get_user_login_by_id(user.id)
+        user_login.password = self.set_password(new_password_1)
+        user_login.save()
+        return True, dict_err.get(000)
+
 
 
 
@@ -242,7 +277,6 @@ class UserBase(object):
 
     # 注销
 
-    # 密码修改
 
     # 忘记密码
 

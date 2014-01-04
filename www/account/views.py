@@ -70,7 +70,7 @@ def user_profile(request, template_name='account/user_profile.html'):
 
 
 @member_required
-def user_settings(request, template_name='account/user_settings.html'):
+def user_settings(request, template_name='account/change_profile.html'):
     if request.POST:
         nick = request.POST.get('nick')
         gender = request.POST.get('gender')
@@ -87,6 +87,16 @@ def user_settings(request, template_name='account/user_settings.html'):
 
 @member_required
 def change_pwd(request, template_name='account/change_pwd.html'):
+    if request.POST:
+        old_password = request.POST.get('old_password')
+        new_password_1 = request.POST.get('new_password_1')
+        new_password_2 = request.POST.get('new_password_2')
+        ub = UserBase()
+        flag, result = ub.change_pwd(request.user, old_password, new_password_1, new_password_2)
+        if not flag:
+            error_msg = result
+        else:
+            success_msg = u'密码修改成功'
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
