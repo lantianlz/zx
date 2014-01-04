@@ -2,6 +2,78 @@
 
 {% block title %}问答详细{% endblock %}
 
+{% block css %}
+<style type="text/css">
+.zx-container-main .user-profile{
+    padding-top: 25px;
+    float: left;
+    width: 100%;
+}
+
+.zx-container-main .user-profile .big-avatar img{
+    width: 110px;
+    height: 110px;
+}
+
+.zx-container-main .user-profile-left{
+    min-height: 450px;
+    margin-bottom: 30px;
+    padding: 0 0 0 15px;
+}
+
+.zx-container-main .user-profile-right{
+    border-left: solid 1px lightgray;
+    margin-bottom: 25px;
+}
+
+.zx-container-main .user-profile-left .list-group{
+    padding-top: 30px;
+}
+
+.zx-container-main .user-profile-left .list-group .active{
+    background-color: lightgray;
+    border-color: lightgray;
+    border-radius: 0px;
+}
+
+.zx-container-main .user-profile-left .list-group-item{
+    border: 0;
+}
+
+.zx-container-main .user-profile-right-top .list-group{
+    padding-top: 10px;
+}
+
+.zx-container-main .user-profile-right-top .list-group-item{
+    border-top: solid 1px lightgray;
+    border-left: 0px; 
+    border-right: 0px;
+    border-bottom: 0px;
+    padding: 20px 15px;
+}
+
+.zx-container-main .user-profile-right-top .list-group-item:first-child{
+    border-top: 0px;
+}
+
+.zx-container-main .user-profile-right-top .list-group-item:last-child{
+    border-bottom: solid 1px lightgray;
+}
+
+.zx-container-main .list-questions .list-group-item{
+    border: 0;
+}
+
+.zx-container-main .list-questions a{
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+</style>
+{% endblock %}
+
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){

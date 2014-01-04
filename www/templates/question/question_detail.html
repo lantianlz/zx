@@ -29,12 +29,87 @@ $(document).ready(function(){
     });
   });
 
+  // 导航事件
+  $(document).ready(function(){
+    $('.replaies .nav-tabs a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+
+      $('#ul_replaies').hide('fast').show('fast');
+    })
+  });
+
 });
 </script>
 {% endblock %}
 
 {% block css %}
 <style type="text/css">
+.zx-container-main .question-entry{
+    float: left;
+    padding-top: 25px;
+    width: 100%;
+}
+
+.zx-container-main .question-entry .topic-title{
+    
+}
+
+.zx-container-main .question-entry .topic-content{
+    padding-top: 25px;
+    font-size: 13px;
+    color: #475058;
+}
+
+.zx-container-main .question-entry .topic-footer{
+    padding-top: 25px;
+}
+
+.zx-container-main .question-entry .question-date{
+    float: right;
+    font-size: 12px;
+    color: #475058;
+}
+
+.zx-container-main .replaies{
+    float: left;
+    width: 100%;
+    padding-top: 25px;
+}
+
+.zx-container-main .replaies .list-group-item:first-child{
+    border-top: 0px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 0px;
+}
+
+.zx-container-main .replay-header{
+    padding: 15px 5px 5px 5px;
+}
+
+
+.zx-container-main .replay-header .user-name a{
+    color: #224e73;
+    font-size: 12px;
+}
+
+.zx-container-main .replay-content{
+    font-size: 13px;
+    color: #475058;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    line-height: 25px;
+}
+
+.zx-container-main .replay-main .vote{
+    padding-left: 30px;
+}
+
+.zx-container-main .replay-main .vote .btn-group-vertical{
+    width: 90%;
+}
+
+
 .answer-title{
   border-bottom: solid 1px #e6e6e6;
 }
@@ -110,7 +185,7 @@ $(document).ready(function(){
         <a href="#">得票最多</a>
       </li>
     </ul>
-    <ul class="list-group">
+    <ul class="list-group" id="ul_replaies">
       <li class="list-group-item">
         <div class="replay-header">
           <a href="#">

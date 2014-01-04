@@ -23,8 +23,8 @@ body {background-color: #F0F4F7}
             <li {% if '/question' in request.path %} class="active" {% endif %}>
                 <a href="/question/">股票问答</a>
             </li>
-            <li>
-                <a href="#">每日精华</a>
+            <li {% if '/daily' in request.path %} class="active" {% endif %}>
+                <a href="/daily/">每日精华</a>
             </li>
             <li>
                 <a href="#">专题推荐</a>
