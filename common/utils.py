@@ -7,10 +7,12 @@
 @date: 2013-12-09
 """
 
+import re
+
 
 def uuid_without_dash():
-	import uuid
-	return str(uuid.uuid1()).replace('-', '')
+    import uuid
+    return str(uuid.uuid1()).replace('-', '')
 
 
 def get_clientip(request):
@@ -89,3 +91,36 @@ def get_next_url(request):
                 # referrer的query参数会丢失
                 next_url = referrer + '?' + list(urlparse(referrer))[4]
     return next_url or '/home'
+
+
+def filter_script(htmlstr):
+    '''
+    @note: html内容过滤 去掉script,link,外联style,标签上面的事件，标签上面样式含expression,javascript
+    '''
+    # 先过滤CDATA
+    re_cdata = re.compile('//<!\[CDATA\[[^>]*//\]\]>', re.I)  # 匹配CDATA
+    re_script = re.compile('<\s*script[^>]*>.*<\s*/\s*script\s*>', re.I)  # Script
+    re_style = re.compile('<\s*style[^>]*>[^<]*<\s*/\s*style\s*>', re.I)  # style
+    re_link = re.compile('<\s*link[^>]*>', re.I)  # 外联link
+    re_comment = re.compile('<!--[^>]*-->')  # HTML注释
+
+    # 过滤html元素节点里面的 expression,javascript,document,cookie,on
+    # re_expression = re.compile('<[^>]*(expression|javascript|document|cookie|\s+on)+[^>]*>[^<]*<\s*/\s*[^>]*\s*>', re.I)
+
+    # 去掉多余的空行
+    blank_line = re.compile('\n+')
+    s = blank_line.sub('\n', htmlstr)
+
+    s = re_cdata.sub('', s)  # 去掉CDATA
+    s = re_script.sub('', s)  # 去掉SCRIPT
+    s = re_style.sub('', s)  # 去掉style
+    s = re_link.sub('', s)  # 外联link
+    s = re_comment.sub('', s)  # 去掉HTML注释
+    # s = re_expression.sub('', s)  # 去掉样式中expression表达式
+
+    re_expression = re.compile('<[^>]*( on)[^>]*>', re.I)
+    s = re_expression.sub('', s)  # 去掉html带on事件的
+
+    # 去掉多余的空行
+    s = blank_line.sub('\n', s)
+    return s

@@ -16,7 +16,7 @@ class Question(models.Model):
     zan_num = models.IntegerField(default=0)
     ip = models.CharField(max_length=32, null=True)
     state = models.BooleanField(default=True)
-    create_time = models.DateTimeField(db_index=True)
+    create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
         ordering = ["-sort_num", "-last_answer_time"]

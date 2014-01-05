@@ -49,7 +49,7 @@ $(document).ready(function(){
 </div>
 
 <div class="ask-main">
-	<form role="form">
+	<form role="form" method='post' action='/question/ask_question'>
 		<div class="form-group">
 			<select name="question_type" class="form-control">
 				<option value='0'>请选择问题类型</option>
@@ -58,9 +58,9 @@ $(document).ready(function(){
 		</div>
 		<div class="blank10"></div>
 		<div class="form-group">
-			<input type="text" class="form-control input-lg" name="question_title" placeholder="你有什么想问的？"></div>
+			<input type="text" class="form-control input-lg" name="question_title" placeholder="你有什么想问的？" value='{{question_title}}'></div>
 		<div class="form-group">
-			<textarea name="question_content" class="form-control" rows="6"></textarea>
+			<textarea name="question_content" class="form-control" rows="6">{{question_content}}</textarea>
 		</div>
 		<div class="form-group pull-right">
 			<button type="submit" class="btn btn-primary">提交</button>
