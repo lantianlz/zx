@@ -13,7 +13,7 @@ from www.misc.decorators import member_required
 
 
 #@member_required
-def question_home(request, template_name='question/question_home.html'):
+def question_home(request, type=0, template_name='question/question_home.html'):
     #todo 更新最后活跃时间
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 

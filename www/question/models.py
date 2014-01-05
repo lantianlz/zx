@@ -39,9 +39,10 @@ class Answer(models.Model):
 
 class QuestionType(models.Model):
     name = models.CharField(max_length=32, unique=True)
-    value = models.CharField(max_length=16)
+    value = models.CharField(max_length=16, unique=True)
+    domain = models.CharField(max_length=16, unique=True)
     sort_num = models.IntegerField(default=-999, db_index=True)
     state = models.BooleanField(default=True)
 
     def get_url(self):
-        return u'/question/type/%s' % self.value
+        return u'/question/type/%s' % self.domain or self.value

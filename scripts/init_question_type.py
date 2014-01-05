@@ -13,12 +13,13 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 
 def init_question_type():
-	from www.question.models import QuestionType
-	datas = [(1, u'大盘'), (2, u'个股'), (2, u'债券'), (2, u'期权')]
-	for data in datas:
-		QuestionType.objects.create(name=data[1], value=data[0])
-	print 'ok'
+    from www.question.models import QuestionType
+    QuestionType.objects.all().delete()
+    datas = [(1, u'大盘', 'dapan'), (2, u'个股', 'gegu'), (3, u'债券', 'zhaiquan'), (4, u'期权', 'qiquan')]
+    for data in datas:
+        QuestionType.objects.create(name=data[1], value=data[0], domain=data[2])
+    print 'ok'
 
 
 if __name__ == '__main__':
-	init_question_type()
+    init_question_type()
