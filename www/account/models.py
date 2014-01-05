@@ -2,6 +2,7 @@
 import datetime
 
 from django.db import models
+from django.conf import settings
 
 import const
 
@@ -51,6 +52,12 @@ class Profile(models.Model):
     ip = models.CharField(verbose_name=u'登陆ip', max_length=32, null=True)
     source = models.IntegerField(default=0, choices=source_choices)
     create_time = models.DateTimeField(verbose_name=u'创建时间', db_index=True, default=datetime.datetime.now)
+
+    def get_url(self):
+        return u'/account/user_profile/%s' % self.id
+
+    def get_avatar(self):
+        return self.avatar or ('%s/img/common/default.png' % settings.MEDIA_URL)
 
 
 class UserChangeLog(models.Model):

@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import utils
-from www.account.interface import UserBase
+from www.account import interface
 from www.misc.decorators import member_required
 
 
@@ -45,7 +45,7 @@ def regist(request, template_name='account/regist.html'):
     nick = request.POST.get('nick', '').strip()
     password = request.POST.get('password', '').strip()
     if request.POST:
-        ub = UserBase()
+        ub = interface.UserBase()
         flag, result = ub.regist_user(email, nick, password, ip=utils.get_clientip(request))
         if flag:
             user = auth.authenticate(username=email, password=password)
@@ -75,7 +75,7 @@ def user_settings(request, template_name='account/change_profile.html'):
         nick = request.POST.get('nick')
         gender = request.POST.get('gender')
         birthday = request.POST.get('birthday')
-        ub = UserBase()
+        ub = interface.UserBase()
         flag, result = ub.change_profile(request.user, nick, gender, birthday)
         if not flag:
             error_msg = result
@@ -91,7 +91,7 @@ def change_pwd(request, template_name='account/change_pwd.html'):
         old_password = request.POST.get('old_password')
         new_password_1 = request.POST.get('new_password_1')
         new_password_2 = request.POST.get('new_password_2')
-        ub = UserBase()
+        ub = interface.UserBase()
         flag, result = ub.change_pwd(request.user, old_password, new_password_1, new_password_2)
         if not flag:
             error_msg = result
@@ -105,7 +105,7 @@ def change_email(request, template_name='account/change_email.html'):
     if request.POST:
         email = request.POST.get('email')
         password = request.POST.get('password')
-        ub = UserBase()
+        ub = interface.UserBase()
         flag, result = ub.change_email(request.user, email, password)
         if not flag:
             error_msg = result
@@ -117,7 +117,7 @@ def change_email(request, template_name='account/change_email.html'):
 @member_required
 def verify_email(request, template_name='account/change_email.html'):
     code = request.GET.get('code')
-    ub = UserBase()
+    ub = interface.UserBase()
     if not code:
         ub.send_confirm_email(request.user)
         success_msg = u'验证邮件发送成功，请登陆邮箱操作'
