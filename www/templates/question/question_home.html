@@ -1,5 +1,5 @@
 {% extends "base/base_question.html" %}
-
+{% load custom_tags %}
 {% block title %}问答首页{% endblock %}
 
 {% block css %}
@@ -96,14 +96,14 @@
 
 {% block javascript %}
 <script type="text/javascript">
-$(document).ready(function(){
-  $('.nav-tabs a').click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
+// $(document).ready(function(){
+//   $('.nav-tabs a').click(function (e) {
+//     e.preventDefault();
+//     $(this).tab('show');
 
-    $('#ul_question_list').hide('fast').show('fast');
-  })
-});
+//     $('#ul_question_list').hide('fast').show('fast');
+//   })
+// });
 </script>
 {% endblock %}
 {% block question_main%}
@@ -111,11 +111,8 @@ $(document).ready(function(){
     <div class="question-list">
         <!--选项卡开始-->
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#">所有问题</a></li>
-          <li><a href="#">大盘<span class="badge pull-right">16</span></a></li>
-          <li><a href="#">个股<span class="badge pull-right">26</span></a></li>
-          <li><a href="#">债券<span class="badge pull-right">19</span></a></li>
-          <li><a href="#">期权<span class="badge pull-right">8</span></a></li>
+          <li class="active"><a href="/question">全部</a></li>
+          {% question_type_nav_display %}
         </ul>
         <!--选项卡结束-->
         <!--列表开始-->

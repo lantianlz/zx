@@ -8,6 +8,7 @@ class Question(models.Model):
     title = models.CharField(max_length=128)
     content = models.TextField()
 
+    question_type = models.ForeignKey('QuestionType')
     views_count = models.IntegerField(default=0)
     answer_count = models.IntegerField(default=0)
     last_answer_time = models.DateTimeField(db_index=True)
@@ -34,3 +35,13 @@ class Answer(models.Model):
 
     class Meta:
         ordering = ["-sort_num", "-id"]
+
+
+class QuestionType(models.Model):
+    name = models.CharField(max_length=32, unique=True)
+    value = models.CharField(max_length=16)
+    sort_num = models.IntegerField(default=-999, db_index=True)
+    state = models.BooleanField(default=True)
+
+    def get_url(self):
+        return u'/question/type/%s' % self.value

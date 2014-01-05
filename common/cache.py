@@ -6,7 +6,8 @@ from cPickle import dumps, loads
 
 CACHE_TMP = ('127.0.0.1', 6379, 5, 'tmp')
 CACHE_STATIC = ('127.0.0.1', 6379, 6, 'static')
-CACHE_SESSION = ('127.0.0.1', 6379, 7, 'session')
+CACHE_USER = ('127.0.0.1', 6379, 7, 'user')
+CACHE_SESSION = ('127.0.0.1', 6379, 8, 'session')
 
 CONNECTIONS = {}
 

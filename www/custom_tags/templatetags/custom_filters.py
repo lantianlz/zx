@@ -31,13 +31,39 @@ def initial_letter_filter(text, autoescape=None):
 initial_letter_filter.needs_autoescape = False
 
 
+# def str_display(str_in, maxlength):
+#     """
+#     @attention: 截断输入字符串,超过最大长度加...
+#     """
+#     maxlength = int(maxlength)
+#     return (str_in[:maxlength] + u'...') if str_in.__len__() > maxlength else str_in
 @register.filter
-def str_display(str_in, maxlength):
+def str_display(str_in, str_parms):
     """
-    @attention: 截断输入字符串,超过最大长度加...
+    @attention: 截断输入字符串,超过最大长度加... 中文算2个字符
+    @note: maxlength最长字符数
     """
-    maxlength = int(maxlength)
-    return (str_in[:maxlength] + u'...') if str_in.__len__() > maxlength else str_in
+    from django.utils.encoding import smart_unicode
+    str_in = smart_unicode(str_in)
+    parms = str(str_parms).split(':')
+    if len(parms) > 1:
+        suffix = parms[1]
+    else:
+        suffix = u'...'
+    maxlength = int(parms[0]) * 2
+    str_out = []
+    str_count = 0
+    for c in str_in:
+        if ord(c) > 127:
+            str_count += 2
+        else:
+            str_count += 1
+        if str_count > maxlength:
+            break
+        str_out.append(c)
+    if maxlength < str_count:
+        str_out.append(suffix)
+    return u''.join(str_out)
 
 
 def get_page_url(url, page=1):
@@ -125,69 +151,9 @@ def paging(value, request, get_page_onclick=None, page_onclick_params={}):
 
 
 @register.filter
-def format_minutes(value, arg):
-    if arg == "minutes":
-        return value % 60
-    elif arg == "hour":
-        return value / 60
-    elif arg == "all":
-        if value / 60 < 10:
-            hour = "0" + str(value / 60)
-        else:
-            hour = str(value / 60)
-        if value % 60 < 10:
-            minutes = "0" + str(value % 60)
-        else:
-            minutes = str(value % 60)
-        return ":".join([hour, minutes])
-
-
-@register.filter
-def format_iso_date(value, arg):
-    year, month, day = value.split("-")
-    if arg == "year":
-        return year
-    elif arg == "month":
-        return month
-    else:
-        return day
-
-
-@register.filter
-def split_datetime(value, arg):
-    date, time = value.split("T")
-    if arg == "date":
-        return date
-    elif arg == "time":
-        return date + ' ' + time
-    elif arg == "hour":
-        return time.split(":")[0]
-    elif arg == "minute":
-        return time.split(":")[1]
-    elif arg == "second":
-        return time.split(":")[2]
-
-
-@register.filter
-def division(value, arg):
-    return value / float(arg)
-
-
-@register.filter
 def number_format(value):
     chinese_number = [u"零", u"一", u"二", u"三", u"四", u"五", u"六", u"七"]
     return chinese_number[value]
-
-
-@register.filter
-def format_today_yes(value):
-    from datetime import datetime, timedelta
-    today = datetime.now().date()
-    if value == today:
-        return u"今天"
-    elif value == today - timedelta(days=1):
-        return u"昨天"
-    return value
 
 
 @register.filter
@@ -209,17 +175,6 @@ def change_http_data(content):
     return content
 
 
-@register.filter
-def custom_devide(value, arg=1):
-    '''
-    @param arg:arg not allow 0 
-    '''
-    try:
-        return value * 1.0 / arg
-    except:
-        return None
-
-
 # 格式化时间输出
-from main.lib.utils import time_format
+from common.utils import time_format
 register.filter('time_format', time_format)

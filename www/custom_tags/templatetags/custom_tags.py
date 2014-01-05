@@ -7,6 +7,8 @@ import datetime
 from django import template
 register = template.Library()
 
+from django.shortcuts import render_to_response
+
 
 @register.simple_tag
 def current_time(format_string):
@@ -26,3 +28,24 @@ def import_variable(context, name, value, json_flag=False):
     value = smart_str(value)
     context[name] = value if not json_flag else json.loads(value)
     return ''
+
+
+@register.simple_tag(takes_context=True)
+def question_type_option_display(context):
+    """
+    @note: 问答类型options方式展现
+    """
+    from www.question.interface import QuestionTypeBase
+    aqts = QuestionTypeBase().get_all_question_type()
+
+    return render_to_response('question/_question_type_option_display.html', locals()).content
+
+
+@register.simple_tag(takes_context=True)
+def question_type_nav_display(context):
+    """
+    @note: 问题类型导航方式展现
+    """
+    from www.question.interface import QuestionTypeBase
+    aqts = QuestionTypeBase().get_all_question_type()
+    return render_to_response('question/_question_type_nav_display.html', locals()).content

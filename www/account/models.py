@@ -86,3 +86,12 @@ class ExternalToken(models.Model):
 
     class Meta:
         unique_together = [("source", "access_token"), ("source", "external_user_id")]
+
+
+class BlackList(models.Model):
+    type_choices = ((0, u'全部'), (1, u'禁止登陆'), (2, u'禁止发帖'))
+    user_id = models.CharField(max_length=32, db_index=True)
+    type = models.IntegerField(default=0, choices=type_choices)
+    state = models.BooleanField(default=True)
+    expire_time = models.DateTimeField()
+    create_time = models.DateTimeField(auto_now_add=True)
