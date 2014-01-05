@@ -112,7 +112,7 @@
 <div class="question-list">
     <!--选项卡开始-->
     <ul class="nav nav-tabs">
-        <li class="active">
+        <li {% if not question_type %} class="active"{% endif %}>
             <a href="/question">全部</a>
         </li>
         {% question_type_nav_display %}

@@ -8,6 +8,7 @@ from django import template
 register = template.Library()
 
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 
 @register.simple_tag
@@ -38,7 +39,8 @@ def question_type_option_display(context):
     from www.question.interface import QuestionTypeBase
     aqts = QuestionTypeBase().get_all_question_type()
 
-    return render_to_response('question/_question_type_option_display.html', locals()).content
+    return render_to_response('question/_question_type_option_display.html', locals(),
+                              context_instance=context).content
 
 
 @register.simple_tag(takes_context=True)
@@ -48,4 +50,5 @@ def question_type_nav_display(context):
     """
     from www.question.interface import QuestionTypeBase
     aqts = QuestionTypeBase().get_all_question_type()
-    return render_to_response('question/_question_type_nav_display.html', locals()).content
+    return render_to_response('question/_question_type_nav_display.html', locals(),
+                              context_instance=context).content
