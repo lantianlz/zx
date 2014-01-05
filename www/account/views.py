@@ -58,6 +58,10 @@ def regist(request, template_name='account/regist.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+def reset_password(request, template_name='account/reset_password.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    
+
 @member_required
 def home(request, template_name='account/home.html'):
     # todo 更新最后活跃时间
