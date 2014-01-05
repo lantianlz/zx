@@ -27,8 +27,7 @@ class Question(models.Model):
         maxlength = 100
         return (self.content[:maxlength] + u'...') if self.content.__len__() > maxlength else self.content
 
-    @property
-    def user(self):
+    def get_user(self):
         from www.account.interface import UserBase
         user = UserBase().get_user_by_id(self.user_id)
         return user

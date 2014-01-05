@@ -16,6 +16,8 @@ from www.misc.decorators import member_required
 def question_home(request, question_type=0, template_name='question/question_home.html'):
     qb = interface.QuestionBase()
     questions = qb.get_questions(question_type_domain=question_type)
+
+    questions = qb.format_quesitons(questions)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

@@ -27,6 +27,11 @@ class QuestionBase(object):
     def __init__(self):
         pass
 
+    def format_quesitons(self, questions):
+        for question in questions:
+            question.user = question.get_user()
+        return questions
+
     def validate_title(self, title):
         if len(title) < 10:
             return False, dict_err.get(100)
