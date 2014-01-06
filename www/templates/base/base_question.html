@@ -123,6 +123,19 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
 .zx-container-right .intro .item:first-child{
     border-left: 0;
 }
+
+.statistics .title{
+    border-bottom: solid 1px #ddd;
+    padding: 5px;
+}
+
+.statistics .main .col-md-4{
+    padding-top: 5px;
+}
+
+.statistics .main .col-md-8{
+    padding-top: 5px;
+}
 </style>
 {% block javascript %}{% endblock %}
 {% block css %}{% endblock %}
@@ -149,10 +162,10 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
 <div class="zx-container-right col-md-4">
     <div class="ask-question well">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <a href="/question/ask_question"><button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button></a>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                 <div>
                     <span class="text-danger">125895</span>
                     个问题
@@ -161,7 +174,7 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
                     <span class="text-danger">56325</span>
                     人参与
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -174,6 +187,17 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
         <div class="row">
             <div class="col-md-4 item"><a href="/account/user_profile">我的提问<br/>122</a></div>
             <div class="col-md-8 item"><a href="/account/user_profile">我的回答<br/>96</a></div>
+        </div>
+    </div>
+
+    <div class="statistics well">
+        <div class="title">
+            社区统计信息
+        </div>
+        <div class="main row">
+            <div class="col-md-4 text-right">注册会员</div><div class="col-md-8"><span class="text-danger">12659</span></div>
+            <div class="col-md-4 text-right">提问数量</div><div class="col-md-8"><span class="text-danger">269862</span></div>
+            <div class="col-md-4 text-right">回复数量</div><div class="col-md-8"><span class="text-danger">456584</span></div>
         </div>
     </div>
 

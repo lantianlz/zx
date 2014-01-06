@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<style>
+.text-right{
+    text-align: right;
+}
+
+.text-danger{
+    color: red;
+}
+
+.part{
+    text-indent: 32px;
+}
+
+.container{
+    margin: 0 auto;
+    width: 600px;
+    /*background-color: red;*/
+    padding: 10px;
+}
+
+.header{
+    height: 60px;
+    width: 100%;
+}
+
+.header .logo{
+    width: 30%;
+}
+
+.footer{
+    height: 60px;
+    width: 100%;
+}
+
+.main{
+    min-height: 200px;
+    width: 100%;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo"><h2>智选网</h2></div>
+        <hr>
+    </div>
+    
+    <div class="main">
+        <p>
+            <strong>亲爱的智选网用户：</strong>
+        </p>
+        {% block email_body %}
+        <p class="part">
+            系统检测到您的网易通行证帐号(286394973@qq.com)于2014-01-06 10:49在黑龙江登录了网易充值中心，如不是您本人操作，请尽快修改密码，或登录帐号修复中心提交资料进行人工修复帐号（修改帐号安全信息、解绑密保）。 您可以登录网易通行证查看最近登录记录，并确定此次登录是否您本人登录，如果有问题请反馈给我们。
+        </p>
+        <p>
+            <span class="text-danger">什么情况下会收到此提醒邮件？</span>
+            <br/>
+            1.您的帐号已经被他人盗取，并通过其他IP地址登录；
+            <br/>
+            2.您正在使用的IP时常发生变动，例如您使用了移动网络；
+            <br/>
+            3.您的网络服务提供商有多个网络出口，并且会经常变动。
+        </p>
+        {% endblock %}
+    </div>
+    
+    <div class="footer">
+        <hr>
+        <p class="text-right">
+            {% block email_date %} 2014-01-01 {% endblock %}
+            <br/>
+            （本邮件由系统自动发出，请勿回复。）
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
