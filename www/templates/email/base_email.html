@@ -53,7 +53,7 @@
         <p>
             <strong>亲爱的智选网用户：</strong>
         </p>
-        {{ email_body|safe }}
+        {% block email_body %}{% endblock %}
     </div>
     
     <div class="footer">

@@ -124,3 +124,17 @@ def filter_script(htmlstr):
     # 去掉多余的空行
     s = blank_line.sub('\n', s)
     return s
+
+
+def render_template(template_path='', context={}):
+    '''
+    @note: 渲染模板
+    '''
+    from django import template 
+
+    if not template_path:
+        return ''
+
+    t = template.loader.get_template(template_path)
+    c = template.Context(context)
+    return t.render(c)
