@@ -2,6 +2,7 @@
 
 import datetime
 import time
+from django import template
 from django.db import transaction
 from django.utils.encoding import smart_unicode
 from django.conf import settings
@@ -308,11 +309,25 @@ class UserBase(object):
 
         if not cache_obj.get_time_is_locked(key, 60):
             from www.tasks import async_send_email
-            content = '''
-            请点击链接进行验证，%s/account/user_settings/verify_email?code=%s
-            如果无法点击，请复制到浏览器中
-            ''' % (settings.MAIN_DOMAIN, code)
-            async_send_email(user.email, u'智选网邮箱验证', content)
+            content = u'''
+            <p class="part">
+                为保证您帐号的安全，我们将验证您的邮箱。请点击下方的链接：
+                <br/>
+                <br/>
+                <a href="%s/account/user_settings/verify_email?code=%s">验证邮箱</a>
+                <br/>
+                <br/>
+                如果上方链接无法点击，请手动将下方的文本复制到浏览器中。
+                <br/>
+                <br/>
+                %s/account/user_settings/verify_email?code=%s
+            </p>
+            ''' % (settings.MAIN_DOMAIN, code, settings.MAIN_DOMAIN, code)
+
+            t = template.loader.get_template('base/base_email.html')
+            c = template.Context({'email_body': content, 'email_date': datetime.datetime.now().strftime('%Y-%m-%d')})
+
+            async_send_email(user.email, u'智选网邮箱验证', t.render(c), 'html')
 
     def check_email_confim_code(self, user, code):
         '''
