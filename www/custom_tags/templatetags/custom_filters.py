@@ -6,6 +6,7 @@
 
 import re
 from django import template
+from django.shortcuts import render_to_response
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django.core.paginator import Page
@@ -125,29 +126,34 @@ def paging(value, request, get_page_onclick=None, page_onclick_params={}):
             page_items.append('...')
         page_items.append(total_page)
 
-    s, s_pre, s_next = '', '', ''
-    if page > 1:
-        if not get_page_onclick:
-            s_pre = u'<li title="上一页"><a href="%s">&laquo;</a></li>' % (get_page_url(url, page - 1))
-        else:
-            s_pre = u'<li title="上一页"><a href="javascript:void(0);" onclick="%s">&laquo;</a></li>' % (get_page_onclick(page - 1, **page_onclick_params))
-    if page < total_page:
-        if not get_page_onclick:
-            s_next = u'<li title="下一页"><a href="%s">&raquo;</a></li>' % (get_page_url(url, page + 1))
-        else:
-            s_next = u'<li title="下一页"><a href="javascript:void(0);" onclick="%s">&raquo;</a></li>' % (get_page_onclick(page + 1, **page_onclick_params))
+    pre_url = get_page_url(url, page - 1)
+    next_url = get_page_url(url, page + 1)
+    page_items_with_url = [(p, get_page_url(url, p) if p != '...' else '') for p in page_items]
+    return mark_safe(render_to_response('include/_paging.html', locals()).content)
 
-    for p in page_items:
-        if p == page:
-            s += u'<li class="active"><a>%s</a></li>' % (p)
-        elif p == '...':
-            s += u'<li class="disabled"><a href="%s">%s</a></li>' % ('javascript:void(0);', p)
-        else:
-            if not get_page_onclick:
-                s += u'<li><a href="%s">%s</a></li>' % (get_page_url(url, p), p)
-            else:
-                s += u'<li><a href="javascript:void(0);" onclick="%s">%s</a></li>' % (get_page_onclick(p, **page_onclick_params), p)
-    return mark_safe('<div class="pagination pagination-right"><ul>%s%s%s</ul></div>' % (s_pre, s, s_next))
+    # s, s_pre, s_next = '', '', ''
+    # if page > 1:
+    #     if not get_page_onclick:
+    #         s_pre = u'<li title="上一页"><a href="%s">&laquo;</a></li>' % (get_page_url(url, page - 1))
+    #     else:
+    #         s_pre = u'<li title="上一页"><a href="javascript:void(0);" onclick="%s">&laquo;</a></li>' % (get_page_onclick(page - 1, **page_onclick_params))
+    # if page < total_page:
+    #     if not get_page_onclick:
+    #         s_next = u'<li title="下一页"><a href="%s">&raquo;</a></li>' % (get_page_url(url, page + 1))
+    #     else:
+    #         s_next = u'<li title="下一页"><a href="javascript:void(0);" onclick="%s">&raquo;</a></li>' % (get_page_onclick(page + 1, **page_onclick_params))
+
+    # for p in page_items:
+    #     if p == page:
+    #         s += u'<li class="active"><a>%s</a></li>' % (p)
+    #     elif p == '...':
+    #         s += u'<li class="disabled"><a href="%s">%s</a></li>' % ('javascript:void(0);', p)
+    #     else:
+    #         if not get_page_onclick:
+    #             s += u'<li><a href="%s">%s</a></li>' % (get_page_url(url, p), p)
+    #         else:
+    #             s += u'<li><a href="javascript:void(0);" onclick="%s">%s</a></li>' % (get_page_onclick(p, **page_onclick_params), p)
+    # return mark_safe('<div class="pagination pagination-right"><ul>%s%s%s</ul></div>' % (s_pre, s, s_next))
 
 
 @register.filter

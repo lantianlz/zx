@@ -8,7 +8,7 @@ from django import template
 register = template.Library()
 
 from django.shortcuts import render_to_response
-from django.template import RequestContext
+# from django.template import RequestContext
 
 
 @register.simple_tag
