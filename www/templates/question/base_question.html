@@ -137,6 +137,14 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     padding-top: 5px;
 }
 </style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.ask-question button').bind('click', function(){
+        window.location.href = '/question/ask_question';
+    })
+});
+</script>
 {% block javascript %}{% endblock %}
 {% block css %}{% endblock %}
 {% endblock %}
