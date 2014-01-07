@@ -387,5 +387,7 @@ class UserBase(object):
         user_login.save()
 
         cache_obj = cache.Cache()
+        key = u'forget_password_email_code_%s' % user.email
+        cache_obj.delete(key)
         cache_obj.delete(code)
         return True, user_login
