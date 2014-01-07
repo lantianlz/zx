@@ -47,6 +47,7 @@ class UserBase(object):
     def set_profile_login_att(self, profile, user):
         for key in ['email', 'mobilenumber', 'username', 'last_login', 'password']:
             setattr(profile, key, getattr(user, key))
+        setattr(profile, 'base_user', user)
 
     def get_user_login_by_id(self, id):
         try:

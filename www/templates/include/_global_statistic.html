@@ -1,0 +1,23 @@
+{% if request.user.base_user.is_staff or request.user.email == 'lantian-lz@163.com' %}
+<div class="statistics well">
+	<div class="title">社区统计信息</div>
+	<div class="main row">
+		<div class="col-md-4 text-right">注册会员</div>
+		<div class="col-md-8">
+			<span class="text-danger">{{gs.account_count}}</span>
+		</div>
+		<div class="col-md-4 text-right">提问数量</div>
+		<div class="col-md-8">
+			<span class="text-danger">{{gs.question_count}}</span>
+		</div>
+		<div class="col-md-4 text-right">回复数量</div>
+		<div class="col-md-8">
+			<span class="text-danger">{{gs.answer_count}}</span>
+		</div>
+		<div class="col-md-4 text-right">更新时间</div>
+		<div class="col-md-8">
+			<span class="text-danger">{{gs.update_time}}</span>
+		</div>
+	</div>
+</div>
+{% endif %}

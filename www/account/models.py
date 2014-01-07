@@ -28,6 +28,9 @@ class User(models.Model):
     last_login = models.DateTimeField(verbose_name=u'上次登陆时间', db_index=True)
     create_time = models.DateTimeField(verbose_name=u'创建时间', db_index=True, default=datetime.datetime.now)
 
+    def is_staff(self):
+        return self.state in (const.INTERNAL_MEMBER, )
+
 
 class Profile(models.Model):
 
