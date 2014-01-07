@@ -8,6 +8,7 @@
 """
 
 import re
+import datetime
 
 
 def uuid_without_dash():
@@ -126,7 +127,7 @@ def filter_script(htmlstr):
     return s
 
 
-def render_template(template_path='', context={}):
+def render_email_template(template_path='', context={}):
     '''
     @note: 渲染模板
     '''
@@ -134,6 +135,7 @@ def render_template(template_path='', context={}):
 
     if not template_path:
         return ''
+    context.update(now=datetime.datetime.now())
 
     t = template.loader.get_template(template_path)
     c = template.Context(context)

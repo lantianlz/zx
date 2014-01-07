@@ -58,13 +58,45 @@ def regist(request, template_name='account/regist.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+def forget_password(request, template_name='account/forget_password.html'):
+    if request.POST:
+        email = request.POST.get('email')
+        ub = interface.UserBase()
+        flag, result = ub.send_forget_password_email(email)
+        if not flag:
+            error_msg = result
+        else:
+            success_msg = u'找回密码邮件已经发送，请登录邮箱后操作'
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
 def reset_password(request, template_name='account/reset_password.html'):
+    ub = interface.UserBase()
+    if not request.POST:
+        code = request.REQUEST.get('code')
+        user = ub.get_user_by_code(code)
+        if not user:
+            error_msg = interface.dict_err.get(112)
+            return render_to_response('account/forget_password.html', locals(), context_instance=RequestContext(request))
+        else:
+            request.session['reset_password_code'] = code
+    else:
+        new_password_1 = request.POST.get('new_password_1')
+        new_password_2 = request.POST.get('new_password_2')
+        code = request.session['reset_password_code']
+        flag, result = ub.reset_password_by_code(code, new_password_1, new_password_2)
+        if not flag:
+            error_msg = result
+        else:
+            success_msg = u'密码修改成功，请重新登录'
+            user = result
+            user.backend = 'www.middleware.user_backend.AuthBackend'
+            auth.login(request, user)
+            request.session['reset_password_code'] = ''
+            return HttpResponseRedirect('/home')
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-
-def forgot_password(request, template_name='account/forgot_password.html'):
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-    
 
 @member_required
 def home(request, template_name='account/home.html'):

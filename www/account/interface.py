@@ -22,6 +22,8 @@ dict_err = {
     108: u'登陆密码验证失败',
     109: u'新邮箱和老邮箱不能相同',
     110: u'邮箱验证码错误或者已过期，请重新验证',
+    111: u'该邮箱尚未注册',
+    112: u'code已失效，请重新执行重置密码操作',
 
     998: u'参数缺失',
     999: u'系统错误',
@@ -47,7 +49,7 @@ class UserBase(object):
     def set_profile_login_att(self, profile, user):
         for key in ['email', 'mobilenumber', 'username', 'last_login', 'password']:
             setattr(profile, key, getattr(user, key))
-        setattr(profile, 'base_user', user)
+        setattr(profile, 'user_login', user)
 
     def get_user_login_by_id(self, id):
         try:
@@ -311,11 +313,11 @@ class UserBase(object):
             from www.tasks import async_send_email
 
             context = {
-                'verify_url': '%s/account/user_settings/verify_email?code=%s' % (settings.MAIN_DOMAIN, code), 
-                'email_date': datetime.datetime.now().strftime('%Y-%m-%d')
+                'verify_url': '%s/account/user_settings/verify_email?code=%s' % (settings.MAIN_DOMAIN, code),
             }
-            
-            async_send_email(user.email, u'智选网邮箱验证', utils.render_template('email/verify_email.html', context), 'html')
+
+            async_send_email(user.email, u'智选网邮箱验证',
+                             utils.render_email_template('email/verify_email.html', context), 'html')
 
     def check_email_confim_code(self, user, code):
         '''
@@ -335,6 +337,55 @@ class UserBase(object):
         user.save()
         return True, user
 
+    def send_forget_password_email(self, email):
+        '''
+        @note: 发送密码找回邮件
+        '''
+        if not email:
+            return False, dict_err.get(998)
 
+        user = self.get_user_by_email(email)
+        if not user:
+            return False, dict_err.get(111)
+        cache_obj = cache.Cache()
+        key = u'forget_password_email_code_%s' % email
+        code = cache_obj.get(key)
+        if not code:
+            code = utils.uuid_without_dash()
+            cache_obj.set(key, code, time_out=1800)
+            cache_obj.set(code, user, time_out=1800)
 
-    # 忘记密码
+        if not cache_obj.get_time_is_locked(key, 60):
+            from www.tasks import async_send_email
+
+            context = {
+                'reset_url': '%s/reset_password?code=%s' % (settings.MAIN_DOMAIN, code),
+            }
+
+            async_send_email(email, u'智选网找回密码',
+                             utils.render_email_template('email/reset_password.html', context), 'html')
+        return True, dict_err.get(000)
+
+    def get_user_by_code(self, code):
+        cache_obj = cache.Cache()
+        return cache_obj.get(code)
+
+    def reset_password_by_code(self, code, new_password_1, new_password_2):
+        user = self.get_user_by_code(code)
+        if not user:
+            return False, dict_err.get(112)
+
+        if new_password_1 != new_password_2:
+            return False, dict_err.get(105)
+        try:
+            validators.vpassword(new_password_1)
+        except Exception, e:
+            return False, smart_unicode(e)
+
+        user_login = self.get_user_login_by_id(user.id)
+        user_login.password = self.set_password(new_password_1)
+        user_login.save()
+
+        cache_obj = cache.Cache()
+        cache_obj.delete(code)
+        return True, user_login

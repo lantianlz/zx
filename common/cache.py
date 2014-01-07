@@ -83,4 +83,4 @@ if __name__ == '__main__':
     os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
     cache_obj = Cache()
-    print cache_obj.get_time_is_locked(u'key', time_out=10)
+    print cache_obj.set(u'keyaaom@a.c!@#$%^&*()om', 'aaa', time_out=1000)

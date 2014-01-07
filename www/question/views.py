@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import urllib
-from pprint import pprint
 from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
