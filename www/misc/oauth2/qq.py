@@ -10,10 +10,12 @@ import re
 import json
 from pprint import pprint
 
+from django.conf import settings
+
 CLIENT_ID = '100588921'
 CLIENT_SECRET = 'c3ada24be18f2e86e99dd086884d0bab'
 API_URL = 'https://graph.qq.com'
-REDIRECT_URI = 'http://www.a.com/account/oauth/qq'
+REDIRECT_URI = '%s/account/oauth/qq' % settings.MAIN_DOMAIN
 
 
 class Consumer(object):

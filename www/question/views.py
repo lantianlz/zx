@@ -19,7 +19,7 @@ def question_home(request, question_type=0, template_name='question/question_hom
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(questions, count=1, page=page_num).info
+    page_objs = page.Cpt(questions, count=3, page=page_num).info
     questions = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
