@@ -68,8 +68,8 @@ $(document).ready(function(){
       animateLike.animate({
         opacity: 0.01,
         fontSize: 16,
-        paddingLeft: 13,
-        paddingTop: 5
+        paddingLeft: 10,
+        paddingTop: 6
       }, 500, function(){
         animateLike.remove();
 
@@ -205,19 +205,10 @@ $(document).ready(function(){
 .vote .animate-liked{
   position: absolute;
   top: 0px;
-  left: 15px;
+  left: 2px;
   z-index: 99;
   font-size: 35px;
   opacity: 0.99,
-}
-
-.vote .animate-un-liked{
-  position: absolute;
-  top: 5px;
-  left: 14px;
-  z-index: 99;
-  font-size: 16px;
-  opacity: 0.01,
 }
 
 </style>
@@ -273,8 +264,8 @@ $(document).ready(function(){
           <div class="vote col-md-3">
             <div class="btn-group-vertical">
               <button type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-heart"></span>
-                <span class="badge pull-right">122</span>
+                <span class="glyphicon glyphicon-heart pull-left"></span>
+                <span class="badge">122</span>
               </button>
             </div>
           </div>
@@ -299,8 +290,8 @@ $(document).ready(function(){
           <div class="vote col-md-3">
             <div class="btn-group-vertical">
               <button type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-heart-empty"></span>
-                <span class="badge pull-right">42</span>
+                <span class="glyphicon glyphicon-heart-empty pull-left"></span>
+                <span class="badge">42</span>
               </button>
             </div>
           </div>
@@ -323,8 +314,8 @@ $(document).ready(function(){
           <div class="vote col-md-3">
             <div class="btn-group-vertical">
               <button type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-heart-empty"></span>
-                <span class="badge pull-right">12</span>
+                <span class="glyphicon glyphicon-heart-empty pull-left"></span>
+                <span class="badge">12</span>
               </button>
             </div>
           </div>
