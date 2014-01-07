@@ -39,12 +39,55 @@ $(document).ready(function(){
     })
   });
 
+  // 赞动作
+  $('.vote button').bind('click', function(){
+    var btn = $(this),
+        likedSpan = btn.children('span').eq(0),
+        votedSpan = btn.children('span').eq(1),
+        isLiked = likedSpan.hasClass('glyphicon-heart'),
+        voteCount = parseInt(votedSpan.text());
+
+    // 取消赞动作
+    if(isLiked){
+      // 动画效果
+      likedSpan.css('opacity', '0.99').animate({
+        opacity: 0.1,
+      }, 500, function(){
+
+        likedSpan.removeClass('glyphicon-heart').addClass('glyphicon-heart-empty').css('opacity', '0.99');
+        votedSpan.text(voteCount - 1);
+      });
+
+    
+    } else {
+      // 添加赞动作
+      btn.parent('.btn-group-vertical').append('<span class="glyphicon glyphicon-heart animate-liked"></span>');
+      
+      // 动画效果
+      var animateLike = btn.siblings();
+      animateLike.animate({
+        opacity: 0.01,
+        fontSize: 16,
+        paddingLeft: 13,
+        paddingTop: 5
+      }, 500, function(){
+        animateLike.remove();
+
+        likedSpan.removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
+        votedSpan.text(voteCount + 1);
+      });
+
+    }
+
+  });
+
 });
 </script>
 {% endblock %}
 
 {% block css %}
 <style type="text/css">
+
 .zx-container-main .question-entry{
     float: left;
     padding-top: 25px;
@@ -150,6 +193,33 @@ $(document).ready(function(){
 .not-login .lock{
   padding: 15px 0 0 30px;
 }
+
+.vote .glyphicon{
+  font-size: 16px;
+}
+
+.vote .glyphicon-heart{
+  color: red;
+}
+
+.vote .animate-liked{
+  position: absolute;
+  top: 0px;
+  left: 15px;
+  z-index: 99;
+  font-size: 35px;
+  opacity: 0.99,
+}
+
+.vote .animate-un-liked{
+  position: absolute;
+  top: 5px;
+  left: 14px;
+  z-index: 99;
+  font-size: 16px;
+  opacity: 0.01,
+}
+
 </style>
 {% endblock %}
 
@@ -203,12 +273,8 @@ $(document).ready(function(){
           <div class="vote col-md-3">
             <div class="btn-group-vertical">
               <button type="button" class="btn btn-default">
-                顶
-                <span class="badge pull-right">2</span>
-              </button>
-              <button type="button" class="btn btn-default">
-                踩
-                <span class="badge pull-right">0</span>
+                <span class="glyphicon glyphicon-heart"></span>
+                <span class="badge pull-right">122</span>
               </button>
             </div>
           </div>
@@ -233,12 +299,8 @@ $(document).ready(function(){
           <div class="vote col-md-3">
             <div class="btn-group-vertical">
               <button type="button" class="btn btn-default">
-                顶
+                <span class="glyphicon glyphicon-heart-empty"></span>
                 <span class="badge pull-right">42</span>
-              </button>
-              <button type="button" class="btn btn-default">
-                踩
-                <span class="badge pull-right">2</span>
               </button>
             </div>
           </div>
@@ -261,12 +323,8 @@ $(document).ready(function(){
           <div class="vote col-md-3">
             <div class="btn-group-vertical">
               <button type="button" class="btn btn-default">
-                顶
+                <span class="glyphicon glyphicon-heart-empty"></span>
                 <span class="badge pull-right">12</span>
-              </button>
-              <button type="button" class="btn btn-default">
-                踩
-                <span class="badge pull-right">0</span>
               </button>
             </div>
           </div>
