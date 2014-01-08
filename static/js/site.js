@@ -71,7 +71,8 @@ $(document).ready(function(){
 	$('.scroll-top').bind('mouseover', function(){
 		var me = $(this);
 		me.animate({'opacity': '0.3'}, 200, function(){
-			me.css({'background-position-x': -149});
+			//me.css({'background-position-x': -149});
+			me.css('background-position', '-149px 0');
 
 			me.animate({'opacity': '0.99'}, 200);
 		});
@@ -84,7 +85,8 @@ $(document).ready(function(){
 		}
 
 		me.animate({'opacity': '0.3'}, 200, function(){
-			me.css({'background-position-x': 0});
+			//me.css({'background-position-x': 0});
+			me.css('background-position', '0 0');
 
 			me.animate({'opacity': '0.99'}, 200);
 		});
@@ -94,9 +96,10 @@ $(document).ready(function(){
 		var me = $(this);
 		userClickTop = true;
 
-		$('html body').animate({scrollTop:0}, 'fast', function(){
+		$('html,body').animate({scrollTop:0}, 'fast', function(){
 			me.animate({'bottom': 800}, 500, function(){
-				me.css({'bottom': 100, 'background-position-x': 0}).hide();
+				me.css({'bottom': 100}).hide();
+				me.css('background-position', '0 0');
 				userClickTop = false;
 			});
 		}); 
