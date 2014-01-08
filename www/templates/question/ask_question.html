@@ -28,7 +28,7 @@ $(document).ready(function(){
         	}           
 		});
 	});
-
+	
 });
 </script>
 {% endblock %}
@@ -40,6 +40,10 @@ $(document).ready(function(){
 
 .ask-main{
 	margin-top: 35px;
+}
+
+.ask-btn{
+	padding-right: 0px;
 }
 </style>
 {% endblock %}
@@ -64,8 +68,15 @@ $(document).ready(function(){
 		<div class="form-group">
 			<textarea name="question_content" class="form-control" rows="6">{{question_content}}</textarea>
 		</div>
-		<div class="form-group pull-right">
-			<button type="submit" class="btn btn-primary">提交</button>
+		<div class="form-group">
+			<div class="col-md-6 checkbox">
+			    <label class="zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="勾选此项后，将隐藏你的名字">
+			      <input  type="checkbox"> 匿名提问
+			    </label>
+			</div>
+			<div class="col-md-6 text-right ask-btn">
+				<button type="submit" class="btn btn-primary">我要提问</button>
+			</div>
 		</div>
 	</form>
 </div>

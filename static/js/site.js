@@ -102,11 +102,15 @@ $(document).ready(function(){
 		me.css('background-position', '-298px 0');
 		$('html,body').animate({scrollTop:0}, 'fast', function(){
 			me.animate({'bottom': 800}, 500, function(){
-				me.css({'bottom': 100}).hide();
+				me.css({'bottom': 10}).hide();
 				me.css('background-position', '0 0');
 				userClickTop = false;
 			});
 		}); 
 		
 	});
+
+
+	// 初始化所有的 tooltip 
+	$('.zx-tooltip').tooltip('hide');
 });
