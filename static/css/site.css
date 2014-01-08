@@ -48,4 +48,15 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     color: #2498EF;
 }
 
-
+.scroll-top{
+    position: fixed;
+    background: url(/static/img/common/rocket.png) no-repeat scroll 0 0 transparent;
+    z-index: 100;
+    width: 149px;
+    height: 120px;
+    bottom: 100px;
+    right: 15px;
+    opacity: 0.99;
+    cursor: pointer;
+    display: none;
+}

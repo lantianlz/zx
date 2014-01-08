@@ -52,3 +52,54 @@ function check_friend_name_callback(data)
 
 
 
+$(document).ready(function(){
+	// 回到顶部动画效果
+	var userClickTop = false;
+
+	$(window).scroll(function(){
+		var me = $(this);
+
+		if(!userClickTop){
+			if(me.scrollTop() < 400){
+				$('.scroll-top').hide('fast');
+			}else{
+				$('.scroll-top').show('fast');
+			}
+		}
+	});
+
+	$('.scroll-top').bind('mouseover', function(){
+		var me = $(this);
+		me.animate({'opacity': '0.3'}, 200, function(){
+			me.css({'background-position-x': -149});
+
+			me.animate({'opacity': '0.99'}, 200);
+		});
+		
+	})
+	.bind('mouseout', function(){
+		var me = $(this);
+		if(userClickTop){
+			return;
+		}
+
+		me.animate({'opacity': '0.3'}, 200, function(){
+			me.css({'background-position-x': 0});
+
+			me.animate({'opacity': '0.99'}, 200);
+		});
+		
+	})
+	.bind('click', function(){
+		var me = $(this);
+		userClickTop = true;
+
+		$('html body').animate({scrollTop:0}, 'fast', function(){
+			me.animate({'bottom': 800}, 500, function(){
+				me.css({'bottom': 100, 'background-position-x': 0}).hide();
+				userClickTop = false;
+			});
+		}); 
+		
+	});
+});
