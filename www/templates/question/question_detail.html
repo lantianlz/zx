@@ -30,23 +30,28 @@ $(document).ready(function(){
   });
 
   // 导航事件
-  $(document).ready(function(){
-    $('.replaies .nav-tabs a').click(function (e) {
-      e.preventDefault();
-      $(this).tab('show');
+  $('.replaies .nav-tabs a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
 
-      $('#ul_replaies').hide('fast').show('fast');
-    })
+    $('#ul_replaies').hide('fast').show('fast');
   });
-
+  
+  
   // 赞动作
+  var voteLoading = false;
   $('.vote button').bind('click', function(){
+    if(voteLoading){
+      return;
+    }
+    voteLoading = true;
+
     var btn = $(this),
         likedSpan = btn.children('span').eq(0),
         votedSpan = btn.children('span').eq(1),
         isLiked = likedSpan.hasClass('glyphicon-heart'),
         voteCount = parseInt(votedSpan.text());
-
+        
     // 取消赞动作
     if(isLiked){
       // 动画效果
@@ -56,6 +61,7 @@ $(document).ready(function(){
 
         likedSpan.removeClass('glyphicon-heart').addClass('glyphicon-heart-empty').css('opacity', '0.99');
         votedSpan.text(voteCount - 1);
+        voteLoading = false;
       });
 
     
@@ -75,6 +81,7 @@ $(document).ready(function(){
 
         likedSpan.removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
         votedSpan.text(voteCount + 1);
+        voteLoading = false;
       });
 
     }

@@ -70,6 +70,10 @@ $(document).ready(function(){
 
 	$('.scroll-top').bind('mouseover', function(){
 		var me = $(this);
+		if(userClickTop){
+			return;
+		}
+
 		me.animate({'opacity': '0.3'}, 200, function(){
 			//me.css({'background-position-x': -149});
 			me.css('background-position', '-149px 0');
@@ -95,7 +99,7 @@ $(document).ready(function(){
 	.bind('click', function(){
 		var me = $(this);
 		userClickTop = true;
-
+		me.css('background-position', '-298px 0');
 		$('html,body').animate({scrollTop:0}, 'fast', function(){
 			me.animate({'bottom': 800}, 500, function(){
 				me.css({'bottom': 100}).hide();
