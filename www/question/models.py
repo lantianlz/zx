@@ -25,8 +25,35 @@ class Question(models.Model):
         return u'/question/question_detail/%s' % self.id
 
     def get_summary(self):
-        maxlength = 100
-        return (self.content[:maxlength] + u'...') if self.content.__len__() > maxlength else self.content
+        """
+        @attention: 通过内容获取摘要
+        """
+        import re
+
+        summary = ''
+        # 提取标签中的文字
+        r = u'<.+?>([^\/\\\&\<\>]+?)</\w+?>'
+        p = re.compile(r, re.DOTALL | re.IGNORECASE)
+        rs = p.findall(self.content)
+        for s in rs:
+            if summary.__len__() > 100:
+                summary += '......'
+                break
+            if s:
+                summary += s
+        # 没有标签的
+        if not summary:
+            r = u'[\u4e00-\u9fa5\w]+'
+            p = re.compile(r, re.DOTALL | re.IGNORECASE)
+            rs = p.findall(self.content)
+            for s in rs:
+                if summary.__len__() > 100:
+                    summary += '......'
+                    break
+                if s:
+                    summary += s
+
+        return summary
 
     def get_user(self):
         from www.account.interface import UserBase
