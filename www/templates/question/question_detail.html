@@ -97,7 +97,7 @@ $(document).ready(function(){
 
 .zx-container-main .question-entry{
     float: left;
-    padding-top: 25px;
+    /*padding-top: 25px;*/
     width: 100%;
 }
 
@@ -218,10 +218,19 @@ $(document).ready(function(){
   opacity: 0.99,
 }
 
+.breadcrumb{
+  margin-top: 25px;
+  border: solid 1px #ddd;
+}
 </style>
 {% endblock %}
 
 {% block question_main%}
+<ol class="breadcrumb">
+  <li><a href="/">首页</a></li>
+  <li><a href="/question/">股票问答</a></li>
+  <li class="active">大盘</li>
+</ol>
 <div class="question-entry">
   <div class="topic">
     <div class="topic-title">
