@@ -37,10 +37,11 @@ def ask_question(request, template_name='question/ask_question.html'):
         question_type = int(request.POST.get('question_type', '0'))
         question_title = request.POST.get('question_title')
         question_content = request.POST.get('question_content')
+        is_hide_user = request.POST.get('is_hide_user')
 
         qb = interface.QuestionBase()
         flag, result = qb.create_question(request.user.id, question_type, question_title,
-                                          question_content, ip=utils.get_clientip(request))
+                                          question_content, ip=utils.get_clientip(request), is_hide_user=is_hide_user)
         if flag:
             return HttpResponseRedirect('/question/question_detail/%s' % result.id)
         else:

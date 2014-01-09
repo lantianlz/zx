@@ -136,6 +136,7 @@
                 <div class="item-question-content">{{question.get_summary}}</div>
                 <div class="item-question-tags"></div>
                 <div class="item-question-profile">
+                    {% if not question.is_hide_user %}
                     <a href="{{question.user.get_url}}">
                         <div class="avatar">
                             <img src="{{question.user.get_avatar}}" />
@@ -144,7 +145,8 @@
                     <a href="{{question.user.get_url}}">
                         <div class="user-name">{{question.user.nick}}</div>
                     </a>
-                    <div class="statistic">
+                    {% endif %}
+                    <div class="statistic" {% if question.is_hide_user %}style="margin-left:0;"{% endif %}>
                         <div class="answers">
                             <a href="#">回答 {{question.answer_count}}</a>
                         </div>

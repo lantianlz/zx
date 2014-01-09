@@ -63,16 +63,14 @@ $(document).ready(function(){
 		<div class="blank10"></div>
 		<div class="form-group">
 			<input type="text" class="form-control input-lg" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
-					value='{{question_title}}'>
-		</div>
+					value='{{question_title}}'></div>
 		<div class="form-group">
 			<textarea name="question_content" class="form-control" rows="6">{{question_content}}</textarea>
 		</div>
 		<div class="form-group">
 			<div class="col-md-6 checkbox">
-			    <label class="zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="勾选此项后，将隐藏你的名字">
-			      <input  type="checkbox"> 匿名提问
-			    </label>
+				<label class="zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="勾选此项后，问题展现的时候将隐藏你的名字">
+					<input type="checkbox" checked name="is_hide_user">匿名提问</label>
 			</div>
 			<div class="col-md-6 text-right ask-btn">
 				<button type="submit" class="btn btn-primary">我要提问</button>

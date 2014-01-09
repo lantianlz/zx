@@ -46,7 +46,7 @@ class QuestionBase(object):
             return False, dict_err.get(103)
         return True, dict_err.get(000)
 
-    def create_question(self, user_id, question_type, question_title, question_content, ip='127.0.0.1'):
+    def create_question(self, user_id, question_type, question_title, question_content, ip='127.0.0.1', is_hide_user=None):
         # 防止xss漏洞
         question_title = utils.filter_script(question_title)
         question_content = utils.filter_script(question_content)
@@ -59,12 +59,15 @@ class QuestionBase(object):
         if not flag:
             return False, result
 
-        if not all((question_type, question_title, question_content)):
+        if not all((int(question_type), question_title, question_content)):
             return False, dict_err.get(998)
 
         question = Question.objects.create(user_id=user_id, question_type_id=question_type,
                                            title=question_title, content=question_content,
-                                           last_answer_time=datetime.datetime.now(), ip=ip)
+                                           last_answer_time=datetime.datetime.now(), ip=ip,
+                                           is_hide_user=True if is_hide_user else False)
+
+        # todo 清理缓存、更新冗余信息等
         return True, question
 
     def get_questions(self, question_type_domain=None):

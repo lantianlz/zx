@@ -179,8 +179,10 @@ $(document).ready(function(){
 
     <div class="intro well">
         <div class="row">
-            <div class="col-md-4 avatar"><img src="{{MEDIA_URL}}img/common/default.png"></div>
-            <div class="col-md-8 nick">{{request.user.nick}}</div>
+            <div class="col-md-4 avatar"><img src="{{request.user.get_avatar}}"></div>
+            <div class="col-md-8 nick">
+                <a href="{{request.user.get_url}}">{{request.user.nick}}</a>
+            </div>
         </div>
         <div class="blank10 bottom-border"></div>
         <div class="row">

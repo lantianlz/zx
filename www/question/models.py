@@ -14,6 +14,7 @@ class Question(models.Model):
     sort_num = models.IntegerField(default=-999, db_index=True)
     zan_num = models.IntegerField(default=0)
     ip = models.CharField(max_length=32, null=True)
+    is_hide_user = models.BooleanField(default=False)
     state = models.BooleanField(default=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 

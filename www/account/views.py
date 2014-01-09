@@ -105,7 +105,7 @@ def home(request, template_name='account/home.html'):
 
 
 @member_required
-def user_profile(request, template_name='account/user_profile.html'):
+def user_profile(request, id=None, template_name='account/user_profile.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
