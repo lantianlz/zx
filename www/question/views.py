@@ -2,7 +2,7 @@
 
 import urllib
 from django.contrib import auth
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
@@ -11,7 +11,6 @@ from www.question import interface
 from www.misc.decorators import member_required
 
 
-#@member_required
 def question_home(request, question_type=0, template_name='question/question_home.html'):
     qb = interface.QuestionBase()
     questions = qb.get_questions(question_type_domain=question_type)
@@ -26,8 +25,12 @@ def question_home(request, question_type=0, template_name='question/question_hom
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-#@member_required
 def question_detail(request, question_id, template_name='question/question_detail.html'):
+    qb = interface.QuestionBase()
+    question = qb.get_question_by_id(question_id)
+    question = qb.format_quesitons([question, ])[0]
+    if not question:
+        raise Http404
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

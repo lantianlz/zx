@@ -77,6 +77,12 @@ class QuestionBase(object):
         questions = Question.objects.filter(**ps)
         return questions
 
+    def get_question_by_id(self, id):
+        try:
+            return Question.objects.select_related('question_type').get(id=id)
+        except Question.DoesNotExist:
+            return None
+
 
 class QuestionTypeBase(object):
 

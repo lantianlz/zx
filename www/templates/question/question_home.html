@@ -139,7 +139,7 @@
                     {% if not question.is_hide_user %}
                     <a href="{{question.user.get_url}}">
                         <div class="avatar">
-                            <img src="{{question.user.get_avatar}}" />
+                            <img src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
                         </div>
                     </a>
                     <a href="{{question.user.get_url}}">
