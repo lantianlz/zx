@@ -114,3 +114,24 @@ $(document).ready(function(){
 	// 初始化所有的 tooltip 
 	$('.zx-tooltip').tooltip('hide');
 });
+
+// 文本编辑器默认设置
+var markItUpSettings = {
+    onShiftEnter:   {keepDefault:false, replaceWith:'<br />\n'},
+    onCtrlEnter:    {keepDefault:false, openWith:'\n<p>', closeWith:'</p>'},
+    onTab:        {keepDefault:false, replaceWith:'    '},
+    markupSet:  [   
+		{name:'粗体', key:'B', openWith:'<b>', closeWith:'</b>' },
+		{name:'斜体', key:'I', openWith:'<i>', closeWith:'</i>'  },
+		{name:'下划线', key:'U', openWith:'<u>', closeWith:'</u>' },
+		{separator:'---------------' },
+		{name:'无序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'\n</ul>'},
+		{name:'有序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'\n</ol>'},
+		{separator:'---------------' },
+		{name:'插入图片', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
+		{name:'插入链接', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
+		{separator:'---------------' },
+		{name:'清除样式', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } }
+		//,{name:'Preview', className:'preview',  call:'preview'}
+    ]
+};
