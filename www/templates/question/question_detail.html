@@ -31,11 +31,11 @@ $(document).ready(function(){
   });
 
   // 导航事件
-  $('.replaies .nav-tabs a').click(function (e) {
+  $('.replies .nav-tabs a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
 
-    $('#ul_replaies').hide('fast').show('fast');
+    $('#ul_replies').hide('fast').show('fast');
   });
   
   
@@ -102,8 +102,14 @@ $(document).ready(function(){
     width: 100%;
 }
 
+.zx-container-main .question-entry .topic{
+    border-radius: 4px;
+    padding: 15px;
+    border: solid 1px #ddd;
+}
+
 .zx-container-main .question-entry .topic-title{
-    
+
 }
 
 .zx-container-main .question-entry .topic-content{
@@ -122,29 +128,23 @@ $(document).ready(function(){
     color: #475058;
 }
 
-.zx-container-main .replaies{
+.zx-container-main .replies{
     float: left;
     width: 100%;
     padding-top: 25px;
 }
 
-.zx-container-main .replaies .list-group-item:first-child{
-    border-top: 0px;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 0px;
-}
-
-.zx-container-main .replay-header{
+.zx-container-main .reply-header{
     padding: 15px 5px 5px 5px;
 }
 
 
-.zx-container-main .replay-header .user-name a{
+.zx-container-main .reply-header .user-name a{
     color: #224e73;
     font-size: 12px;
 }
 
-.zx-container-main .replay-content{
+.zx-container-main .reply-content{
     font-size: 13px;
     color: #475058;
     padding-top: 15px;
@@ -152,11 +152,11 @@ $(document).ready(function(){
     line-height: 25px;
 }
 
-.zx-container-main .replay-main .vote{
+.zx-container-main .reply-main .vote{
     padding-left: 30px;
 }
 
-.zx-container-main .replay-main .vote .btn-group-vertical{
+.zx-container-main .reply-main .vote .btn-group-vertical{
     width: 90%;
 }
 
@@ -223,6 +223,10 @@ $(document).ready(function(){
   margin-top: 25px;
   border: solid 1px #ddd;
 }
+
+.replies-sort{
+  margin-top: 5px;
+}
 </style>
 {% endblock %}
 
@@ -257,10 +261,24 @@ $(document).ready(function(){
             <div class="question-date">{{question.create_time}}</div>
         </div>
     </div>
-    <div class="replaies">
-        <ul class="list-group" id="ul_replaies">
+    
+    <div class="replies">
+        <ul class="list-group" id="ul_replies">
             <li class="list-group-item">
-                <div class="replay-header">
+              <div class="row">
+                <div class="col-md-6">
+                  <h4><strong>共4个回答</strong></h4>
+                </div>
+                <div class="col-md-3 pull-right">
+                  <select class="form-control input-sm replies-sort">
+                    <option>按赞最多排序</option>
+                    <option>按时间排序</option>
+                  </select>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+                <div class="reply-header">
                     <a href="#">
                         <div class="avatar">
                             <img src="{{MEDIA_URL}}img/common/default.png" />
@@ -271,8 +289,8 @@ $(document).ready(function(){
                     </a>
                     <div class="question-date">2013.12.13 12:27:49</div>
                 </div>
-                <div class="replay-main row">
-                    <div class="replay-content col-md-9">陆金所的收益率更低，24－36个月期限的每年收益率还不到9%，而且还是“预期”，不是约定收益率。</div>
+                <div class="reply-main row">
+                    <div class="reply-content col-md-9">陆金所的收益率更低，24－36个月期限的每年收益率还不到9%，而且还是“预期”，不是约定收益率。</div>
                     <div class="vote col-md-3">
                         <div class="btn-group-vertical">
                             <button type="button" class="btn btn-default">
@@ -284,7 +302,7 @@ $(document).ready(function(){
                 </div>
             </li>
             <li class="list-group-item">
-                <div class="replay-header">
+                <div class="reply-header">
                     <a href="#">
                         <div class="avatar">
                             <img src="{{MEDIA_URL}}img/common/default.png" />
@@ -295,8 +313,8 @@ $(document).ready(function(){
                     </a>
                     <div class="question-date">2013.12.13 12:27:49</div>
                 </div>
-                <div class="replay-main row">
-                    <div class="replay-content col-md-9">
+                <div class="reply-main row">
+                    <div class="reply-content col-md-9">
                         yangjinzhong9，你好！平台上发布的每个项目都是由与我们合作的担保机构提供本金和利息担保的，这样就将投资人的风险转移给了担保公司，对于投资人可以说是没有风险的哦！对于要投资多少份额你要根据资金情况及个人规划来决定哦！:) 感谢你的持续关注与支持！上有利，好收益！
                     </div>
                     <div class="vote col-md-3">
@@ -310,7 +328,7 @@ $(document).ready(function(){
                 </div>
             </li>
             <li class="list-group-item">
-                <div class="replay-header">
+                <div class="reply-header">
                     <a href="#">
                         <div class="avatar">
                             <img src="{{MEDIA_URL}}img/common/default.png" />
@@ -321,8 +339,8 @@ $(document).ready(function(){
                     </a>
                     <div class="question-date">2013.12.15 15:23:12</div>
                 </div>
-                <div class="replay-main row">
-                    <div class="replay-content col-md-9">各有优缺点。有利在安全上还是比较靠谱，只是利率低一点。陆金所还可以，毕竟是平安集团旗下的，但开鑫贷我不看好。</div>
+                <div class="reply-main row">
+                    <div class="reply-content col-md-9">各有优缺点。有利在安全上还是比较靠谱，只是利率低一点。陆金所还可以，毕竟是平安集团旗下的，但开鑫贷我不看好。</div>
                     <div class="vote col-md-3">
                         <div class="btn-group-vertical">
                             <button type="button" class="btn btn-default">
@@ -334,7 +352,7 @@ $(document).ready(function(){
                 </div>
             </li>
             <li class="list-group-item">
-                <div class="replay-header">
+                <div class="reply-header">
                     <a href="#">
                         <div class="avatar">
                             <img src="{{MEDIA_URL}}img/common/default.png" />
@@ -345,8 +363,8 @@ $(document).ready(function(){
                     </a>
                     <div class="question-date">2013.12.15 15:23:12</div>
                 </div>
-                <div class="replay-main row">
-                    <div class="replay-content col-md-9">各有优缺点。有利在安全上还是比较靠谱，只是利率低一点。陆金所还可以，毕竟是平安集团旗下的，但开鑫贷我不看好。</div>
+                <div class="reply-main row">
+                    <div class="reply-content col-md-9">各有优缺点。有利在安全上还是比较靠谱，只是利率低一点。陆金所还可以，毕竟是平安集团旗下的，但开鑫贷我不看好。</div>
                     <div class="vote col-md-3">
                         <div class="btn-group-vertical">
                             <button type="button" class="btn btn-default">
