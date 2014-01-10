@@ -7,7 +7,7 @@ from django.utils.encoding import smart_unicode
 from django.conf import settings
 
 from common import utils, debug, validators, cache
-from www.question.models import Question, QuestionType
+from www.question.models import Question, QuestionType, Answer
 
 
 dict_err = {
@@ -16,10 +16,25 @@ dict_err = {
     102: u'内容过于简单，稍微详述一下',
     103: u'内容过于冗长，稍微提炼一下',
 
+    800: u'问题不存在或者已删除',
     998: u'参数缺失',
     999: u'系统错误',
     000: u'成功'
 }
+
+QUESTION_DB = 'question'
+
+
+def question_required(func):
+    def _decorator(self, question_id_or_object, *args, **kwargs):
+        question = question_id_or_object
+        if not isinstance(question_id_or_object, Question):
+            try:
+                question = Question.objects.get(id=question_id_or_object)
+            except Question.DoesNotExist:
+                return False, dict_err.get(800)
+        return func(self, question, *args, **kwargs)
+    return _decorator
 
 
 class QuestionBase(object):
@@ -31,6 +46,11 @@ class QuestionBase(object):
         for question in questions:
             question.user = question.get_user()
         return questions
+
+    def format_answers(self, answers):
+        for answer in answers:
+            answer.from_user = answer.get_from_user()
+        return answers
 
     def validate_title(self, title):
         if len(title) < 10:
@@ -82,6 +102,37 @@ class QuestionBase(object):
             return Question.objects.select_related('question_type').get(id=id)
         except Question.DoesNotExist:
             return None
+
+    @question_required
+    @transaction.commit_manually(using=QUESTION_DB)
+    def create_answer(self, question, from_user_id, content, ip=None):
+        try:
+            content = utils.filter_script(content)
+            if not all((question, from_user_id, content)):
+                transaction.rollback(using=QUESTION_DB)
+                return False, dict_err.get(998)
+
+            flag, result = self.validate_content(content)
+            if not flag:
+                transaction.rollback(using=QUESTION_DB)
+                return False, result
+
+            answer = Answer.objects.create(from_user_id=from_user_id, to_user_id=question.user_id, content=content,
+                                           question=question, ip=ip)
+
+            question.answer_count += 1
+            question.last_answer_time = datetime.datetime.now()
+            question.save()
+
+            transaction.commit(using=QUESTION_DB)
+            return True, answer
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return False, dict_err.get(999)
+
+    def get_answers_by_question_id(self, question_id):
+        return Answer.objects.filter(question=question_id, state=True)
 
 
 class QuestionTypeBase(object):

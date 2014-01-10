@@ -25,12 +25,16 @@ def question_home(request, question_type=0, template_name='question/question_hom
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def question_detail(request, question_id, template_name='question/question_detail.html'):
+def question_detail(request, question_id, template_name='question/question_detail.html',
+                    error_msg=None, content=''):
     qb = interface.QuestionBase()
     question = qb.get_question_by_id(question_id)
     question = qb.format_quesitons([question, ])[0]
     if not question:
         raise Http404
+
+    answers = qb.get_answers_by_question_id(question_id)
+    answers = qb.format_answers(answers)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -50,3 +54,15 @@ def ask_question(request, template_name='question/ask_question.html'):
         else:
             error_msg = result
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@member_required
+def create_answer(request, question_id):
+    content = request.POST.get('answer_content', '')
+
+    qb = interface.QuestionBase()
+    flag, result = qb.create_answer(question_id, request.user.id, content, ip=utils.get_clientip(request))
+    if flag:
+        return HttpResponseRedirect('/question/question_detail/%s' % question_id)
+    else:
+        return question_detail(request, question_id, error_msg=result, content=content)

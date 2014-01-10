@@ -62,18 +62,23 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    user_id = models.CharField(max_length=32, db_index=True)
+    from_user_id = models.CharField(max_length=32, db_index=True)
+    to_user_id = models.CharField(max_length=32, db_index=True)
     content = models.TextField()
-
     question = models.ForeignKey(Question)
     sort_num = models.IntegerField(default=-999, db_index=True)
     zan_num = models.IntegerField(default=0)
     ip = models.CharField(max_length=32, null=True)
     state = models.BooleanField(default=True)
-    create_time = models.DateTimeField(db_index=True)
+    create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
-        ordering = ["-sort_num", "-id"]
+        ordering = ["-sort_num", "zan_num", "-id"]
+
+    def get_from_user(self):
+        from www.account.interface import UserBase
+        user = UserBase().get_user_by_id(self.from_user_id)
+        return user
 
 
 class QuestionType(models.Model):
