@@ -18,6 +18,7 @@ urlpatterns = patterns('',
                        url(r'^account/', include('account.urls')),
                        url(r'^question/', include('question.urls')),
                        url(r'^daily/', include('daily.urls')),
+                       url(r'^admin/', include('admin.urls')),
 
                        # Examples:
                        # url(r'^$', 'www.views.home', name='home'),
