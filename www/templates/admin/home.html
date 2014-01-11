@@ -5,10 +5,65 @@
 
 {% block bheader %}
 <style type="text/css">
+body{
+    background-color: #F0F4F7;
+}
+
+.admin-profile{
+    color: #ddd;
+    padding-top: 5px;
+    font-size: 12px;
+} 
+
+.avatar{
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+.zx-admin-container{
+    min-height: 360px;
+    padding: 10px 0 0 0;
+    margin-top: 80px;
+    background-color: white;
+    border: solid 1px #ddd;
+    border-radius: 4px;
+}
+
+.zx-admin-left .list-group-item{
+    border-left: 0px;
+    border-radius: 0px;
+    border-right: 0px;
+    transition: background-color 0.5s; 
+}
+
+.zx-admin-left .list-group-item:hover{
+    background-color: #dbdbdb;
+}
+
+.zx-admin-left{
+    padding-top: 10px;
+}
+
+.zx-admin-left .list-group-item:first-child{
+    border-top: 0px;
+}
+
+.zx-admin-main{
+    border-left: solid 1px #ddd;
+    margin-bottom: 20px;
+    min-height: 380px;
+}
 
 </style>
 <script type="text/javascript">
-
+$(document).ready(function(){
+    window.setInterval(function(){
+        var d = new Date();
+        var strDate = d.getFullYear()+'-'+d.getMonth()+1+'-'+d.getDay()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        $('.clock').html(strDate);
+    }, 1000);
+});
 </script>
 {% block css %}{% endblock %}
 {% block javascript %}{% endblock %}
@@ -16,9 +71,25 @@
 {% endblock bheader %}
 
 {% block container %}
-<div class="col-md-2 admin-left">
+<div class="col-md-3 zx-admin-left">
+    <a class="list-group-item {% if '/s/agreement' == request.path %} active {% endif %}" href="/s/agreement">
+        {% if '/s/agreement' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+        问题分类管理
+    </a>
+    <a class="list-group-item {% if '/s/about' == request.path %} active {% endif %}" href="/s/about">
+        {% if '/s/about' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+        问题管理
+    </a>
+    <a class="list-group-item {% if '/s/disclaimer' == request.path %} active {% endif %}" href="/s/disclaimer">
+        {% if '/s/disclaimer' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+        每日精华管理
+    </a>
+    <a class="list-group-item {% if '/s/links' == request.path %} active {% endif %}" href="/s/links">
+        {% if '/s/links' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+        用户管理
+    </a>
     
 </div>
-<div class="col-md-10 admin-main">
+<div class="col-md-9 zx-admin-main">
 </div>
 {% endblock container %}
