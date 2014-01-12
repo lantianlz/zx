@@ -6,34 +6,6 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-  /*
-  var editor;
-  KindEditor.ready(function(K) {
-    editor = K.create('textarea[name=answer_content]', {
-      resizeType : 1,
-      width: '100%',
-      height: '260',
-      allowPreviewEmoticons : false,
-      allowImageUpload : false,
-      themesPath: "{{MEDIA_URL}}css/kindeditor/themes/",
-      pluginsPath: "{{MEDIA_URL}}js/kindeditor/plugins/",
-      langPath: "{{MEDIA_URL}}js/kindeditor/",
-      items : [
-        'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
-        'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
-        'insertunorderedlist', '|', 'emoticons', 'image', 'link'],
-      afterCreate : function() { 
-          this.sync(); 
-      }, 
-      afterBlur:function(){ 
-          this.sync(); 
-      }
-    });
-  });
-  */
-
-  // 设置编辑器
-  $('textarea[name=answer_content]').markItUp(markItUpSettings);
 
   // 导航事件
   $('.replies .nav-tabs a').click(function (e) {
@@ -352,7 +324,7 @@ $(document).ready(function(){
             {% if request.user.is_authenticated %}
             <form role="form" method="post" action="/question/create_answer/{{question.id}}">
                 <div class="form-group editor">
-                    <textarea name="answer_content" class="form-control" rows="10">{{content}}</textarea>
+                    <textarea name="answer_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{content}}</textarea>
                 </div>
                 <div class="form-group pull-right">
                     <button type="submit" class="btn btn-primary">提交你的回答</button>

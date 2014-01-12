@@ -51,6 +51,26 @@ function check_friend_name_callback(data)
 }
 
 
+// 文本编辑器默认设置
+var markItUpSettings = {
+    onShiftEnter:   {keepDefault:false, replaceWith:'<br />\n'},
+    onCtrlEnter:    {keepDefault:false, openWith:'\n<p>', closeWith:'</p>'},
+    onTab:        {keepDefault:false, replaceWith:'    '},
+    markupSet:  [   
+		{name:'粗体', key:'B', openWith:'<b>', closeWith:'</b>' },
+		{name:'斜体', key:'I', openWith:'<i>', closeWith:'</i>'  },
+		{name:'下划线', key:'U', openWith:'<u>', closeWith:'</u>' },
+		{separator:'---------------' },
+		{name:'无序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'\n</ul>'},
+		{name:'有序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'\n</ol>'},
+		{separator:'---------------' },
+		{name:'插入图片', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
+		{name:'插入链接', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
+		{separator:'---------------' },
+		{name:'清除样式', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } }
+		//,{name:'Preview', className:'preview',  call:'preview'}
+    ]
+};
 
 $(document).ready(function(){
 	// 回到顶部动画效果
@@ -113,25 +133,40 @@ $(document).ready(function(){
 
 	// 初始化所有的 tooltip 
 	$('.zx-tooltip').tooltip('hide');
+
+	// 设置编辑器
+  	$('.zx-textarea').markItUp(markItUpSettings);
+  	$('.zx-textarea').bind('keyup', function(e){
+		if(e.keyCode == 13){
+			$(this).height($(this).height() + $(this).scrollTop() + 2);
+		}
+	});
+
+	/*
+	var editor;
+	KindEditor.ready(function(K) {
+	    editor = K.create('textarea[name=answer_content]', {
+			resizeType : 1,
+			width: '100%',
+			height: '260',
+			allowPreviewEmoticons : false,
+			allowImageUpload : false,
+			themesPath: "{{MEDIA_URL}}css/kindeditor/themes/",
+			pluginsPath: "{{MEDIA_URL}}js/kindeditor/plugins/",
+			langPath: "{{MEDIA_URL}}js/kindeditor/",
+			items : [
+				'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+				'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+				'insertunorderedlist', '|', 'emoticons', 'image', 'link'],
+			afterCreate : function() { 
+			  	this.sync(); 
+			}, 
+			afterBlur:function(){ 
+			  	this.sync(); 
+			}
+	    });
+	});
+    */
+    
 });
 
-// 文本编辑器默认设置
-var markItUpSettings = {
-    onShiftEnter:   {keepDefault:false, replaceWith:'<br />\n'},
-    onCtrlEnter:    {keepDefault:false, openWith:'\n<p>', closeWith:'</p>'},
-    onTab:        {keepDefault:false, replaceWith:'    '},
-    markupSet:  [   
-		{name:'粗体', key:'B', openWith:'<b>', closeWith:'</b>' },
-		{name:'斜体', key:'I', openWith:'<i>', closeWith:'</i>'  },
-		{name:'下划线', key:'U', openWith:'<u>', closeWith:'</u>' },
-		{separator:'---------------' },
-		{name:'无序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'\n</ul>'},
-		{name:'有序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'\n</ol>'},
-		{separator:'---------------' },
-		{name:'插入图片', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
-		{name:'插入链接', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
-		{separator:'---------------' },
-		{name:'清除样式', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } }
-		//,{name:'Preview', className:'preview',  call:'preview'}
-    ]
-};
