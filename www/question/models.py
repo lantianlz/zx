@@ -62,12 +62,12 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    from_user_id = models.CharField(max_length=32, db_index=True)
-    to_user_id = models.CharField(max_length=32, db_index=True)
+    from_user_id = models.CharField(verbose_name=u'回答者', max_length=32, db_index=True)
+    to_user_id = models.CharField(verbose_name=u'提问者', max_length=32, db_index=True)
     content = models.TextField()
     question = models.ForeignKey(Question)
-    sort_num = models.IntegerField(default=-999, db_index=True)
-    zan_num = models.IntegerField(default=0)
+    sort_num = models.IntegerField(verbose_name=u'排序值', default=-999, db_index=True)
+    zan_num = models.IntegerField(verbose_name=u'赞的次数', default=0)
     ip = models.CharField(max_length=32, null=True)
     state = models.BooleanField(default=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)

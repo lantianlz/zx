@@ -14,7 +14,7 @@ from www.misc.decorators import member_required
 
 def show_index(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/home')
+        return HttpResponseRedirect('/question')
     else:
         return HttpResponseRedirect('/login')
 
