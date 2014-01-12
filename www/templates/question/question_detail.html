@@ -8,11 +8,23 @@
 $(document).ready(function(){
 
   // 导航事件
+  /*
   $('.replies .nav-tabs a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
 
     $('#ul_replies').hide('fast').show('fast');
+  });
+  */
+
+  // 删除回复事件
+  $('.reply-main').bind('mouseover', function(){
+    
+    $(this).find('.remove-reply').removeClass('hide');
+  })
+  .bind('mouseout', function(){
+
+    $(this).find('.remove-reply').addClass('hide');
   });
   
   
@@ -205,8 +217,26 @@ $(document).ready(function(){
   margin-top: 5px;
 }
 
-.mine-reply{
+.my-reply{
   background-color: #f1f1f1;
+}
+
+.question-tool{
+    font-size: 12px;
+    float: right;
+    padding-right: 10px;
+}
+
+.remove-reply{
+    font-size: 12px;
+    padding-top: 15px;
+    width: 90%;
+    text-align: center;
+}
+
+.question-content{
+    border: solid 1px #ddd;
+    border-radius: 4px;
 }
 </style>
 {% endblock %}
@@ -240,6 +270,45 @@ $(document).ready(function(){
             </a>
             {% endif %}
             <div class="question-date">{{question.create_time}}</div>
+            {% if request.user.id == question.user.id %}
+            <div class="question-tool"><a href="#" data-toggle="modal" data-target="#edit_modal"><span class="glyphicon glyphicon-pencil"></span>修改提问</a></div>
+
+            <!-- 弹出层 -->
+            <div class="modal fade" id="edit_modal">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form" method='post' action='/question/modify_question'>
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">修改提问</h4>
+                      </div>
+                      <div class="modal-body">
+                    
+                        <div class="form-group">
+                            <select name="question_type" class="form-control">
+                                <option value='0'>请选择问题类型</option>
+                                {% question_type_option_display %}
+                            </select>
+                        </div>
+                        <div class="blank10"></div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
+                                    value='{{question.title}}'></div>
+                        <div class="form-group question-content">
+                            <textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question.content}}</textarea>
+                        </div>
+                    
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                      </div>
+                  </form>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- 弹出层结束 -->
+            {% endif %}
         </div>
     </div>
 
@@ -261,7 +330,7 @@ $(document).ready(function(){
             </li>
 
             {% for answer in answers %}
-            <li class="list-group-item {% if answer.from_user_id == question.user_id %}mine-reply{% endif %}">
+            <li class="list-group-item {% if answer.from_user_id == question.user_id %}my-reply{% endif %}">
                 <div class="reply-header">
                     <a href="{{answer.from_user.get_url}}">
                         <div class="avatar">
@@ -282,6 +351,9 @@ $(document).ready(function(){
                                 <span class="badge">{{answer.zan_num}}</span>
                             </button>
                         </div>
+                        {% if question.user.id == request.user.id %}
+                        <div class="remove-reply hide"><a href="#"><span class="glyphicon glyphicon-remove"></span>删除回答</a></div>
+                        {% endif %}
                     </div>
                 </div>
             </li>
@@ -308,6 +380,7 @@ $(document).ready(function(){
                                 <span class="badge">12</span>
                             </button>
                         </div>
+                        <div class="remove-reply hide"><a href="#"><span class="glyphicon glyphicon-remove"></span>删除回答</a></div>
                     </div>
                 </div>
             </li>

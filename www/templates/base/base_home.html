@@ -26,6 +26,11 @@ body {background-color: #F0F4F7}
     text-decoration: none;
 }
 
+.login-user .avatar{
+    width: 25px;
+    height: 25px;
+}
+
 .img-logo img{
     padding-top: 12px;
 }
@@ -54,6 +59,7 @@ body {background-color: #F0F4F7}
             <div class="pull-right login-user text-right">
                 {% if request.user.is_authenticated %}
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <img class='avatar' src="{{MEDIA_URL}}img/common/default.png">
                     {{ request.user.nick }}
                     <span class="caret"></span>
                 </a>
