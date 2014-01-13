@@ -238,6 +238,15 @@ $(document).ready(function(){
     border: solid 1px #ddd;
     border-radius: 4px;
 }
+
+.jinghua{
+  background: url({{MEDIA_URL}}img/common/jinghua.png) no-repeat ;
+  background-position: 0 0!important;
+  width: 127px;
+  height: 110px;
+  position: absolute;
+  right: 40px;
+}
 </style>
 {% endblock %}
 
@@ -253,6 +262,7 @@ $(document).ready(function(){
 </ol>
 <div class="question-entry">
     <div class="topic">
+        <span class="jinghua"></span>
         <div class="topic-title">
             <h4> <strong>{{question.title}}</strong>
             </h4>

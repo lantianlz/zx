@@ -1,41 +1,30 @@
-{% extends "daily/base_daily.html" %}
+{% extends "recommend/base_recommend.html" %}
 
-{% block title %}每日精华{% endblock %}
+{% block title %}专题推荐{% endblock %}
 
 {% block css %}
 <style type="text/css">
-.daily-main{
+.recommend-main{
 	margin-top: 30px;
 }
 
-.daily-main-row{
+.recommend-main-row{
 	padding-bottom: 15px;
 }
 
-.daily-title h4{
+.recommend-title h4{
 	color: #475058;
 }
 
-.daily-profile{
+.recommend-profile{
 	color: #999;
 	font-size: 12px;
 }
 
-.daily-content{
+.recommend-content{
 	padding-top: 8px;
 	color: #475058;
 	line-height: 24px;
-}
-
-.jinghua{
-	background: url({{MEDIA_URL}}img/common/jinghua.png) no-repeat ;
-	background-position: 0 -110px!important;
-	width: 127px;
-	height: 110px;
-	position: absolute;
-	right: 20px;
-	/*-webkit-transform: rotate(30deg);
-	-moz-transform: rotate(30deg);*/
 }
 </style>
 {% endblock %}
@@ -43,19 +32,18 @@
 {% block javascript %}
 {% endblock %}
 
-{% block daily_main %}
-<ul class="list-group daily-main">
+{% block recommend_main %}
+<ul class="list-group recommend-main">
 	<li class="list-group-item">
-		<div class='daily-item'>
-			<span class="jinghua"></span>
-			<div class='daily-title'>
-				<a href="/question/question_detail/2"><h4>支付是互联网金融的基础工具</h4></a>
+		<div class='recommend-item'>
+			<div class='recommend-title'>
+				<a href="/recommend/recommend_detail"><h4>支付是互联网金融的基础工具</h4></a>
 			</div>
-			<div class='daily-main-row row'>
-				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
-				<div class='daily-right col-md-10'>
-					<div class='daily-profile'>时间：2013-11-19  来源：有利网   作者：中华浔</div>
-					<div class='daily-content'>
+			<div class='recommend-main-row row'>
+				<div class='recommend-img col-md-2'><img src="{{MEDIA_URL}}img/common/recommend.jpg"></div>
+				<div class='recommend-right col-md-10'>
+					<div class='recommend-profile'>时间：2013-11-19  来源：有利网   作者：中华浔</div>
+					<div class='recommend-content'>
 						上篇中华浔讲到互联网金融是如何火起来的，兴起来之后，每一位行业者都会想互联网金融都包括些什么。接下来，就从互联网金融最早兴起的几种形式，P2P、第三方支付、众筹是其中三种。...
 					</div>
 				</div>
@@ -63,16 +51,15 @@
 		</div>
 	</li>
 	<li class="list-group-item">
-		<div class='daily-item'>
-			<span class="jinghua"></span>
-			<div class='daily-title'>
-				<a href="/daily/daily_detail"><h4>中国网络借贷模式大起底</h4></a>
+		<div class='recommend-item'>
+			<div class='recommend-title'>
+				<a href="/recommend/recommend_detail"><h4>中国网络借贷模式大起底</h4></a>
 			</div>
-			<div class='daily-main-row row'>
-				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
-				<div class='daily-right col-md-10'>
-					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：史晨昱</div>
-					<div class='daily-content'>
+			<div class='recommend-main-row row'>
+				<div class='recommend-img col-md-2'><img src="{{MEDIA_URL}}img/common/recommend.jpg"></div>
+				<div class='recommend-right col-md-10'>
+					<div class='recommend-profile'>时间：2013-11-18  来源：有利网   作者：史晨昱</div>
+					<div class='recommend-content'>
 						相对于第三方支付和网络销售，网络借贷因为涉及到借贷关系，成为公众更为关注的互联网金融模式。网络借贷是指民间出资人通过网络平台在收取一定利息的前提下，...
 					</div>
 				</div>
@@ -80,16 +67,15 @@
 		</div>
 	</li>
 	<li class="list-group-item">
-		<div class='daily-item'>
-			<span class="jinghua"></span>
-			<div class='daily-title'>
-				<a href="/daily/daily_detail"><h4>互联网金融是怎么火起来的？</h4></a>
+		<div class='recommend-item'>
+			<div class='recommend-title'>
+				<a href="/recommend/recommend_detail"><h4>互联网金融是怎么火起来的？</h4></a>
 			</div>
-			<div class='daily-main-row row'>
-				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
-				<div class='daily-right col-md-10'>
-					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>
-					<div class='daily-content'>
+			<div class='recommend-main-row row'>
+				<div class='recommend-img col-md-2'><img src="{{MEDIA_URL}}img/common/recommend.jpg"></div>
+				<div class='recommend-right col-md-10'>
+					<div class='recommend-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>
+					<div class='recommend-content'>
 						今年，是互联网金融的元年。很多人都不知道， 它究意是怎么火起来的。 最近，热炒的是百度的百发，这是百度与华夏共同推出的， 能够带给用户8％的收益，这被看做是推翻余额宝的一个重磅产品。...
 					</div>
 				</div>
@@ -97,16 +83,15 @@
 		</div>
 	</li>
 	<li class="list-group-item">
-		<div class='daily-item'>
-			<span class="jinghua"></span>
-			<div class='daily-title'>
-				<a href="/daily/daily_detail"><h4>艺术创新、商业创新和原教旨主义</h4></a>
+		<div class='recommend-item'>
+			<div class='recommend-title'>
+				<a href="/recommend/recommend_detail"><h4>艺术创新、商业创新和原教旨主义</h4></a>
 			</div>
-			<div class='daily-main-row row'>
-				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
-				<div class='daily-right col-md-10'>
-					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>
-					<div class='daily-content'>
+			<div class='recommend-main-row row'>
+				<div class='recommend-img col-md-2'><img src="{{MEDIA_URL}}img/common/recommend.jpg"></div>
+				<div class='recommend-right col-md-10'>
+					<div class='recommend-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>
+					<div class='recommend-content'>
 						最近和很多朋友谈到P2P(网贷)模式的发展演变问题，这个问题基本上可以从两个方面看，一方面是行业有识之士不断通过微创新努力给模式带来了更大的活力和安全；另一面则是异化问题，即很多别有用心的人利用模式的形式，假借P2P之名做非P2P的事情给自己企业"自融"，...
 					</div>
 				</div>
@@ -114,16 +99,15 @@
 		</div>
 	</li>
 	<li class="list-group-item">
-		<div class='daily-item'>
-			<span class="jinghua"></span>
-			<div class='daily-title'>
-				<a href="/daily/daily_detail"><h4>风口、互联网金融和众筹</h4></a>
+		<div class='recommend-item'>
+			<div class='recommend-title'>
+				<a href="/recommend/recommend_detail"><h4>风口、互联网金融和众筹</h4></a>
 			</div>
-			<div class='daily-main-row row'>
-				<div class='daily-img col-md-2'><img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
-				<div class='daily-right col-md-10'>
-					<div class='daily-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>
-					<div class='daily-content'>
+			<div class='recommend-main-row row'>
+				<div class='recommend-img col-md-2'><img src="{{MEDIA_URL}}img/common/recommend.jpg"></div>
+				<div class='recommend-right col-md-10'>
+					<div class='recommend-profile'>时间：2013-11-18  来源：有利网   作者：中华浔</div>
+					<div class='recommend-content'>
 						这一年来，要说创投界的热门领域，互联网金融肯定算一个。 创投界是一个很奇怪的场域——这个创投界包括创业圈和投资界——总是被一波波的风潮所驱动，前年的话题是团购，去年变成了导购和APP,今年上半年还是打车软件，下半年就变成了互联网金融。 我不知道这是羊群效应，还是如凯文凯利所说的那样，是“技术元素”的自我驱动使然。...
 					</div>
 				</div>

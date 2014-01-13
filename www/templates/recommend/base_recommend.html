@@ -1,0 +1,51 @@
+{% extends "base/base_home.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block cheader %}
+<style type="text/css">
+body {background-color: #F0F4F7; font-family: "微软雅黑";}
+
+.container_content{
+    background-color: white;
+    border-radius: 5px;
+    border: solid 1px lightgray;
+    padding-bottom: 20px;
+    /*margin-left: 0px;*/
+    /*margin-right: 0px;*/
+}
+
+.zx-container-main{
+    padding-left: 25px;
+}
+
+.zx-container-right{
+    padding-right: 25px;
+}
+
+.recommend-ad {
+    margin-top: 30px;
+}
+
+.recommend-ad img{
+    width: 100%;
+    height: 100%;
+}
+</style>
+{% block javascript %}{% endblock %}
+{% block css %}{% endblock %}
+{% endblock %}
+
+{% block container_content %}
+<div class="zx-container-main col-md-8">
+    {% block recommend_main %}{% endblock %}
+</div>
+<div class="zx-container-right col-md-4">
+    <div class="panel panel-default recommend-ad">
+        <div class="panel-heading">广告位招租</div>
+        <div class="panel-body">
+            <img src="{{MEDIA_URL}}img/common/ad.png" title="广告位招租" alt="广告位招租">
+        </div>
+    </div>
+</div>
+{% endblock container_content %}
