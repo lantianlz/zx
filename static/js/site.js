@@ -142,6 +142,8 @@ $(document).ready(function(){
 		}
 	});
 
+  	// 给不支持placeholder的浏览器添加次属性
+  	$('input, textarea').placeholder();
 	/*
 	var editor;
 	KindEditor.ready(function(K) {

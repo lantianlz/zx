@@ -19,15 +19,21 @@
 }
 
 .login-main .xlwb{
+    /*
     background: url({{MEDIA_URL}}img/common/is.png) no-repeat;
     background-position: 0 -120px!important;
     padding-left: 22px;
+    */
+    /*background-image: url({{MEDIA_URL}}img/common/xlwb.png);*/
 }
 
 .login-main .txqq{
+    /*
     background: url({{MEDIA_URL}}img/common/is.png) no-repeat;
     background-position: 0 -2234px!important;
     padding-left: 22px;
+    */
+    /*background-image: url({{MEDIA_URL}}img/common/txqq.png);*/
 }
 
 </style>
@@ -64,7 +70,7 @@
                     <div class="col-md-6">
                         <a href="/forget_password">忘记密码?</a>
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-md-6">
                         <a href="/regist">还没有帐号？免费注册</a>
                     </div>
                 </div>
@@ -72,10 +78,10 @@
             <div class="form-group">
                 <div class="col-md-offset-1">
                     <div class="col-md-6">
-                        <a class="xlwb" href="#">新浪微博登录</a>
+                        <a class="xlwb" href="#"><img src="{{MEDIA_URL}}img/common/xlwb.png"></a>
                     </div>
                     <div class="col-md-6">
-                        <a class="txqq" href="/account/oauth/qq">腾讯QQ登录</a>
+                        <a class="txqq" href="/account/oauth/qq"><img src="{{MEDIA_URL}}img/common/txqq.png"></a>
                     </div>
                 </div>
             </div>
