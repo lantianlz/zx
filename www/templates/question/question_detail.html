@@ -78,6 +78,14 @@ $(document).ready(function(){
 
   });
 
+
+  // 精华盖章动画
+  var jinghua = $('.jinghua img');
+  jinghua.show()
+  .css({'width': '444.5px', 'height': '385px'})
+  .animate({'width': '190.5', 'height': '165px', 'opacity': '0.6'}, 500)
+  .animate({'width': '127px', 'height': '110px', 'opacity': '0.99'}, 50);
+
 });
 </script>
 {% endblock %}
@@ -239,18 +247,22 @@ $(document).ready(function(){
     border-radius: 4px;
 }
 
-.jinghua{
-  background: url({{MEDIA_URL}}img/common/jinghua.png) no-repeat ;
-  background-position: 0 0!important;
+.jinghua img{
   width: 127px;
   height: 110px;
   position: absolute;
   right: 40px;
+  display: none;
+  opacity: 0.1;
+  top: 100px;
+  z-index: 99;
 }
 </style>
 {% endblock %}
 
 {% block question_main%}
+<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
+
 <ol class="breadcrumb">
     <li>
         <a href="/question">全部</a>
@@ -262,7 +274,7 @@ $(document).ready(function(){
 </ol>
 <div class="question-entry">
     <div class="topic">
-        <span class="jinghua"></span>
+        
         <div class="topic-title">
             <h4> <strong>{{question.title}}</strong>
             </h4>

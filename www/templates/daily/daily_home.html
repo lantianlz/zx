@@ -27,27 +27,49 @@
 	line-height: 24px;
 }
 
-.jinghua{
-	background: url({{MEDIA_URL}}img/common/jinghua.png) no-repeat ;
-	background-position: 0 -110px!important;
-	width: 127px;
-	height: 110px;
-	position: absolute;
-	right: 20px;
-	/*-webkit-transform: rotate(30deg);
-	-moz-transform: rotate(30deg);*/
+
+.jinghua img{
+  width: 127px;
+  height: 110px;
+  position: absolute;
+  right: 20px;
+  display: none;
+  opacity: 0.1;
+  top: 1px;
+  z-index: 99;
 }
 </style>
 {% endblock %}
 
 {% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+	// 精华盖章动画
+  	var jinghua = $('.jinghua img');
+  	for (var i = jinghua.length - 1; i >= 0; i--) {
+
+  		(function(index){
+  			var temp = jinghua.eq(i);
+	  		window.setTimeout(function(){
+	  			temp.show()
+				.css({'width': '444.5px', 'height': '262.5px'})
+				.animate({'width': '190.5', 'height': '112.5px', 'opacity': '0.6'}, 500)
+				.animate({'width': '127px', 'height': '75px', 'opacity': '0.99'}, 50);
+	  		}, 300*i);
+
+  		})(i);
+
+  	};
+	  
+});
+</script>
 {% endblock %}
 
 {% block daily_main %}
 <ul class="list-group daily-main">
 	<li class="list-group-item">
 		<div class='daily-item'>
-			<span class="jinghua"></span>
+			<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
 			<div class='daily-title'>
 				<a href="/question/question_detail/2"><h4>支付是互联网金融的基础工具</h4></a>
 			</div>
@@ -64,7 +86,7 @@
 	</li>
 	<li class="list-group-item">
 		<div class='daily-item'>
-			<span class="jinghua"></span>
+			<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
 			<div class='daily-title'>
 				<a href="/daily/daily_detail"><h4>中国网络借贷模式大起底</h4></a>
 			</div>
@@ -81,7 +103,7 @@
 	</li>
 	<li class="list-group-item">
 		<div class='daily-item'>
-			<span class="jinghua"></span>
+			<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
 			<div class='daily-title'>
 				<a href="/daily/daily_detail"><h4>互联网金融是怎么火起来的？</h4></a>
 			</div>
@@ -98,7 +120,7 @@
 	</li>
 	<li class="list-group-item">
 		<div class='daily-item'>
-			<span class="jinghua"></span>
+			<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
 			<div class='daily-title'>
 				<a href="/daily/daily_detail"><h4>艺术创新、商业创新和原教旨主义</h4></a>
 			</div>
@@ -115,7 +137,7 @@
 	</li>
 	<li class="list-group-item">
 		<div class='daily-item'>
-			<span class="jinghua"></span>
+			<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
 			<div class='daily-title'>
 				<a href="/daily/daily_detail"><h4>风口、互联网金融和众筹</h4></a>
 			</div>
