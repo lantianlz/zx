@@ -42,6 +42,18 @@ body {background-color: #F0F4F7}
 .navbar-inverse .navbar-nav .active a:hover{
     background-color: #888888;
 }
+
+.dropdown-menu{
+    background-color: #101010;
+}
+
+.dropdown-menu>li>a{
+    color: #ddd;
+}
+
+.dropdown-menu .divider{
+    background-color: #555555;
+}
 </style>
 {% block cheader %}{% endblock %}
 {% endblock %}
@@ -81,6 +93,7 @@ body {background-color: #F0F4F7}
                     <li>
                         <a href="#">通知中心</a>
                     </li>
+                    <li role="presentation" class="divider"></li>
                     <li>
                         <a href="/logout">退出</a>
                     </li>
