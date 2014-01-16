@@ -1,0 +1,71 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}问题分类管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+#question_type_list{
+    padding-top: 10px;
+}
+</style>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+var questionTypeModule = angular.module('QuestionTypeModule', []);
+
+questionTypeModule.factory('Items', function(){
+    var items = {};
+    items.query = function(){
+        // In real apps, we'd pull this data from the server…
+        return [
+            {name: '大盘', value: '10', domin: 'a', sort_num: '1', state: true},
+            {name: '基金', value: '20', domin: 'b', sort_num: '2', state: true},
+            {name: '股票', value: '30', domin: 'c', sort_num: '3', state: true},
+            {name: '期货', value: '40', domin: 'd', sort_num: '4', state: true}
+        ];
+    };
+    return items;
+});
+
+//
+function questionTypeListController($scope, Items){
+    $scope.items = Items.query();
+}
+
+$(document).ready(function(){
+    
+});
+</script>
+{% endblock %}
+
+
+{% block admin-main %}
+<div ng-app="QuestionTypeModule">
+    <!-- Nav tabs -->
+    <ul class="question-type-tabs nav nav-tabs">
+        <li class="active"><a href="#question_type_list" data-toggle="tab">问题类型列表</a></li>
+        <li><a href="#add_question_type" data-toggle="tab">添加问题类型</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="question_type_list" ng-controller="questionTypeListController">
+            <table class="table table-hover">
+                <thead><tr><th>序号</th><th>名称</th><th>属性值</th><th>域名</th><th>排序</th><th>状态</th></tr></thead>
+                <tbody>
+                    <tr ng-repeat="item in items">
+                        <td>{{'{'}}{{'{'}}$index + 1{{'}'}}{{'}'}}</td>
+                        <td>{{'{'}}{{'{'}}item.name{{'}'}}{{'}'}}</td>
+                        <td>{{'{'}}{{'{'}}item.value{{'}'}}{{'}'}}</td>
+                        <td>{{'{'}}{{'{'}}item.domin{{'}'}}{{'}'}}</td>
+                        <td>{{'{'}}{{'{'}}item.sort_num{{'}'}}{{'}'}}</td>
+                        <td>{{'{'}}{{'{'}}item.state{{'}'}}{{'}'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="add_question_type">...2</div>
+    </div>
+</div>
+{% endblock admin-main %}

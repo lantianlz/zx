@@ -15,6 +15,10 @@ body{
     font-size: 12px;
 } 
 
+.admin-profile .profile{
+    padding-top: 5px;
+}
+
 .avatar{
     width: 60px;
     height: 60px;
@@ -60,7 +64,15 @@ body{
 $(document).ready(function(){
     window.setInterval(function(){
         var d = new Date();
-        var strDate = d.getFullYear()+'-'+d.getMonth()+1+'-'+d.getDay()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var strDate = String.format(
+            '{0}-{1}-{2} {3}:{4}:{5}', 
+            addZero(d.getFullYear()), 
+            addZero(d.getMonth()), 
+            addZero(d.getDate()),
+            addZero(d.getHours()),
+            addZero(d.getMinutes()),
+            addZero(d.getSeconds())
+        ); 
         $('.clock').html(strDate);
     }, 1000);
 });
@@ -72,8 +84,8 @@ $(document).ready(function(){
 
 {% block container %}
 <div class="col-md-3 zx-admin-left">
-    <a class="list-group-item {% if '/s/agreement' == request.path %} active {% endif %}" href="/s/agreement">
-        {% if '/s/agreement' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
+    <a class="list-group-item {% if '/admin/question_type' == request.path %} active {% endif %}" href="/admin/question_type">
+        {% if '/admin/question_type' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
         问题分类管理
     </a>
     <a class="list-group-item {% if '/s/about' == request.path %} active {% endif %}" href="/s/about">
@@ -91,5 +103,6 @@ $(document).ready(function(){
     
 </div>
 <div class="col-md-9 zx-admin-main">
+    {% block admin-main %}{% endblock %}
 </div>
 {% endblock container %}

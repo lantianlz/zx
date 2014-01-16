@@ -50,6 +50,39 @@ function check_friend_name_callback(data)
 	}
 }
 
+/*
+	为字符串拓展format方法
+	用例：
+	String.format('{0}, {1}!', 'Hello', 'world')
+*/
+if (!String.format) {
+	String.format = function(src){
+	    if (arguments.length == 0){
+	    	return null;
+	   	}
+
+	    var args = Array.prototype.slice.call(arguments, 1);
+	    return src.replace(/\{(\d+)\}/g, function(m, i){
+	        return args[i];
+	    });
+	};
+}
+
+
+/*
+  自动补零
+*/
+function addZero(data){
+	var temp = data + '';
+	if(temp.length === 0){
+		return '00'
+	} else if(temp.length === 1){
+		return  '0' + temp;
+	} else{
+		return data;
+	}
+}
+
 
 // 文本编辑器默认设置
 var markItUpSettings = {

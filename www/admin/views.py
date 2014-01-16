@@ -11,3 +11,7 @@ from common import utils, page
 
 def home(request, template_name='admin/home.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def question_type_list(request, template_name='admin/question_type_list.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
