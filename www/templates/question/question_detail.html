@@ -17,6 +17,14 @@ $(document).ready(function(){
   });
   */
 
+  // 
+  $('.not-login .btn-login').bind('click', function(){
+    window.location.href = '/login';
+  });
+  $('.not-login .btn-regist').bind('click', function(){
+    window.location.href = '/regist';
+  });
+
   // 删除回复事件
   $('.reply-main').bind('mouseover', function(){
     
@@ -434,12 +442,12 @@ $(document).ready(function(){
                     <div class="content">须登录后才能发表你的回复，点击下面的登录按钮进行登录，如果你还没有成为我们的会员，请点击下面的注册按钮进行新用户注册</div>
                     <div class="col-md-6 links">
                         <a href="/login">
-                            <button type="button" class="btn btn-primary btn-lg">立即登录</button>
+                            <button type="button" class="btn btn-primary btn-lg btn-login">立即登录</button>
                         </a>
                     </div>
                     <div class="col-md-6 links">
                         <a href="/regist">
-                            <button type="button" class="btn btn-primary btn-lg">免费注册</button>
+                            <button type="button" class="btn btn-primary btn-lg btn-regist">免费注册</button>
                         </a>
                     </div>
                 </div>
