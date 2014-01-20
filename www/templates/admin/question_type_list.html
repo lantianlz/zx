@@ -8,6 +8,14 @@
 #question_type_list{
     padding-top: 10px;
 }
+
+.question-type-items{
+    min-height: 310px;
+}
+
+.filter-question-type{
+    /*padding-right: 50px;*/
+}
 </style>
 {% endblock %}
 {% block javascript %}
@@ -44,28 +52,175 @@ $(document).ready(function(){
 <div ng-app="QuestionTypeModule">
     <!-- Nav tabs -->
     <ul class="question-type-tabs nav nav-tabs">
-        <li class="active"><a href="#question_type_list" data-toggle="tab">问题类型列表</a></li>
-        <li><a href="#add_question_type" data-toggle="tab">添加问题类型</a></li>
+        <li class="active">
+            <a href="#question_type_list" data-toggle="tab">问题类型列表</a>
+        </li>
+        <li>
+            <a href="#add_question_type" data-toggle="tab">添加问题类型</a>
+        </li>
+        <li class="pull-right">
+            <div class="filter-question-type row">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="filter_question_type_name" placeholder="输入要查找的问题类型名称">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-default">查询</button>
+                </div>
+            </div>
+        </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane fade in active" id="question_type_list" ng-controller="questionTypeListController">
-            <table class="table table-hover">
-                <thead><tr><th>序号</th><th>名称</th><th>属性值</th><th>域名</th><th>排序</th><th>状态</th></tr></thead>
-                <tbody>
-                    <tr ng-repeat="item in items">
-                        <td>{{'{'}}{{'{'}}$index + 1{{'}'}}{{'}'}}</td>
-                        <td>{{'{'}}{{'{'}}item.name{{'}'}}{{'}'}}</td>
-                        <td>{{'{'}}{{'{'}}item.value{{'}'}}{{'}'}}</td>
-                        <td>{{'{'}}{{'{'}}item.domin{{'}'}}{{'}'}}</td>
-                        <td>{{'{'}}{{'{'}}item.sort_num{{'}'}}{{'}'}}</td>
-                        <td>{{'{'}}{{'{'}}item.state{{'}'}}{{'}'}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="question-type-items">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>名称</th>
+                            <th>属性值</th>
+                            <th>域名</th>
+                            <th>排序</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in items">
+                            <td>{{'{'}}{{'{'}}$index + 1{{'}'}}{{'}'}}</td>
+                            <td>{{'{'}}{{'{'}}item.name{{'}'}}{{'}'}}</td>
+                            <td>{{'{'}}{{'{'}}item.value{{'}'}}{{'}'}}</td>
+                            <td>{{'{'}}{{'{'}}item.domin{{'}'}}{{'}'}}</td>
+                            <td>{{'{'}}{{'{'}}item.sort_num{{'}'}}{{'}'}}</td>
+                            <td>{{'{'}}{{'{'}}item.state{{'}'}}{{'}'}}</td>
+                            <td>
+                                <a href="#" data-toggle="modal" data-target="#edit_modal">修改</a>
+                                <button type="submit" class="btn btn-primary">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center">
+                <ul class="pagination pagination-sm">
+                    <li class="disabled">
+                        <a href="#">&laquo;</a>
+                    </li>
+                    <li class="active">
+                        <a href="#">1</a>
+                    </li>
+                    <li>
+                        <a href="#">2</a>
+                    </li>
+                    <li>
+                        <a href="#">3</a>
+                    </li>
+                    <li>
+                        <a href="#">4</a>
+                    </li>
+                    <li>
+                        <a href="#">5</a>
+                    </li>
+                    <li>
+                        <a href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- 修改提问弹出层 -->
+            <div class="modal fade" id="edit_modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form role="form" class="form-horizontal" method='post' action=''>
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">修改问题类型</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">类型名称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="question_type_name" placeholder="" value=''></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">属性值</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="question_type_value" placeholder="" value=''></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">域名</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="question_type_domin" placeholder="" value=''></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">排序</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="question_type_sort_num" placeholder="" value=''></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">状态</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="question_type_state" placeholder="" value=''></div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary">保存修改</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="tab-pane fade" id="add_question_type">...2</div>
-    </div>
+        <!-- 弹出层结束 -->
+
+        <!-- 添加提问 -->
+        <div class="tab-pane fade" id="add_question_type">
+            <form role="form" class="form-horizontal" method='post' action=''>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">类型名称</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="question_type_name" placeholder="" value=''></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">属性值</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="question_type_value" placeholder="" value=''></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">域名</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="question_type_domin" placeholder="" value=''></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">排序</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="question_type_sort_num" placeholder="" value=''></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">状态</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="question_type_state" placeholder="" value=''></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary">添加新的提问类型</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- 添加提问结束 --> </div>
 </div>
 {% endblock admin-main %}

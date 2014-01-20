@@ -59,6 +59,24 @@ body{
     min-height: 380px;
 }
 
+.zx-admin-main{
+    min-height: 450px;
+    border-left: 1px solid #ddd;
+    margin-bottom: 20px;
+    /*padding-top: 10px;*/
+}
+
+.zx-admin-main .form-group{
+    padding-top: 20px;
+    margin-right: 10px;
+    border-top: solid 1px #f2f2f2;
+    margin-left: 10px;
+}
+
+.zx-admin-main .form-group:first-child{
+    border-top: 0px;
+}
+
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -67,7 +85,7 @@ $(document).ready(function(){
         var strDate = String.format(
             '{0}-{1}-{2} {3}:{4}:{5}', 
             addZero(d.getFullYear()), 
-            addZero(d.getMonth()), 
+            addZero(d.getMonth()+1), 
             addZero(d.getDate()),
             addZero(d.getHours()),
             addZero(d.getMinutes()),
@@ -88,15 +106,15 @@ $(document).ready(function(){
         {% if '/admin/question_type' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
         问题分类管理
     </a>
-    <a class="list-group-item {% if '/s/about' == request.path %} active {% endif %}" href="/s/about">
+    <a class="list-group-item {% if '/s/about' == request.path %} active {% endif %}" href="#">
         {% if '/s/about' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
         问题管理
     </a>
-    <a class="list-group-item {% if '/s/disclaimer' == request.path %} active {% endif %}" href="/s/disclaimer">
+    <a class="list-group-item {% if '/s/disclaimer' == request.path %} active {% endif %}" href="#">
         {% if '/s/disclaimer' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
         每日精华管理
     </a>
-    <a class="list-group-item {% if '/s/links' == request.path %} active {% endif %}" href="/s/links">
+    <a class="list-group-item {% if '/s/links' == request.path %} active {% endif %}" href="#">
         {% if '/s/links' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
         用户管理
     </a>
