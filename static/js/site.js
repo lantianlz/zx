@@ -169,6 +169,7 @@ $(document).ready(function(){
 
 	// 设置编辑器
   	$('.zx-textarea').markItUp(markItUpSettings);
+  	// 设置文本框自动增加高度
   	$('.zx-textarea').bind('keyup', function(e){
 		if(e.keyCode == 13){
 			$(this).height($(this).height() + $(this).scrollTop() + 2);
