@@ -22,6 +22,7 @@
 <script type="text/javascript">
 var questionTypeModule = angular.module('QuestionTypeModule', []);
 
+// 修改模板渲染标签
 questionTypeModule.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{[{');
   $interpolateProvider.endSymbol('}]}');
@@ -54,8 +55,9 @@ questionTypeModule.factory('QuestionTypeService', function(){
         });
     }
 
+    // 删除
     service.remove = function(questionTypeId){
-        console.log(questionTypeId);
+        // console.log(questionTypeId);
         for (var i = data.length - 1; i >= 0; i--) {
             if(data[i].id == questionTypeId){
                 data.splice(i, 1);
@@ -63,7 +65,28 @@ questionTypeModule.factory('QuestionTypeService', function(){
         };
     };
 
+    // 显示详细
+    service.detail = function(questionTypeId){
+        for (var i = data.length - 1; i >= 0; i--) {
+            if(data[i].id == questionTypeId){
+                return data[i];
+            }
+        };
+    }
 
+    // 保存
+    service.save = function(questionTypeId, name, value, domin, sort_num, state){
+        for (var i = data.length - 1; i >= 0; i--) {
+            if(data[i].id == questionTypeId){
+                data[i].name = name;
+                data[i].value = value;
+                data[i].domin = domin;
+                data[i].sort_num = sort_num;
+                data[i].state = state;
+            }
+        };
+        return true;
+    }
     return service;
 });
 
@@ -87,18 +110,39 @@ function questionTypeListController($scope, QuestionTypeService){
     };
 
     // 修改问题类型
-    $scope.modifyQuestionType = function(){
-
+    $scope.saveQuestionType = function(){
+        QuestionTypeService.save(
+            $scope.questionType.questionTypeId,
+            $scope.questionType.questionTypeName,
+            $scope.questionType.questionTypeValue,
+            $scope.questionType.questionTypeDomin,
+            $scope.questionType.questionTypeSortNum,
+            $scope.questionType.questionTypeState
+        );
+        
+        $('#edit_modal').modal('hide');
     };
 
     // 显示问题类型
-    $scope.detailQuestionType = function(){
-
+    $scope.detailQuestionType = function(questionTypeId){
+        var data = QuestionTypeService.detail(questionTypeId);
+        
+        $scope.questionType.questionTypeId = data.id;
+        $scope.questionType.questionTypeName = data.name;
+        $scope.questionType.questionTypeValue = data.value;
+        $scope.questionType.questionTypeDomin = data.domin;
+        $scope.questionType.questionTypeSortNum = data.sort_num;
+        $scope.questionType.questionTypeState = data.state;
+        
     }
 
     // 删除问题类型
     $scope.removeQuestionType = function(questionTypeId){
         QuestionTypeService.remove(questionTypeId);
+    }
+
+    $scope.clearData = function(){
+        $scope.questionType = {};
     }
 }
 
@@ -117,7 +161,7 @@ $(document).ready(function(){
             <a href="#question_type_list" data-toggle="tab">问题类型列表</a>
         </li>
         <li>
-            <a href="#add_question_type" data-toggle="tab">添加问题类型</a>
+            <a href="#add_question_type" ng-click="clearData()" data-toggle="tab">添加问题类型</a>
         </li>
         <li class="pull-right">
             <div class="filter-question-type row">
@@ -155,7 +199,7 @@ $(document).ready(function(){
                             <td>{[{item.sort_num}]}</td>
                             <td>{[{item.state}]}</td>
                             <td>
-                                <a href="#" data-toggle="modal" data-target="#edit_modal">修改</a>
+                                <a href="#" data-toggle="modal" data-target="#edit_modal" ng-click="detailQuestionType(item.id)">修改</a>
                                 <button type="submit" class="btn btn-primary" ng-click="removeQuestionType(item.id)">删除</button>
                             </td>
                         </tr>
@@ -192,47 +236,47 @@ $(document).ready(function(){
             <div class="modal fade" id="edit_modal">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form role="form" class="form-horizontal" method='post' action=''>
+                        <form role="form" ng-submit="saveQuestionType()" class="form-horizontal" method='post' action=''>
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 <h4 class="modal-title">修改问题类型</h4>
                             </div>
                             <div class="modal-body">
-
+                                <input type="hidden" name='question_type_id' ng-model="questionType.questionTypeId">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">类型名称</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="question_type_name" placeholder="" value=''></div>
+                                        <input type="text" class="form-control" name="question_type_name" placeholder="" value='' ng-model="questionType.questionTypeName"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">属性值</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="question_type_value" placeholder="" value=''></div>
+                                        <input type="text" class="form-control" name="question_type_value" placeholder="" value='' ng-model="questionType.questionTypeValue"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">域名</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="question_type_domin" placeholder="" value=''></div>
+                                        <input type="text" class="form-control" name="question_type_domin" placeholder="" value='' ng-model="questionType.questionTypeDomin"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">排序</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="question_type_sort_num" placeholder="" value=''></div>
+                                        <input type="text" class="form-control" name="question_type_sort_num" placeholder="" value='' ng-model="questionType.questionTypeSortNum"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">状态</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="question_type_state" placeholder="" value=''></div>
+                                        <input type="text" class="form-control" name="question_type_state" placeholder="" value='' ng-model="questionType.questionTypeState"></div>
                                 </div>
 
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button type="submit" class="btn btn-primary">保存修改</button>
+                                <button type="submit" class="btn btn-primary" ng-submit=>保存修改</button>
                             </div>
                         </form>
                     </div>
