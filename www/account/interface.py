@@ -161,7 +161,7 @@ class UserBase(object):
     def get_user_by_external_info(self, source, access_token, external_user_id,
                                   refresh_token, nick, ip, expire_time,
                                   user_url='', gender=0):
-        assert all((source, access_token, external_user_id, refresh_token, nick))
+        assert all((source, access_token, external_user_id, nick))
         et = self.get_external_user(source, access_token, external_user_id, refresh_token)
         if et:
             return True, self.get_user_by_id(et.user_id)

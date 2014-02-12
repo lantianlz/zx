@@ -18,5 +18,5 @@ urlpatterns = patterns('www.account.views',
 
 urlpatterns += patterns('www.account.views_oauth',
                         url(r'^oauth/qq$', 'oauth_qq'),
-                        url(r'^oauth/weibo$', 'oauth_weibo'),
+                        url(r'^oauth/sina$', 'oauth_sina'),
                         )
