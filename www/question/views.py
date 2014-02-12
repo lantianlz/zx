@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+import json
 from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
@@ -66,3 +67,26 @@ def create_answer(request, question_id):
         return HttpResponseRedirect('/question/question_detail/%s' % question_id)
     else:
         return question_detail(request, question_id, error_msg=result, content=content)
+
+
+def get_tags(request):
+    name = request.REQUEST.get('search', '').strip()
+    print name, '==========='
+    tags = [
+        [1, 'aaaaa'], 
+        [2, 'AAbbb'], 
+        [3, u'大盘'], 
+        [4, u'个股'], 
+        [5, u'套现'], 
+        [6, u'网贷'], 
+        [7, u'信用卡'], 
+        [8, u'小额贷款'], 
+        [9, u'互联网金融'], 
+        [10, u'利率市场化'], 
+        [11, u'P2P借贷']
+    ]
+    match_tags = filter(lambda x: x[1].find(name) > -1, tags)
+    format_tags = [[x[0], x[1], None, x[1]] for x in match_tags]
+    print format_tags, '************'
+    #format_tags = [[2, 'Adolf Hitler', None, '<img src="images/adolfhitler.jpg" /> Adolf Hitler']]
+    return HttpResponse(json.dumps(format_tags))

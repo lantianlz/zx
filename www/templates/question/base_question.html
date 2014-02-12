@@ -128,6 +128,22 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
 .statistics .main .col-md-8{
     padding-top: 5px;
 }
+
+.hot-tags .tag-title{
+    margin-left: 8px;
+}
+
+.hot-tags ul{
+    list-style: none;
+    padding-left: 0px;
+}
+
+.hot-tags li{
+    list-style：none;
+    float: left;
+    margin-bottom: 18px;
+    margin-right: 8px;
+}
 </style>
 
 <script type="text/javascript">
@@ -183,6 +199,83 @@ $(document).ready(function(){
         </div>
     </div>
 
+    <div class="hot-tags panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-tags"></span><span class="tag-title">热门标签</span></div>
+        <div class="panel-body">
+            <ul class="">
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">大盘</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">个股</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">小额贷款</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">互联网金融</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">利率市场化</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">信用卡套现</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">年化收益</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">提现</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">P2P借贷</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="label label-default">
+                            <span class="glyphicon glyphicon-tag"></span><span class="tag-title">理财</span>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
     {% global_statistic %}
 
 </div>
