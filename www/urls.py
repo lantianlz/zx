@@ -19,6 +19,7 @@ urlpatterns = patterns('',
                        url(r'^question/', include('question.urls')),
                        url(r'^daily/', include('daily.urls')),
                        url(r'^recommend/', include('recommend.urls')),
+                       url(r'^message/', include('message.urls')),
                        url(r'^admin/', include('admin.urls')),
 
                        # Examples:

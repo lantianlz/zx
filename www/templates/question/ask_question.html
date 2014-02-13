@@ -8,10 +8,10 @@ $(document).ready(function(){
 	
 	var text_tags = new $.TextboxList('#question_tags_input', {
 		bitsOptions: {
-    		box: {deleteButton: true},
-    		editable: {addKeys: 188}
+    		box: {deleteButton: true}
     	},
 		unique: true, 
+		max: 10,
 		plugins: {
 			autocomplete: {
 				minLength: 1,
@@ -62,10 +62,10 @@ $(document).ready(function(){
 			</select>
 		</div>
 		<div class="form-group">
-			<input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder="添加标签">
+			<input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder="">
 		</div>
 		<div class="form-group">
-			<input type="text" class="form-control input-lg" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
+			<input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
 					value='{{question_title}}'></div>
 		<div class="form-group question-content">
 			<textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question_content}}</textarea>

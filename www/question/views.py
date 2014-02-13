@@ -71,7 +71,7 @@ def create_answer(request, question_id):
 
 def get_tags(request):
     name = request.REQUEST.get('search', '').strip()
-    print name, '==========='
+    
     tags = [
         [1, 'aaaaa'], 
         [2, 'AAbbb'], 
@@ -87,6 +87,5 @@ def get_tags(request):
     ]
     match_tags = filter(lambda x: x[1].find(name) > -1, tags)
     format_tags = [[x[0], x[1], None, x[1]] for x in match_tags]
-    print format_tags, '************'
-    #format_tags = [[2, 'Adolf Hitler', None, '<img src="images/adolfhitler.jpg" /> Adolf Hitler']]
+
     return HttpResponse(json.dumps(format_tags))
