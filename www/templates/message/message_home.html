@@ -32,6 +32,7 @@
 
 .message-list .from{
 	margin-bottom: 7px;
+	font-size: 12px;
 }
 
 .message-list .date{
@@ -42,6 +43,10 @@
 
 .message-list .delete{
 	font-size: 12px;
+}
+
+.message-list .fix-top{
+	padding-top: 8px;
 }
 
 .message-list .toolbar .checkbox{
@@ -77,27 +82,28 @@ $(document).ready(function(){
 <ul class="message-list list-group">
 	<li class="list-group-item toolbar">
 		<div class="row">
-			<form class="form-inline  pull-right" role="form">
-				<div class="form-group">
+			<form class="form-inline " role="form">
+				<div class="form-group pull-left">
 					<select class="form-control input-sm">
-						<option>全部信息</option>
-						<option>未读信息</option>
-						<option>已读信息</option>
+						<option>显示全部信息</option>
+						<option>只显未读信息</option>
+						<option>只显已读信息</option>
 					</select>
 				</div>
-				<div class="form-group">
-					<a href="">删除</a>
-				</div>
-				<div class="form-group">
-					<a href="">标为已读</a>
-				</div>
-				<div class="form-group">
+				<div class="form-group pull-right fix-top">
 					<div class="checkbox">
 					    <label>
 					        <input type="checkbox"> 全 选
 					    </label>
 				    </div>
 				</div>
+				<div class="form-group pull-right fix-top">
+					<a href="">删除</a>
+				</div>
+				<div class="form-group pull-right fix-top">
+					<a href="">标为已读</a>
+				</div>
+				
 			</form>
 		</div>
 	</li>
@@ -145,6 +151,42 @@ $(document).ready(function(){
 			<div class="col-md-8">
 				<div class="from">随便玩玩</div>
 				<div class="content"><a href="/message/message_detail/">不用多久,我就会升职加薪,当上总经理,出任CEO,迎娶白富美,走上人生巅峰。想想还有点小激动呢,嘿嘿~~</a></div>
+			</div>
+			<div class="col-md-3">
+				<div class="date pull-right">2014-02-14 16:52:54</div>
+				<div class="pull-right">
+					<a href="#" class="delete">删除</a>
+					<input type="checkbox">
+				</div>
+			</div>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class="message-item row">
+			<div class="col-md-1">
+				<a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/default.png"></a>
+			</div>
+			<div class="col-md-8">
+				<div class="from">叫我女王大人</div>
+				<div class="content"><a href="/message/message_detail/">十动然拒、喜大普奔、累觉不爱、人艰不拆、不明觉厉……你晓得这些词是什么意思吗？	</a></div>
+			</div>
+			<div class="col-md-3">
+				<div class="date pull-right">2014-02-14 16:52:54</div>
+				<div class="pull-right">
+					<a href="#" class="delete">删除</a>
+					<input type="checkbox">
+				</div>
+			</div>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class="message-item row">
+			<div class="col-md-1">
+				<a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/default.png"></a>
+			</div>
+			<div class="col-md-8">
+				<div class="from">习大大</div>
+				<div class="content"><a href="/message/message_detail/">东莞不哭,东莞加油!央视无情,人间有爱,众志成城,东莞加油!一方有难,八方支援!东莞挺住!大灾面前不放弃,务必抓好灾后重建工作,尽快恢复当地的生产生活秩序。今夜,我们都是东莞人</a></div>
 			</div>
 			<div class="col-md-3">
 				<div class="date pull-right">2014-02-14 16:52:54</div>
