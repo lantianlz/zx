@@ -189,4 +189,4 @@ def security_question(request, template_name='account/security_question.html'):
 @member_required
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect('/home')
+    return HttpResponseRedirect('/')

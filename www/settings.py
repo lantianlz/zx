@@ -159,4 +159,4 @@ SESSION_COOKIE_HTTPONLY = True
 
 import logging
 logging.basicConfig(format='%(asctime)s %(message)s ---------- %(pathname)s:%(module)s.%(funcName)s Line:%(lineno)d',
-                    datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+                    datefmt='%Y-%m-%d %H:%M:%S', level=logging.WARNING)

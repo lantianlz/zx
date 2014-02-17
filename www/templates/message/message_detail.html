@@ -1,0 +1,154 @@
+{% extends "message/base_message.html" %}
+
+{% block title %}消息详情{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.message-list{
+	font-size: 13px;
+	margin-top: 9px;
+}
+
+.message-list .title{
+	font-size: 15px;
+}
+
+.message-list .user{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.message-list .list-group-item{
+	border: 0px;
+}
+
+.message-list .list-group-item:first-child{
+	border-bottom: solid lightgray;
+}
+
+.message-list .avatar{
+	width: 47px;
+	height: 47px;
+}
+
+.message-list .from{
+	margin-bottom: 3px;
+	padding-left: 6px;
+	color: #afafaf;
+	font-size: 12px;
+}
+
+.message-list .date{
+	margin-bottom: 3px;
+}
+
+.message-list .chat{
+	padding: 0 5px 5px 5px;
+	/*background-color: #EDEFF0;
+	border-radius: 4px;
+	margin-left: 7px;
+	margin-right: 7px;*/
+	width: 70%;
+	/*box-shadow: 1px 1px 5px 1px #AEB1B5;
+	line-height: 22px;*/
+}
+
+.message-list .content{
+	padding: 5px;
+	background-color: #EDEFF0;
+	/*border-radius: 4px;*/
+	margin-left: 7px;
+	margin-right: 7px;
+	box-shadow: 3px 3px 3px #AEB1B5;
+	line-height: 22px;
+	float: left;
+}
+
+.message-item{
+	/*width: 80%;*/
+}
+
+.message-item>div{
+	float: left;
+}
+
+.mine>div{
+	float: right;
+}
+
+.mine .from{
+	text-align: right;
+	padding-right: 6px;
+	color: #afafaf;
+	font-size: 12px;
+}
+
+.mine .content{
+	background-color: #91C6F8;
+	float: right;
+}
+
+.send{
+	/*margin-top: 60px;*/
+}
+</style>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block message_main %}
+<ul class="message-list list-group">
+	<li class="list-group-item">
+		<div class="title">  与<a class="user" href=""><span class="glyphicon glyphicon-user"></span>  半夜没事下溜达</a>的消息</div>
+	</li>
+	<li class="list-group-item">
+		<div class="row message-item">
+			<div class=""><a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/default.png"></a></div>
+			<div class="chat">
+				<div class="from">2014-02-14 16:52:54</div>
+				<div class="content">九二九的马自达啊，七星街上不打滑啊；伍思凯在洗澡啊，七仙女下凡啊，刘晓庆没看到啊，全部弄睡着啊；实话给你说啊，九阴真经恶啊；一打一个包啊，三天不得销啊；</div>
+			</div>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class="row message-item mine">
+			<div class=""><a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/default.png"></a></div>
+			<div class="chat">
+				<div class="from">2014-02-14 16:52:54</div>
+				<div class="content">五星红旗飘啊，四人帮打倒啊，三中全会好啊，六角钱张票啊，全家上北京；山上风很大啊，呜啦啦的吹啊，牛儿到处跑啊；刘德华不上班啊，两路口去摸包啊；刘晓庆她妈啊，一颗大暴牙啊；楼上那朵花啊，是不是她妈啊；刘晓庆她爸啊，五里店会客啊，一生过得很坎坷啊，八年前跳过河啊；</div>
+			</div>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class="row message-item">
+			<div class=""><a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/default.png"></a></div>
+			<div class="chat">
+				
+				<div class="from">2014-02-14 16:52:54</div>
+				<div class="content">妈蛋，调这玩意调半天！！老费劲了！</div>
+				
+			</div>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class="row message-item mine">
+			<div class=""><a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/default.png"></a></div>
+			<div class="chat">
+				<div class="from">2014-02-14 16:52:54</div>
+				<div class="content">呢吗搞了快3个小时啊。。。。。 O_O</div>
+			</div>
+		</div>
+	</li>
+</ul>
+
+<hr/>
+
+<form class="form-horizontal" role="form" method='post' action="">
+	<div class="form-group">
+		<div class="col-sm-10">
+			<textarea rows="3" name='message' class="form-control" placeholder="请输入消息内容" value=''></textarea>
+		</div>
+		<div class="col-sm-2 send"><button type="submit" class="btn btn-primary btn-block">发送消息</button></div>
+	</div>
+</form>
+
+{% endblock %}

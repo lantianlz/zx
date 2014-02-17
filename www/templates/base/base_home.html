@@ -18,6 +18,11 @@ body {background-color: #F0F4F7}
     text-decoration: none;
 }
 
+.login-user a:hover{
+    color: #fff;
+    text-decoration: none;
+}
+
 .un-login-user{
     margin-top: 15px;
 }
@@ -35,14 +40,13 @@ body {background-color: #F0F4F7}
     line-height: 25px;
 }
 
-.login-user a:hover{
-    color: #fff;
-    text-decoration: none;
-}
-
 .login-user .avatar{
     width: 25px;
     height: 24px;
+}
+
+.login-user .user{
+    font-size: 14px;
 }
 
 .img-logo img{
@@ -58,25 +62,90 @@ body {background-color: #F0F4F7}
 }
 
 .dropdown-menu{
-    background-color: #101010;
+    background-color: #eeeeee;
 }
 
 .dropdown-menu>li>a{
-    color: #ddd;
+    color: #555555;
+    transition: background-color 0.5s; 
 }
 
 .dropdown-menu .divider{
-    background-color: #555555;
+    background-color: #bebebe;
+}
+
+.dropdown-menu>li>a:hover{
+    background-color: #cacaca;
+}
+
+.zx-header{
+    padding-top: 5px;
+}
+
+.zx-logo{
+    padding-right: 10px;
+    color: #428bca;
+    font-size: 32px;
+}
+
+.zx-logo:hover{
+    text-decoration: none;
+    color: #428bca;
+}
+
+.zx-slogan{
+    color: #555555;
+    margin-right: 20px;
+}
+
+.zx-navbar{
+    background-color: white;
+    box-shadow: 1px 1px 1px #b9b9b9;
+    border-bottom: solid 1px #b9b9b9;
+}
+
+.navbar-nav .active{
+    border-bottom: solid 3px #428bca;
+}
+
+.navbar-nav .active a{
+    color: #428bca;
+}
+
+.navbar-nav .active a:hover{
+    border-bottom: solid 0px #428bca;
+}
+
+.navbar-nav>li{
+    margin-right: 7px;
+}
+
+.navbar-nav>li>a:hover{
+    color: #428bca;
+    background-color: transparent;
+    border-bottom: solid 3px #428bca;
+}
+
+.navbar-nav>li>a{
+    font-size: 17px;
+    color: #555555;
+}
+
+.login-user .user:hover{
+    background-color: none; 
+    color: #555555;
+    border-bottom: 0px;
 }
 </style>
 {% block cheader %}{% endblock %}
 {% endblock %}
 
 {% block container_head %}
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="navbar navbar-fixed-top zx-navbar" role="navigation">
     <div class="container zx-container">
-        <div class="navbar-header">
-            <a class="img-logo" href="/"><img title="智选网" alt="智选网" src="{{MEDIA_URL}}img/common/logo.png"></a>
+        <div class="navbar-header zx-header">
+            <a class="zx-logo" href="/">智选<!-- <img title="智选网" alt="智选网" src="{{MEDIA_URL}}img/common/logo.png"> --></a>
+            <span class="zx-slogan"></span>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
@@ -90,18 +159,19 @@ body {background-color: #F0F4F7}
                     <a href="/recommend/">专题推荐</a>
                 </li>
             </ul>
-            <form class="navbar-form navbar-left" role="search">
+            <!-- <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">      
                     <input type="text" class="form-control" placeholder="搜索问题或人...">
                 </div>
                 <button type="submit" class="btn btn-default">查询</button>
-            </form>
+            </form> -->
             <ul class="nav navbar-nav navbar-right login-user text-right">
                 {% if request.user.is_authenticated %}
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <a class="dropdown-toggle user" data-toggle="dropdown" href="#">
                         <img class='avatar' src="{{MEDIA_URL}}img/common/default.png">
                         {{ request.user.nick }}
+                        <span class="badge">3</span>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu text-left" role="menu">
@@ -112,7 +182,7 @@ body {background-color: #F0F4F7}
                             <a href="/account/user_settings">账号设置</a>
                         </li>
                         <li>
-                            <a href="#">通知中心</a>
+                            <a href="/message">消息中心<span class="badge">3</span></a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>

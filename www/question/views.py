@@ -73,7 +73,7 @@ def create_answer(request, question_id):
 
 def get_tags(request):
     name = request.REQUEST.get('search', '').strip()
-    print name, '==========='
+
     tags = [
         [1, 'aaaaa'],
         [2, 'AAbbb'],
@@ -89,6 +89,40 @@ def get_tags(request):
     ]
     match_tags = filter(lambda x: x[1].find(name) > -1, tags)
     format_tags = [[x[0], x[1], None, x[1]] for x in match_tags]
-    print format_tags, '************'
-    #format_tags = [[2, 'Adolf Hitler', None, '<img src="images/adolfhitler.jpg" /> Adolf Hitler']]
     return HttpResponse(json.dumps(format_tags))
+
+
+def get_tags_by_question_type(request):
+    '''
+    根据提问类型获取对应的子话题
+    '''
+    tags = {
+        '1': [
+            {'id': 1, 'name': '大盘子话题1'},
+            {'id': 2, 'name': '大盘子话题2'},
+            {'id': 3, 'name': '大盘子话题3'}
+        ],
+        '2': [
+            {'id': 4, 'name': '个股子话题1'},
+            {'id': 5, 'name': '个股子话题2'},
+            {'id': 6, 'name': '个股子话题3'}
+        ],
+        '3': [
+            {'id': 7, 'name': '债券子话题1'},
+            {'id': 8, 'name': '债券子话题2'},
+        ],
+        '4': [
+            {'id': 9, 'name': '期权子话题1'},
+            {'id': 10, 'name': '期权子话题2'},
+            {'id': 11, 'name': '期权子话题3'},
+            {'id': 12, 'name': '期权子话题4'}
+        ]
+    }
+
+    result = []
+    question_type = request.REQUEST.get('question_type', None)
+
+    if question_type:
+        result = tags[question_type]
+
+    return HttpResponse(json.dumps(result))

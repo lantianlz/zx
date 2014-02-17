@@ -3,9 +3,9 @@
 <style type="text/css">
 
 .container_content{
-	background-color: white;
+	background-color: transparent;
 	border-radius: 5px;
-	border: solid 1px lightgray;
+	border: solid 0px lightgray;
 }
 
 .zx-static-left .list-group-item{
@@ -13,10 +13,12 @@
 	border-radius: 0px;
 	border-right: 0px;
 	transition: background-color 0.5s; 
+	background-color: #e9e9e9;
+	border: 1px solid #F1F1F1;
 }
 
 .zx-static-left .list-group-item:hover{
-    background-color: #dbdbdb;
+    background-color: #86C1D6;
 }
 
 
@@ -30,10 +32,22 @@
 
 .zx-static-main{
 	min-height: 450px;
-	border-left: 1px solid #ddd;
-	padding-right: 25px;
-	margin-bottom: 20px;
+	/*border-left: 1px solid #ddd;*/
+	/*padding-right: 25px;*/
+	/*margin-bottom: 20px;*/
 	padding-top: 10px;
+	padding-left: 5px;
+
+}
+
+.static-border{
+	background-color: white;
+	border: solid 1px lightgray;
+	min-height: 500px;
+	padding-top: 30px;
+	padding-right: 20px;
+	box-shadow: 1px 1px 1px 1px lightgrey;
+	padding-left: 20px;
 }
 </style>
 {% block css %}{% endblock %}
@@ -42,7 +56,7 @@
 {% endblock %}
 {% block container_content %}
 <div class="zx-static">
-	<div class="zx-static-left col-md-3">
+	<div class="zx-static-left col-md-2">
 		<a class="list-group-item {% if '/s/agreement' == request.path %} active {% endif %}" href="/s/agreement">
 			{% if '/s/agreement' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
 			服务条款
@@ -64,6 +78,8 @@
 			商务合作
 		</a>
 	</div>
-	<div class="zx-static-main col-md-9">{% block static_main %}{% endblock %}</div>
+	<div class="zx-static-main col-md-10">
+		<div class="static-border">{% block static_main %}{% endblock %}</div>
+	</div>
 </div>
 {% endblock %}

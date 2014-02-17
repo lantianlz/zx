@@ -12,14 +12,14 @@ class Question(models.Model):
     answer_count = models.IntegerField(default=0)
     last_answer_time = models.DateTimeField(db_index=True)
     sort_num = models.IntegerField(default=-999, db_index=True)
-    zan_num = models.IntegerField(default=0)
+    like_count = models.IntegerField(default=0)
     ip = models.CharField(max_length=32, null=True)
     is_hide_user = models.BooleanField(default=False)
     state = models.BooleanField(default=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
-        ordering = ["-sort_num", '-zan_num', "-last_answer_time"]
+        ordering = ["-sort_num", '-like_count', "-last_answer_time"]
 
     def get_url(self):
         return u'/question/question_detail/%s' % self.id
@@ -67,13 +67,13 @@ class Answer(models.Model):
     content = models.TextField()
     question = models.ForeignKey(Question)
     sort_num = models.IntegerField(verbose_name=u'排序值', default=-999, db_index=True)
-    zan_num = models.IntegerField(verbose_name=u'赞的次数', default=0)
+    like_count = models.IntegerField(verbose_name=u'赞的次数', default=0)
     ip = models.CharField(max_length=32, null=True)
     state = models.BooleanField(default=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
-        ordering = ["-sort_num", "zan_num", "-id"]
+        ordering = ["-sort_num", "like_count", "-id"]
 
     def get_from_user(self):
         from www.account.interface import UserBase
@@ -90,3 +90,18 @@ class QuestionType(models.Model):
 
     def get_url(self):
         return u'/question/type/%s' % self.domain or self.value
+
+
+class Like(models.Model):
+
+    """
+    @note: 喜欢
+    """
+    answer = models.ForeignKey(Answer)
+    from_user_id = models.CharField(verbose_name=u'发起赞的人', max_length=32, db_index=True)
+    to_user_id = models.CharField(verbose_name=u'被赞者', max_length=32, db_index=True)
+    ip = models.IPAddressField(db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-id', ]

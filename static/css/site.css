@@ -6,6 +6,13 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     min-width: 1000px;
 }
 
+.zx-alert{
+    position: fixed;
+    top: 60px;
+    z-index: 9999;
+    margin-left: 175px;
+}
+
 .footer {
 	font-size: 12px;
 	margin-top:50px;
