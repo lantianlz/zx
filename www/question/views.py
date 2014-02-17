@@ -12,6 +12,7 @@ from www.question import interface
 from www.misc.decorators import member_required
 
 
+@member_required
 def question_home(request, question_type=0, template_name='question/question_home.html'):
     qb = interface.QuestionBase()
     questions = qb.get_questions(question_type_domain=question_type)
@@ -26,6 +27,7 @@ def question_home(request, question_type=0, template_name='question/question_hom
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+@member_required
 def question_detail(request, question_id, template_name='question/question_detail.html',
                     error_msg=None, content=''):
     qb = interface.QuestionBase()
@@ -73,16 +75,16 @@ def get_tags(request):
     name = request.REQUEST.get('search', '').strip()
     print name, '==========='
     tags = [
-        [1, 'aaaaa'], 
-        [2, 'AAbbb'], 
-        [3, u'大盘'], 
-        [4, u'个股'], 
-        [5, u'套现'], 
-        [6, u'网贷'], 
-        [7, u'信用卡'], 
-        [8, u'小额贷款'], 
-        [9, u'互联网金融'], 
-        [10, u'利率市场化'], 
+        [1, 'aaaaa'],
+        [2, 'AAbbb'],
+        [3, u'大盘'],
+        [4, u'个股'],
+        [5, u'套现'],
+        [6, u'网贷'],
+        [7, u'信用卡'],
+        [8, u'小额贷款'],
+        [9, u'互联网金融'],
+        [10, u'利率市场化'],
         [11, u'P2P借贷']
     ]
     match_tags = filter(lambda x: x[1].find(name) > -1, tags)
