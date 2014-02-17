@@ -49,7 +49,7 @@ $(document).ready(function(){
         votedSpan = btn.children('span').eq(1),
         isLiked = likedSpan.hasClass('glyphicon-heart'),
         voteCount = parseInt(votedSpan.text());
-        
+
     // 取消赞动作
     if(isLiked){
       // 动画效果
@@ -58,7 +58,7 @@ $(document).ready(function(){
       }, 500, function(){
 
         likedSpan.removeClass('glyphicon-heart').addClass('glyphicon-heart-empty').css('opacity', '0.99');
-        votedSpan.text(voteCount - 1);
+        votedSpan.text(voteCount<=1 ? 0 : (voteCount - 1));
         voteLoading = false;
       });
 
@@ -265,6 +265,20 @@ $(document).ready(function(){
   top: 100px;
   z-index: 99;
 }
+
+.topic-tags{
+  padding-bottom: 10px;
+}
+
+.topic-tags ul{
+  list-style: none;
+  padding-left: 0px;
+}
+
+.topic-tags li{
+  float: left;
+  padding-left: 5px;
+}
 </style>
 {% endblock %}
 
@@ -288,6 +302,24 @@ $(document).ready(function(){
             </h4>
         </div>
         <div class="topic-content">{{question.content|safe}}</div>
+        <div class="topic-tags">
+          <ul>
+            <li>
+              <a href="">
+                <span class="label label-default">
+                  <span class="glyphicon glyphicon-tag"></span><span class="tag-title">年化收益</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <span class="label label-default">
+                  <span class="glyphicon glyphicon-tag"></span><span class="tag-title">P2P借贷</span>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
         <div class="topic-footer">
             {% if not question.is_hide_user %}
             <a href="{{question.user.get_url}}">
@@ -389,7 +421,7 @@ $(document).ready(function(){
             </li>
             {% endfor %}
 
-            <li class="list-group-item">
+            <!-- <li class="list-group-item">
                 <div class="reply-header">
                     <a href="#">
                         <div class="avatar">
@@ -413,14 +445,14 @@ $(document).ready(function(){
                         <div class="remove-reply hide"><a href="#"><span class="glyphicon glyphicon-remove"></span>删除回答</a></div>
                     </div>
                 </div>
-            </li>
+            </li> -->
         </ul>
     </div>
 
     <!-- 回复块 -->
     <div class="answer">
         <div class="answer-title">
-            <h3>你可以在下面添加你的回答</h3>
+            <h3>可以在下面添加你的回答</h3>
         </div>
 
         <div class="answer-main">
