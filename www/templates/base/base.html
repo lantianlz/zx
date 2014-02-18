@@ -47,14 +47,11 @@
         <div class="alert alert-success popmsg zx-alert" id="divSuccess">{{success_msg}}</div>
         {% endif %}
         {% if error_msg %}
-            <div class="container zx-container alert alert-danger alert-dismissable zx-alert">
-                
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{error_msg}}
-                
-              
+            <div class="alert alert-danger alert-dismissable zx-alert container zx-container">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{error_msg}}
             </div>
-            {% endif %}
+        {% endif %}
         <div class="scroll-top"></div>
         <div class="container zx-container" style="min-height:360px;" id="content_container_id">
             {% block container %}{% endblock container %}
