@@ -1,71 +1,25 @@
-{% extends "base/base_home.html" %}
-{% block cheader %}
+{% extends "base/base_split.html" %}
+{% block dheader %}
 <style type="text/css">
-.container_content{
-	background-color: white;
-	border-radius: 5px;
-	border: solid 1px lightgray;
-}
 
-.zx-message-left{
-	padding-top: 10px;
-}
-
-.zx-message-left .list-group-item{
-	border-left: 0px;
-	border-radius: 0px;
-	border-right: 0px;
-	transition: background-color 0.5s; 
-}
-
-.zx-message-left .list-group-item:hover{
-    background-color: #dbdbdb;
-}
-
-.zx-message-left .list-group-item:first-child{
-	border-top: 0px;
-}
-
-.zx-message-main{
-	min-height: 450px;
-	border-left: 1px solid #ddd;
-	margin-bottom: 20px;
-	/*padding-top: 10px;*/
-}
-
-.zx-message-main .form-group{
-	padding-top: 20px;
-	margin-right: 10px;
-	border-top: solid 1px #f2f2f2;
-	margin-left: 10px;
-}
-
-.zx-message-main .form-group:first-child{
-	border-top: 0px;
-}
 </style>
 {% block css %}{% endblock %}
 {% block javascript %}{% endblock %}
 
 {% endblock %}
-{% block container_content %}
-<div class="zx-message">
-	<div class="zx-message-left col-md-3">
-		<a class="list-group-item {% if '/message/new_message' == request.path %} active {% endif %}" href="/message/new_message">
-			{% if '/message/new_message' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			写消息
-		</a>
-		<a class="list-group-item {% if '/message/' == request.path %} active {% endif %}" href="/message/">
-			{% if '/message/' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			消息列表
-		</a>
-		<a class="list-group-item {% if '/message/system_message' == request.path %} active {% endif %}" href="/message/system_message">
-			{% if '/message/system_message' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			系统消息
-		</a>
-	</div>
-	<div class="zx-message-main col-md-9">
+{% block split_left %}
+
+	<a class="list-group-item {% if '/message/new_message' == request.path %} active {% endif %}" href="/message/new_message">
+		写消息
+	</a>
+	<a class="list-group-item {% if '/message/' == request.path %} active {% endif %}" href="/message/">
+		消息列表
+	</a>
+	<a class="list-group-item {% if '/message/system_message' == request.path %} active {% endif %}" href="/message/system_message">
+		系统消息
+	</a>
+{% endblock %}
+
+{% block split_main %}
 		{% block message_main %}{% endblock %}
-	</div>
-</div>
 {% endblock %}

@@ -10,7 +10,8 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     position: fixed;
     top: 60px;
     z-index: 9999;
-    margin-left: 175px;
+    left: 0px;
+    right: 0px;
 }
 
 .footer {

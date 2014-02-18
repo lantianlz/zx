@@ -1,85 +1,33 @@
-{% extends "base/base_home.html" %}
-{% block cheader %}
+{% extends "base/base_split.html" %}
+{% block dheader %}
 <style type="text/css">
 
-.container_content{
-	background-color: transparent;
-	border-radius: 5px;
-	border: solid 0px lightgray;
-}
-
-.zx-static-left .list-group-item{
-	border-left: 0px;
-	border-radius: 0px;
-	border-right: 0px;
-	transition: background-color 0.5s; 
-	background-color: #e9e9e9;
-	border: 1px solid #F1F1F1;
-}
-
-.zx-static-left .list-group-item:hover{
-    background-color: #86C1D6;
-}
-
-
-.zx-static-left{
-	padding-top: 10px;
-}
-
-.zx-static-left .list-group-item:first-child{
-	border-top: 0px;
-}
-
-.zx-static-main{
-	min-height: 450px;
-	/*border-left: 1px solid #ddd;*/
-	/*padding-right: 25px;*/
-	/*margin-bottom: 20px;*/
-	padding-top: 10px;
-	padding-left: 5px;
-
-}
-
-.static-border{
-	background-color: white;
-	border: solid 1px lightgray;
-	min-height: 500px;
-	padding-top: 30px;
-	padding-right: 20px;
-	box-shadow: 1px 1px 1px 1px lightgrey;
-	padding-left: 20px;
-}
 </style>
 {% block css %}{% endblock %}
 {% block javascript %}{% endblock %}
 
 {% endblock %}
-{% block container_content %}
-<div class="zx-static">
-	<div class="zx-static-left col-md-2">
-		<a class="list-group-item {% if '/s/agreement' == request.path %} active {% endif %}" href="/s/agreement">
-			{% if '/s/agreement' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			服务条款
-		</a>
-		<a class="list-group-item {% if '/s/about' == request.path %} active {% endif %}" href="/s/about">
-			{% if '/s/about' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			关于我们
-		</a>
-		<a class="list-group-item {% if '/s/disclaimer' == request.path %} active {% endif %}" href="/s/disclaimer">
-			{% if '/s/disclaimer' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			免责声明
-		</a>
-		<a class="list-group-item {% if '/s/links' == request.path %} active {% endif %}" href="/s/links">
-			{% if '/s/links' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			友情链接
-		</a>
-		<a class="list-group-item {% if '/s/business' == request.path %} active {% endif %}" href="/s/business">
-			{% if '/s/business' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-			商务合作
-		</a>
-	</div>
-	<div class="zx-static-main col-md-10">
-		<div class="static-border">{% block static_main %}{% endblock %}</div>
-	</div>
-</div>
+{% block split_left %}
+
+	<a class="list-group-item {% if '/s/agreement' == request.path %} active {% endif %}" href="/s/agreement">
+		服务条款
+	</a>
+	<a class="list-group-item {% if '/s/about' == request.path %} active {% endif %}" href="/s/about">
+		关于我们
+	</a>
+	<a class="list-group-item {% if '/s/disclaimer' == request.path %} active {% endif %}" href="/s/disclaimer">
+		免责声明
+	</a>
+	<a class="list-group-item {% if '/s/links' == request.path %} active {% endif %}" href="/s/links">
+		友情链接
+	</a>
+	<a class="list-group-item {% if '/s/business' == request.path %} active {% endif %}" href="/s/business">
+		商务合作
+	</a>
+{% endblock %}
+
+{% block split_main %}
+	
+	{% block static_main %}{% endblock %}
+	
 {% endblock %}
