@@ -86,6 +86,7 @@ body {background-color: #F0F4F7}
     padding-right: 58px;
     color: #428bca;
     font-size: 32px;
+    text-shadow: 1px 1px 0 #D0E0F1;
 }
 
 .zx-logo:hover{
@@ -136,6 +137,48 @@ body {background-color: #F0F4F7}
     color: #555555;
     border-bottom: 0px;
 }
+
+.flash-badge{
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+    /*transition: background-color 2s;*/
+    animation-duration: 3s;
+    animation-name: flashbadge;
+    animation-iteration-count: infinite;
+    -webkit-animation: flashbadge 3s infinite alternate;
+    box-shadow: 50%;
+}
+
+
+@keyframes flashbadge{
+  from {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+  50%{
+    background-color: orange;
+    box-shadow: 0 0 10px orange;
+  }
+  to {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+}
+
+@-webkit-keyframes flashbadge{
+  from {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+  50%{
+    background-color: orange;
+    box-shadow: 0 0 10px orange;
+  }
+  to {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+}
 </style>
 {% block cheader %}{% endblock %}
 {% endblock %}
@@ -171,7 +214,7 @@ body {background-color: #F0F4F7}
                     <a class="dropdown-toggle user" data-toggle="dropdown" href="#">
                         <img class='avatar' src="{{MEDIA_URL}}img/common/default.png">
                         {{ request.user.nick }}
-                        <span class="badge">3</span>
+                        <span class="badge flash-badge">3</span>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu text-left" role="menu">
@@ -182,7 +225,7 @@ body {background-color: #F0F4F7}
                             <a href="/account/user_settings">账号设置</a>
                         </li>
                         <li>
-                            <a href="/message">消息中心<span class="badge">3</span></a>
+                            <a href="/message">消息中心<span class="badge flash-badge">3</span></a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>

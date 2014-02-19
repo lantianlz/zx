@@ -25,6 +25,8 @@ $(document).ready(function(){
 	});
 	//text_tags.add('John Doe').add('Jane Roe');
 	*/
+
+	// 选择类型事件
 	$('#div-tags').hide();
 	$('#sel_question_type').bind("change", function(){
 		$('#div-tags').hide('fast');
@@ -40,7 +42,7 @@ $(document).ready(function(){
 			url: '/question/get_tags_by_question_type',
 			dataType: 'json',
 			success: function(tags){
-				console.log(tags)
+				
 				$('#div-tags').show('fast').find('label').remove();
 				for (var i = tags.length - 1; i >= 0; i--) {
 					$('#div-tags').append(String.format('<label class="checkbox-inline"><input type="checkbox" alue="{0}"> {1}</label>', tags[i].id, tags[i].name));
