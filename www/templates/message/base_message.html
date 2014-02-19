@@ -13,10 +13,10 @@
 		写消息
 	</a>
 	<a class="list-group-item {% if '/message/' == request.path %} active {% endif %}" href="/message/">
-		消息列表
+		消息列表<span class="badge flash-badge">1</span>
 	</a>
 	<a class="list-group-item {% if '/message/system_message' == request.path %} active {% endif %}" href="/message/system_message">
-		系统消息
+		系统消息<span class="badge flash-badge">2</span>
 	</a>
 {% endblock %}
 

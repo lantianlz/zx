@@ -1,100 +1,114 @@
 {% extends "base/base_static.html" %}
 
-{% block title %}服务条款{% endblock %}
+{% block title %}服务协议{% endblock %}
+{% block css %}
+<style type="text/css">
+.list-group-item{
+	border-bottom: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	border-radius: 0px;
+	border-top: solid 1px #f1f1f1;
+}
 
+.list-group-item:first-child{
+	border-top: 0px;
+}
+
+.split-border{
+	padding-top: 10px;
+}
+
+.sub-title{
+	padding-bottom: 20px;
+	padding-top: 10px;
+	font-size: 22px;
+}
+
+.text{
+	color: #888888;
+	text-indent: 28px;
+	padding-bottom: 15px;
+}
+
+.text ul{
+	list-style: disc outside none;
+	padding-left: 57px;
+}
+
+.text ul>li{
+	margin: 0px;
+	padding: 0px;
+	text-indent: 0px;
+}
+</style>
+{% endblock %}
 {% block static_main %}
-<div>
-
-	<ol>
-		<li>
-			<span style="font-size:16px;">
-				关于
-				<br />
-				<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-					本服务条款是你与成都智选网科技有限公司（下称智选）之间的协议。Tower（下称本服务） 是由智选提供的互联网软件服务。在本服务创建账户并使用之前，你必须首先同意此条款。
-				</p>
-				<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">此条款在必要时将进行修订，且毋须另行通知。修订后的条款一旦在网页上公布即有效代替原来的服务条款。</p>
-				<br />
-			</span>
-		</li>
-		<li>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				账户
-				<br />
-				你同意并理解你有责任将你与用于获得服务的任何帐户相关的密码保密。你负责对你账户下发生的所有的行为和内容负责。
-			</p>
-			<p>
-				<br />
-			</p>
-		</li>
-		<li>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">内容和版权</p>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				智选对你在本服务提交的内容没有所有权，这些内容的所有权仍然归你所有。但是，如果你将页面设置为公开，就意味着你允许其他人查看和共享你的内容。
-			</p>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				你明白智选对他人提供的任何内容不在任何方面负责或负有责任，智选没有义务预先审查此类内容。但是，智选有权随时决定内容是否合适和与本条款相符；如果发现此类内容违反本条款或在其他方面令人反感，彩程可随时并有绝对酌情权预先审查、转移、拒绝、修改和/或删除内容，而不需事先通知。
-			</p>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				本服务的外观设计与专利归智选所有。未经智选书面许可，你不能复制、拷贝，或者重用任何部分代码和外观设计。
-				<br />
-			</p>
-			<p>
-				<br />
-			</p>
-		</li>
-		<li>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">隐私策略</p>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				使用本服务，即表示你同意智选合法收集和使用有关你及你所使用本服务的技术性或诊断性信息。收集到的些信息将用于改进网页的内容，提升我们的服务品质。
-			</p>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				智选不会将你的信息和内容分享或出售给其他的组织。但以下情况除外：
-			</p>
-			<ul style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">你同意让第三方共享资料；</li>
-				<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">
-					智选需要听从法庭传票、法律命令或遵循法律程序；
-				</li>
-				<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">你违反了本条款。</li>
+<ul class="list-group">
+	<li class="list-group-item">
+		<div class="sub-title">1. 特别提示</div>
+		<div class="text">欢迎您来到智选。请您仔细阅读以下条款，如果您对本协议的任何条款表示异议，您可以选择不进入智选。当您注册成功，无论是进入智选，还是在智选上发布任何内容（即「内容」），均意味着您（即「用户」）完全接受本协议项下的全部条款。</div>
+	</li>
+	<li class="list-group-item">
+		<div class="sub-title">2. 使用规则</div>
+		<div class="text">2.1 用户注册成功后，智选将给予每个用户一个用户帐号及相应的密码，该用户帐号和密码由用户负责保管；用户应当对以其用户帐号进行的所有活动和事件负法律责任。</div>
+		<div class="text">2.2 用户须对在智选的注册信息的真实性、合法性、有效性承担全部责任，用户不得冒充他人；不得利用他人的名义发布任何信息；不得恶意使用注册帐户导致其他用户误认；否则智选有权立即停止提供服务，收回其帐号并由用户独自承担由此而产生的一切法律责任。</div>
+		<div class="text">2.3 用户直接或通过各类方式（如 RSS 源和站外 API 引用等）间接使用智选服务和数据的行为，都将被视作已无条件接受本协议全部内容；若用户对本协议的任何条款存在异议，请停止使用智选所提供的全部服务</div>
+		<div class="text">2.4 智选是一个信息分享、传播及获取的平台，用户通过智选发表的信息为公开的信息，其他第三方均可以通过智选获取用户发表的信息，用户对任何信息的发表即认可该信息为公开的信息，并单独对此行为承担法律责任；任何用户不愿被其他第三人获知的信息都不应该在智选上进行发表。</div>
+		<div class="text">2.5 用户承诺不得以任何方式利用智选直接或间接从事违反中国法律、以及社会公德的行为，智选有权对违反上述承诺的内容予以删除。</div>
+		<div class="text">
+			2.6 用户不得利用智选服务制作、上载、复制、发布、传播或者转载如下内容：
+			<ul>
+				<li>反对宪法所确定的基本原则的;</li>
+				<li>危害国家安全，泄露国家秘密，颠覆国家政权，破坏国家统一的;</li>
+				<li>损害国家荣誉和利益的;</li>
+				<li>煽动民族仇恨、民族歧视，破坏民族团结的;</li>
+				<li>破坏国家宗教政策，宣扬邪教和封建迷信的;</li>
+				<li>散布谣言，扰乱社会秩序，破坏社会稳定的;</li>
+				<li>散布淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的;</li>
+				<li>侮辱或者诽谤他人，侵害他人合法权益的;</li>
+				<li>含有法律、行政法规禁止的其他内容的信息;</li>
 			</ul>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				<br />
-			</p>
-		</li>
-		<li>
-			<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-				终止
-				<br />
-				<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">你可随时终止你的帐户和/或停用本服务。你在服务终止前支付的任何费用均不能退还（除本服务条款另有明文允许者除外）。</p>
-				<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-					智选可随时在某些情况下，不需事先通知，立即终止或暂停你所有或部分帐户和/或本服务之进入。此类服务终止的原因包括但不限于：
-				</p>
-				<ul style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">
-					<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">违反本服务条款；</li>
-					<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">你要求取消或终止你的帐户；</li>
-					<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">需要听从法庭传票、法律命令或遵循法律程序；</li>
-					<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">突发的自然灾害导致的问题；</li>
-					<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">战争、军事行动、暴动或武装叛乱；</li>
-					<li style="font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;vertical-align:baseline;">你没有支付与本服务相关的费用；</li>
-				</ul>
-				<p style="font-family:'Helvetica Neue', Helvetica, Arial;font-size:14px;vertical-align:baseline;">一旦你的帐户被终止，阁下将无法正常使用本服务。此外，你可以选择删除你账户下的所有信息和内容。</p>
-			</p>
-		</li>
-	</ol>
-	<p>
-        <br/>
-	</p>
-	<p>
-		<div style="text-align:right;">
-			最近修订 2014年1月1日
 		</div>
-		<span>
-			<div style="text-align:right;">
-				&copy;成都智选网科技有限公司 保留一切权利
-			</div>
-		</span>
-	</p>
+		<div class="text">2.7 智选有权对用户使用智选的情况进行审查和监督，如用户在使用智选时违反任何上述规定，智选或其授权的人有权要求用户改正或直接采取一切必要的措施（包括但不限于更改或删除用户张贴的内容、暂停或终止用户使用智选的权利）以减轻用户不当行为造成的影响。</div>
+	</li>
+	<li class="list-group-item">
+		<div class="sub-title">3. 知识产权</div>
+		<div class="text">3.1 用户在智选上发表的全部原创回答和评论，著作权均归用户本人所有。用户可授权第三方以任何方式使用，不需要得到智选的同意。</div>
+		<div class="text">3.2 智选提供的网络服务中包含的标识、版面设计、排版方式、文本、图片、图形等均受著作权、商标及其它法律保护，未经相关权利人（含智选及其他原始权利人）同意，上述内容均不得在任何平台被直接或间接发布、使用、出于发布或使用目的的改写或再发行，或被用于其他任何商业目的。</div>
+		<div class="text">3.3 为了促进知识的分享和传播，用户将其在智选上发表的全部内容，授予智选免费的、不可撤销的、非独家使用许可，智选有权将该内容用于智选各种形态的产品和服务上，包括但不限于网站以及发表的应用或其他互联网产品。</div>
+		<div class="text">3.4 第三方若出于非商业目的，将用户在智选上发表的内容转载在智选之外的地方，应当在作品的正文开头的显著位置注明原作者姓名（或原作者在智选上使用的帐号名称），给出原始链接，注明「发表于智选」，并不得对作品进行修改演绎。若需要对作品进行修改，或用于商业目的，第三方应当联系用户获得单独授权，按照用户规定的方式使用该内容。</div>
+		<div class="text">3.5 智选为用户提供「保留所有权利，禁止转载」的选项。除非获得原作者的单独授权，并邮件通知智选（邮箱：jz@zhixuan.com），任何第三方不得转载标注了「禁止转载」的内容，否则均视为侵权。</div>
+		<div class="text">3.6 用户在智选上传或发表的内容，用户应保证其为著作权人或已取得合法授权，并且该内容不会侵犯任何第三方的合法权益。如果第三方提出关于著作权的异议，智选有权根据实际情况删除相关的内容有权追究用户的法律责任，给智选或任何第三方造成损失的，用户应负责全额赔偿。</div>
+		<div class="text">3.7 如果任何第三方侵犯了智选用户相关的权利，用户同意授权智选或其指定的代理人代表智选自身或用户对该第三方提出警告、投诉、发起行政执法、诉讼、进行上诉，或谈判和解，并且用户同意在智选认为必要的情况下参与共同维权。</div>
+		<div class="text">3.8 智选有权但无义务对用户发布的内容进行审核，有权根据相关证据结合《侵权责任法》、《信息网络传播权保护条例》等法律法规及智选社区指导原则对侵权信息进行处理。</div>
+		<div class="text">
+			3.9 如个人或单位发现智选上存在侵犯其自身合法权益的内容，请及时与智选取得联系（邮箱：jz@zhixuan.com），并提供具有法律效力的证明材料，以便智选作出处理。包含的书面证明材料如下：
+			<ul>
+				<li>涉嫌侵权内容所有者的权属证明；</li>
+				<li>明确的身份证明、住址、联系方式；</li>
+				<li>涉嫌侵权内容在智选平台上的位置、描述和著作权遭受侵犯的证明；</li>
+				<li>其他必要的具有法律效力的证明材料。</li>
+			</ul>
+		</div>
+	</li>
+	<li class="list-group-item">
+		<div class="sub-title">4. 个人隐私</div>
+		<div class="text">尊重用户个人隐私信息的私有性是智选的一贯原则，智选将通过技术手段、强化内部管理等办法充分保护用户的个人隐私信息，除法律或有法律赋予权限的政府部门要求或事先得到用户明确授权等原因外，智选保证不对外公开或向第三方透露用户个人隐私信息，或用户在使用服务时存储的非公开内容。同时，为了运营和改善智选的技术与服务，智选将可能会自行收集使用或向第三方提供用户的非个人隐私信息，这将有助于智选向用户提供更好的用户体验和服务质量。</div>
+	</li>
+	<li class="list-group-item">
+		<div class="sub-title">5. 免责声明</div>
+		<div class="text">5.1 智选不能对用户发表的回答或评论的正确性进行保证。</div>
+		<div class="text">5.2 用户在智选发表的内容仅表明其个人的立场和观点，并不代表智选的立场或观点。作为内容的发表者，需自行对所发表内容负责，因所发表内容引发的一切纠纷，由该内容的发表者承担全部法律及连带责任。智选不承担任何法律及连带责任。</div>
+		<div class="text">5.3 智选不保证网络服务一定能满足用户的要求，也不保证网络服务不会中断，对网络服务的及时性、安全性、准确性也都不作保证。</div>
+		<div class="text">5.4 对于因不可抗力或智选不能控制的原因造成的网络服务中断或其它缺陷，智选不承担任何责任，但将尽力减少因此而给用户造成的损失和影响。</div>
+		<div class="text">5.5 如果您发现智选上有内容侵犯了您的知识产权或其他权益，请联系我们 jz@zhixuan.com</div>
+	</li>
+	<li class="list-group-item">
+		<div class="sub-title">6. 协议修改</div>
+		<div class="text">6.1 根据互联网的发展和有关法律、法规及规范性文件的变化，或者因业务发展需要，智选有权对本协议的条款作出修改或变更，一旦本协议的内容发生变动，智选将会直接在智选网站上公布修改之后的协议内容，该公布行为视为智选已经通知用户修改内容。智选也可采用电子邮件或私信的传送方式，提示用户协议条款的修改、服务变更、或其它重要事项。</div>
+		<div class="text">6.2 如果不同意智选对本协议相关条款所做的修改，用户有权并应当停止使用智选。如果用户继续使用智选，则视为用户接受智选对本协议相关条款所做的修改。</div>
+	</li>
+</ul>
 
-</div>
 {% endblock %}
