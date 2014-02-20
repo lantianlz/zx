@@ -29,7 +29,7 @@ $(document).ready(function(){
 		<label class="col-sm-2 control-label">头像</label>
 		<div class="col-sm-10">
 			<p class="form-control-static avatar">
-				<img src="{{MEDIA_URL}}{{request.user.avatar|default:'img/common/default.png'}}"></p>
+				<img class="avatar-circle" src="{{MEDIA_URL}}{{request.user.avatar|default:'img/common/default.png'}}"></p>
 			<div class="blank10"></div>
 			<input type="file"/>
 		</div>

@@ -166,6 +166,37 @@ $(document).ready(function(){
 
 	// 初始化所有的 tooltip 
 	$('.zx-tooltip').tooltip('hide');
+	// 初始化所有的 popover 
+	/*
+	$('.zx-popover').popover({
+		html: true,
+		placement: 'auto left',
+		trigger: 'manual',
+		delay: { show: 500, hide: 100 },
+		title: '测试',
+		content: '呵呵'
+	});
+	*/
+
+	var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="/static/img/common/user1.jpg" ></div><div class="col-md-9"><div class="username">半夜没事瞎溜达</div><div class="question-info"><span>提问<a href="#">58</a></span><span>回答<a href="#">132</a></span><span>赞<a href="#">82</a></span></div></div></div><div class="desc">独立投资者，证券投资和物业投资都懂一点儿。新浪博客http://blog.sina.com.cn/u/1880123175</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow">关注ta</button><a class="send-message" href="#" data-user_name="半夜没事瞎溜达">私信ta</a></div></div>'
+	$('.zx-cardtips').tooltipster({
+		animation: 'fade',
+		delay: 200,
+		trigger: 'hover',
+		theme: 'tooltipster-shadow',
+		interactive: true,
+		interactiveTolerance: 300,
+		autoClose: true,
+		content: cardtipsHtml,
+		contentAsHTML: true
+	});
+	$('.send-message').live('click', function(){
+		var user_name = $(this).data('user_name');
+		var user_id = $(this).data('user_id');
+		$('#new_message_modal').modal('show')
+
+		$('#receiver_input').text(user_name);
+	})
 
 	// 设置编辑器
   	$('.zx-textarea').markItUp(markItUpSettings);

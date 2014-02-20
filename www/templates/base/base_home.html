@@ -140,6 +140,7 @@ body {background-color: #F0F4F7}
 .navbar-nav>li>a{
     font-size: 17px;
     color: #555555;
+    transition: color 0.5s;
 }
 
 .login-user .user:hover{
@@ -221,7 +222,7 @@ body {background-color: #F0F4F7}
                 {% if request.user.is_authenticated %}
                 <li class="dropdown">
                     <a class="dropdown-toggle user" data-toggle="dropdown" href="#">
-                        <img class='avatar' src="{{MEDIA_URL}}img/common/default.png">
+                        <img class='avatar avatar-circle' src="{{MEDIA_URL}}img/common/user3.jpg">
                         {{ request.user.nick }}
                         <span class="badge flash-badge">3</span>
                         <span class="caret"></span>
