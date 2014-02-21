@@ -26,6 +26,9 @@
 	<a class="hide list-group-item {% if '/account/user_settings/bind_community' == request.path %} active {% endif %}" href="/account/user_settings/bind_community">
 		社区绑定
 	</a>
+	<a class="list-group-item {% if '/account/invitation' == request.path %} active {% endif %}" href="/account/invitation">
+		我的邀请
+	</a>
 {% endblock %}
 
 {% block split_main %}

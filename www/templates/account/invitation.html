@@ -1,0 +1,131 @@
+{% extends "account/base_settings.html" %}
+
+{% block title %}社区绑定{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.zx-invitation .form-control[readonly]{
+	cursor: pointer;
+}
+
+.zx-invitation span.used{
+	color: #428bca;
+	font-size: 28px;
+	text-shadow: 2px 2px 4px #888888;
+}
+
+.zx-invitation span.un-used{
+	color: #666666;
+	font-size: 28px;
+	/*text-shadow: 0px 0px 2px #666666;*/
+}
+
+.zx-invitation input.used{
+	font-style: italic;
+}
+
+.zx-invitation input.used[readonly]{
+	font-style: italic;
+	cursor: not-allowed;
+}
+
+.zx-invitation{
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.invited{
+	padding: 10px;
+	background-color: #428bca;
+	color: #ffffff;
+	box-shadow: 2px 2px 4px #666666;
+}
+
+.invited-persons{
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.invited-persons .avatar{
+	width: 45px;
+	height: 45px;
+}
+</style>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.zx-invitation input').not('.used').bind('click', function(){
+			$(this).select();
+		})
+	});
+</script>
+{% endblock %}
+
+{% block settings_main %}
+<div class="zx-invitation">
+	<div>
+		长效邀请注册链接 <span class="zx-tooltip glyphicon glyphicon-question-sign cl_gray" data-toggle="tooltip" data-placement="right" data-original-title="长效邀请注册链接为不限制时间和次数的邀请注册链接，可重复使用"></span>
+	</div>
+	<ul class="list-group only-top-border">
+	  	<li class="list-group-item">
+	  		<div class="row">
+		    	<div class="col-md-10">
+		    		<input type="text" class="form-control" readonly value="http://www.zhixuan.com/invitation/8FyfC4x">
+		    	</div>
+		    	<div class="col-md-2">
+		    		
+		    	</div>
+	    	</div>
+	  	</li>
+	</ul>
+	<div>
+		普通邀请注册链接 <span class="zx-tooltip glyphicon glyphicon-question-sign cl_gray" data-toggle="tooltip" data-placement="right" data-original-title="普通邀请注册链接为一次性的邀请注册链接，用户注册后即失效"></span>
+	</div>
+	<ul class="list-group only-top-border ">
+	  	<li class="list-group-item">
+	  		<div class="row">
+		    	<div class="col-md-10">
+		    		<input type="text" class="form-control used" readonly value="http://www.zhixuan.com/invitation/8FyfC4x">
+		    	</div>
+		    	<div class="col-md-2">
+		    		<span class="glyphicon glyphicon-ok used"></span>
+		    	</div>
+	    	</div>
+	  	</li>
+	  	<li class="list-group-item">
+	  		<div class="row">
+		    	<div class="col-md-10">
+		    		<input type="text" class="form-control" readonly value="http://www.zhixuan.com/invitation/8FyfC4x">
+		    	</div>
+		    	<div class="col-md-2">
+		    		<span class="glyphicon glyphicon-exclamation-sign un-used"></span>
+		    	</div>
+	    	</div>
+	  	</li>
+	  	<li class="list-group-item">
+	  		<div class="row">
+		    	<div class="col-md-10">
+		    		<input type="text" class="form-control" readonly value="http://www.zhixuan.com/invitation/8FyfC4x">
+		    	</div>
+		    	<div class="col-md-2">
+		    		<span class="glyphicon glyphicon-exclamation-sign un-used"></span>
+		    	</div>
+	    	</div>
+	  	</li>
+	</ul>
+	
+	<div class="invited split">已被邀请并注册用户</div>
+	<ul class="invited-persons list-inline">
+		<li><img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user1.jpg"></li>
+		<li><img class="avatar avatar-circle" src="/static/img/common/user2.jpg"></li>
+		<li><img class="avatar avatar-circle" src="/static/img/common/user3.jpg"></li>
+		<li><img class="avatar avatar-circle" src="/static/img/common/user4.png"></li>
+		<li><img class="avatar avatar-circle" src="/static/img/common/user1.jpg"></li>
+		<li><img class="avatar avatar-circle" src="/static/img/common/user2.jpg"></li>
+		<li><img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user3.jpg"></li>
+		<li><img class="avatar avatar-circle zx-cardtips" data-user_id="1"  src="/static/img/common/user4.png"></li>
+	</ul>
+	
+</div>
+{% endblock %}

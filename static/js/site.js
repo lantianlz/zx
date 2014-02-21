@@ -178,7 +178,7 @@ $(document).ready(function(){
 	});
 	*/
 
-	var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="/static/img/common/user1.jpg" ></div><div class="col-md-9"><div class="username">半夜没事瞎溜达</div><div class="question-info"><span>提问<a href="#">58</a></span><span>回答<a href="#">132</a></span><span>赞<a href="#">82</a></span></div></div></div><div class="desc">独立投资者，证券投资和物业投资都懂一点儿。新浪博客http://blog.sina.com.cn/u/1880123175</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow">关注ta</button><a class="send-message" href="#" data-user_name="半夜没事瞎溜达">私信ta</a></div></div>'
+	var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="{0}" ></div><div class="col-md-9"><div class="username">{1}</div><div class="question-info"><span>提问<a href="#">{2}</a></span><span>回答<a href="#">{3}</a></span><span>赞<a href="#">{4}</a></span></div></div></div><div class="desc">{5}</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow {8}">关注ta</button><button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button><a class="send-message" href="#" data-user_name="{6}" data-user_id="{7}">私信ta</a></div></div>'
 	$('.zx-cardtips').tooltipster({
 		animation: 'fade',
 		delay: 200,
@@ -187,16 +187,53 @@ $(document).ready(function(){
 		interactive: true,
 		interactiveTolerance: 300,
 		autoClose: true,
-		content: cardtipsHtml,
-		contentAsHTML: true
+		//content: cardtipsHtml,
+		contentAsHTML: true,
+		content: '名片加载中...',
+	    functionBefore: function(origin, continueTooltip) {
+
+	        // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+	        continueTooltip();
+	        
+	        // next, we want to check if our data has already been cached
+	        if (origin.data('ajax') !== 'cached') {
+	            $.ajax({
+	                type: 'POST',
+	                dataType: 'json',
+	                url: '/account/get_user_info_by_id?user_id=' + origin.data('user_id'),
+	                success: function(data) {
+	                    if(data.success){
+		                    origin.tooltipster('content', String.format(
+		                    	cardtipsHtml, 
+		                    	data.avatar,
+		                    	data.name, 
+		                    	data.question_count,
+		                    	data.answer_count,
+		                    	data.like_count,
+		                    	data.desc,
+		                    	data.name,
+		                    	data.id,
+		                    	data.is_follow?'hide':'', // 关注按钮
+		                    	data.is_follow?'':'hide' //取消关注按钮
+		                    )).data('ajax', 'cached');
+	                    } else {
+	                    	origin.tooltipster('content', '加载名片失败');
+	                    }
+	                }
+	            });
+	        }
+	    }
 	});
+	// 从名片上点击发私信事件 
 	$('.send-message').live('click', function(){
 		var user_name = $(this).data('user_name');
 		var user_id = $(this).data('user_id');
 		$('#new_message_modal').modal('show')
 
-		$('#receiver_input').text(user_name);
+		$('#receiver_label').text(user_name);
+		$('#receiver_id').val(user_id);
 	})
+
 
 	// 设置编辑器
   	$('.zx-textarea').markItUp(markItUpSettings);

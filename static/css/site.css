@@ -67,6 +67,10 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     box-shadow: 0px 2px 4px #666666;
 }
 
+.tooltipster-content{
+    border: solid 1px #f1f1f1;
+}
+
 .cardtips{
     font-size: 12px;
 }
@@ -129,4 +133,15 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 
 #new_message_modal .modal-content{
     width: 400px;
+}
+
+.list-group.only-top-border>.list-group-item{
+    border-bottom: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-radius: 0px;
+}
+
+.list-group.only-top-border>.list-group-item:first-child{
+    border-top: 0px;
 }
