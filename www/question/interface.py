@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import time
+import logging
 from django.db import transaction
-from django.utils.encoding import smart_unicode
-from django.conf import settings
 
-from common import utils, debug, validators, cache
-from www.question.models import Question, QuestionType, Answer
+from common import utils, debug, cache
+from www.question.models import Question, QuestionType, Answer, Like
 
 
 dict_err = {
@@ -15,8 +13,10 @@ dict_err = {
     101: u'标题过于冗长，稍微提炼一下',
     102: u'内容过于简单，稍微详述一下',
     103: u'内容过于冗长，稍微提炼一下',
+    104: u'喜欢一次足矣',
 
     800: u'问题不存在或者已删除',
+    801: u'回答不存在或者已删除',
     998: u'参数缺失',
     999: u'系统错误',
     000: u'成功'
@@ -34,6 +34,18 @@ def question_required(func):
             except Question.DoesNotExist:
                 return False, dict_err.get(800)
         return func(self, question, *args, **kwargs)
+    return
+
+
+def answer_required(func):
+    def _decorator(self, answer_id_or_object, *args, **kwargs):
+        answer = answer_id_or_object
+        if not isinstance(answer_id_or_object, Question):
+            try:
+                answer = Answer.objects.get(id=answer_id_or_object)
+            except Answer.DoesNotExist:
+                return False, dict_err.get(801)
+        return func(self, answer, *args, **kwargs)
     return _decorator
 
 
@@ -151,3 +163,37 @@ class QuestionTypeBase(object):
         for aqt in aqts:
             if str(aqt.id) == str(id_or_domain) or str(aqt.domain) == str(id_or_domain):
                 return aqt
+
+
+class LikeBase(object):
+
+    '''
+    @note: “喜欢”模块封装
+    '''
+    @answer_required
+    @transaction.commit_manually(QUESTION_DB)
+    def like_it(self, answer, user_id, ip):
+        '''
+        @note: 喜欢操作封装
+        '''
+        try:
+            from django.db.models import F
+            if user_id:
+                if Like.objects.filter(user_id=user_id, answer=answer):
+                    transaction.rollback(QUESTION_DB)
+                    return False, dict_err.get(104)
+            else:
+                user_id = ''
+                if Like.objects.filter(ip=ip, answer=answer):
+                    transaction.rollback(QUESTION_DB)
+                    return False, dict_err.get(104)
+
+            Like.objects.create(answer=answer, user_id=user_id, ip=ip)
+            Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
+
+            transaction.commit(QUESTION_DB)
+            return True, dict_err.get(000)
+        except Exception, e:
+            logging.error(debug.get_debug_detail(e))
+            transaction.rollback(QUESTION_DB)
+            return False, str(e)
