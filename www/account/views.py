@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+import json
 from pprint import pprint
 from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect
@@ -190,3 +191,34 @@ def security_question(request, template_name='account/security_question.html'):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect('/')
+
+@member_required
+def get_user_info_by_id(request):
+    '''
+    根据用户id获取名片信息
+    '''
+    user_id = request.REQUEST.get('user_id', None)
+
+    infos = {
+        'success': False
+    }
+
+    if user_id:
+        infos = {
+            'success': True,
+            'id': 'e0f87ed0712b11e3b894000c290d194c',
+            'name': '半夜没事乱溜达',
+            'avatar': '/static/img/common/user3.jpg',
+            'desc': '在那山的这边海的那边有一群程序员，他们老实又胹腆，他们苦逼又没钱。他们一天到晚坐在那里熬夜写软件，饿了就咬一口方便面～～哦苦命的程序员，哦苦命的程序员，只要一改需求他们就要重新搞一遍，但是期限只剩下两天。',
+            'question_count': 125,
+            'answer_count': 326,
+            'like_count': 224,
+            'is_follow': True
+        }
+
+    return HttpResponse(json.dumps(infos))
+
+
+@member_required
+def invitation(request, template_name='account/invitation.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))

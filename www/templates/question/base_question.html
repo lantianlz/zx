@@ -144,6 +144,23 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
     margin-bottom: 18px;
     margin-right: 8px;
 }
+
+.border-cover:before{
+    content: "";
+    position: absolute;
+    border-width: 30px;
+    border-radius: 50%;
+    transition: 0.5s ease;
+    border-color: transparent;
+    border-style: dashed;
+    width: 100%;
+    height: 100%;
+}
+
+.border-cover:hover:before{
+    border-width: 0px;
+    border-color: #999999;
+}
 </style>
 
 <script type="text/javascript">
@@ -186,7 +203,7 @@ $(document).ready(function(){
 
     <div class="intro well">
         <div class="row">
-            <div class="col-md-4 avatar"><img src="{{request.user.get_avatar}}"></div>
+            <div class="col-md-4 avatar"><img class="avatar-circle" src="{{request.user.get_avatar}}"></div>
             <div class="col-md-8 nick">
                 <a href="{{request.user.get_url}}">{{request.user.nick}}</a>
             </div>

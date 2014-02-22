@@ -16,9 +16,6 @@
 }
 
 .message-list .list-group-item{
-	border-left: 0px;
-	border-radius: 0px;
-	border-right: 0px;
 	transition: 0.5s box-shadow;
 }
 
@@ -28,7 +25,6 @@
 }
 
 .message-list .list-group-item:first-child{
-	border-top: 0px;
 	box-shadow: 0 0 0;
 }
 
@@ -101,7 +97,7 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block message_main %}
-<ul class="message-list list-group">
+<ul class="message-list list-group only-top-border">
 	<li class="list-group-item toolbar">
 		<div class="row">
 			<form class="form-inline " role="form">

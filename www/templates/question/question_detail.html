@@ -327,7 +327,7 @@ $(document).ready(function(){
                     <img src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
                 </div>
             </a>
-            <a href="{{question.user.get_url}}">
+            <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
                 <div class="user-name">{{question.user.nick}}</div>
             </a>
             {% endif %}
@@ -399,7 +399,7 @@ $(document).ready(function(){
                             <img src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
                         </div>
                     </a>
-                    <a href="{{answer.from_user.get_url}}">
+                    <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
                         <div class="user-name">{{answer.from_user.nick}}</div>
                     </a>
                     <div class="question-date">{{answer.create_time|time_format}}</div>

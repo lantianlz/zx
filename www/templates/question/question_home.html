@@ -136,10 +136,10 @@
                     {% if not question.is_hide_user %}
                     <a href="{{question.user.get_url}}">
                         <div class="avatar">
-                            <img src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
+                            <img class="avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
                         </div>
                     </a>
-                    <a href="{{question.user.get_url}}">
+                    <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
                         <div class="user-name">{{question.user.nick}}</div>
                     </a>
                     {% endif %}
@@ -159,6 +159,7 @@
     </ul>
     <!--列表结束-->
     {{page_params|paging:request}}
+
 </div>
 <!--问题列表结束-->
 {% endblock %}

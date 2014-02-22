@@ -4,16 +4,9 @@
 {% block css %}
 <style type="text/css">
 .list-group-item{
-	border-bottom: 0px;
-	border-left: 0px;
-	border-right: 0px;
-	border-radius: 0px;
 	border-top: solid 1px #f1f1f1;
 }
 
-.list-group-item:first-child{
-	border-top: 0px;
-}
 
 .split-border{
 	padding-top: 10px;
@@ -44,7 +37,7 @@
 </style>
 {% endblock %}
 {% block static_main %}
-<ul class="list-group">
+<ul class="list-group only-top-border">
 	<li class="list-group-item">
 		<div class="sub-title">1. 特别提示</div>
 		<div class="text">欢迎您来到智选。请您仔细阅读以下条款，如果您对本协议的任何条款表示异议，您可以选择不进入智选。当您注册成功，无论是进入智选，还是在智选上发布任何内容（即「内容」），均意味着您（即「用户」）完全接受本协议项下的全部条款。</div>

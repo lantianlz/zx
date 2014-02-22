@@ -57,3 +57,91 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 }
 
 .placeholder { color: #aaa; }
+
+.avatar-circle{
+    border-radius: 50%;
+    transition: box-shadow 0.3s;
+}
+
+.avatar-circle:hover{
+    box-shadow: 0px 2px 4px #666666;
+}
+
+.tooltipster-content{
+    border: solid 1px #f1f1f1;
+}
+
+.cardtips{
+    font-size: 12px;
+}
+
+.cardtips .desc{
+    width: 320px;
+    padding-left: 10px;
+    padding-top: 5px;
+    color: #666666;
+}
+
+.cardtips .user-avatar{
+    float: left;
+}
+
+.cardtips .avatar{
+    width: 55px;
+    height: 55px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.cardtips .username{
+    padding-top: 10px;
+    padding-bottom: 7px;
+}
+
+.cardtips .tools{
+    border-top: solid 1px #f1f1f1;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+.cardtips .profile{
+    font-size: 14px;
+}
+
+.cardtips .send-message{
+    float: right;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+
+.cardtips .follow{
+    margin-left: 10px;
+}
+
+.cardtips .question-info{
+    padding-top: 5px;
+}
+
+.cardtips .question-info a{
+    padding-left: 3px;
+    padding-right: 15px;
+}
+
+#new_message_modal .modal-body{
+    padding-bottom: 0px;
+}
+
+#new_message_modal .modal-content{
+    width: 400px;
+}
+
+.list-group.only-top-border>.list-group-item{
+    border-bottom: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-radius: 0px;
+}
+
+.list-group.only-top-border>.list-group-item:first-child{
+    border-top: 0px;
+}

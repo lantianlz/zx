@@ -15,6 +15,8 @@
         <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css">
         <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/jquery.markitup/default.css">
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/tooltipster.css">
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/themes/tooltipster-shadow.css">
         <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.css">
         <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.Autocomplete.css">
         <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/base.css">
@@ -24,6 +26,7 @@
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery-1.7.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.placeholder.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.markitup.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.tooltipster.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
@@ -53,6 +56,40 @@
             </div>
         {% endif %}
         <div class="scroll-top"></div>
+        <!-- 私信弹出层 -->
+        <div class="modal fade" id="new_message_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form" class="form-horizontal" method='post' action=''>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">发送私信</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">发送给</label>
+                                <div class="col-sm-9">
+                                    <!-- <input id='receiver_input' autocomplete="off" type="text" class="form-control" name="msm_receiver" placeholder="用户"> -->
+                                    <label id="receiver_label" class="control-label"></label>
+                                    <input type="hidden" id="receiver_id" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">消息内容</label>
+                                <div class="col-sm-9">
+                                    <textarea rows="4" name='message' class="form-control" placeholder="请输入消息内容" value=''></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">发送</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <!-- 弹出层结束 -->
         <div class="container zx-container" style="min-height:360px;" id="content_container_id">
             {% block container %}{% endblock container %}
         </div>
