@@ -66,6 +66,7 @@
                 var url = '/question/like_answer';
                 var postData = {'answer_id':btn.parents('li:eq(0)').attr('id').split('_')[1]};
                 ajaxSend(url, postData, function(data){
+                    voteLoading = false;
                     if(data['flag'] == '0')
                     {
                         // 添加赞动作
@@ -82,7 +83,6 @@
 
                         likedSpan.removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
                         votedSpan.text(voteCount + 1);
-                        voteLoading = false;
                         });
                     }
                     else
