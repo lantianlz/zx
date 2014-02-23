@@ -108,12 +108,21 @@
 <!--问题列表开始-->
 <div class="question-list">
     <!--选项卡开始-->
+    {% if '/tag/' in request.path %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="/question">全部</a>
+        </li>
+        <li class="active">{{tag.name|str_display:10}}</li>
+    </ol>
+    {% else %}
     <ul class="nav nav-tabs">
         <li {% if not question_type %} class="active"{% endif %}>
             <a href="/question">全部</a>
         </li>
         {% question_type_nav_display %}
     </ul>
+    {% endif %}
     <!--选项卡结束-->
     {% if not questions %}
     <div class="blank10"></div>

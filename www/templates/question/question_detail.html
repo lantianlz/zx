@@ -289,8 +289,7 @@
 {% endblock %}
 
 {% block question_main%}
-<span class="jinghua">
-    <img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
+<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
 
 <ol class="breadcrumb">
     <li>
@@ -311,22 +310,7 @@
         <div class="topic-content">{{question.content|safe}}</div>
         <div class="topic-tags">
             <ul>
-                <li>
-                    <a href="">
-                        <span class="label label-default">
-                            <span class="glyphicon glyphicon-tag"></span>
-                            <span class="tag-title">年化收益</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="">
-                        <span class="label label-default">
-                            <span class="glyphicon glyphicon-tag"></span>
-                            <span class="tag-title">P2P借贷</span>
-                        </span>
-                    </a>
-                </li>
+                {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
             </ul>
         </div>
         <div class="topic-footer">

@@ -77,3 +77,13 @@ def global_statistic(context):
         cache_obj.set(key, gs, time_out=3600 * 8)
     return render_to_response('include/_global_statistic.html', locals(),
                               context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def global_hotest_tags(context):
+    """
+    @note: 热门标签提取
+    """
+    from www.question.interface import TagBase
+    global_hotest_tags = TagBase().get_all_tags()
+    return render_to_response('question/_global_hotest_tags.html', locals(), context_instance=context).content

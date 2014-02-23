@@ -5,7 +5,7 @@ import logging
 from django.db import transaction
 
 from common import utils, debug, cache
-from www.question.models import Question, QuestionType, Answer, Like
+from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion
 
 
 dict_err = {
@@ -85,36 +85,63 @@ class QuestionBase(object):
             return False, dict_err.get(103)
         return True, dict_err.get(000)
 
-    def create_question(self, user_id, question_type, question_title, question_content, ip='127.0.0.1', is_hide_user=None):
-        # 防止xss漏洞
-        question_title = utils.filter_script(question_title)
-        question_content = utils.filter_script(question_content)
+    @transaction.commit_manually(using=QUESTION_DB)
+    def create_question(self, user_id, question_type, question_title, question_content,
+                        ip='127.0.0.1', is_hide_user=None, tags=[]):
+        try:
+            # 防止xss漏洞
+            question_title = utils.filter_script(question_title)
+            question_content = utils.filter_script(question_content)
 
-        flag, result = self.validate_title(question_title)
-        if not flag:
-            return False, result
+            flag, result = self.validate_title(question_title)
+            if not flag:
+                transaction.rollback(using=QUESTION_DB)
+                return False, result
 
-        flag, result = self.validate_content(question_content)
-        if not flag:
-            return False, result
+            flag, result = self.validate_content(question_content)
+            if not flag:
+                transaction.rollback(using=QUESTION_DB)
+                return False, result
 
-        if not all((int(question_type), question_title, question_content)):
-            return False, dict_err.get(998)
+            if not all((int(question_type), question_title, question_content)):
+                transaction.rollback(using=QUESTION_DB)
+                return False, dict_err.get(998)
 
-        question = Question.objects.create(user_id=user_id, question_type_id=question_type,
-                                           title=question_title, content=question_content,
-                                           last_answer_time=datetime.datetime.now(), ip=ip,
-                                           is_hide_user=True if is_hide_user else False)
+            question = Question.objects.create(user_id=user_id, question_type_id=question_type,
+                                               title=question_title, content=question_content,
+                                               last_answer_time=datetime.datetime.now(), ip=ip,
+                                               is_hide_user=True if is_hide_user else False)
 
-        # todo 清理缓存、更新冗余信息等
-        return True, question
+            # 创建话题和tags关系
+            for tag in tags:
+                try:
+                    TagQuestion.objects.create(tag_id=tag, question=question)
+                except:
+                    pass
 
-    def get_questions(self, question_type_domain=None):
+            # todo 清理缓存、更新冗余信息等
+            transaction.commit(using=QUESTION_DB)
+            return True, question
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return False, dict_err.get(999)
+
+    def get_questions_by_type(self, question_type_domain=None):
         ps = dict(state=True)
         if question_type_domain:
             ps.update(question_type=QuestionTypeBase().get_question_type_by_id_or_domain(question_type_domain))
         questions = Question.objects.filter(**ps)
         return questions
+
+    def get_questions_by_tag(self, tag_object_or_domain):
+        tag = TagBase().get_tag_by_domain(tag_object_or_domain) if not isinstance(tag_object_or_domain, Tag)\
+            else tag_object_or_domain
+        if tag:
+            return [tq.question for tq in TagQuestion.objects.select_related('question')
+                    .filter(tag=tag).order_by("-question__sort_num", '-question__like_count', "-question__last_answer_time")]
+        else:
+            return []
 
     def get_question_by_id(self, id):
         try:
@@ -225,3 +252,36 @@ class LikeBase(object):
         if ip:
             ps.update(dict(ip=ip, is_anonymous=True))
         return Like.objects.filter(**ps)
+
+
+class TagBase(object):
+
+    def get_all_tags(self, cached=True):
+        key = 'all_question_tag'
+        cache_obj = cache.Cache(config=cache.CACHE_STATIC)
+        tags = cache_obj.get(key)
+        if not tags or not cached:
+            tags = Tag.objects.filter(state=True)
+            cache_obj.set(key, tags)
+        return tags
+
+    def get_tag_by_domain(self, domain):
+        tags = self.get_all_tags()
+        for tag in tags:
+            if tag.domain == domain:
+                return tag
+
+    def get_tags_by_question_type(self, question_type):
+        return self.get_all_tags().filter(question_type=question_type)
+
+    def get_tags_by_question(self, question):
+        return [tq.tag for tq in TagQuestion.objects.select_related('tag').filter(question=question)]
+
+    def format_tags_for_ask_page(self, tags):
+        ftags = {}
+        for tag in tags:
+            if str(tag.question_type_id) not in ftags:
+                ftags[str(tag.question_type_id)] = [(tag.id, tag.name), ]
+            else:
+                ftags[str(tag.question_type_id)].append((tag.id, tag.name),)
+        return ftags

@@ -5,119 +5,118 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-	/*
-	var text_tags = new $.TextboxList('#question_tags_input', {
-		bitsOptions: {
-    		box: {deleteButton: true}
-    	},
-		unique: true, 
-		max: 10,
-		plugins: {
-			autocomplete: {
-				minLength: 1,
-				queryRemote: true,
-				placeholder: '添加标签',
-				highlight: false,
-				remote: {url: '/question/get_tags' }
-			}
-		}
+    /*
+    var text_tags = new $.TextboxList('#question_tags_input', {
+        bitsOptions: {
+            box: {deleteButton: true}
+        },
+        unique: true, 
+        max: 10,
+        plugins: {
+            autocomplete: {
+                minLength: 1,
+                queryRemote: true,
+                placeholder: '添加标签',
+                highlight: false,
+                remote: {url: '/question/get_tags' }
+            }
+        }
 
-	});
-	//text_tags.add('John Doe').add('Jane Roe');
-	*/
+    });
+    //text_tags.add('John Doe').add('Jane Roe');
+    */
 
-	// 选择类型事件
-	$('#div-tags').hide();
-	$('#sel_question_type').bind("change", function(){
-		$('#div-tags').hide('fast');
+    var tags = {{tags|safe}};
 
-		var type = $(this).val();
-		if(!type){
-			return;
-		}
+    // 选择类型事件
+    $('#div-tags').hide();
+    $('#sel_question_type').bind("change", function(){
+        $('#div-tags').hide('fast');
 
-		$.ajax({
-			type: 'POST',
-			data: 'question_type=' + type,
-			url: '/question/get_tags_by_question_type',
-			dataType: 'json',
-			success: function(tags){
-				
-				$('#div-tags').show('fast').find('label').remove();
-				for (var i = tags.length - 1; i >= 0; i--) {
-					$('#div-tags').append(String.format('<label class="checkbox-inline"><input type="checkbox" alue="{0}"> {1}</label>', tags[i].id, tags[i].name));
-				};
-			}
-		})
-	})
+        var type = $(this).val();
+        if(!type){
+            return;
+        }
+        var type_tags = tags[type];
+        if(!type_tags)
+        {
+            return;
+        }
+        $('#div-tags').show('fast').find('label').remove();
+        for (var i = type_tags.length - 1; i >= 0; i--) {
+            $('#div-tags').append(String.format('<label class="checkbox-inline"><input name="tag" type="checkbox" value="{0}"> {1}</label>', 
+                type_tags[i][0], type_tags[i][1]));
+        };
+
+    })
 });
 </script>
 {% endblock %}
 {% block css %}
 <style type="text/css">
 .ask-title{
-	border-bottom: solid 1px #e6e6e6;
+    border-bottom: solid 1px #e6e6e6;
 }
 
 .ask-main{
-	margin-top: 35px;
+    margin-top: 35px;
 }
 
 .ask-btn{
-	padding-right: 0px;
+    padding-right: 0px;
 }
 
 .question-content{
-	border: solid 1px #ddd;
-	border-radius: 4px;
+    border: solid 1px #ddd;
+    border-radius: 4px;
 }
 
 .tag-title{
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 </style>
 {% endblock %}
 {% block question_main%}
 <div class="ask-title">
-	<h2>问个问题</h2>
+    <h2>问个问题</h2>
 </div>
 
 <div class="ask-main">
-	<form role="form" method='post' action='/question/ask_question'>
-		<div class="form-group">
-			<select name="question_type" id="sel_question_type" class="form-control">
-				<option value='0'>请选择问题类型</option>
-				{% question_type_option_display %}
-			</select>
-		</div>
-		<div class="form-group" id="div-tags">
-			<!-- <input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder=""> -->
-			<div class="tag-title">将你的提问归类至子话题 :</div>
-			<label class="checkbox-inline">
-			  	<input type="checkbox" id="inlineCheckbox1" value="option1"> 1
-			</label>
-			<label class="checkbox-inline">
-			  	<input type="checkbox" id="inlineCheckbox2" value="option2"> 2
-			</label>
-		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
-					value='{{question_title}}'></div>
-		<div class="form-group question-content">
-			<textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question_content}}</textarea>
-		</div>
-		<div class="form-group">
-			<div class="col-md-6 checkbox">
-				<label class="zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="勾选此项后，问题展现的时候将隐藏你的名字">
-					<input type="checkbox" checked name="is_hide_user">匿名提问
-					<span class="glyphicon glyphicon-question-sign cl_gray"></span>
-				</label>
-			</div>
-			<div class="col-md-6 text-right ask-btn">
-				<button type="submit" class="btn btn-primary">我要提问</button>
-			</div>
-		</div>
-	</form>
+    <form role="form" method='post' action='/question/ask_question'>
+        <div class="form-group">
+            <select name="question_type" id="sel_question_type" class="form-control">
+                <option value='0'>请选择问题类型</option>
+                {% question_type_option_display %}
+            </select>
+        </div>
+        <div class="form-group" id="div-tags">
+            <!-- <input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder=""> -->
+            <div class="tag-title">将你的提问归类至子话题 :</div>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox2" value="option2"> 2
+            </label>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
+                    value='{{question_title}}'></div>
+        <div class="form-group question-content">
+            <textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question_content}}</textarea>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6 checkbox">
+                <label class="zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="勾选此项后，问题展现的时候将隐藏你的名字">
+                    <input type="checkbox" checked name="is_hide_user">匿名提问
+                    <span class="glyphicon glyphicon-question-sign cl_gray"></span>
+                </label>
+            </div>
+            <div class="col-md-6 text-right ask-btn">
+                <button type="submit" class="btn btn-primary">我要提问</button>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock %}
