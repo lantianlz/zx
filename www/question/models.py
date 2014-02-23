@@ -73,7 +73,7 @@ class Answer(models.Model):
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
-        ordering = ["-sort_num", "like_count", "-id"]
+        ordering = ["-sort_num", "-like_count", "-id"]
 
     def get_from_user(self):
         from www.account.interface import UserBase
@@ -98,6 +98,7 @@ class Like(models.Model):
     @note: 喜欢
     """
     answer = models.ForeignKey(Answer)
+    question = models.ForeignKey(Question)  # 冗余字段，用于改提问下所有的喜欢
     from_user_id = models.CharField(verbose_name=u'发起赞的人', max_length=32, db_index=True)
     to_user_id = models.CharField(verbose_name=u'被赞者', max_length=32, db_index=True)
     ip = models.IPAddressField(db_index=True)

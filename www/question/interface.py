@@ -34,7 +34,7 @@ def question_required(func):
             except Question.DoesNotExist:
                 return False, dict_err.get(800)
         return func(self, question, *args, **kwargs)
-    return
+    return _decorator
 
 
 def answer_required(func):
@@ -42,7 +42,7 @@ def answer_required(func):
         answer = answer_id_or_object
         if not isinstance(answer_id_or_object, Question):
             try:
-                answer = Answer.objects.get(id=answer_id_or_object)
+                answer = Answer.objects.select_related('question').get(id=answer_id_or_object)
             except Answer.DoesNotExist:
                 return False, dict_err.get(801)
         return func(self, answer, *args, **kwargs)
@@ -59,9 +59,15 @@ class QuestionBase(object):
             question.user = question.get_user()
         return questions
 
-    def format_answers(self, answers):
+    def format_answers(self, answers, request_user=None):
+        request_user_like_answer_ids = []
+        if request_user and answers:
+            request_user_likes = LikeBase().get_likes_by_question(answers[0].question, request_user.id)
+            request_user_like_answer_ids = [l.answer_id for l in request_user_likes]
+
         for answer in answers:
             answer.from_user = answer.get_from_user()
+            answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
         return answers
 
     def validate_title(self, title):
@@ -144,7 +150,7 @@ class QuestionBase(object):
             return False, dict_err.get(999)
 
     def get_answers_by_question_id(self, question_id):
-        return Answer.objects.filter(question=question_id, state=True)
+        return Answer.objects.select_related('question').filter(question=question_id, state=True)
 
 
 class QuestionTypeBase(object):
@@ -172,23 +178,27 @@ class LikeBase(object):
     '''
     @answer_required
     @transaction.commit_manually(QUESTION_DB)
-    def like_it(self, answer, user_id, ip):
+    def like_it(self, answer, from_user_id, ip):
         '''
         @note: 喜欢操作封装
         '''
         try:
+            assert all((answer, from_user_id, ip))
             from django.db.models import F
-            if user_id:
-                if Like.objects.filter(user_id=user_id, answer=answer):
+            is_anonymous = False
+            if from_user_id:
+                if Like.objects.filter(from_user_id=from_user_id, answer=answer):
                     transaction.rollback(QUESTION_DB)
                     return False, dict_err.get(104)
             else:
-                user_id = ''
+                from_user_id = ''
+                is_anonymous = False
                 if Like.objects.filter(ip=ip, answer=answer):
                     transaction.rollback(QUESTION_DB)
                     return False, dict_err.get(104)
 
-            Like.objects.create(answer=answer, user_id=user_id, ip=ip)
+            Like.objects.create(answer=answer, question=answer.question, is_anonymous=is_anonymous,
+                                from_user_id=from_user_id, to_user_id=answer.question.get_user().id, ip=ip)
             Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
 
             transaction.commit(QUESTION_DB)
@@ -197,3 +207,14 @@ class LikeBase(object):
             logging.error(debug.get_debug_detail(e))
             transaction.rollback(QUESTION_DB)
             return False, str(e)
+
+    def get_likes_by_question(self, question, user_id=None, ip=None):
+        '''
+        @note: 获取某个提问下的问题的所有喜欢，用于前端判断当前登录用户是否喜欢了该回答，匿名用户采用ip判断
+        '''
+        ps = dict(question=question)
+        if user_id:
+            ps.update(dict(from_user_id=user_id))
+        if ip:
+            ps.update(dict(ip=ip, is_anonymous=True))
+        return Like.objects.filter(**ps)

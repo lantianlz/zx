@@ -37,7 +37,7 @@ def question_detail(request, question_id, template_name='question/question_detai
         raise Http404
 
     answers = qb.get_answers_by_question_id(question_id)
-    answers = qb.format_answers(answers)
+    answers = qb.format_answers(answers, request.user)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -126,3 +126,14 @@ def get_tags_by_question_type(request):
         result = tags[question_type]
 
     return HttpResponse(json.dumps(result))
+
+
+# ===================================================ajax部分=================================================================#
+@member_required
+def like_answer(request):
+    answer_id = request.POST.get('answer_id', '')
+
+    lb = interface.LikeBase()
+    flag, result = lb.like_it(answer_id, request.user.id, ip=utils.get_clientip(request))
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
