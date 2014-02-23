@@ -390,7 +390,8 @@
                 </div>
             </li>
             {% for answer in answers %}
-            <li class="list-group-item {% if answer.from_user_id == question.user_id %}my-reply{% endif %}" id="answer_{{answer.id}}">
+            <li class="list-group-item {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" 
+                id="answer_{{answer.id}}">
                 <div class="reply-header">
                     <a href="{{answer.from_user.get_url}}">
                         <div class="avatar">
