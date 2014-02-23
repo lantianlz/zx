@@ -14,6 +14,7 @@ dict_err = {
     102: u'内容过于简单，稍微详述一下',
     103: u'内容过于冗长，稍微提炼一下',
     104: u'喜欢一次足矣',
+    105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
 
     800: u'问题不存在或者已删除',
     801: u'回答不存在或者已删除',
@@ -197,8 +198,14 @@ class LikeBase(object):
                     transaction.rollback(QUESTION_DB)
                     return False, dict_err.get(104)
 
+            # 不支持自赞
+            to_user_id = answer.question.get_user().id
+            if from_user_id == to_user_id:
+                transaction.rollback(QUESTION_DB)
+                return False, dict_err.get(105)
+
             Like.objects.create(answer=answer, question=answer.question, is_anonymous=is_anonymous,
-                                from_user_id=from_user_id, to_user_id=answer.question.get_user().id, ip=ip)
+                                from_user_id=from_user_id, to_user_id=to_user_id, ip=ip)
             Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
 
             transaction.commit(QUESTION_DB)
