@@ -94,6 +94,11 @@
 .question-list .nav a:hover{
     background-color: #dbdbdb;
 }
+
+.question-list .tag-ul li:first-child{
+    border-top: 1px solid #dddddd;
+    border-top-left-radius: 4px;
+}
 </style>
 {% endblock %}
 
@@ -126,7 +131,7 @@
     <div class="alert alert-success popmsg" id="divSuccess">该分类暂无数据</div>
     {% endif %}
     <!--列表开始-->
-    <ul class="list-group" id="ul_question_list">
+    <ul class="list-group {% if '/tag/' in request.path %}tag-ul{% endif %}" id="ul_question_list">
         {% for question in questions %}
         <li class="list-group-item">
             <div class="item-container">
