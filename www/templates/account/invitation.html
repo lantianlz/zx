@@ -49,12 +49,20 @@
 .invited-persons .avatar{
 	width: 45px;
 	height: 45px;
+	margin-left: 5px;
+}
+
+.invited-persons .name{
+	font-size: 12px;
+	text-align: center;
+	width: 57px;
 }
 </style>
 {% endblock %}
 {% block javascript %}
 <script type="text/javascript">
 	$(document).ready(function(){
+		// 未使用的邀请链接单击选中全文本
 		$('.zx-invitation input').not('.used').bind('click', function(){
 			$(this).select();
 		})
@@ -117,14 +125,22 @@
 	
 	<div class="invited split">已被邀请并注册用户</div>
 	<ul class="invited-persons list-inline">
-		<li><img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user1.jpg"></li>
-		<li><img class="avatar avatar-circle" src="/static/img/common/user2.jpg"></li>
-		<li><img class="avatar avatar-circle" src="/static/img/common/user3.jpg"></li>
-		<li><img class="avatar avatar-circle" src="/static/img/common/user4.png"></li>
-		<li><img class="avatar avatar-circle" src="/static/img/common/user1.jpg"></li>
-		<li><img class="avatar avatar-circle" src="/static/img/common/user2.jpg"></li>
-		<li><img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user3.jpg"></li>
-		<li><img class="avatar avatar-circle zx-cardtips" data-user_id="1"  src="/static/img/common/user4.png"></li>
+		<li>
+			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user1.jpg">
+			<div class="name">半夜没事...</div>
+		</li>
+		<li>
+			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user3.jpg">
+			<div class="name">习大大</div>
+		</li>
+		<li>
+			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user2.jpg">
+			<div class="name">女王大人</div>
+		</li>
+		<li>
+			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user4.png">
+			<div class="name">莫文蔚</div>
+		</li>
 	</ul>
 	
 </div>

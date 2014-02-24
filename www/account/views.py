@@ -192,7 +192,7 @@ def logout(request):
     auth.logout(request)
     return HttpResponseRedirect('/')
 
-@member_required
+#@member_required
 def get_user_info_by_id(request):
     '''
     根据用户id获取名片信息

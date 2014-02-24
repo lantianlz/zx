@@ -21,6 +21,15 @@
 	padding-top: 40px;
 	margin-top: 40px;
 }
+
+.regist-main .avatar{
+	width: 35px;
+	height: 35px;
+}
+
+.regist-main .inviter{
+	margin-right: 5px;
+}
 </style>
 {% endblock %}
 
@@ -37,6 +46,12 @@
 			<h1>智选网</h1>
 		</div>
 		<form class="form-horizontal" role="form" method="post" action="/regist">
+			<div class="form-group">
+				<div class="col-md-offset-1">
+					<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user3.jpg">
+					<span class="inviter">半夜没事瞎溜达</span>邀请你注册
+				</div>
+			</div>
 			<div class="form-group">
 				<div class="col-md-offset-1">
 					<input type="email" name="email" class="form-control" placeholder="你的登录邮箱" name="email" value='{{email}}'></div>

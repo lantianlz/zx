@@ -244,7 +244,7 @@ $(document).ready(function(){
 		}
 	});
 
-  	// 给不支持placeholder的浏览器添加次属性
+  	// 给不支持placeholder的浏览器添加此属性
   	$('input, textarea').placeholder();
 	/*
 	var editor;

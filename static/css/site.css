@@ -145,3 +145,14 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 .list-group.only-top-border>.list-group-item:first-child{
     border-top: 0px;
 }
+
+.list-flow{
+    list-style: none;
+    padding-left: 0px;
+}
+
+.list-flow li{
+    float: left;
+    padding-bottom: 10px;
+    padding-left: 5px;
+}

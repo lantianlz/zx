@@ -119,24 +119,13 @@
     border: solid 1px #ddd;
 }
 
-.zx-container-main .question-entry .topic-title{
-
-}
-
 .zx-container-main .question-entry .topic-content{
     padding-top: 25px;
     font-size: 13px;
-    color: #475058;
-}
-
-.zx-container-main .question-entry .topic-footer{
-    padding-top: 25px;
 }
 
 .zx-container-main .question-entry .question-date{
-    float: right;
     font-size: 12px;
-    color: #475058;
 }
 
 .zx-container-main .replies{
@@ -157,7 +146,6 @@
 
 .zx-container-main .reply-content{
     font-size: 13px;
-    color: #475058;
     padding-top: 15px;
     padding-bottom: 25px;
     line-height: 25px;
@@ -245,7 +233,7 @@
 
 .question-tool{
     font-size: 12px;
-    float: right;
+    /*float: right;*/
     padding-right: 10px;
 }
 
@@ -272,201 +260,200 @@
   z-index: 99;
 }
 
-.topic-tags{
-  padding-bottom: 10px;
+.topic-tags ul.list-flow{
+  padding: 10px 5px 10px 10px;
 }
 
-.topic-tags ul{
-  list-style: none;
-  padding-left: 0px;
-}
-
-.topic-tags li{
-  float: left;
-  padding-left: 5px;
+.answer-date{
+  font-size: 12px;
 }
 </style>
 {% endblock %}
 
 {% block question_main%}
-<span class="jinghua"><img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
+<span class="jinghua">
+  <img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
 
 <ol class="breadcrumb">
-    <li>
-        <a href="/question">全部</a>
-    </li>
-    <li>
-        <a href="{{question.question_type.get_url}}">{{question.question_type.name}}</a>
-    </li>
-    <li class="active">{{question.title|str_display:10}}</li>
+  <li>
+    <a href="/question">全部</a>
+  </li>
+  <li>
+    <a href="{{question.question_type.get_url}}">{{question.question_type.name}}</a>
+  </li>
+  <li class="active">{{question.title|str_display:10}}</li>
 </ol>
 <div class="question-entry">
-    <div class="topic">
+  <div class="topic">
 
-        <div class="topic-title">
-            <h4> <strong>{{question.title}}</strong>
-            </h4>
-        </div>
-        <div class="topic-content">{{question.content|safe}}</div>
-        <div class="topic-tags">
-            <ul>
-                {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
-            </ul>
-        </div>
-        <div class="topic-footer">
-            {% if not question.is_hide_user %}
-            <a href="{{question.user.get_url}}">
-                <div class="avatar">
-                    <img src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
-                </div>
-            </a>
-            <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
-                <div class="user-name">{{question.user.nick}}</div>
-            </a>
-            {% endif %}
-            <div class="question-date">{{question.create_time}}</div>
-            {% if request.user.id == question.user.id %}
-            <div class="question-tool">
-                <a href="#" data-toggle="modal" data-target="#edit_modal">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    修改提问
-                </a>
+    <div class="topic-title">
+      <h4> <strong>{{question.title}}</strong>
+      </h4>
+    </div>
+    <div class="topic-content">{{question.content|safe}}</div>
+    <div class="topic-tags row">
+      <ul class="list-flow">
+        {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
+      </ul>
+    </div>
+    <div class="topic-footer row">
+      <div class="col-md-6">
+        {% if not question.is_hide_user %}
+        <a href="{{question.user.get_url}}">
+          <img class="avatar" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
+        </a>
+        <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
+          <div class="user-name">{{question.user.nick}}</div>
+        </a>
+        {% endif %}
+      </div>
+      <div class="col-md-6 text-right">
+        {% if request.user.id == question.user.id %}
+        <span class="question-tool">
+          <a href="#" data-toggle="modal" data-target="#edit_modal">
+            <span class="glyphicon glyphicon-pencil"></span>
+            修改提问
+          </a>
+        </span>
+        {% endif %}
+        <span class="question-date">{{question.create_time}}</span>
+      </div>
+    </div>
+    {% if request.user.id == question.user.id %}
+    <!-- 弹出层 -->
+    <div class="modal fade" id="edit_modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form role="form" method='post' action='/question/modify_question'>
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">修改提问</h4>
             </div>
+            <div class="modal-body">
 
-            <!-- 弹出层 -->
-            <div class="modal fade" id="edit_modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form role="form" method='post' action='/question/modify_question'>
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">修改提问</h4>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="form-group">
-                                    <select name="question_type" class="form-control">
-                                        <option value='0'>请选择问题类型</option>
-                                        {% question_type_option_display %}
-                                    </select>
-                                </div>
-                                <div class="blank10"></div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
+              <div class="form-group">
+                <select name="question_type" class="form-control">
+                  <option value='0'>请选择问题类型</option>
+                  {% question_type_option_display %}
+                </select>
+              </div>
+              <div class="blank10"></div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
                                     value='{{question.title}}'></div>
-                                <div class="form-group question-content">
-                                    <textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question.content}}</textarea>
-                                </div>
+              <div class="form-group question-content">
+                <textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question.content}}</textarea>
+              </div>
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button type="submit" class="btn btn-primary">保存</button>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- /.modal-content --> </div>
-                <!-- /.modal-dialog --> </div>
-            <!-- /.modal -->
-            <!-- 弹出层结束 -->{% endif %}</div>
-    </div>
-
-    <div class="replies">
-        <ul class="list-group" id="ul_replies">
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4> <strong>共{{question.answer_count}}个回答</strong>
-                        </h4>
-                    </div>
-                    <!-- 
-                    <div class="col-md-3 pull-right">
-                        <select class="form-control input-sm replies-sort">
-                            <option>按赞最多排序</option>
-                            <option>按时间排序</option>
-                        </select>
-                    </div>
-                    -->
-                </div>
-            </li>
-            {% for answer in answers %}
-            <li class="list-group-item {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" 
-                id="answer_{{answer.id}}">
-                <div class="reply-header">
-                    <a href="{{answer.from_user.get_url}}">
-                        <div class="avatar">
-                            <img src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
-                        </div>
-                    </a>
-                    <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
-                        <div class="user-name">{{answer.from_user.nick}}</div>
-                    </a>
-                    <div class="question-date">{{answer.create_time|time_format}}</div>
-                </div>
-                <div class="reply-main row">
-                    <div class="reply-content col-md-9">{{answer.content|safe}}</div>
-                    <div class="vote col-md-3">
-                        <div class="btn-group-vertical">
-                            <button type="button" class="btn btn-default">
-                                <span class="glyphicon 
-                                {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} 
-                                pull-left">
-                                </span>
-                                <span class="badge">{{answer.like_count}}</span>
-                            </button>
-                        </div>
-                        {% if question.user.id == request.user.id %}
-                        <div class="remove-reply hide">
-                            <a href="#">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                删除回答
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <!-- 回复块 -->
-    <div class="answer">
-        <div class="answer-title">
-            <h3>可以在下面添加你的回答</h3>
-        </div>
-
-        <div class="answer-main">
-            {% if request.user.is_authenticated %}
-            <form role="form" method="post" action="/question/create_answer/{{question.id}}">
-                <div class="form-group editor">
-                    <textarea name="answer_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{content}}</textarea>
-                </div>
-                <div class="form-group pull-right">
-                    <button type="submit" class="btn btn-primary">提交你的回答</button>
-                </div>
-            </form>
-            {% else %}
-            <div class="not-login row">
-                <div class="col-md-2 lock">
-                    <img src="{{MEDIA_URL}}img/common/icon-locked.png"></div>
-                <div class="col-md-10">
-                    <div class="title">回复前请登录</div>
-                    <div class="content">须登录后才能发表你的回复，点击下面的登录按钮进行登录，如果你还没有成为我们的会员，请点击下面的注册按钮进行新用户注册</div>
-                    <div class="col-md-6 links">
-                        <a href="/login">
-                            <button type="button" class="btn btn-primary btn-lg btn-login">立即登录</button>
-                        </a>
-                    </div>
-                    <div class="col-md-6 links">
-                        <a href="/regist">
-                            <button type="button" class="btn btn-primary btn-lg btn-regist">免费注册</button>
-                        </a>
-                    </div>
-                </div>
             </div>
-            {% endif %}
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+          </form>
         </div>
+        <!-- /.modal-content --> </div>
+      <!-- /.modal-dialog --> </div>
+    <!-- /.modal -->
+    <!-- 弹出层结束 -->{% endif %}</div>
+
+  <div class="replies">
+    <ul class="list-group" id="ul_replies">
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-md-6">
+            <h4> <strong>共{{question.answer_count}}个回答</strong>
+            </h4>
+          </div>
+          <!-- 
+                    <div class="col-md-3 pull-right">
+          <select class="form-control input-sm replies-sort">
+            <option>按赞最多排序</option>
+            <option>按时间排序</option>
+          </select>
+        </div>
+        -->
+      </div>
+    </li>
+    {% for answer in answers %}
+    <li class="list-group-item {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" 
+                id="answer_{{answer.id}}">
+      <div class="reply-header row">
+        <div class="col-md-6">
+          <a href="{{answer.from_user.get_url}}">
+            <img class="avatar" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
+          </a>
+          <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
+            <div class="user-name">{{answer.from_user.nick}}</div>
+          </a>
+        </div>
+        <div class="col-md-6 text-right">
+          <span class="answer-date">{{answer.create_time|time_format}}</span>
+        </div>
+      </div>
+      <div class="reply-main row">
+        <div class="reply-content col-md-9">{{answer.content|safe}}</div>
+        <div class="vote col-md-3 text-right">
+          <div class="btn-group-vertical">
+            <button type="button" class="btn btn-default">
+              <span class="glyphicon 
+                                {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} 
+                                pull-left"></span>
+              <span class="badge">{{answer.like_count}}</span>
+            </button>
+          </div>
+          {% if question.user.id == request.user.id %}
+          <div class="remove-reply hide">
+            <a href="#">
+              <span class="glyphicon glyphicon-remove"></span>
+              删除回答
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<!-- 回复块 -->
+<div class="answer">
+  <div class="answer-title">
+    <h3>可以在下面添加你的回答</h3>
+  </div>
+
+  <div class="answer-main">
+    {% if request.user.is_authenticated %}
+    <form role="form" method="post" action="/question/create_answer/{{question.id}}">
+      <div class="form-group editor">
+        <textarea name="answer_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{content}}</textarea>
+      </div>
+      <div class="form-group pull-right">
+        <button type="submit" class="btn btn-primary">提交你的回答</button>
+      </div>
+    </form>
+    {% else %}
+    <div class="not-login row">
+      <div class="col-md-2 lock">
+        <img src="{{MEDIA_URL}}img/common/icon-locked.png"></div>
+      <div class="col-md-10">
+        <div class="title">回复前请登录</div>
+        <div class="content">须登录后才能发表你的回复，点击下面的登录按钮进行登录，如果你还没有成为我们的会员，请点击下面的注册按钮进行新用户注册</div>
+        <div class="col-md-6 links">
+          <a href="/login">
+            <button type="button" class="btn btn-primary btn-lg btn-login">立即登录</button>
+          </a>
+        </div>
+        <div class="col-md-6 links">
+          <a href="/regist">
+            <button type="button" class="btn btn-primary btn-lg btn-regist">免费注册</button>
+          </a>
+        </div>
+      </div>
     </div>
+    {% endif %}
+  </div>
+</div>
 </div>
 {% endblock %}
