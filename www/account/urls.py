@@ -21,5 +21,5 @@ urlpatterns = patterns('www.account.views',
 
 urlpatterns += patterns('www.account.views_oauth',
                         url(r'^oauth/qq$', 'oauth_qq'),
-                        url(r'^oauth/sina$', 'oauth_siget_user_info_by_idna'),
+                        url(r'^oauth/sina$', 'oauth_sina'),
                         )
