@@ -56,6 +56,10 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     overflow-y: hidden;
 }
 
+.markItUpEditor{
+    font-family: '微软雅黑';
+}
+
 .placeholder { color: #aaa; }
 
 .avatar-circle{

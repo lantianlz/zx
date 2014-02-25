@@ -221,7 +221,7 @@ body {background-color: #F0F4F7}
             <ul class="nav navbar-nav navbar-right login-user text-right">
                 {% if request.user.is_authenticated %}
                 <li class="dropdown">
-                    <a class="dropdown-toggle user" data-toggle="dropdown" href="#">
+                    <a class="dropdown-toggle user" data-toggle="dropdown" data-target="#">
                         <img class='avatar avatar-circle' src="{{MEDIA_URL}}img/common/user3.jpg">
                         {{ request.user.nick }}
                         <span class="badge flash-badge">3</span>

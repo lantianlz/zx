@@ -18,7 +18,7 @@
         });
         */
 
-        // 
+        // 按钮点击事件 IE直接点还不行,非要js
         $('.not-login .btn-login').bind('click', function(){
             window.location.href = '/login';
         });
@@ -26,7 +26,7 @@
             window.location.href = '/regist';
         });
 
-        // 删除回复事件
+        // 删除回答显示隐藏事件
         $('.reply-main').bind('mouseover', function(){
             $(this).find('.remove-reply').removeClass('hide');
         })
@@ -74,15 +74,15 @@
                         // 动画效果
                         var animateLike = btn.siblings();
                         animateLike.animate({
-                        opacity: 0.01,
-                        fontSize: 16,
-                        paddingLeft: 10,
-                        paddingTop: 6
+                          opacity: 0.01,
+                          fontSize: 16,
+                          paddingLeft: 10,
+                          paddingTop: 6
                         }, 500, function(){
-                        animateLike.remove();
+                          animateLike.remove();
 
-                        likedSpan.removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
-                        votedSpan.text(voteCount + 1);
+                          likedSpan.removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
+                          votedSpan.text(voteCount + 1);
                         });
                     }
                     else
