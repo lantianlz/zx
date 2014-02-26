@@ -69,6 +69,7 @@ class Answer(models.Model):
     sort_num = models.IntegerField(verbose_name=u'排序值', default=-999, db_index=True)
     like_count = models.IntegerField(verbose_name=u'赞的次数', default=0)
     ip = models.CharField(max_length=32, null=True)
+    is_bad = models.BooleanField(default=False) # 是否是无用回复，无用回复需要折叠
     state = models.BooleanField(default=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 

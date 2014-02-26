@@ -29,7 +29,6 @@ def get_clientip(request):
 
 def time_format(value):
     import time
-    import datetime
 
     if not value:
         return 'datetime error'
@@ -131,7 +130,7 @@ def render_email_template(template_path='', context={}):
     '''
     @note: 渲染模板
     '''
-    from django import template 
+    from django import template
 
     if not template_path:
         return ''
@@ -140,3 +139,7 @@ def render_email_template(template_path='', context={}):
     t = template.loader.get_template(template_path)
     c = template.Context(context)
     return t.render(c)
+
+
+# 判断user是否为user对象获取user id
+get_uid = lambda user: user.id if hasattr(user, 'id') else str(user)

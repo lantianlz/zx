@@ -9,22 +9,20 @@ from www.misc.decorators import member_required
 
 
 @member_required
-def message_home(request, template_name='message/message_home.html'):
-    #todo 更新最后活跃时间
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-
-
-@member_required
-def message_detail(request, template_name='message/message_detail.html'):
-    #todo 更新最后活跃时间
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-
-
-@member_required
 def system_message(request, template_name='message/system_message.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 @member_required
-def new_message(request, template_name='message/new_message.html'):
+def received_like(request, template_name='message/received_like.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@member_required
+def received_answer(request, template_name='message/received_answer.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@member_required
+def at_answer(request, template_name='message/at_answer.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))

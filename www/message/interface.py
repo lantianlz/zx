@@ -30,11 +30,11 @@ class UnreadCountBase(object):
     def __del__(self):
         del self.cache_obj
 
-    def get_notification_type(self):
+    def get_unread_type(self):
         """
         @note: 获取提醒类型数据
         """
-        cache_key = u'notification_type_all'
+        cache_key = u'unread_type_all'
         cache_obj = cache.Cache(config=cache.CACHE_STATIC)
 
         if cache_obj.exists(cache_key):
@@ -64,7 +64,7 @@ class UnreadCountBase(object):
         @note: 获取初始未读数信息
         """
 
-        nts = self.get_notification_type()
+        nts = self.get_unread_type()
         count_info = {}
         for nt in nts:
             count_info.setdefault(str(nt.code), 0)

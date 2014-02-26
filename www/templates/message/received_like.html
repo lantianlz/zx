@@ -1,0 +1,169 @@
+{% extends "message/base_message.html" %}
+
+{% block title %}系统消息{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.tml-message-list{
+	/*min-height: 400px;*/
+	list-style: none;
+	padding-left: 10px;
+	position: relative;
+}
+
+.tml-message-list:before{
+	content: '';
+	position: absolute;
+	width: 5px;
+	background-color: #3594cb;
+	top: 0px;
+	bottom: 0px;
+	margin-bottom: 60px;
+	left: 22%;
+	margin-left: -1.4%;
+}
+
+.tml-item{
+	height: 80px;
+	position: relative;
+	padding-right: 30px;
+}
+
+.tml-date{
+	position: absolute;
+	width: 14%;
+	/*background-color: red;*/
+}
+
+.tml-date .date{
+	display: block;
+	font-size: 12px;
+	color: #bdd0db;
+	text-align: right;
+}
+
+.tml-date .time{
+	display: block;
+	font-size: 21px;
+	color: #3594cb;
+	text-align: right;
+}
+
+.tml-user{
+	position: absolute;
+	left: 17%;
+	box-shadow: 0 0 5px #666666;
+	border-radius: 50%;
+	width: 45px;
+	height: 45px;
+	text-align: center;
+	padding-top: 5px;
+	background-color: #3594cb;
+	transition: background-color 0.5s;
+}
+
+.tml-user:hover{
+	background-color: white;
+}
+
+.tml-content{
+	position: relative;
+	margin-left: 26%;
+	line-height: 22px;
+	padding-top: 10px;
+	padding-left: 10px;
+	color: #ffffff;
+	min-height: 45px;
+	background-color: #3594cb;
+	box-shadow: 2px 2px 4px #666666;
+	border-radius: 3px;
+	font-size: 12px;
+	/*transition: box-shadow 0.5s;*/
+}
+
+.tml-content:after{
+	right: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0px;
+	width: 0px;
+	position: absolute;
+	border-width: 10px;
+	top: 10px;
+	border-right-color: #3594cb;
+}
+
+.tml-content:hover{
+	/*box-shadow: 2px 2px 4px #666666;*/
+}
+
+.tml-content a{
+	color: #ffffff;
+	text-decoration: underline;
+	padding-left: 4px;
+	padding-right: 4px;
+	font-size: 13px;
+}
+
+.tml-content a:hover{
+	color: #444444;
+}
+
+.tml-user .avatar{
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+}
+</style>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block message_main %}
+<div>
+<ul class="tml-message-list">
+	<li class="tml-item">
+		<div class="tml-date">
+			<span class="date">2014-02-14</span>
+			<span class="time">13:22:46</span>
+		</div>
+		<div class="tml-user new-message"><img class="avatar" src="{{MEDIA_URL}}/img/common/user1.jpg"></div>
+		<div class="tml-content">用户<a href="#">半夜没事下溜达</a>在提问<a href="#">新来乍到,测试一下</a>中@了你</div>
+	</li>
+	<li class="tml-item">
+		<div class="tml-date">
+			<span class="date">2014-02-14</span>
+			<span class="time">23:52:32</span>
+		</div>
+		<div class="tml-user"><img class="avatar" src="{{MEDIA_URL}}/img/common/user2.jpg"></div>
+		<div class="tml-content">用户<a href="#">众里寻她</a>在回答<a href="#">请问余额宝的收益问题</a>中@了你</div>
+	</li>
+	<li class="tml-item">
+		<div class="tml-date">
+			<span class="date">2014-02-14</span>
+			<span class="time">08:32:22</span>
+		</div>
+		<div class="tml-user"><img class="avatar" src="{{MEDIA_URL}}/img/common/user3.jpg"></div>
+		<div class="tml-content">用户<a href="#">习大大</a>在提问<a href="#">如何在有限的资金情况下进行优选理财，求详细指导，拜谢！</a>中赞了你的回答</div>
+	</li>
+	<li class="tml-item">
+		<div class="tml-date">
+			<span class="date">2014-02-14</span>
+			<span class="time">10:12:42</span>
+		</div>
+		<div class="tml-user"><img class="avatar" src="{{MEDIA_URL}}/img/common/user4.png"></div>
+		<div class="tml-content">用户<a href="#">小星星</a>关注了你</div>
+	</li>
+</ul>
+<!-- <div class="pagebar text-center">
+  	<ul class="pagination pagination-sm">
+        <li class="disabled"><a href="#">&laquo;</a></li>
+        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">&raquo;</a></li>
+  	</ul>
+</div> -->
+</div>
+{% endblock %}

@@ -6,22 +6,19 @@
 
 {% endblock %}
 {% block split_left %}
-<a class="list-group-item {% if '/message/system_message' == request.path %} active {% endif %}" href="/message/system_message">
-    系统通知
+<a class="list-group-item {% if '/message/' == request.path %} active {% endif %}" href="/message">
+    系统消息
     <span class="badge flash-badge">40</span>
 </a>
-<a class="list-group-item {% if '/message/new_message' == request.path %} active {% endif %}" href="/message/new_message">收到的回答</a>
-<a class="list-group-item {% if '/message/' == request.path %} active {% endif %}" href="/message/">
+<a class="list-group-item {% if '/message/received_like' == request.path %} active {% endif %}" href="/message/received_like">
     收到的赞
     <span class="badge flash-badge">1</span>
 </a>
-<a class="list-group-item {% if '/message/system_message' == request.path %} active {% endif %}" href="/message/system_message">
+<a class="list-group-item {% if '/message/received_answer' == request.path %} active {% endif %}" 
+    href="/message/received_answer">收到的回答</a>
+<a class="list-group-item {% if '/message/at_answer' == request.path %} active {% endif %}" href="/message/at_answer">
     @我的回答
     <span class="badge flash-badge">2</span>
-</a>
-<a class="list-group-item {% if '/message/system_message' == request.path %} active {% endif %}" href="/message/system_message">
-    @我的提问
-    <span class="badge flash-badge">3</span>
 </a>
 {% endblock %}
 

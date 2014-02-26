@@ -312,9 +312,7 @@ class UserBase(object):
         if not cache_obj.get_time_is_locked(key, 60):
             from www.tasks import async_send_email
 
-            context = {
-                'verify_url': '%s/account/user_settings/verify_email?code=%s' % (settings.MAIN_DOMAIN, code),
-            }
+            context = {'verify_url': '%s/account/user_settings/verify_email?code=%s' % (settings.MAIN_DOMAIN, code), }
 
             async_send_email(user.email, u'智选网邮箱验证',
                              utils.render_email_template('email/verify_email.html', context), 'html')

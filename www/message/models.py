@@ -7,8 +7,7 @@ class UnreadCount(models.Model):
 
     """
     @note: 用户的未读数提醒
-    未读数字典信息，数据类型{'answer':1, 'like':2, 'invite':3, 'at_answer':4,
-    'at_question':5, 'notification':6, 'request':7,}
+    未读数字典信息，数据类型{'answer':1, 'like':2, 'invite':3, 'at_answer':4, 'notification':5}
     """
     user_id = models.CharField(max_length=32, unique=True)
     count_info = models.CharField(max_length=512)
@@ -38,12 +37,13 @@ class UnreadType(models.Model):
     def __unicode__(self):
         return self.code
 
+
 class Notice(models.Model):
 
     """
     @note: 通知信息
     """
-    source_choices = ((0, u'赞'), )
+    source_choices = ((0, u'邀请注册用户通知'), )
 
     user_id = models.CharField(max_length=32, db_index=True, null=True)  # 用户外键，可以为空，系统通知类
     source = models.CharField(max_length=32, choices=source_choices)  # 来源
