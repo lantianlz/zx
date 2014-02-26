@@ -42,8 +42,7 @@
         .bind('mouseleave', function(){
           $(this).find('.comment-date .autohide').hide();
         });
-        // 隐藏所有 autohide 样式
-        $('.autohide').hide();
+        
       
         // 评论打开关闭事件
         $('.reply-tools .comments').bind('click', function(){
@@ -54,7 +53,18 @@
           } else {
             target.show('fast');
           }
-        })
+        });
+
+        // 邀请打开关闭事件
+        $('.question-tools .invite').bind('click', function(){
+          var target = $(".topic-invite");
+          
+          if(target.css('display') === 'block'){
+            target.hide();
+          } else {
+            target.show();
+          }
+        });
       
         // 赞动作
         var voteLoading = false;
@@ -252,7 +262,7 @@
   background-color: #f1f1f1;
 }
 
-.question-tool{
+.question-tools{
     font-size: 12px;
     /*float: right;*/
     padding-right: 10px;
@@ -285,9 +295,68 @@
   padding: 10px 5px 10px 10px;
 }
 
-.topic-footer .avatar{
-  width: 25px;
-  height: 25px;
+.topic-footer{
+  margin-bottom: 7px;
+}
+
+.topic-invite{
+  /*margin-top: 7px;*/
+  position: relative;
+}
+
+.topic-invite .invite-item{
+  border-bottom: 1px solid #f1f1f1;
+  padding-top: 10px;
+}
+
+.topic-invite .invite-person-info{
+  padding-left: 15px;
+  font-size: 12px;
+}
+
+.topic-invite .invite-person-info .name{
+  padding-top: 5px;
+}
+
+.topic-invite .invite-person-info .des{
+  padding-top: 10px;
+}
+
+.topic-invite .arrow-in{
+  width: 0px;
+  height: 0px;
+  border: 7px solid transparent;
+  border-top: 0px;
+  position: absolute;
+  top: -7px;
+  right: 165px;
+  z-index: 101;
+  border-bottom-color: #ffffff;
+}
+
+.topic-invite .arrow-out{
+  width: 0px;
+  height: 0px;
+  border: 7px solid transparent;
+  border-top: 0px;
+  position: absolute;
+  top: -8px;
+  right: 165px;
+  border-bottom-color: #dddddd;
+  z-index: 100;
+}
+
+.recommend-invite>ul>li{
+  width: 50%;
+}
+
+.filter-invite .search{
+  position: absolute;
+  left: 81%;
+  top: 27%;
+  font-size: 12px;
+  color: gray;
+  cursor: pointer;
 }
 
 .answer-date{
@@ -302,6 +371,7 @@
 .reply-comments{
   padding-top: 5px;
   display: none;
+  position: relative;
 }
 
 .reply-comments .arrow-in{
@@ -310,10 +380,9 @@
   border: 7px solid transparent;
   border-top: 0px;
   position: absolute;
-  /*top: 0px;*/
+  top: 6px;
   left: 40px;
   z-index: 101;
-  padding-top: 1px;
   border-bottom-color: #ffffff;
 }
 
@@ -323,7 +392,7 @@
   border: 7px solid transparent;
   border-top: 0px;
   position: absolute;
-  /*top: 0px;*/
+  top: 5px;
   left: 40px;
   border-bottom-color: #dddddd;
   z-index: 100;
@@ -331,11 +400,6 @@
 
 .reply-comments>ul{
   padding-top: 7px;
-}
-
-.comment-left .avatar{
-  width: 25px;
-  height: 25px;
 }
 
 .comment-main{
@@ -403,7 +467,7 @@
       <div class="col-md-6">
         {% if not question.is_hide_user %}
         <a href="{{question.user.get_url}}">
-          <img class="avatar avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
+          <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
         </a>
         <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
           <div class="user-name">{{question.user.nick}}</div>
@@ -411,16 +475,90 @@
         {% endif %}
       </div>
       <div class="col-md-6 text-right">
-        {% if request.user.id == question.user.id %}
-        <span class="question-tool">
+        <span class="question-tools gray-a">
+          {% if request.user.id == question.user.id %}
           <a href="#" data-toggle="modal" data-target="#edit_modal">
             <span class="glyphicon glyphicon-pencil"></span>
-            修改提问
+            修改
           </a>
+          {% endif %}
+          <a class="invite" href="javascript: void(0);">
+            <span class="glyphicon glyphicon-transfer"></span>
+            邀请回答
+          </a>
+          
         </span>
-        {% endif %}
         <span class="question-date">{{question.create_time}}</span>
       </div>
+    </div>
+    <div class="topic-invite panel panel-default autohide">
+      <span class="arrow-out"></span>
+      <span class="arrow-in"></span> 
+      <div class="panel-body row">
+        <div class="filter-invite col-md-12">
+          <div class="col-md-4">
+            <input type="text" class="form-control input-sm" placeholder="输入你想邀请人的名字" value="">
+            <span class="glyphicon glyphicon-search search"></span>
+          </div>
+        </div>
+        <div class="recommend-invite col-md-12">
+          <ul class="list-flow">
+            <li class="invite-item">
+              <div class="col-md-2">
+                <img class="avatar-35 avatar-circle" src="/static/img/common/user3.jpg">
+              </div>
+              <div class="col-md-10 invite-person-info">
+                <div class="name blue-a">
+                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">半夜没事瞎溜达</a>
+                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
+                </div>
+                <div class="des">漫漫人生路，谁不错几步</div>
+              </div>
+            </li>
+            <li class="invite-item">
+              <div class="col-md-2">
+                <img class="avatar-35 avatar-circle" src="/static/img/common/user1.jpg">
+              </div>
+              <div class="col-md-10 invite-person-info">
+                <div class="name blue-a">
+                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">习大大</a>
+                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
+                </div>
+                <div class="des">专注解答各种疑难杂症20年</div>
+              </div>
+            </li>
+            <li class="invite-item">
+              <div class="col-md-2">
+                <img class="avatar-35 avatar-circle" src="/static/img/common/user2.jpg">
+              </div>
+              <div class="col-md-10 invite-person-info">
+                <div class="name blue-a">
+                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">坑坑更健康</a>
+                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
+                </div>
+                <div class="des">谁坑爹啊，你坑爹</div>
+              </div>
+            </li>
+            <li class="invite-item">
+              <div class="col-md-2">
+                <img class="avatar-35 avatar-circle" src="/static/img/common/user4.png">
+              </div>
+              <div class="col-md-10 invite-person-info">
+                <div class="name blue-a">
+                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">女王</a>
+                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
+                </div>
+                <div class="des">要叫我女王大人!</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 
+      
+      -->
+      
     </div>
     {% if request.user.id == question.user.id %}
     <!-- 弹出层 -->
@@ -484,7 +622,7 @@
       <div class="reply-header row">
         <div class="col-md-6">
           <a href="{{answer.from_user.get_url}}">
-            <img class="avatar avatar-circle" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
+            <img class="avatar-25 avatar-circle" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
           </a>
           <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
             <div class="user-name">{{answer.from_user.nick}}</div>
@@ -517,14 +655,15 @@
         {% endif %}
       </div>
 
-      <!--
+      
+
       <div class="reply-comments">
         <span class="arrow-out"></span>
         <span class="arrow-in"></span>
         <ul class="list-group">
           <li class="list-group-item">
             <div class="comment row">
-              <div class="col-md-1 comment-left"><img class="avatar avatar-circle" src="/static/img/common/user3.jpg"></div>
+              <div class="col-md-1 comment-left"><img class="avatar-25 avatar-circle" src="/static/img/common/user3.jpg"></div>
               <div class="col-md-11 comment-main">
                 <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">半夜没事瞎溜达</a></div>
                 <div class="comment-content">看得我充满斗志, 热血沸腾</div>
@@ -540,7 +679,7 @@
           </li>
           <li class="list-group-item">
             <div class="comment row">
-              <div class="col-md-1 comment-left"><img class="avatar avatar-circle" src="/static/img/common/user1.jpg"></div>
+              <div class="col-md-1 comment-left"><img class="avatar-25 avatar-circle" src="/static/img/common/user1.jpg"></div>
               <div class="col-md-11 comment-main">
                 <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">习大大</a></div>
                 <div class="comment-content">我本科财务管理专业（自以为和会计专业无非名字不同学的都是难分彼此的东西），你若实心想从事会计行业，先去考会从吧（是会计工作的准入证书，就像你要给人看病你得先有个证明你是医生的东西），然后找份财务方面工作，将书本中的东西在现实工作中一一实践积累经验的同事下工夫考CPA之类的高级职称，之后便如这个答案说的干一个擅长的门类，越过越牛！</div>
@@ -556,7 +695,7 @@
           </li>
           <li class="list-group-item">
             <div class="comment row">
-              <div class="col-md-1 comment-left"><img class="avatar avatar-circle" src="/static/img/common/user2.jpg"></div>
+              <div class="col-md-1 comment-left"><img class="avatar-25 avatar-circle" src="/static/img/common/user2.jpg"></div>
               <div class="col-md-11 comment-main">
                 <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">女王大人</a></div>
                 <div class="comment-content">先考会计证，然后去考CPA，同时复习司法考试，争取几年内三证到手，苦练英语，届时潜力无穷。</div>
@@ -578,7 +717,9 @@
           </li>
         </ul>
       </div>
-    -->
+
+
+    
     </li>
     {% endfor %}
   </ul>

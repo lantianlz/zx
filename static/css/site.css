@@ -169,3 +169,21 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 .gary-a>a:hover{
     color: #999999;
 }
+
+.blue-a>a{
+    color: #224e73;
+}
+
+.blue-a>a:hover{
+    color: #224e73;
+}
+
+.avatar-25{
+    width: 25px;
+    height: 25px;
+}
+
+.avatar-35{
+    width: 35px;
+    height: 35px;
+}
