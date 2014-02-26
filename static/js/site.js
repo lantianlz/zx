@@ -301,5 +301,7 @@ $(document).ready(function(){
     .bind('mouseenter', showDropdown)
     .bind('mouseleave', hideDropdown);
 
+    // 
+    //$('a[href=#]').bind('click', function(){return false;})
 });
 

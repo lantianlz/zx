@@ -26,14 +26,35 @@
             window.location.href = '/regist';
         });
 
-        // 删除回答显示隐藏事件
-        $('.reply-main').bind('mouseover', function(){
-            $(this).find('.remove-reply').removeClass('hide');
+        // 回答工具条显示隐藏事件
+        $('#ul_replies .list-group-item')
+        .bind('mouseenter', function(){
+          $(this).find('.reply-tools .autohide').show();
         })
-        .bind('mouseout', function(){
-            $(this).find('.remove-reply').addClass('hide');
+        .bind('mouseleave', function(){
+          $(this).find('.reply-tools .autohide').hide();
         });
+        // 评论工具条显示隐藏事件
+        $('.reply-comments .comment')
+        .bind('mouseenter', function(){
+          $(this).find('.comment-date .autohide').show();
+        })
+        .bind('mouseleave', function(){
+          $(this).find('.comment-date .autohide').hide();
+        });
+        // 隐藏所有 autohide 样式
+        $('.autohide').hide();
       
+        // 评论打开关闭事件
+        $('.reply-tools .comments').bind('click', function(){
+          var target = $(this).parent().next();
+          
+          if(target.css('display') === 'block'){
+            target.hide('fast');
+          } else {
+            target.show('fast');
+          }
+        })
       
         // 赞动作
         var voteLoading = false;
@@ -139,19 +160,20 @@
 
 
 .zx-container-main .reply-header .user-name a{
-    color: #224e73;
+    color: #333333;
     font-size: 12px;
 }
 
 .zx-container-main .reply-content{
     font-size: 13px;
-    padding-top: 15px;
-    padding-bottom: 25px;
+    padding-top: 10px;
+    padding-bottom: 15px;
     line-height: 25px;
 }
 
 .zx-container-main .reply-main .vote{
     padding-left: 30px;
+    padding-top: 10px;
 }
 
 .zx-container-main .reply-main .vote .btn-group-vertical{
@@ -263,8 +285,89 @@
   padding: 10px 5px 10px 10px;
 }
 
+.topic-footer .avatar{
+  width: 25px;
+  height: 25px;
+}
+
 .answer-date{
   font-size: 12px;
+}
+
+.reply-tools{
+  font-size: 12px;
+}
+
+.reply-comments{
+  padding-top: 5px;
+  display: none;
+}
+
+.reply-comments .arrow-in{
+  width: 0px;
+  height: 0px;
+  border: 7px solid transparent;
+  border-top: 0px;
+  position: absolute;
+  /*top: 0px;*/
+  left: 40px;
+  z-index: 101;
+  padding-top: 1px;
+  border-bottom-color: #ffffff;
+}
+
+.reply-comments .arrow-out{
+  width: 0px;
+  height: 0px;
+  border: 7px solid transparent;
+  border-top: 0px;
+  position: absolute;
+  /*top: 0px;*/
+  left: 40px;
+  border-bottom-color: #dddddd;
+  z-index: 100;
+}
+
+.reply-comments>ul{
+  padding-top: 7px;
+}
+
+.comment-left .avatar{
+  width: 25px;
+  height: 25px;
+}
+
+.comment-main{
+  font-size: 12px;
+  padding-left: 0px;
+}
+
+.comment-username{
+  padding-bottom: 5px;
+}
+
+.comment-username a{
+  color: #224e73;
+}
+
+.comment-username a:hover{
+  color: #224e73;
+}
+
+.comment-content{
+  padding-bottom:  5px;
+}
+
+.comment-date{
+  color: #999999;
+}
+
+.comment-date .date{
+  padding-right: 10px;
+}
+
+.send-comment{
+  padding-left: 0px;
 }
 </style>
 {% endblock %}
@@ -299,7 +402,7 @@
       <div class="col-md-6">
         {% if not question.is_hide_user %}
         <a href="{{question.user.get_url}}">
-          <img class="avatar" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
+          <img class="avatar avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
         </a>
         <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
           <div class="user-name">{{question.user.nick}}</div>
@@ -365,22 +468,22 @@
             </h4>
           </div>
           <!-- 
-                    <div class="col-md-3 pull-right">
-          <select class="form-control input-sm replies-sort">
-            <option>按赞最多排序</option>
-            <option>按时间排序</option>
-          </select>
-        </div>
+          <div class="col-md-3 pull-right">
+            <select class="form-control input-sm replies-sort">
+              <option>按赞最多排序</option>
+              <option>按时间排序</option>
+            </select>
+          </div>
         -->
-      </div>
-    </li>
+        </div>
+      </li>
     {% for answer in answers %}
     <li class="list-group-item {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" 
                 id="answer_{{answer.id}}">
       <div class="reply-header row">
         <div class="col-md-6">
           <a href="{{answer.from_user.get_url}}">
-            <img class="avatar" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
+            <img class="avatar avatar-circle" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
           </a>
           <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
             <div class="user-name">{{answer.from_user.nick}}</div>
@@ -401,16 +504,80 @@
               <span class="badge">{{answer.like_count}}</span>
             </button>
           </div>
-          {% if question.user.id == request.user.id %}
-          <div class="remove-reply hide">
-            <a href="#">
-              <span class="glyphicon glyphicon-remove"></span>
-              删除回答
-            </a>
-          </div>
-          {% endif %}
         </div>
       </div>
+      <div class="reply-tools gray-a">
+        <a class="comments hide" href="javascript: void(0);"><span class="glyphicon glyphicon-comment"></span> 88条评论</a>
+        <a class="mark autohide hide" href="javascript: void(0);"><span class="glyphicon glyphicon-bookmark"></span> 收藏</a>
+        <a class="share autohide hide" href="javascript: void(0);"><span class="glyphicon glyphicon-share-alt"></span> 分享</a>
+        <a class="report-answer autohide hide" href="javascript: void(0);"><span class="glyphicon glyphicon-flag"></span> 举报</a>
+        {% if question.user.id == request.user.id %}
+        <a class="remove-answer autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+        {% endif %}
+      </div>
+
+      <!--
+      <div class="reply-comments">
+        <span class="arrow-out"></span>
+        <span class="arrow-in"></span>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="comment row">
+              <div class="col-md-1 comment-left"><img class="avatar avatar-circle" src="/static/img/common/user3.jpg"></div>
+              <div class="col-md-11 comment-main">
+                <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">半夜没事瞎溜达</a></div>
+                <div class="comment-content">看得我充满斗志, 热血沸腾</div>
+                <div class="comment-date gray-a">
+                  <span class="date">2014-02-16 12:25:56</span>
+                  <a href="javascript: void(0);" class="thumbs-up"><span class="glyphicon glyphicon-thumbs-up"></span> 5赞</a>
+                  <a href="javascript: void(0);" class="say-to autohide"><span class="glyphicon glyphicon-share"></span> 回复</a>
+                  <a href="javascript: void(0);" class="report-comment autohide"><span class="glyphicon glyphicon-flag"></span> 举报</a>
+                  <a class="remove-comment autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="comment row">
+              <div class="col-md-1 comment-left"><img class="avatar avatar-circle" src="/static/img/common/user1.jpg"></div>
+              <div class="col-md-11 comment-main">
+                <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">习大大</a></div>
+                <div class="comment-content">我本科财务管理专业（自以为和会计专业无非名字不同学的都是难分彼此的东西），你若实心想从事会计行业，先去考会从吧（是会计工作的准入证书，就像你要给人看病你得先有个证明你是医生的东西），然后找份财务方面工作，将书本中的东西在现实工作中一一实践积累经验的同事下工夫考CPA之类的高级职称，之后便如这个答案说的干一个擅长的门类，越过越牛！</div>
+                <div class="comment-date gray-a">
+                  <span class="date">2014-02-16 12:28:06</span>
+                  <a href="javascript: void(0);" class="thumbs-up"><span class="glyphicon glyphicon-thumbs-up"></span> 10赞</a>
+                  <a href="javascript: void(0);" class="say-to autohide"><span class="glyphicon glyphicon-share"></span> 回复</a>
+                  <a href="javascript: void(0);" class="report-comment autohide"><span class="glyphicon glyphicon-flag"></span> 举报</a>
+                  <a class="remove-comment autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="comment row">
+              <div class="col-md-1 comment-left"><img class="avatar avatar-circle" src="/static/img/common/user2.jpg"></div>
+              <div class="col-md-11 comment-main">
+                <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">女王大人</a></div>
+                <div class="comment-content">先考会计证，然后去考CPA，同时复习司法考试，争取几年内三证到手，苦练英语，届时潜力无穷。</div>
+                <div class="comment-date gray-a">
+                  <span class="date">2014-02-16 12:33:31</span>
+                  <a href="javascript: void(0);" class="thumbs-up"><span class="glyphicon glyphicon-thumbs-up"></span> 赞</a>
+                  <a href="javascript: void(0);" class="say-to autohide"><span class="glyphicon glyphicon-share"></span> 回复</a>
+                  <a href="javascript: void(0);" class="report-comment autohide"><span class="glyphicon glyphicon-flag"></span> 举报</a>
+                  <a class="remove-comment autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-10"><input name="comment" class="form-control"></div>
+              <div class="col-md-2 send-comment"><button type="button" class="btn btn-primary btn-block">评论</button></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    -->
     </li>
     {% endfor %}
   </ul>

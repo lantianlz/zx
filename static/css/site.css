@@ -1,5 +1,5 @@
 @charset "utf-8";
-body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #555555}
+body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;}
 
 .zx-container{
     width: 1000px;
@@ -159,4 +159,13 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     float: left;
     padding-bottom: 10px;
     padding-left: 5px;
+}
+
+.gray-a>a{
+    color: #999999;
+    padding-right: 10px;
+}
+
+.gary-a>a:hover{
+    color: #999999;
 }
