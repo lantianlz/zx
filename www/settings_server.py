@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'www.custom_tags',
     'www.account',
     'www.question',
+    'www.message',
 )
 
 AUTHENTICATION_BACKENDS = ('www.middleware.user_backend.AuthBackend',)
