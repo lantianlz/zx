@@ -68,13 +68,13 @@
 
         // 回复某人事件
         $('.answer-say-to').bind('click', function(){
-          $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ")
+          $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ");
           $('.answer-main .zx-textarea').focusEnd();
-        })
+        });
       
         // 修改问题弹出层自动选中问题类型和标签
-        var selectedQuestionType = "{{question.question_type.id}}";
-        var selectedQuestionTags = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}";
+        var selectedQuestionType = "{{question.question_type.id}}",
+            selectedQuestionTags = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}";
         if (selectedQuestionType){
           // 自动选中问题类型
           $('#sel_question_type').val(selectedQuestionType);
@@ -82,74 +82,65 @@
 
           // 自动选中问题标签
           if(selectedQuestionTags){
-            var tempTags = selectedQuestionTags.split('-'), tags={};
+            var tempTags = selectedQuestionTags.split('-'), 
+                tags = {};
+
             for(var i=0; i<tempTags.length; i++){
               if(tempTags[i]){
                 tags[tempTags[i]] = true;
               }
             }
 
-            $('#div_tags input').filter(function(i){ return tags[$(this).val()]}).attr('checked', true)
+            $('#div_tags input').filter(function(i){ 
+                return tags[$(this).val()]
+              }).attr('checked', true);
           }
         }
 
-        // 赞动作
-        var voteLoading = false;
-        $('.vote button').bind('click', function(){
-            if(voteLoading){
-                return;
-            }
-            voteLoading = true;
-
-            var btn = $(this),
-                likedSpan = btn.children('span').eq(0),
-                votedSpan = btn.children('span').eq(1),
-                isLiked = likedSpan.hasClass('glyphicon-heart'),
-                voteCount = parseInt(votedSpan.text());
-
-            // 取消赞动作
-            if(isLiked){
-                voteLoading = false;
-                return;
-                // 动画效果
-                likedSpan.css('opacity', '0.99').animate({
-                opacity: 0.1,
-                }, 500, function(){
-
-                likedSpan.removeClass('glyphicon-heart').addClass('glyphicon-heart-empty').css('opacity', '0.99');
-                votedSpan.text(voteCount<=1 ? 0 : (voteCount - 1));
-                });
-            } 
-            else {
-                var url = '/question/like_answer';
-                var postData = {'answer_id':btn.parents('li:eq(0)').attr('id').split('_')[1]};
-                ajaxSend(url, postData, function(data){
-                    voteLoading = false;
-                    if(data['flag'] == '0')
-                    {
-                        // 添加赞动作
-                        btn.parent('.btn-group-vertical').append('<span class="glyphicon glyphicon-heart animate-liked"></span>');
-                        // 动画效果
-                        var animateLike = btn.siblings();
-                        animateLike.animate({
-                          opacity: 0.01,
-                          fontSize: 16,
-                          paddingLeft: 10,
-                          paddingTop: 6
-                        }, 500, function(){
-                          animateLike.remove();
-
-                          likedSpan.removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
-                          votedSpan.text(voteCount + 1);
-                        });
-                    }
-                    else
-                    {
-                        alert(data['result']);
-                    }
-                });
-            }
+        // 赞动作显示隐藏动画
+        $('.answer-like-border')
+        .bind('mouseenter', function(){
+          $(this).find('.answer-like').show('fast');
+          $(this).find('.answer-like-count').hide('fast');
+        })
+        .bind('mouseleave', function(){
+          $(this).find('.answer-like').hide('fast');
+          $(this).find('.answer-like-count').show('fast');
         });
+
+        // 点击赞动作
+        $('.answer-like-border .answer-like').bind('click', function(){
+          var parent = $(this).parent(), 
+              temp = null,
+              postData = {'answer_id': $(this).data('answer_id')};
+
+          ajaxSend("/question/like_answer", postData, function(data){
+            if(data['flag'] != '0'){
+              alert(data['result']);
+              return;
+            }
+
+            parent.append('<span class="animate-like glyphicon glyphicon-heart"></span>');
+            temp = parent.find('.animate-like');
+            temp.animate({
+              opacity: 0.01,
+              fontSize: 25,
+              top: 11,
+              left: 10
+            }, 500, function(){
+              temp.remove();
+
+              parent.find('.answer-like')
+              .removeClass('glyphicon-heart-empty')
+              .addClass('glyphicon-heart')
+              .css({'color': 'red'});
+
+              parent.find('.answer-like-count')
+              .text(parseInt(parent.find('.answer-like-count').text()) + 1);
+            });
+          });
+
+        })
 
         // 精华盖章动画
         var jinghua = $('.jinghua img');
@@ -267,15 +258,6 @@
   color: red;
 }
 
-.vote .animate-liked{
-  position: absolute;
-  top: 0px;
-  left: 2px;
-  z-index: 99;
-  font-size: 35px;
-  opacity: 0.99,
-}
-
 .breadcrumb{
   margin-top: 25px;
   border: solid 1px #ddd;
@@ -386,8 +368,51 @@
   cursor: pointer;
 }
 
-.answer-date{
+.reply-tools .answer-date{
   font-size: 12px;
+  color: #999999;
+  padding-right: 10px;
+}
+
+.reply-header .glyphicon-heart{
+  color: red;
+}
+
+.reply-header .answer-like{
+  font-size: 25px;
+  cursor: pointer;
+  position: absolute;
+  top: 11px;
+  left: 10px;
+}
+
+.reply-header .answer-like-count{
+  left: 2px;
+  position: absolute;
+  text-align: center;
+  top: 13px;
+  width: 40px;
+}
+
+.reply-header .answer-like-border{
+  background-color: white;
+  padding: 22px;
+  position: absolute;
+  right: 10px;
+  top: -10px;
+  border-radius: 50%;
+  border: solid 1px #dddddd;
+  box-shadow: 0px 0px 10px 1px #dddddd;
+}
+
+.reply-header .animate-like{
+  position: absolute;
+  top: 5px;
+  left: 2px;
+  font-size: 40px;
+  opacity: 0.99;
+  color: red;
+  z-index: 99;
 }
 
 .reply-tools{
@@ -662,24 +687,20 @@
           </a>
         </div>
         <div class="col-md-6 text-right">
-          <span class="answer-date">{{answer.create_time|time_format}}</span>
+          <span class="answer-like-border">
+            <span class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} autohide answer-like" data-answer_id="{{answer.id}}"></span>
+            <span class="answer-like-count">{{answer.like_count}}</span>
+            
+          </span>
+          
         </div>
       </div>
       <div class="reply-main row">
-        <div class="reply-content col-md-9">{{answer.content|safe}}</div>
-        <div class="vote col-md-3 text-right">
-          <div class="btn-group-vertical">
-            <button type="button" class="btn btn-default">
-              <span class="glyphicon 
-                                {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} 
-                                pull-left"></span>
-              <span class="badge">{{answer.like_count}}</span>
-            </button>
-          </div>
-        </div>
+        <div class="reply-content col-md-12">{{answer.content|safe}}</div>
       </div>
       <div class="reply-tools gray-a">
-        <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}" >
+        <span class="answer-date">{{answer.create_time|time_format}}</span>
+        <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}">
           <span class="glyphicon glyphicon-share"></span> 回复
         </a>
         <a class="answer-comments hide" href="javascript: void(0);">
