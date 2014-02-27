@@ -149,6 +149,34 @@ $(document).ready(function(){
     $('.ask-question button').bind('click', function(){
         window.location.href = '/question/ask_question';
     });
+
+    var tags = {{tags|safe}};
+
+    // 选择类型事件
+    $('#div_tags').hide();
+    $('#sel_question_type').bind("change", function(){
+        $('#div_tags').hide('fast');
+
+        var type = $(this).val();
+        if(!type) {
+            return;
+        }
+        var type_tags = tags[type];
+        if(!type_tags){
+            return;
+        }
+        $('#div_tags').show('fast').find('label').remove();
+        for (var i = type_tags.length - 1; i >= 0; i--) {
+            $('#div_tags').append(
+                String.format(
+                    '<label class="checkbox-inline"><input name="tag" type="checkbox" value="{0}"> {1}</label>', 
+                    type_tags[i][0], 
+                    type_tags[i][1]
+                )
+            );
+        };
+
+    });
 });
 </script>
 {% block javascript %}{% endblock %}

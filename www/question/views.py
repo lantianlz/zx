@@ -60,6 +60,9 @@ def question_detail(request, question_id, template_name='question/question_detai
 
     tb = interface.TagBase()
     question_tags = tb.get_tags_by_question(question)
+
+    # 标签
+    tags = json.dumps(tb.format_tags_for_ask_page(tb.get_all_tags()))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

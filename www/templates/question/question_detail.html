@@ -45,7 +45,7 @@
         
       
         // 评论打开关闭事件
-        $('.reply-tools .comments').bind('click', function(){
+        $('.reply-tools .answer-comments').bind('click', function(){
           var target = $(this).parent().next();
           
           if(target.css('display') === 'block'){
@@ -65,7 +65,34 @@
             target.show();
           }
         });
+
+        // 回复某人事件
+        $('.answer-say-to').bind('click', function(){
+          $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ")
+          $('.answer-main .zx-textarea').focusEnd();
+        })
       
+        // 修改问题弹出层自动选中问题类型和标签
+        var selectedQuestionType = "{{question.question_type.id}}";
+        var selectedQuestionTags = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}";
+        if (selectedQuestionType){
+          // 自动选中问题类型
+          $('#sel_question_type').val(selectedQuestionType);
+          $('#sel_question_type').change();
+
+          // 自动选中问题标签
+          if(selectedQuestionTags){
+            var tempTags = selectedQuestionTags.split('-'), tags={};
+            for(var i=0; i<tempTags.length; i++){
+              if(tempTags[i]){
+                tags[tempTags[i]] = true;
+              }
+            }
+
+            $('#div_tags input').filter(function(i){ return tags[$(this).val()]}).attr('checked', true)
+          }
+        }
+
         // 赞动作
         var voteLoading = false;
         $('.vote button').bind('click', function(){
@@ -555,9 +582,6 @@
         </div>
       </div>
 
-      <!-- 
-      
-      -->
       
     </div>
     {% if request.user.id == question.user.id %}
@@ -573,12 +597,21 @@
             <div class="modal-body">
 
               <div class="form-group">
-                <select name="question_type" class="form-control">
+                <select id="sel_question_type" name="question_type" class="form-control">
                   <option value='0'>请选择问题类型</option>
                   {% question_type_option_display %}
                 </select>
               </div>
-              <div class="blank10"></div>
+              <div class="form-group" id="div_tags">
+                <!-- <input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder=""> -->
+                <div class="tag-title">将你的提问归类至子话题 :</div>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox2" value="option2"> 2
+                </label>
+              </div>
               <div class="form-group">
                 <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
                                     value='{{question.title}}'></div>
@@ -646,12 +679,27 @@
         </div>
       </div>
       <div class="reply-tools gray-a">
-        <a class="comments hide" href="javascript: void(0);"><span class="glyphicon glyphicon-comment"></span> 88条评论</a>
-        <a class="mark autohide hide" href="javascript: void(0);"><span class="glyphicon glyphicon-bookmark"></span> 收藏</a>
-        <a class="share autohide hide" href="javascript: void(0);"><span class="glyphicon glyphicon-share-alt"></span> 分享</a>
-        <a class="report-answer autohide hide" href="javascript: void(0);"><span class="glyphicon glyphicon-flag"></span> 举报</a>
+        <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}" >
+          <span class="glyphicon glyphicon-share"></span> 回复
+        </a>
+        <a class="answer-comments hide" href="javascript: void(0);">
+          <span class="glyphicon glyphicon-comment"></span> 88条评论
+        </a>
+        <a class="answer-no-help autohide" href="javascript: void(0);">
+          <span class="glyphicon glyphicon-thumbs-down"></span> 没有帮助
+        </a>
+        <a class="answer-mark autohide hide" href="javascript: void(0);">
+          <span class="glyphicon glyphicon-bookmark"></span> 收藏
+        </a>
+        <a class="answer-share autohide hide" href="javascript: void(0);">
+          <span class="glyphicon glyphicon-share-alt"></span> 分享
+        </a>
+        <a class="answer-report autohide hide" href="javascript: void(0);">
+          <span class="glyphicon glyphicon-flag"></span> 举报</a>
         {% if question.user.id == request.user.id %}
-        <a class="remove-answer autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+        <a class="answer-remove autohide pull-right" href="javascript: void(0);">
+          <span class="glyphicon glyphicon-trash"></span> 删除
+        </a>
         {% endif %}
       </div>
 
@@ -669,10 +717,18 @@
                 <div class="comment-content">看得我充满斗志, 热血沸腾</div>
                 <div class="comment-date gray-a">
                   <span class="date">2014-02-16 12:25:56</span>
-                  <a href="javascript: void(0);" class="thumbs-up"><span class="glyphicon glyphicon-thumbs-up"></span> 5赞</a>
-                  <a href="javascript: void(0);" class="say-to autohide"><span class="glyphicon glyphicon-share"></span> 回复</a>
-                  <a href="javascript: void(0);" class="report-comment autohide"><span class="glyphicon glyphicon-flag"></span> 举报</a>
-                  <a class="remove-comment autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+                  <a class="comment-thumbs-up" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-thumbs-up"></span> 5赞
+                  </a>
+                  <a class="comment-say-to autohide" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-share"></span> 回复
+                  </a>
+                  <a class="comment-report autohide" href="javascript: void(0);" >
+                    <span class="glyphicon glyphicon-flag"></span> 举报
+                  </a>
+                  <a class="comment-remove autohide pull-right" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-trash"></span> 删除
+                  </a>
                 </div>
               </div>
             </div>
@@ -685,10 +741,18 @@
                 <div class="comment-content">我本科财务管理专业（自以为和会计专业无非名字不同学的都是难分彼此的东西），你若实心想从事会计行业，先去考会从吧（是会计工作的准入证书，就像你要给人看病你得先有个证明你是医生的东西），然后找份财务方面工作，将书本中的东西在现实工作中一一实践积累经验的同事下工夫考CPA之类的高级职称，之后便如这个答案说的干一个擅长的门类，越过越牛！</div>
                 <div class="comment-date gray-a">
                   <span class="date">2014-02-16 12:28:06</span>
-                  <a href="javascript: void(0);" class="thumbs-up"><span class="glyphicon glyphicon-thumbs-up"></span> 10赞</a>
-                  <a href="javascript: void(0);" class="say-to autohide"><span class="glyphicon glyphicon-share"></span> 回复</a>
-                  <a href="javascript: void(0);" class="report-comment autohide"><span class="glyphicon glyphicon-flag"></span> 举报</a>
-                  <a class="remove-comment autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+                  <a class="comment-thumbs-up" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-thumbs-up"></span> 5赞
+                  </a>
+                  <a class="comment-say-to autohide" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-share"></span> 回复
+                  </a>
+                  <a class="comment-report autohide" href="javascript: void(0);" >
+                    <span class="glyphicon glyphicon-flag"></span> 举报
+                  </a>
+                  <a class="comment-remove autohide pull-right" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-trash"></span> 删除
+                  </a>
                 </div>
               </div>
             </div>
@@ -701,10 +765,18 @@
                 <div class="comment-content">先考会计证，然后去考CPA，同时复习司法考试，争取几年内三证到手，苦练英语，届时潜力无穷。</div>
                 <div class="comment-date gray-a">
                   <span class="date">2014-02-16 12:33:31</span>
-                  <a href="javascript: void(0);" class="thumbs-up"><span class="glyphicon glyphicon-thumbs-up"></span> 赞</a>
-                  <a href="javascript: void(0);" class="say-to autohide"><span class="glyphicon glyphicon-share"></span> 回复</a>
-                  <a href="javascript: void(0);" class="report-comment autohide"><span class="glyphicon glyphicon-flag"></span> 举报</a>
-                  <a class="remove-comment autohide pull-right" href="javascript: void(0);"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+                  <a class="comment-thumbs-up" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-thumbs-up"></span> 5赞
+                  </a>
+                  <a class="comment-say-to autohide" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-share"></span> 回复
+                  </a>
+                  <a class="comment-report autohide" href="javascript: void(0);" >
+                    <span class="glyphicon glyphicon-flag"></span> 举报
+                  </a>
+                  <a class="comment-remove autohide pull-right" href="javascript: void(0);">
+                    <span class="glyphicon glyphicon-trash"></span> 删除
+                  </a>
                 </div>
               </div>
             </div>

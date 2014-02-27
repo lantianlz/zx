@@ -105,6 +105,40 @@ var markItUpSettings = {
     ]
 };
 
+/*
+	拓展Jquery方法 设置文本框光标位置
+*/
+$.fn.setSelection = function(selectionStart, selectionEnd) {
+    if(this.length == 0){
+    	return this;
+    }
+
+    input = this[0];
+
+    // IE
+    if (input.createTextRange) {
+        var range = input.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', selectionEnd);
+        range.moveStart('character', selectionStart);
+        range.select();
+    } else if (input.setSelectionRange) {
+        input.focus();
+        input.setSelectionRange(selectionStart, selectionEnd);
+    }
+
+    return this;
+}
+
+/*
+	拓展Jquery方法 设置文本框光标到最后
+*/
+$.fn.focusEnd = function() {
+    this.setSelection(this.val().length, this.val().length);
+}
+
+
+
 $(document).ready(function(){
 	// 回到顶部动画效果
 	var userClickTop = false;
