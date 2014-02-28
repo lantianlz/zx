@@ -97,15 +97,43 @@
           }
         }
 
-        // 赞动作显示隐藏动画
-        $('.answer-like-border')
-        .bind('mouseenter', function(){
-          $(this).find('.answer-like').show('fast');
-          $(this).find('.answer-like-count').hide('fast');
-        })
-        .bind('mouseleave', function(){
-          $(this).find('.answer-like').hide('fast');
-          $(this).find('.answer-like-count').show('fast');
+        // 红心显示隐藏动画
+        var parent = null,
+            isRotating = false,
+            transformFun = function(target, deg){
+              target[0].style.webkitTransform = String.format("rotateY({0}deg)", deg);
+              target[0].style.mozTransform = String.format("rotateY({0}deg)", deg);
+              target[0].style.msTransform = String.format("rotateY({0}deg)", deg);
+              target[0].style.transform = String.format("rotateY({0}deg)", deg);
+            },
+            animateFun = function(target, isShowHeart){
+              // 开始旋转
+              jQuery({p: 0}).animate({p: 90}, {
+                duration: 500,
+                step: function(now, fx) {
+                  transformFun(target, now);
+                },
+                complete: function(){
+                  // 旋转到90度后将数字隐藏，将红心显示，
+                  isShowHeart ? target.find('.answer-like').show() : target.find('.answer-like').hide();
+                  isShowHeart ? target.find('.answer-like-count').hide() : target.find('.answer-like-count').show();
+                  // 再旋转到0度
+                  jQuery({p: 90}).animate({p: 0}, {
+                    duration: 500,
+                    step: function(now, fx) {
+                      transformFun(target, now);
+                    }
+                  });
+                }
+
+              });
+              
+            };
+        $('.answer-like-border .answer-like-count').bind('mouseenter', function(){
+          animateFun($(this).parent(), true);
+        });
+        $('.answer-like-border .answer-like').bind('mouseleave', function(){
+          animateFun($(this).parent(), false);
         });
 
         // 点击赞动作
@@ -120,6 +148,7 @@
               return;
             }
 
+            // 添加动画
             parent.append('<span class="animate-like glyphicon glyphicon-heart"></span>');
             temp = parent.find('.animate-like');
             temp.animate({
@@ -138,6 +167,7 @@
               parent.find('.answer-like-count')
               .text(parseInt(parent.find('.answer-like-count').text()) + 1);
             });
+
           });
 
         })
@@ -383,7 +413,7 @@
   cursor: pointer;
   position: absolute;
   top: 11px;
-  left: 10px;
+  left: 9px;
 }
 
 .reply-header .answer-like-count{
@@ -392,6 +422,7 @@
   text-align: center;
   top: 13px;
   width: 40px;
+  cursor: pointer;
 }
 
 .reply-header .answer-like-border{
@@ -402,7 +433,7 @@
   top: -10px;
   border-radius: 50%;
   border: solid 1px #dddddd;
-  box-shadow: 0px 0px 10px 1px #dddddd;
+  box-shadow: 0px 0px 0px 1px #dddddd;
 }
 
 .reply-header .animate-like{
@@ -413,6 +444,7 @@
   opacity: 0.99;
   color: red;
   z-index: 99;
+  cursor: pointer;
 }
 
 .reply-tools{
@@ -687,7 +719,7 @@
           </a>
         </div>
         <div class="col-md-6 text-right">
-          <span class="answer-like-border">
+          <span class="answer-like-border flashborder">
             <span class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} autohide answer-like" data-answer_id="{{answer.id}}"></span>
             <span class="answer-like-count">{{answer.like_count}}</span>
             
