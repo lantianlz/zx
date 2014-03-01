@@ -200,7 +200,8 @@
 
 .zx-container-main .question-entry .topic-content{
     padding-top: 25px;
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 25px;
 }
 
 .zx-container-main .question-entry .question-date{
@@ -223,7 +224,7 @@
 }
 
 .zx-container-main .reply-content{
-    font-size: 13px;
+    font-size: 14px;
     padding-top: 10px;
     padding-bottom: 15px;
     line-height: 25px;
@@ -386,7 +387,7 @@
 }
 
 .recommend-invite>ul>li{
-  width: 50%;
+  width: 49.5%;
 }
 
 .filter-invite .search{
@@ -538,10 +539,10 @@
   <div class="topic">
 
     <div class="topic-title">
-      <h4> <strong>{{question.title}}</strong>
+      <h4 class="f22"><strong>{{question.title}}</strong>
       </h4>
     </div>
-    <div class="topic-content">{{question.content|safe}}</div>
+    <div class="topic-content line-height-25">{{question.content|safe}}</div>
     <div class="topic-tags row">
       <ul class="list-flow">
         {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
@@ -728,7 +729,7 @@
         </div>
       </div>
       <div class="reply-main row">
-        <div class="reply-content col-md-12">{{answer.content|safe}}</div>
+        <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
       </div>
       <div class="reply-tools gray-a">
         <span class="answer-date">{{answer.create_time|time_format}}</span>
@@ -860,7 +861,7 @@
     {% if request.user.is_authenticated %}
     <form role="form" method="post" action="/question/create_answer/{{question.id}}">
       <div class="form-group editor">
-        <textarea name="answer_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{content}}</textarea>
+        <textarea name="answer_content" class="form-control zx-textarea auto-height-textarea  cl_black f14" rows="10">{{content}}</textarea>
       </div>
       <div class="form-group pull-right">
         <button type="submit" class="btn btn-primary">提交你的回答</button>

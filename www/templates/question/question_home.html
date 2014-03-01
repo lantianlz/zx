@@ -29,7 +29,7 @@
 
 .question-list .item-question-title a{
     cursor: pointer;
-    color: black;
+    color: #222;
 }
 
 .question-list .item-question-title a:hover{
@@ -153,8 +153,8 @@
                     </a>
                     {% endif %}
                     <span class="statistic" {% if question.is_hide_user %}style="margin-left:0;"{% endif %}>
-                        <a class="answers" href="#">回答 {{question.answer_count}}</a>
-                        <a class="views" href="#">浏览 {{question.views_count}}</a>
+                        <a class="answers" href="#">{{question.answer_count}} 个回答</a>
+                        <a class="views" href="#">{{question.views_count}} 次浏览</a>
                     </span>
                     <span class="last-replay">{{question.create_time|time_format}}</span>
                 </div>

@@ -150,7 +150,7 @@ $(document).ready(function(){
         window.location.href = '/question/ask_question';
     });
 
-    var tags = {{tags|safe}};
+    var tags = {{tags|safe|default:"{}"}};
 
     // 选择类型事件
     $('#div_tags').hide();
