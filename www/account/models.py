@@ -31,6 +31,9 @@ class User(models.Model):
     def is_staff(self):
         return self.state in (const.INTERNAL_MEMBER, )
 
+    def __unicode__(self):
+        return '%s, %s' % (self.id, self.email)
+
 
 class Profile(models.Model):
 
@@ -61,6 +64,9 @@ class Profile(models.Model):
 
     def get_avatar(self):
         return self.avatar or ('%s/img/common/default.png' % settings.MEDIA_URL)
+
+    def __unicode__(self):
+        return u'%s, %s' % (self.id, self.nick)
 
 
 class UserChangeLog(models.Model):

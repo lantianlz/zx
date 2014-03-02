@@ -13,6 +13,8 @@ todo list:
 
 6.删除问题、删除回答
 
+7.增加个人介绍
+
 7.session替换为缓存backend
 
 8.获取user增加缓存
