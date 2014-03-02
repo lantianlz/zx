@@ -53,7 +53,7 @@ class UnreadCountBase(object):
         created = True
         if not obj_urcs:
             count_info = self.init_count_info()
-            urc = UnreadCount.objects.create(user_id=user_id, count_info=count_info)
+            urc = UnreadCount.objects.create(user_id=user_id, count_info=json.dumps(count_info))
             created = False
         else:
             urc = obj_urcs[0]
@@ -68,7 +68,7 @@ class UnreadCountBase(object):
         count_info = {}
         for nt in nts:
             count_info.setdefault(str(nt.code), 0)
-        return json.dumps(count_info)
+        return count_info
 
     def update_unread_count(self, user, code, operate="add"):
         """
@@ -111,10 +111,10 @@ class UnreadCountBase(object):
         # 从数据库中取
         else:
             try:
-                count_info = UnreadCount.objects.get(user_id=user_id).count_info
+                count_info = json.loads(UnreadCount.objects.get(user_id=user_id).count_info)
             except UnreadCount.DoesNotExist:
                 count_info = self.init_count_info()  # 没有就不用自动创建，更新的时候进行创建
-            self.cache_obj.set(cache_key, json.loads(count_info), 3600 * 24)
+            self.cache_obj.set(cache_key, count_info, 3600 * 24)
         return count_info
 
     def get_unread_count_total(self, user):
