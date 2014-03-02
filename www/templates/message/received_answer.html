@@ -1,6 +1,7 @@
 {% extends "message/base_message.html" %}
-
-{% block title %}消息列表{% endblock %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}收到的回答{% endblock %}
 
 {% block css %}
 <style type="text/css">
@@ -80,126 +81,35 @@
 {% endblock %}
 {% block javascript %}
 <script type="text/javascript">
-// $(document).ready(function(){
-// 	// 全选事件
-// 	var checkAll = $('.message-list .toolbar input[type=checkbox]');
-// 	checkAll.bind('click', function(){
-		
-// 		if(checkAll.attr('checked')){
-			
-// 			$('.message-list input[type=checkbox]').attr('checked', true);
-
-// 		} else {
-			
-// 			$('.message-list input[type=checkbox]').attr('checked', false);
-// 		}
-// 	})
-// });
 </script>
 {% endblock %}
 
 {% block message_main %}
 <ul class="message-list list-group only-top-border">
+	{% for answer in answers %}
 	<li class="list-group-item">
 		<div class="message-item row">
 			<div class="col-md-1">
-				<a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/user1.jpg"></a>
+				<a href="{{answer.from_user.get_url}}">
+					<img class="avatar" src="{{answer.from_user.get_avatar}}"></a>
 			</div>
 			<div class="col-md-8">
-				<div class="from">半夜不溜达</div>
-				<div class="content"><a href="/message/message_detail/">你好，很高兴认识你。</a></div>
+				<div class="from">{{answer.from_user.nick}}</div>
+				<div class="content f16">{{answer.content|str_display:50}}</div>
+                <div class="blank10"></div>
+                <div class="content"> 
+                    回答了我的提问 <a href="{{answer.question.get_url}}">{{answer.question.title}}</a>
+                </div>
 			</div>
 			<div class="col-md-3">
-				<div class="date text-right">2014-02-14 16:52:54</div>
+				<div class="date text-right">{{answer.create_time}}</div>
 				<div class="text-right hide">
 					<a href="#" class="delete">删除</a>
-					<input type="checkbox">
-				</div>
+					<input type="checkbox"></div>
 			</div>
 		</div>
 	</li>
-	<li class="list-group-item">
-		<div class="message-item row">
-			<div class="col-md-1">
-				<a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/user2.jpg"></a>
-			</div>
-			<div class="col-md-8">
-				<div class="from">半夜瞎溜达</div>
-				<div class="content"><a href="/message/message_detail/">听说智选网不错，一起来玩玩。</a></div>
-			</div>
-			<div class="col-md-3">
-				<div class="date text-right">2014-02-14 16:52:54</div>
-				<div class="text-right">
-					<a href="#" class="delete">删除</a>
-					<input type="checkbox">
-				</div>
-			</div>
-		</div>
-	</li>
-	<li class="list-group-item">
-		<div class="message-item row">
-			<div class="col-md-1">
-				<a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/user3.jpg"></a>
-			</div>
-			<div class="col-md-8">
-				<div class="from">随便玩玩</div>
-				<div class="content"><a href="/message/message_detail/">不用多久,我就会升职加薪,当上总经理,出任CEO,迎娶白富美,走上人生巅峰。想想还有点小激动呢,嘿嘿~~</a></div>
-			</div>
-			<div class="col-md-3">
-				<div class="date text-right">2014-02-14 16:52:54</div>
-				<div class="text-right">
-					<a href="#" class="delete">删除</a>
-					<input type="checkbox">
-				</div>
-			</div>
-		</div>
-	</li>
-	<li class="list-group-item">
-		<div class="message-item row">
-			<div class="col-md-1">
-				<a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/user4.png"></a>
-			</div>
-			<div class="col-md-8">
-				<div class="from">叫我女王大人</div>
-				<div class="content"><a href="/message/message_detail/">十动然拒、喜大普奔、累觉不爱、人艰不拆、不明觉厉……你晓得这些词是什么意思吗？	</a></div>
-			</div>
-			<div class="col-md-3">
-				<div class="date text-right">2014-02-14 16:52:54</div>
-				<div class="text-right">
-					<a href="#" class="delete">删除</a>
-					<input type="checkbox">
-				</div>
-			</div>
-		</div>
-	</li>
-	<li class="list-group-item">
-		<div class="message-item row">
-			<div class="col-md-1">
-				<a href="#"><img class="avatar" src="{{MEDIA_URL}}img/common/user1.jpg"></a>
-			</div>
-			<div class="col-md-8">
-				<div class="from">习大大</div>
-				<div class="content"><a href="/message/message_detail/">东莞不哭,东莞加油!央视无情,人间有爱,众志成城,东莞加油!一方有难,八方支援!东莞挺住!大灾面前不放弃,务必抓好灾后重建工作,尽快恢复当地的生产生活秩序。今夜,我们都是东莞人</a></div>
-			</div>
-			<div class="col-md-3">
-				<div class="date text-right">2014-02-14 16:52:54</div>
-				<div class="text-right">
-					<a href="#" class="delete">删除</a>
-					<input type="checkbox">
-				</div>
-			</div>
-		</div>
-	</li>
+	{% endfor %}
 </ul>
-<div class="pagebar text-center">
-  	<ul class="pagination pagination-sm">
-        <li class="disabled"><a href="#">&laquo;</a></li>
-        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">&raquo;</a></li>
-  	</ul>
-</div>
+{{page_params|paging:request}}
 {% endblock %}

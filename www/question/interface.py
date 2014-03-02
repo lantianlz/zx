@@ -167,12 +167,18 @@ class AnswerBase(object):
                 transaction.rollback(using=QUESTION_DB)
                 return False, result
 
-            answer = Answer.objects.create(from_user_id=from_user_id, to_user_id=question.user_id, content=content,
+            to_user_id = question.user_id
+            answer = Answer.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, content=content,
                                            question=question, ip=ip)
 
             question.answer_count += 1
             question.last_answer_time = datetime.datetime.now()
             question.save()
+
+            if from_user_id != to_user_id:
+                # 更新未读消息
+                from www.message.interface import UnreadCountBase
+                UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
 
             transaction.commit(using=QUESTION_DB)
             return True, answer
@@ -183,6 +189,10 @@ class AnswerBase(object):
 
     def get_answers_by_question_id(self, question_id):
         return Answer.objects.select_related('question').filter(question=question_id, state=True)
+
+    def get_my_received_answer(self, user_id):
+        return Answer.objects.select_related('question').filter(to_user_id=user_id, state=True)\
+            .exclude(from_user_id=user_id).order_by('-id')
 
 
 class QuestionTypeBase(object):
