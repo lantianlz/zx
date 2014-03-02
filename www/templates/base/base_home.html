@@ -224,7 +224,7 @@ body {background-color: #F0F4F7}
                     <a class="dropdown-toggle user" data-toggle="dropdown" data-target="#">
                         <img class='avatar avatar-circle' src="{{MEDIA_URL}}img/common/user3.jpg">
                         {{ request.user.nick }}
-                        <span class="badge flash-badge">3</span>
+                        <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu text-left" role="menu">
@@ -235,7 +235,7 @@ body {background-color: #F0F4F7}
                             <a href="/account/user_settings">账号设置</a>
                         </li>
                         <li>
-                            <a href="/message">消息中心<span class="badge flash-badge">3</span></a>
+                            <a href="/message">消息中心<span class="badge flash-badge none" id="unread_count_total_nav_2">0</span></a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>
@@ -243,6 +243,7 @@ body {background-color: #F0F4F7}
                         </li>
                     </ul>
                 </li>
+                <script type="text/javascript" src="{{MEDIA_URL}}js/_update_unread_count_total.js"></script>
                 {% else %}
                 <li>
                     <div class="un-login-user">
