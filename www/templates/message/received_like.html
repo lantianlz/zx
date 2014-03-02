@@ -1,6 +1,7 @@
 {% extends "message/base_message.html" %}
-
-{% block title %}系统消息{% endblock %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}收到的赞{% endblock %}
 
 {% block css %}
 <style type="text/css">
@@ -120,50 +121,22 @@
 
 {% block message_main %}
 <div>
-<ul class="tml-message-list">
-	<li class="tml-item">
-		<div class="tml-date">
-			<span class="date">2014-02-14</span>
-			<span class="time">13:22:46</span>
-		</div>
-		<div class="tml-user new-message"><img class="avatar" src="{{MEDIA_URL}}/img/common/user1.jpg"></div>
-		<div class="tml-content">用户<a href="#">半夜没事下溜达</a>在提问<a href="#">新来乍到,测试一下</a>中@了你</div>
-	</li>
-	<li class="tml-item">
-		<div class="tml-date">
-			<span class="date">2014-02-14</span>
-			<span class="time">23:52:32</span>
-		</div>
-		<div class="tml-user"><img class="avatar" src="{{MEDIA_URL}}/img/common/user2.jpg"></div>
-		<div class="tml-content">用户<a href="#">众里寻她</a>在回答<a href="#">请问余额宝的收益问题</a>中@了你</div>
-	</li>
-	<li class="tml-item">
-		<div class="tml-date">
-			<span class="date">2014-02-14</span>
-			<span class="time">08:32:22</span>
-		</div>
-		<div class="tml-user"><img class="avatar" src="{{MEDIA_URL}}/img/common/user3.jpg"></div>
-		<div class="tml-content">用户<a href="#">习大大</a>在提问<a href="#">如何在有限的资金情况下进行优选理财，求详细指导，拜谢！</a>中赞了你的回答</div>
-	</li>
-	<li class="tml-item">
-		<div class="tml-date">
-			<span class="date">2014-02-14</span>
-			<span class="time">10:12:42</span>
-		</div>
-		<div class="tml-user"><img class="avatar" src="{{MEDIA_URL}}/img/common/user4.png"></div>
-		<div class="tml-content">用户<a href="#">小星星</a>关注了你</div>
-	</li>
-</ul>
-<!-- <div class="pagebar text-center">
-  	<ul class="pagination pagination-sm">
-        <li class="disabled"><a href="#">&laquo;</a></li>
-        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">&raquo;</a></li>
-  	</ul>
-</div> -->
+	<ul class="tml-message-list">
+		{% for like in likes %}
+		<li class="tml-item">
+			<div class="tml-date">
+				<span class="date">{{like.create_time|date:'Y-m-d'}}</span>
+				<span class="time">{{like.create_time|date:'H:i:s'}}</span>
+			</div>
+			<div class="tml-user"><img class="avatar" src="{{like.from_user.get_avatar}}"></div>
+			<div class="tml-content">用户
+				<a href="{{request.user.get_url}}">{{request.user.nick}}</a>
+				在提问 <a href="{{like.question.get_url}}">{{like.question.title|str_display:50}}</a>
+				中赞了你的回答
+			</div>
+		</li>
+		{% endfor %}
+	</ul>
+	{{page_params|paging:request}}
 </div>
 {% endblock %}

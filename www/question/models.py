@@ -103,11 +103,14 @@ class Like(models.Model):
     from_user_id = models.CharField(verbose_name=u'发起赞的人', max_length=32, db_index=True)
     to_user_id = models.CharField(verbose_name=u'被赞者', max_length=32, db_index=True)
     ip = models.IPAddressField(db_index=True)
-    is_anonymous = models.BooleanField(verbose_name=u'是否匿名')
+    is_anonymous = models.BooleanField(verbose_name=u'是否匿名', db_index=True)
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-id', ]
+
+    def __unicode__(self):
+        return '%s, %s' % (self.from_user_id, self.to_user_id)
 
 
 class Tag(models.Model):

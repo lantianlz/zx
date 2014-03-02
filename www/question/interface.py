@@ -5,6 +5,7 @@ import logging
 from django.db import transaction
 
 from common import utils, debug, cache
+from www.account.interface import UserBase
 from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion
 
 
@@ -252,6 +253,15 @@ class LikeBase(object):
         if ip:
             ps.update(dict(ip=ip, is_anonymous=True))
         return Like.objects.filter(**ps)
+
+    def get_to_user_likes(self, user_id):
+        return Like.objects.select_related('question').filter(to_user_id=user_id, is_anonymous=False)
+
+    def format_likes(self, likes):
+        for like in likes:
+            like.from_user = UserBase().get_user_by_id(like.from_user_id)
+        return likes
+
 
 
 class TagBase(object):

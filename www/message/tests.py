@@ -19,9 +19,12 @@ def main():
     ucb = interface.UnreadCountBase()
     print ucb.init_count_info()
     print ucb.get_unread_type()
-    print ucb.get_unread_count(user)
+    print ucb.get_unread_count_info(user)
     print ucb.get_unread_count_total(user)
-    # print ucb.update_unread_count(user, code='at_answer')
+    print ucb.update_unread_count(user, code='at_answer', operate="add")
+    print ucb.update_unread_count(user, code='system_message', operate="add")
+    print ucb.update_unread_count(user, code='received_like', operate="add")
+    print ucb.update_unread_count(user, code='received_answer', operate="add")
 
 if __name__ == '__main__':
 	main()

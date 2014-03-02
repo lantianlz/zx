@@ -98,7 +98,7 @@ class UnreadCountBase(object):
 
         return True
 
-    def get_unread_count(self, user):
+    def get_unread_count_info(self, user):
         """
         @note: 获取未读数
         """
@@ -118,12 +118,12 @@ class UnreadCountBase(object):
         return count_info
 
     def get_unread_count_total(self, user):
-        count_info = self.get_unread_count(user)
+        count_info = self.get_unread_count_info(user)
         return sum(count_info.values())
 
     def clear_count_info_by_code(self, code, user_id):
         """
         @note: 通用的清除消息数的方法，数字大于0的才去调用清除，提高效率
         """
-        if code and user_id and int(UnreadCountBase().get_unread_count(user_id).get(code, 0)) > 0:
+        if code and user_id and int(UnreadCountBase().get_unread_count_info(user_id).get(code, 0)) > 0:
             UnreadCountBase().update_unread_count(user_id, code, operate='clear')

@@ -7,7 +7,7 @@ class UnreadCount(models.Model):
 
     """
     @note: 用户的未读数提醒
-    未读数字典信息，数据类型{'answer':1, 'like':2, 'invite':3, 'at_answer':4, 'notification':5}
+    未读数字典信息，数据类型{'system_message':1, 'received_like':2, 'received_answer':3, 'at_answer':4}
     """
     user_id = models.CharField(max_length=32, unique=True)
     count_info = models.CharField(max_length=512)
@@ -43,10 +43,10 @@ class Notice(models.Model):
     """
     @note: 通知信息
     """
-    source_choices = ((0, u'邀请注册用户通知'), )
+    source_choices = ((0, u'默认消息'), (1, u''))
 
     user_id = models.CharField(max_length=32, db_index=True, null=True)  # 用户外键，可以为空，系统通知类
-    source = models.CharField(max_length=32, choices=source_choices)  # 来源
+    source = models.CharField(max_length=32, choices=source_choices, default=1)  # 来源
     content = models.CharField(max_length=128)  # 通知对应的内容
     process_result = models.CharField(max_length=32, default='')  # 处理结果
     create_time = models.DateTimeField(auto_now_add=True, db_index=True)  # 创建时间
