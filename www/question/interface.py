@@ -111,6 +111,10 @@ class QuestionBase(object):
                 except:
                     pass
 
+            # 更新用户话题数信息
+            cache.get_or_update_data_from_cache('question_count_%s' % user_id, False, 3600 * 24,
+                                                self.get_user_question_count, user_id)
+
             # todo 清理缓存、更新冗余信息等
             transaction.commit(using=QUESTION_DB)
             return True, question
@@ -124,6 +128,9 @@ class QuestionBase(object):
         @note: 更新浏览次数
         '''
         Question.objects.filter(id=question_id).update(views_count=F('views_count') + 1)
+
+    def get_question_by_user_id(self, user_id):
+        return Question.objects.filter(user_id=user_id, state=True)
 
     def get_questions_by_type(self, question_type_domain=None):
         ps = dict(state=True)
@@ -146,6 +153,21 @@ class QuestionBase(object):
             return Question.objects.select_related('question_type').get(id=id)
         except Question.DoesNotExist:
             return None
+
+    def get_user_question_count(self, user_id):
+        return self.get_question_by_user_id(user_id).count()
+
+    def get_user_qa_count_info(self, user_id):
+        '''
+        @note: 获取问、答、被赞统计信息
+        '''
+        user_question_count = cache.get_or_update_data_from_cache('question_count_%s' % user_id, True, 3600 * 24,
+                                                                  self.get_user_question_count, user_id)
+        user_answer_count = cache.get_or_update_data_from_cache('answer_count_%s' % user_id, True, 3600 * 24,
+                                                                AnswerBase().get_user_sended_answers_count, user_id)
+        user_liked_count = cache.get_or_update_data_from_cache('liked_count_%s' % user_id, True, 3600 * 24,
+                                                               LikeBase().get_user_liked_count, user_id)
+        return user_question_count, user_answer_count, user_liked_count
 
 
 class AnswerBase(object):
@@ -195,6 +217,10 @@ class AnswerBase(object):
             if from_user_id != to_user_id:
                 UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
 
+            # 更新用户回答统计总数
+            cache.get_or_update_data_from_cache('answer_count_%s' % from_user_id, False, 3600 * 24,
+                                                self.get_user_sended_answers_count, from_user_id)
+
             # 更新回答数冗余信息
             question.answer_count += 1
             question.last_answer_time = datetime.datetime.now()
@@ -210,12 +236,18 @@ class AnswerBase(object):
     def get_answers_by_question_id(self, question_id):
         return Answer.objects.select_related('question').filter(question=question_id, state=True)
 
-    def get_my_received_answer(self, user_id):
+    def get_user_received_answer(self, user_id):
         return Answer.objects.select_related('question').filter(to_user_id=user_id, state=True)\
             .exclude(from_user_id=user_id).order_by('-id')
 
+    def get_user_sended_answer(self, user_id):
+        return Answer.objects.select_related('question').filter(from_user_id=user_id, state=True).order_by('-id')
+
     def get_at_answers(self, user_id):
         return [aa.answer for aa in AtAnswer.objects.select_related('answer').filter(user_id=user_id)]
+
+    def get_user_sended_answers_count(self, user_id):
+        return self.get_user_sended_answer(user_id).count()
 
 
 class QuestionTypeBase(object):
@@ -275,6 +307,10 @@ class LikeBase(object):
             from www.message.interface import UnreadCountBase
             UnreadCountBase().update_unread_count(to_user_id, code='received_like')
 
+            # 更新被赞次数
+            cache.get_or_update_data_from_cache('liked_count_%s' % to_user_id, False, 3600 * 24,
+                                                self.get_user_liked_count, to_user_id)
+
             transaction.commit(QUESTION_DB)
             return True, dict_err.get(000)
         except Exception, e:
@@ -300,6 +336,9 @@ class LikeBase(object):
         for like in likes:
             like.from_user = UserBase().get_user_by_id(like.from_user_id)
         return likes
+
+    def get_user_liked_count(self, user_id):
+        return self.get_to_user_likes(user_id).count()
 
 
 class TagBase(object):

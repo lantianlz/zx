@@ -210,20 +210,20 @@ $(document).ready(function(){
         </div>
     </div>
 
+    {% if request.user.is_authenticated %}
     <div class="intro well">
         <div class="row">
-            <div class="col-md-4 avatar"><img class="avatar-circle" src="{{request.user.get_avatar}}"></div>
+            <div class="col-md-4 avatar">
+                <a href="{{request.user.get_url}}"><img class="avatar-circle" src="{{request.user.get_avatar}}"></a>
+            </div>
             <div class="col-md-8 nick">
                 <a href="{{request.user.get_url}}">{{request.user.nick}}</a>
             </div>
         </div>
         <div class="blank10 bottom-border"></div>
-        <div class="row">
-            <div class="col-md-4 item"><a href="/account/user_profile">我的提问<br/>122</a></div>
-            <div class="col-md-4 item"><a href="/account/user_profile">我的回答<br/>96</a></div>
-            <div class="col-md-4 item"><a href="/account/user_profile">被赞次数<br/>165</a></div>
-        </div>
+        {% user_qa_count_info_right_nav_dispaly %}
     </div>
+    {% endif %}
 
     <div class="hot-tags panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-tags"></span><span class="tag-title">热门标签</span></div>

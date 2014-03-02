@@ -93,7 +93,7 @@ class UnreadCountBase(object):
         urc.save()
         # 操作缓存
         user_id = utils.get_uid(user)
-        cache_key = u'%s_%s' % ('notification', user_id)
+        cache_key = u'%s_%s' % ('unread_count', user_id)
         self.cache_obj.set(cache_key, count_info, 3600 * 24)
 
         return True
@@ -104,7 +104,7 @@ class UnreadCountBase(object):
         """
 
         user_id = utils.get_uid(user)
-        cache_key = u'%s_%s' % ('notification', user_id)
+        cache_key = u'%s_%s' % ('unread_count', user_id)
         # 从缓存中取
         if self.cache_obj.exists(cache_key):
             count_info = self.cache_obj.get(cache_key)

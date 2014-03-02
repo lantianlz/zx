@@ -80,6 +80,17 @@ def global_statistic(context):
 
 
 @register.simple_tag(takes_context=True)
+def user_qa_count_info_right_nav_dispaly(context):
+    """
+    @note: 个人问答相关统计总数信息获取
+    """
+    from www.question import interface
+    user_question_count, user_answer_count, user_liked_count = interface.QuestionBase()\
+        .get_user_qa_count_info(context['request'].user.id)
+    return render_to_response('question/_user_qa_count_info_right_nav_dispaly.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
 def global_hotest_tags(context):
     """
     @note: 热门标签提取

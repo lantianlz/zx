@@ -53,7 +53,7 @@ def received_like(request, template_name='message/received_like.html'):
 
 @member_required
 def received_answer(request, template_name='message/received_answer.html'):
-    answers = ab.get_my_received_answer(request.user.id)
+    answers = ab.get_user_received_answer(request.user.id)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))

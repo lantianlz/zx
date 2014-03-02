@@ -66,13 +66,22 @@ class Cache(object):
         key = "tlock:%s" % key
         if self.conn.exists(key):
             return True
-        
+
         #self.conn.setex(key, '0', time_out)
         self.conn.set(key, 0, time_out)
         return False
 
     def flush(self):
         self.conn.flushdb()
+
+
+def get_or_update_data_from_cache(key, not_must_update, expire, func, *args, **kwargs):
+    cache_obj = Cache(config=CACHE_TMP)
+    data = cache_obj.get(key)
+    if data is None or not not_must_update:
+        data = func(*args, **kwargs)
+        cache_obj.set(key, data, time_out=expire)
+    return data
 
 
 if __name__ == '__main__':
