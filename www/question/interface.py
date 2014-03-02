@@ -236,6 +236,10 @@ class LikeBase(object):
                                 from_user_id=from_user_id, to_user_id=to_user_id, ip=ip)
             Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
 
+            # 更新未读消息
+            from www.message.interface import UnreadCountBase
+            UnreadCountBase().update_unread_count(to_user_id, code='received_like')
+
             transaction.commit(QUESTION_DB)
             return True, dict_err.get(000)
         except Exception, e:

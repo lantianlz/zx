@@ -121,7 +121,7 @@ class UnreadCountBase(object):
         count_info = self.get_unread_count_info(user)
         return sum(count_info.values())
 
-    def clear_count_info_by_code(self, code, user_id):
+    def clear_count_info_by_code(self, user_id, code):
         """
         @note: 通用的清除消息数的方法，数字大于0的才去调用清除，提高效率
         """

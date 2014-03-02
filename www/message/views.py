@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response
 from common import utils, page
 from www.misc.decorators import member_required
 from www.message import interface
+from www.tasks import async_clear_count_info_by_code
 
 
 urb = interface.UnreadCountBase()
@@ -33,7 +34,10 @@ def received_like(request, template_name='message/received_like.html'):
     page_params = (page_objs[1], page_objs[4])
     likes = lb.format_likes(likes)
 
+    # 异步清除未读消息数
+    async_clear_count_info_by_code(request.user.id, code='received_like')
     unread_count_info = urb.get_unread_count_info(request.user)
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
