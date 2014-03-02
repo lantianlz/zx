@@ -524,370 +524,281 @@
 
 {% block question_main%}
 <span class="jinghua">
-  <img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
+    <img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
 
 <ol class="breadcrumb">
-  <li>
-    <a href="/question">全部</a>
-  </li>
-  <li>
-    <a href="{{question.question_type.get_url}}">{{question.question_type.name}}</a>
-  </li>
-  <li class="active">{{question.title|str_display:10}}</li>
+    <li>
+        <a href="/question">全部</a>
+    </li>
+    <li>
+        <a href="{{question.question_type.get_url}}">{{question.question_type.name}}</a>
+    </li>
+    <li class="active">{{question.title|str_display:10}}</li>
 </ol>
 <div class="question-entry">
-  <div class="topic">
+    <div class="topic">
 
-    <div class="topic-title">
-      <h4 class="f22"><strong>{{question.title}}</strong>
-      </h4>
-    </div>
-    <div class="topic-content line-height-25">{{question.content|safe}}</div>
-    <div class="topic-tags row">
-      <ul class="list-flow">
-        {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
-      </ul>
-    </div>
-    <div class="topic-footer row">
-      <div class="col-md-6">
-        {% if not question.is_hide_user %}
-        <a href="{{question.user.get_url}}">
-          <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
-        </a>
-        <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
-          <div class="user-name">{{question.user.nick}}</div>
-        </a>
-        {% endif %}
-      </div>
-      <div class="col-md-6 text-right">
-        <span class="question-tools gray-a">
-          {% if request.user.id == question.user.id %}
-          <a href="#" data-toggle="modal" data-target="#edit_modal">
-            <span class="glyphicon glyphicon-pencil"></span>
-            修改
-          </a>
-          {% endif %}
-          <a class="invite" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-transfer"></span>
-            邀请回答
-          </a>
-          
-        </span>
-        <span class="question-date">{{question.create_time}}</span>
-      </div>
-    </div>
-    <div class="topic-invite panel panel-default autohide">
-      <span class="arrow-out"></span>
-      <span class="arrow-in"></span> 
-      <div class="panel-body row">
-        <div class="filter-invite col-md-12">
-          <div class="col-md-4">
-            <input type="text" class="form-control input-sm" placeholder="输入你想邀请人的名字" value="">
-            <span class="glyphicon glyphicon-search search"></span>
-          </div>
-        </div>
-        <div class="recommend-invite col-md-12">
-          <ul class="list-flow">
-            <li class="invite-item">
-              <div class="col-md-2">
-                <img class="avatar-35 avatar-circle" src="/static/img/common/user3.jpg">
-              </div>
-              <div class="col-md-10 invite-person-info">
-                <div class="name blue-a">
-                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">半夜没事瞎溜达</a>
-                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
-                </div>
-                <div class="des">漫漫人生路，谁不错几步</div>
-              </div>
-            </li>
-            <li class="invite-item">
-              <div class="col-md-2">
-                <img class="avatar-35 avatar-circle" src="/static/img/common/user1.jpg">
-              </div>
-              <div class="col-md-10 invite-person-info">
-                <div class="name blue-a">
-                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">习大大</a>
-                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
-                </div>
-                <div class="des">专注解答各种疑难杂症20年</div>
-              </div>
-            </li>
-            <li class="invite-item">
-              <div class="col-md-2">
-                <img class="avatar-35 avatar-circle" src="/static/img/common/user2.jpg">
-              </div>
-              <div class="col-md-10 invite-person-info">
-                <div class="name blue-a">
-                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">坑坑更健康</a>
-                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
-                </div>
-                <div class="des">谁坑爹啊，你坑爹</div>
-              </div>
-            </li>
-            <li class="invite-item">
-              <div class="col-md-2">
-                <img class="avatar-35 avatar-circle" src="/static/img/common/user4.png">
-              </div>
-              <div class="col-md-10 invite-person-info">
-                <div class="name blue-a">
-                  <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">女王</a>
-                  <span><button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button></span>
-                </div>
-                <div class="des">要叫我女王大人!</div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      
-    </div>
-    {% if request.user.id == question.user.id %}
-    <!-- 弹出层 -->
-    <div class="modal fade" id="edit_modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form role="form" method='post' action='/question/modify_question'>
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">修改提问</h4>
-            </div>
-            <div class="modal-body">
-
-              <div class="form-group">
-                <select id="sel_question_type" name="question_type" class="form-control">
-                  <option value='0'>请选择问题类型</option>
-                  {% question_type_option_display %}
-                </select>
-              </div>
-              <div class="form-group" id="div_tags">
-                <!-- <input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder=""> -->
-                <div class="tag-title">将你的提问归类至子话题 :</div>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="inlineCheckbox2" value="option2"> 2
-                </label>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
-                                    value='{{question.title}}'></div>
-              <div class="form-group question-content">
-                <textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question.content}}</textarea>
-              </div>
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="submit" class="btn btn-primary">保存</button>
-            </div>
-          </form>
-        </div>
-        <!-- /.modal-content --> </div>
-      <!-- /.modal-dialog --> </div>
-    <!-- /.modal -->
-    <!-- 弹出层结束 -->{% endif %}</div>
-
-  <div class="replies">
-    <ul class="list-group" id="ul_replies">
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-md-6">
-            <h4> <strong>共{{question.answer_count}}个回答</strong>
+        <div class="topic-title">
+            <h4 class="f22"> <strong>{{question.title}}</strong>
             </h4>
-          </div>
-          <!-- 
-          <div class="col-md-3 pull-right">
-            <select class="form-control input-sm replies-sort">
-              <option>按赞最多排序</option>
-              <option>按时间排序</option>
-            </select>
-          </div>
-        -->
         </div>
-      </li>
-    {% for answer in answers %}
-    <li class="list-group-item {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" 
+        <div class="topic-content line-height-25">{{question.content|safe}}</div>
+        <div class="topic-tags row">
+            <ul class="list-flow">
+                {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
+            </ul>
+        </div>
+        <div class="topic-footer row">
+            <div class="col-md-6">
+                {% if not question.is_hide_user %}
+                <a href="{{question.user.get_url}}">
+                    <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
+                </a>
+                <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
+                    <div class="user-name">{{question.user.nick}}</div>
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-md-6 text-right">
+                <span class="question-tools gray-a">
+                    {% if request.user.id == question.user.id %}
+                    <a href="#" data-toggle="modal" data-target="#edit_modal">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        修改
+                    </a>
+                    {% endif %}
+                    <a class="invite hide" href="javascript: void(0);">
+                        <span class="glyphicon glyphicon-transfer"></span>
+                        邀请回答
+                    </a>
+
+                </span>
+                <span class="question-date">{{question.create_time}}</span>
+            </div>
+        </div>
+        <div class="topic-invite panel panel-default autohide">
+            <span class="arrow-out"></span>
+            <span class="arrow-in"></span>
+            <div class="panel-body row">
+                <div class="filter-invite col-md-12">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control input-sm" placeholder="输入你想邀请人的名字" value="">
+                        <span class="glyphicon glyphicon-search search"></span>
+                    </div>
+                </div>
+                <div class="recommend-invite col-md-12">
+                    <ul class="list-flow">
+                        <li class="invite-item">
+                            <div class="col-md-2">
+                                <img class="avatar-35 avatar-circle" src="/static/img/common/user3.jpg"></div>
+                            <div class="col-md-10 invite-person-info">
+                                <div class="name blue-a">
+                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">半夜没事瞎溜达</a>
+                                    <span>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
+                                    </span>
+                                </div>
+                                <div class="des">漫漫人生路，谁不错几步</div>
+                            </div>
+                        </li>
+                        <li class="invite-item">
+                            <div class="col-md-2">
+                                <img class="avatar-35 avatar-circle" src="/static/img/common/user1.jpg"></div>
+                            <div class="col-md-10 invite-person-info">
+                                <div class="name blue-a">
+                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">习大大</a>
+                                    <span>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
+                                    </span>
+                                </div>
+                                <div class="des">专注解答各种疑难杂症20年</div>
+                            </div>
+                        </li>
+                        <li class="invite-item">
+                            <div class="col-md-2">
+                                <img class="avatar-35 avatar-circle" src="/static/img/common/user2.jpg"></div>
+                            <div class="col-md-10 invite-person-info">
+                                <div class="name blue-a">
+                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">坑坑更健康</a>
+                                    <span>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
+                                    </span>
+                                </div>
+                                <div class="des">谁坑爹啊，你坑爹</div>
+                            </div>
+                        </li>
+                        <li class="invite-item">
+                            <div class="col-md-2">
+                                <img class="avatar-35 avatar-circle" src="/static/img/common/user4.png"></div>
+                            <div class="col-md-10 invite-person-info">
+                                <div class="name blue-a">
+                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">女王</a>
+                                    <span>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
+                                    </span>
+                                </div>
+                                <div class="des">要叫我女王大人!</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% if request.user.id == question.user.id %}
+        <!-- 弹出层 -->
+        <div class="modal fade" id="edit_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form" method='post' action='/question/modify_question'>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">修改提问</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <select id="sel_question_type" name="question_type" class="form-control">
+                                    <option value='0'>请选择问题类型</option>
+                                    {% question_type_option_display %}
+                                </select>
+                            </div>
+                            <div class="form-group" id="div_tags">
+                                <!-- <input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder="">
+                                -->
+                                <div class="tag-title">将你的提问归类至子话题 :</div>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox1" value="option1">1</label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox2" value="option2">2</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
+                                    value='{{question.title}}'></div>
+                            <div class="form-group question-content">
+                                <textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question.content}}</textarea>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content --> </div>
+            <!-- /.modal-dialog --> </div>
+        <!-- /.modal -->
+        <!-- 弹出层结束 -->{% endif %}</div>
+
+    <div class="replies">
+        <ul class="list-group" id="ul_replies">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4> <strong>共{{question.answer_count}}个回答</strong>
+                        </h4>
+                    </div>
+                </div>
+            </li>
+            {% for answer in answers %}
+            <li class="list-group-item {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" 
                 id="answer_{{answer.id}}">
-      <div class="reply-header row">
-        <div class="col-md-6">
-          <a href="{{answer.from_user.get_url}}">
-            <img class="avatar-25 avatar-circle" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
-          </a>
-          <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
-            <div class="user-name">{{answer.from_user.nick}}</div>
-          </a>
-        </div>
-        <div class="col-md-6 text-right">
-          <span class="answer-like-border flashborder">
-            <span class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} autohide answer-like" data-answer_id="{{answer.id}}"></span>
-            <span class="answer-like-count">{{answer.like_count}}</span>
-            
-          </span>
-          
-        </div>
-      </div>
-      <div class="reply-main row">
-        <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
-      </div>
-      <div class="reply-tools gray-a">
-        <span class="answer-date">{{answer.create_time|time_format}}</span>
-        <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}">
-          <span class="glyphicon glyphicon-share"></span> 回复
-        </a>
-        <a class="answer-comments hide" href="javascript: void(0);">
-          <span class="glyphicon glyphicon-comment"></span> 88条评论
-        </a>
-        <a class="answer-no-help autohide" href="javascript: void(0);">
-          <span class="glyphicon glyphicon-thumbs-down"></span> 没有帮助
-        </a>
-        <a class="answer-mark autohide hide" href="javascript: void(0);">
-          <span class="glyphicon glyphicon-bookmark"></span> 收藏
-        </a>
-        <a class="answer-share autohide hide" href="javascript: void(0);">
-          <span class="glyphicon glyphicon-share-alt"></span> 分享
-        </a>
-        <a class="answer-report autohide hide" href="javascript: void(0);">
-          <span class="glyphicon glyphicon-flag"></span> 举报</a>
-        {% if question.user.id == request.user.id %}
-        <a class="answer-remove autohide pull-right" href="javascript: void(0);">
-          <span class="glyphicon glyphicon-trash"></span> 删除
-        </a>
-        {% endif %}
-      </div>
+                <div class="reply-header row">
+                    <div class="col-md-6">
+                        <a href="{{answer.from_user.get_url}}">
+                            <img class="avatar-25 avatar-circle" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
+                        </a>
+                        <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
+                            <div class="user-name">{{answer.from_user.nick}}</div>
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <span class="answer-like-border flashborder">
+                            <span class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} autohide answer-like" data-answer_id="{{answer.id}}"></span>
+                            <span class="answer-like-count">{{answer.like_count}}</span>
 
-      
+                        </span>
 
-      <div class="reply-comments">
-        <span class="arrow-out"></span>
-        <span class="arrow-in"></span>
-        <ul class="list-group">
-          <li class="list-group-item">
-            <div class="comment row">
-              <div class="col-md-1 comment-left"><img class="avatar-25 avatar-circle" src="/static/img/common/user3.jpg"></div>
-              <div class="col-md-11 comment-main">
-                <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">半夜没事瞎溜达</a></div>
-                <div class="comment-content">看得我充满斗志, 热血沸腾</div>
-                <div class="comment-date gray-a">
-                  <span class="date">2014-02-16 12:25:56</span>
-                  <a class="comment-thumbs-up" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-thumbs-up"></span> 5赞
-                  </a>
-                  <a class="comment-say-to autohide" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-share"></span> 回复
-                  </a>
-                  <a class="comment-report autohide" href="javascript: void(0);" >
-                    <span class="glyphicon glyphicon-flag"></span> 举报
-                  </a>
-                  <a class="comment-remove autohide pull-right" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-trash"></span> 删除
-                  </a>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="comment row">
-              <div class="col-md-1 comment-left"><img class="avatar-25 avatar-circle" src="/static/img/common/user1.jpg"></div>
-              <div class="col-md-11 comment-main">
-                <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">习大大</a></div>
-                <div class="comment-content">我本科财务管理专业（自以为和会计专业无非名字不同学的都是难分彼此的东西），你若实心想从事会计行业，先去考会从吧（是会计工作的准入证书，就像你要给人看病你得先有个证明你是医生的东西），然后找份财务方面工作，将书本中的东西在现实工作中一一实践积累经验的同事下工夫考CPA之类的高级职称，之后便如这个答案说的干一个擅长的门类，越过越牛！</div>
-                <div class="comment-date gray-a">
-                  <span class="date">2014-02-16 12:28:06</span>
-                  <a class="comment-thumbs-up" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-thumbs-up"></span> 5赞
-                  </a>
-                  <a class="comment-say-to autohide" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-share"></span> 回复
-                  </a>
-                  <a class="comment-report autohide" href="javascript: void(0);" >
-                    <span class="glyphicon glyphicon-flag"></span> 举报
-                  </a>
-                  <a class="comment-remove autohide pull-right" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-trash"></span> 删除
-                  </a>
+                <div class="reply-main row">
+                    <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
                 </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="comment row">
-              <div class="col-md-1 comment-left"><img class="avatar-25 avatar-circle" src="/static/img/common/user2.jpg"></div>
-              <div class="col-md-11 comment-main">
-                <div class="comment-username"><a href="#" class="zx-cardtips" data-user_id="1">女王大人</a></div>
-                <div class="comment-content">先考会计证，然后去考CPA，同时复习司法考试，争取几年内三证到手，苦练英语，届时潜力无穷。</div>
-                <div class="comment-date gray-a">
-                  <span class="date">2014-02-16 12:33:31</span>
-                  <a class="comment-thumbs-up" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-thumbs-up"></span> 5赞
-                  </a>
-                  <a class="comment-say-to autohide" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-share"></span> 回复
-                  </a>
-                  <a class="comment-report autohide" href="javascript: void(0);" >
-                    <span class="glyphicon glyphicon-flag"></span> 举报
-                  </a>
-                  <a class="comment-remove autohide pull-right" href="javascript: void(0);">
-                    <span class="glyphicon glyphicon-trash"></span> 删除
-                  </a>
+                <div class="reply-tools gray-a">
+                    <span class="answer-date">{{answer.create_time|time_format}}</span>
+                    <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}">
+                        <span class="glyphicon glyphicon-share"></span>
+                        回复
+                    </a>
+                    <a class="answer-no-help autohide" href="javascript: void(0);">
+                        <span class="glyphicon glyphicon-thumbs-down"></span>
+                        没有帮助
+                        <a class="answer-comments hide" href="javascript: void(0);">
+                            <span class="glyphicon glyphicon-comment"></span>
+                            88条评论
+                        </a>
+                    </a>
+                    <a class="answer-mark autohide hide" href="javascript: void(0);">
+                        <span class="glyphicon glyphicon-bookmark"></span>
+                        收藏
+                    </a>
+                    <a class="answer-share autohide hide" href="javascript: void(0);">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                        分享
+                    </a>
+                    <a class="answer-report autohide hide" href="javascript: void(0);">
+                        <span class="glyphicon glyphicon-flag"></span>
+                        举报
+                    </a>
+                    {% if answer.from_user.id == request.user.id %}
+                    <a class="answer-remove autohide pull-right" href="javascript: void(0);">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        删除
+                    </a>
+                    {% endif %}
                 </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="row">
-              <div class="col-md-10"><input name="comment" class="form-control"></div>
-              <div class="col-md-2 send-comment"><button type="button" class="btn btn-primary btn-block">评论</button></div>
-            </div>
-          </li>
+            </li>
+            {% endfor %}
         </ul>
-      </div>
-
-
-    
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-
-<!-- 回复块 -->
-<div class="answer">
-  <div class="answer-title">
-    <h3>可以在下面添加你的回答</h3>
-  </div>
-
-  <div class="answer-main">
-    {% if request.user.is_authenticated %}
-    <form role="form" method="post" action="/question/create_answer/{{question.id}}">
-      <div class="form-group editor">
-        <textarea name="answer_content" class="form-control zx-textarea auto-height-textarea  cl_black f14" rows="10">{{content}}</textarea>
-      </div>
-      <div class="form-group pull-right">
-        <button type="submit" class="btn btn-primary">提交你的回答</button>
-      </div>
-    </form>
-    {% else %}
-    <div class="not-login row">
-      <div class="col-md-2 lock">
-        <img src="{{MEDIA_URL}}img/common/icon-locked.png"></div>
-      <div class="col-md-10">
-        <div class="title">回复前请登录</div>
-        <div class="content">须登录后才能发表你的回复，点击下面的登录按钮进行登录，如果你还没有成为我们的会员，请点击下面的注册按钮进行新用户注册</div>
-        <div class="col-md-6 links">
-          <a href="/login">
-            <button type="button" class="btn btn-primary btn-lg btn-login">立即登录</button>
-          </a>
-        </div>
-        <div class="col-md-6 links">
-          <a href="/regist">
-            <button type="button" class="btn btn-primary btn-lg btn-regist">免费注册</button>
-          </a>
-        </div>
-      </div>
     </div>
-    {% endif %}
-  </div>
-</div>
+
+    <!-- 回复块 -->
+    <div class="answer">
+        <div class="answer-title">
+            <h3>可以在下面添加你的回答</h3>
+        </div>
+
+        <div class="answer-main">
+            {% if request.user.is_authenticated %}
+            <form role="form" method="post" action="/question/create_answer/{{question.id}}">
+                <div class="form-group editor">
+                    <textarea name="answer_content" class="form-control zx-textarea auto-height-textarea  cl_black f14" rows="10">{{content}}</textarea>
+                </div>
+                <div class="form-group pull-right">
+                    <button type="submit" class="btn btn-primary">提交你的回答</button>
+                </div>
+            </form>
+            {% else %}
+            <div class="not-login row">
+                <div class="col-md-2 lock">
+                    <img src="{{MEDIA_URL}}img/common/icon-locked.png"></div>
+                <div class="col-md-10">
+                    <div class="title">回复前请登录</div>
+                    <div class="content">须登录后才能发表你的回复，点击下面的登录按钮进行登录，如果你还没有成为我们的会员，请点击下面的注册按钮进行新用户注册</div>
+                    <div class="col-md-6 links">
+                        <a href="/login">
+                            <button type="button" class="btn btn-primary btn-lg btn-login">立即登录</button>
+                        </a>
+                    </div>
+                    <div class="col-md-6 links">
+                        <a href="/regist">
+                            <button type="button" class="btn btn-primary btn-lg btn-regist">免费注册</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}
