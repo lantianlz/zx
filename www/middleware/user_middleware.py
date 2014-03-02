@@ -3,6 +3,7 @@
 import time
 import logging
 from django.http import Http404
+from django.conf import settings
 from common import debug
 
 
@@ -23,12 +24,16 @@ class UserMiddware(object):
         return response
 
     def process_exception(self, request, exception):
+        print '*' * 50 + 'debug info start' + '*' * 50
         if type(exception) == Http404:
             return
 
         url = request.path
-        ext_data = {"url": url, "method": request.method,
-                    "query_string": ",".join(["".join([k, request.REQUEST.get(k)]) for k in request.REQUEST])}
-        debug.get_debug_detail(exception)
-        # if not settings.DEBUG:
-        #    send_a_mail(settings.NOTIFICATION_EMAIL, title, content, content_type="text")
+        # ext_data = {"url": url, "method": request.method,
+        #             "query_string": ",".join(["".join([k, request.REQUEST.get(k)]) for k in request.REQUEST])}
+        title = u'%s error in %s' % (settings.SERVER_NAME, url)
+        content = debug.get_debug_detail(exception)
+        print '*' * 50 + 'debug info end' + '*' * 50
+        if not settings.DEBUG or True:
+            from www.tasks import async_send_email
+            async_send_email(settings.NOTIFICATION_EMAIL, title, content)

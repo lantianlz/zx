@@ -36,19 +36,19 @@ class Frame(object):
             return u"value can not serilizable"
 
 
-def get_debug_detail(e, log_it=False):
+def get_debug_detail(e, log_it=True):
     exc_type, exc_value, exc_traceback = sys.exc_info()
     frames = []
     tb = exc_traceback
     frames.append(tb.tb_frame)
-    detail = u"system error -Exception:%s\n" % e
+    detail = u"system error -Exception:\n%s\n\ndetail info is:\n" % e
     while tb.tb_next:
         tb = tb.tb_next
         fm = Frame(tb)
         detail += fm.print_path()
         detail += u"\nlocals variables:\n"
         detail += fm.print_local()
-        detail += u"\n-------------------------------------------------------\n"
+        detail += u"\n" + "-" * 100 + "\n"
     if log_it:
         logging.error(detail)
     else:

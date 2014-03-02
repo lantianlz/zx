@@ -16,7 +16,7 @@ import sys
 SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 
-SERVER_NAME = 'WEB'
+SERVER_NAME = 'ZHIXUAN_WEB0'
 SERVER_DOMAIN = 'zhixuan.com'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
 
@@ -25,7 +25,7 @@ EMAIL_HOST_USER = 'service@zhixuan.com'
 EMAIL_HOST_PASSWORD = 'zhixuan2013'
 EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = '25'
-NOTIFICATION_EMAIL = ['lantian-lz@163.com', '286394973@qq.com']   # todo 替换成webteam
+NOTIFICATION_EMAIL = ['web@zhixuan.com']
 
 if DEBUG:
     DB_USER, DB_PWD, DB_HOST = '', '', ''
