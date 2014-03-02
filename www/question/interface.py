@@ -6,7 +6,8 @@ from django.db import transaction
 
 from common import utils, debug, cache
 from www.account.interface import UserBase
-from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion
+from www.message.interface import UnreadCountBase
+from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer
 
 
 dict_err = {
@@ -150,6 +151,7 @@ class AnswerBase(object):
 
         for answer in answers:
             answer.from_user = answer.get_from_user()
+            answer.content = utils.replace_at_html(answer.content)
             answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
         return answers
 
@@ -171,14 +173,25 @@ class AnswerBase(object):
             answer = Answer.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, content=content,
                                            question=question, ip=ip)
 
+            # 添加at信息
+            if content.find('@') != -1:
+                at_usernicks = utils.select_at(content)
+                for nick in at_usernicks:
+                    at_user = UserBase().get_user_by_nick(nick)
+                    if at_user:
+                        AtAnswer.objects.create(answer=answer, user_id=at_user.id)
+                        if at_user.id != from_user_id and at_user.id != to_user_id:
+                            # 发送未读消息数通知
+                            UnreadCountBase().update_unread_count(at_user.id, code='at_answer')
+
+            # 更新未读消息
+            if from_user_id != to_user_id:
+                UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
+
+            # 更新回答数冗余信息
             question.answer_count += 1
             question.last_answer_time = datetime.datetime.now()
             question.save()
-
-            if from_user_id != to_user_id:
-                # 更新未读消息
-                from www.message.interface import UnreadCountBase
-                UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
 
             transaction.commit(using=QUESTION_DB)
             return True, answer
@@ -193,6 +206,9 @@ class AnswerBase(object):
     def get_my_received_answer(self, user_id):
         return Answer.objects.select_related('question').filter(to_user_id=user_id, state=True)\
             .exclude(from_user_id=user_id).order_by('-id')
+
+    def get_at_answers(self, user_id):
+        return [aa.answer for aa in AtAnswer.objects.select_related('answer').filter(user_id=user_id)]
 
 
 class QuestionTypeBase(object):
@@ -241,7 +257,7 @@ class LikeBase(object):
 
             # 不支持自赞
             to_user_id = answer.from_user_id
-            if from_user_id == answer.from_user_id:
+            if from_user_id == to_user_id:
                 transaction.rollback(QUESTION_DB)
                 return False, dict_err.get(105)
 

@@ -143,3 +143,29 @@ def render_email_template(template_path='', context={}):
 
 # 判断user是否为user对象获取user id
 get_uid = lambda user: user.id if hasattr(user, 'id') else str(user)
+
+
+def select_at(s):
+    """
+    @attention: 寻找at对象名称
+    """
+    #@提到的用户名称必须是：中文，英文字符，数字，下划线，减号这四类
+    p = re.compile(u'@([\w\-\u4e00-\u9fa5]+)', re.I)
+    return list(set(p.findall(s)))  # 去掉重复提到的人
+
+
+def replace_at_html(value):
+    """
+    @attention: 从内容中提取@信息
+    """
+    def _re_sub(match):
+        """
+        @attention: callback for re.sub
+        """
+        nick = match.group(1)
+        return '@<a href="/n/%(nick)s">%(nick)s</a>' % dict(nick=nick)
+
+    tup_re = (u'@([\w\-\u4e00-\u9fa5]+)', _re_sub)
+    p = re.compile(tup_re[0], re.DOTALL | re.IGNORECASE)
+    value = p.sub(tup_re[1], value)
+    return value

@@ -15,6 +15,7 @@ urlpatterns = patterns('',
                        url(r'^reset_password$', 'www.account.views.reset_password'),
                        url(r'^forget_password$', 'www.account.views.forget_password'),
                        url(r'^home$', 'www.question.views.question_home'),
+                       url(r'^n/(?P<nick>.*)$', 'www.account.views.get_user_by_nick'),
                        url(r'^account/', include('account.urls')),
                        url(r'^question/', include('question.urls')),
                        url(r'^daily/', include('daily.urls')),
@@ -22,15 +23,6 @@ urlpatterns = patterns('',
                        url(r'^message/', include('message.urls')),
                        url(r'^admin/', include('admin.urls')),
 
-                       # Examples:
-                       # url(r'^$', 'www.views.home', name='home'),
-                       # url(r'^www/', include('www.foo.urls')),
-
-                       # Uncomment the admin/doc line below to enable admin documentation:
-                       # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-                       # Uncomment the next line to enable the admin:
-                       # url(r'^admin/', include(admin.site.urls)),
 
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',

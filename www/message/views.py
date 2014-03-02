@@ -70,6 +70,17 @@ def received_answer(request, template_name='message/received_answer.html'):
 
 @member_required
 def at_answer(request, template_name='message/at_answer.html'):
+    answers = ab.get_at_answers(request.user.id)
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(answers, count=5, page=page_num).info
+    answers = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+    answers = ab.format_answers(answers)
+
+    # 异步清除未读消息数
+    async_clear_count_info_by_code(request.user.id, code='at_answer')
     unread_count_info = urb.get_unread_count_info(request.user)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 

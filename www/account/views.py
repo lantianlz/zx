@@ -12,6 +12,8 @@ from common import utils
 from www.account import interface
 from www.misc.decorators import member_required
 
+ub = interface.UserBase()
+
 
 def show_index(request):
     if request.user.is_authenticated():
@@ -46,7 +48,6 @@ def regist(request, template_name='account/regist.html'):
     nick = request.POST.get('nick', '').strip()
     password = request.POST.get('password', '').strip()
     if request.POST:
-        ub = interface.UserBase()
         flag, result = ub.regist_user(email, nick, password, ip=utils.get_clientip(request))
         if flag:
             user = auth.authenticate(username=email, password=password)
@@ -62,7 +63,6 @@ def regist(request, template_name='account/regist.html'):
 def forget_password(request, template_name='account/forget_password.html'):
     if request.POST:
         email = request.POST.get('email')
-        ub = interface.UserBase()
         flag, result = ub.send_forget_password_email(email)
         if not flag:
             error_msg = result
@@ -73,7 +73,6 @@ def forget_password(request, template_name='account/forget_password.html'):
 
 
 def reset_password(request, template_name='account/reset_password.html'):
-    ub = interface.UserBase()
     if not request.POST:
         code = request.REQUEST.get('code')
         user = ub.get_user_by_code(code)
@@ -100,9 +99,13 @@ def reset_password(request, template_name='account/reset_password.html'):
 
 
 @member_required
-def home(request, template_name='account/home.html'):
-    # todo 更新最后活跃时间
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+def get_user_by_nick(request, nick):
+    user = ub.get_user_by_nick(nick)
+    if user:
+        return HttpResponseRedirect(user.get_url())
+    else:
+        err_msg = u'未找到对应user'
+        return HttpResponse(err_msg)
 
 
 @member_required
@@ -116,7 +119,7 @@ def user_settings(request, template_name='account/change_profile.html'):
         nick = request.POST.get('nick')
         gender = request.POST.get('gender')
         birthday = request.POST.get('birthday')
-        ub = interface.UserBase()
+
         flag, result = ub.change_profile(request.user, nick, gender, birthday)
         if not flag:
             error_msg = result
@@ -132,7 +135,7 @@ def change_pwd(request, template_name='account/change_pwd.html'):
         old_password = request.POST.get('old_password')
         new_password_1 = request.POST.get('new_password_1')
         new_password_2 = request.POST.get('new_password_2')
-        ub = interface.UserBase()
+
         flag, result = ub.change_pwd(request.user, old_password, new_password_1, new_password_2)
         if not flag:
             error_msg = result
@@ -146,7 +149,7 @@ def change_email(request, template_name='account/change_email.html'):
     if request.POST:
         email = request.POST.get('email')
         password = request.POST.get('password')
-        ub = interface.UserBase()
+
         flag, result = ub.change_email(request.user, email, password)
         if not flag:
             error_msg = result
@@ -158,7 +161,7 @@ def change_email(request, template_name='account/change_email.html'):
 @member_required
 def verify_email(request, template_name='account/change_email.html'):
     code = request.GET.get('code')
-    ub = interface.UserBase()
+
     if not code:
         ub.send_confirm_email(request.user)
         success_msg = u'验证邮件发送成功，请登陆邮箱操作'
@@ -188,11 +191,18 @@ def security_question(request, template_name='account/security_question.html'):
 
 
 @member_required
+def invitation(request, template_name='account/invitation.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@member_required
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect('/')
 
-#@member_required
+
+# ===================================================ajax部分=================================================================#
+@member_required
 def get_user_info_by_id(request):
     '''
     根据用户id获取名片信息
@@ -217,8 +227,3 @@ def get_user_info_by_id(request):
         }
 
     return HttpResponse(json.dumps(infos))
-
-
-@member_required
-def invitation(request, template_name='account/invitation.html'):
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
