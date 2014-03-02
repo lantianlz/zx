@@ -260,7 +260,7 @@ body {background-color: #F0F4F7}
                     <a class="dropdown-toggle user" data-toggle="dropdown" data-target="#">
                         <img class='avatar avatar-circle' src="{{MEDIA_URL}}img/common/user3.jpg">
                         <span class="pl-3">{{ request.user.nick|str_display:5 }}</span>
-                        <span class="badge flash-badge" id="unread_count_total_nav_1">0</span>
+                        <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
                         <!-- <span class="caret"></span> -->
                     </a>
                     
@@ -278,7 +278,7 @@ body {background-color: #F0F4F7}
                         <li>
                             <a href="/message">
                                 <span class="glyphicon glyphicon-bell mr-10 f15"></span>消息中心
-                                <span class="badge flash-badge" id="unread_count_total_nav_2">0</span>
+                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
                             </a>
                         </li>
                         <li role="presentation" class="divider"></li>

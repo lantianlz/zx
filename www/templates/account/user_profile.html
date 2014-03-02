@@ -75,9 +75,19 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
+	// 左侧切换事件
 	$('.stats a').bind('click', function(){
 		$('.user-profile-main a[href='+$(this).attr('href')+']').tab('show');
 	});
+
+	$('.avatar-100')
+	.bind('mouseenter', function(){
+		$(this).addClass('avatar-spin');
+	})
+	.bind('mouseleave', function(){
+		$(this).removeClass('avatar-spin');
+		//animation-play-state
+	})
 });
 </script>
 {% endblock %}
@@ -85,7 +95,7 @@ $(document).ready(function(){
 {% block container_content %}
 
 <div class="user-profile-left col-md-4 text-center">
-	<div class="profile pt-80">
+	<div class="profile pt-80 ">
 		<img class="avatar-100 avatar-circle" src="/static/img/common/user3.jpg">
 	</div>
 	<div class="username">
@@ -243,10 +253,10 @@ $(document).ready(function(){
 			</ul>
 		</div>
 		<div class="tab-pane fade" id="following">
-			following
+			暂不开放
 		</div>
 		<div class="tab-pane fade" id="followers">
-			followers
+			暂不开放
 		</div>
 	</div>
 </div>

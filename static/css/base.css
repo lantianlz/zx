@@ -147,3 +147,22 @@
 .line-height-25: {
 	line-height: 25px;
 }
+
+a:focus {
+    outline: none;
+    -moz-outline: none;
+}
+
+.animation-paused{
+	-webkit-animation-play-state: paused;
+	-moz-animation-play-state: paused;
+	-ms-animation-play-state: paused;
+	animation-play-state: paused;
+}
+
+.animation-running{
+	-webkit-animation-play-state: running;
+	-moz-animation-play-state: running;
+	-ms-animation-play-state: running;
+	animation-play-state: running;
+}

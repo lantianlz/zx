@@ -62,6 +62,21 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 
 .placeholder { color: #aaa; }
 
+.avatar-25{
+    width: 25px;
+    height: 25px;
+}
+
+.avatar-35{
+    width: 35px;
+    height: 35px;
+}
+
+.avatar-100{
+    width: 100px;
+    height: 100px;
+}
+
 .avatar-circle{
     border-radius: 50%;
     transition: box-shadow 0.3s;
@@ -69,6 +84,36 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 
 .avatar-circle:hover{
     box-shadow: 0px 2px 4px #666666;
+}
+
+.avatar-spin{
+    -webkit-transform: rotateZ(0deg);
+    -moz-transform: rotateZ(0deg);
+    -ms-transform: rotateZ(0deg);
+    -transform: rotateZ(0deg);
+    
+    -webkit-animation: avatarspin 6s linear infinite;
+    -moz-animation: avatarspin 6s linear infinite;
+    -ms-animation: avatarspin 6s linear infinite;
+    animation: avatarspin 6s linear infinite;
+}
+
+@keyframes avatarspin{
+  to {
+    -webkit-transform: rotateZ(360deg);
+    -moz-transform: rotateZ(360deg);
+    -ms-transform: rotateZ(360deg);
+    -transform: rotateZ(360deg);
+  }
+}
+
+@-webkit-keyframes avatarspin{
+  to {
+    -webkit-transform: rotateZ(360deg);
+    -moz-transform: rotateZ(360deg);
+    -ms-transform: rotateZ(360deg);
+    -transform: rotateZ(360deg);
+  }
 }
 
 .tooltipster-content{
@@ -190,17 +235,3 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     color: #224e73;
 }
 
-.avatar-25{
-    width: 25px;
-    height: 25px;
-}
-
-.avatar-35{
-    width: 35px;
-    height: 35px;
-}
-
-.avatar-100{
-    width: 100px;
-    height: 100px;
-}
