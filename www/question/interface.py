@@ -240,7 +240,7 @@ class LikeBase(object):
                     return False, dict_err.get(104)
 
             # 不支持自赞
-            to_user_id = answer.question.get_user().id
+            to_user_id = answer.from_user_id
             if from_user_id == answer.from_user_id:
                 transaction.rollback(QUESTION_DB)
                 return False, dict_err.get(105)
