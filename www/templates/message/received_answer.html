@@ -80,53 +80,26 @@
 {% endblock %}
 {% block javascript %}
 <script type="text/javascript">
-$(document).ready(function(){
-	// 全选事件
-	var checkAll = $('.message-list .toolbar input[type=checkbox]');
-	checkAll.bind('click', function(){
+// $(document).ready(function(){
+// 	// 全选事件
+// 	var checkAll = $('.message-list .toolbar input[type=checkbox]');
+// 	checkAll.bind('click', function(){
 		
-		if(checkAll.attr('checked')){
+// 		if(checkAll.attr('checked')){
 			
-			$('.message-list input[type=checkbox]').attr('checked', true);
+// 			$('.message-list input[type=checkbox]').attr('checked', true);
 
-		} else {
+// 		} else {
 			
-			$('.message-list input[type=checkbox]').attr('checked', false);
-		}
-	})
-});
+// 			$('.message-list input[type=checkbox]').attr('checked', false);
+// 		}
+// 	})
+// });
 </script>
 {% endblock %}
 
 {% block message_main %}
 <ul class="message-list list-group only-top-border">
-	<li class="list-group-item toolbar">
-		<div class="row">
-			<form class="form-inline " role="form">
-				<div class="form-group pull-left">
-					<select class="form-control input-sm">
-						<option>显示全部信息</option>
-						<option>只显未读信息</option>
-						<option>只显已读信息</option>
-					</select>
-				</div>
-				<div class="form-group pull-right fix-top">
-					<div class="checkbox">
-					    <label>
-					        <input type="checkbox"> 全 选
-					    </label>
-				    </div>
-				</div>
-				<div class="form-group pull-right fix-top">
-					<a href="">删除</a>
-				</div>
-				<div class="form-group pull-right fix-top">
-					<a href="">标为已读</a>
-				</div>
-				
-			</form>
-		</div>
-	</li>
 	<li class="list-group-item">
 		<div class="message-item row">
 			<div class="col-md-1">
@@ -138,7 +111,7 @@ $(document).ready(function(){
 			</div>
 			<div class="col-md-3">
 				<div class="date text-right">2014-02-14 16:52:54</div>
-				<div class="text-right">
+				<div class="text-right hide">
 					<a href="#" class="delete">删除</a>
 					<input type="checkbox">
 				</div>

@@ -61,17 +61,6 @@ class QuestionBase(object):
             question.user = question.get_user()
         return questions
 
-    def format_answers(self, answers, request_user=None):
-        request_user_like_answer_ids = []
-        if request_user and answers:
-            request_user_likes = LikeBase().get_likes_by_question(answers[0].question, request_user.id)
-            request_user_like_answer_ids = [l.answer_id for l in request_user_likes]
-
-        for answer in answers:
-            answer.from_user = answer.get_from_user()
-            answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
-        return answers
-
     def validate_title(self, title):
         if len(title) < 10:
             return False, dict_err.get(100)
@@ -150,6 +139,20 @@ class QuestionBase(object):
         except Question.DoesNotExist:
             return None
 
+
+class AnswerBase(object):
+
+    def format_answers(self, answers, request_user=None):
+        request_user_like_answer_ids = []
+        if request_user and answers:
+            request_user_likes = LikeBase().get_likes_by_question(answers[0].question, request_user.id)
+            request_user_like_answer_ids = [l.answer_id for l in request_user_likes]
+
+        for answer in answers:
+            answer.from_user = answer.get_from_user()
+            answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
+        return answers
+
     @question_required
     @transaction.commit_manually(using=QUESTION_DB)
     def create_answer(self, question, from_user_id, content, ip=None):
@@ -159,7 +162,7 @@ class QuestionBase(object):
                 transaction.rollback(using=QUESTION_DB)
                 return False, dict_err.get(998)
 
-            flag, result = self.validate_content(content)
+            flag, result = QuestionBase().validate_content(content)
             if not flag:
                 transaction.rollback(using=QUESTION_DB)
                 return False, result
@@ -265,7 +268,6 @@ class LikeBase(object):
         for like in likes:
             like.from_user = UserBase().get_user_by_id(like.from_user_id)
         return likes
-
 
 
 class TagBase(object):
