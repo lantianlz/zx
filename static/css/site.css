@@ -1,5 +1,5 @@
 @charset "utf-8";
-body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;}
+body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #222}
 
 .zx-container{
     width: 1000px;
@@ -156,18 +156,30 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 }
 
 .list-flow li{
-    float: left;
+    /*float: left;*/
     padding-bottom: 10px;
     padding-left: 5px;
+    display: inline-block;
 }
 
 .gray-a>a{
     color: #999999;
     padding-right: 10px;
+    transition: color 0.5s;
 }
 
 .gary-a>a:hover{
+    color: black;
+}
+
+.gray-a>li>a{
     color: #999999;
+    padding-right: 10px;
+    transition: color 0.5s;
+}
+
+.gary-a>li>a:hover{
+    color: black;
 }
 
 .blue-a>a{
@@ -186,4 +198,9 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 .avatar-35{
     width: 35px;
     height: 35px;
+}
+
+.avatar-100{
+    width: 100px;
+    height: 100px;
 }
