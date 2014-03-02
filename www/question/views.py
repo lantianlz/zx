@@ -61,8 +61,11 @@ def question_detail(request, question_id, template_name='question/question_detai
     answers = ab.get_answers_by_question_id(question_id)
     answers = ab.format_answers(answers, request.user)
 
-    question_tags = tb.get_tags_by_question(question)
+    # 异步更新浏览次数
+    from www.tasks import async_add_question_view_count
+    async_add_question_view_count(question.id)
 
+    question_tags = tb.get_tags_by_question(question)
     # 标签
     tags = json.dumps(tb.format_tags_for_ask_page(tb.get_all_tags()))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))

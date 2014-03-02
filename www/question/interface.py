@@ -3,6 +3,7 @@
 import datetime
 import logging
 from django.db import transaction
+from django.db.models import F
 
 from common import utils, debug, cache
 from www.account.interface import UserBase
@@ -117,6 +118,12 @@ class QuestionBase(object):
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
             return False, dict_err.get(999)
+
+    def add_question_view_count(self, question_id):
+        '''
+        @note: 更新浏览次数
+        '''
+        Question.objects.filter(id=question_id).update(views_count=F('views_count') + 1)
 
     def get_questions_by_type(self, question_type_domain=None):
         ps = dict(state=True)
@@ -242,7 +249,6 @@ class LikeBase(object):
         '''
         try:
             assert all((answer, from_user_id, ip))
-            from django.db.models import F
             is_anonymous = False
             if from_user_id:
                 if Like.objects.filter(from_user_id=from_user_id, answer=answer):
