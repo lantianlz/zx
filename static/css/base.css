@@ -6,6 +6,7 @@
 .hidden{visibility:hidden}
 .none{display:none}
 .block{display:block;}
+.inline-block{display: inline-block;}
 .tl{text-align:left}
 .tc{text-align:center}
 .tr{text-align:right}
