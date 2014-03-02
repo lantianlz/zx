@@ -52,6 +52,9 @@ class Notice(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, db_index=True)  # 创建时间
     author_readed = models.BooleanField(default=False)  # 是否已读
 
+    class Meta:
+        ordering = ["-id"]
+
 
 '''
 class GlobalNotice(models.Model):

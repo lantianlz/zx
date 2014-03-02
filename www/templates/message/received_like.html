@@ -120,6 +120,7 @@
 {% block javascript %}{% endblock %}
 
 {% block message_main %}
+{% if likes %}
 <div>
 	<ul class="tml-message-list">
 		{% for like in likes %}
@@ -139,4 +140,7 @@
 	</ul>
 	{{page_params|paging:request}}
 </div>
+{% else %}
+<div class="alert alert-success popmsg" id="divSuccess">暂无</div>
+{% endif %}
 {% endblock %}

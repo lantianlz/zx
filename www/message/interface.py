@@ -6,7 +6,7 @@ import json
 from django.db import transaction
 
 from common import utils, debug, cache
-from www.message.models import UnreadCount, UnreadType
+from www.message.models import UnreadCount, UnreadType, Notice
 
 
 dict_err = {
@@ -127,3 +127,6 @@ class UnreadCountBase(object):
         """
         if code and user_id and int(UnreadCountBase().get_unread_count_info(user_id).get(code, 0)) > 0:
             UnreadCountBase().update_unread_count(user_id, code, operate='clear')
+
+    def get_system_message(self, user_id):
+        return Notice.objects.filter(user_id=user_id)

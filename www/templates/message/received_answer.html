@@ -85,6 +85,7 @@
 {% endblock %}
 
 {% block message_main %}
+{% if answers %}
 <ul class="message-list list-group only-top-border">
 	{% for answer in answers %}
 	<li class="list-group-item">
@@ -112,4 +113,7 @@
 	{% endfor %}
 </ul>
 {{page_params|paging:request}}
+{% else %}
+<div class="alert alert-success popmsg" id="divSuccess">暂无</div>
+{% endif %}
 {% endblock %}

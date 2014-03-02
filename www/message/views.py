@@ -19,6 +19,16 @@ ab = interface_question.AnswerBase()
 
 @member_required
 def system_message(request, template_name='message/system_message.html'):
+    system_messages = urb.get_system_message(request.user.id)
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(system_messages, count=5, page=page_num).info
+    system_messages = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    # 异步清除未读消息数
+    async_clear_count_info_by_code(request.user.id, code='system_message')
     unread_count_info = urb.get_unread_count_info(request.user)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
