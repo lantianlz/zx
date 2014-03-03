@@ -77,6 +77,11 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     height: 100px;
 }
 
+.avatar-300{
+    width: 300px;
+    height: 300px;
+}
+
 .avatar-circle{
     border-radius: 50%;
     transition: box-shadow 0.3s;

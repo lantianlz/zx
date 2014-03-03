@@ -1,0 +1,223 @@
+body {background-color: #F0F4F7}
+
+.container_content{
+    background-color: white;
+    border-radius: 5px;
+    border: solid 1px lightgray;
+    padding-bottom: 20px;
+    /*margin-left: 0px;*/
+    /*margin-right: 0px;*/
+    margin-top: 70px;
+}
+
+.login-user a{
+    text-decoration: none;
+}
+
+.login-user a:hover{
+    color: #fff;
+    text-decoration: none;
+}
+
+.un-login-user{
+    margin-top: 15px;
+}
+
+.un-login-user .regist{
+    color: #fc8936;
+    margin-right: 10px;
+}
+
+.un-login-user .regist:hover{
+    color: #fc8936;
+    text-decoration: underline;
+}
+
+.un-login-user .login{
+    color: #428bca;
+}
+
+.un-login-user .login:hover{
+    text-decoration: underline;
+    color: #428bca;
+}
+
+.login-user1 .dropdown-toggle{
+    line-height: 25px;
+}
+
+.login-user .avatar{
+    width: 25px;
+    height: 24px;
+}
+
+.login-user .user{
+    font-size: 14px;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.img-logo img{
+    padding-top: 12px;
+}
+
+.navbar-inverse .navbar-nav .active a{
+    background-color: #888888;
+}
+
+.navbar-inverse .navbar-nav .active a:hover{
+    background-color: #888888;
+}
+
+.dropdown-menu{
+    background-color: #eeeeee;
+}
+
+.dropdown-menu>li>a{
+    color: #555555;
+    transition: background-color 0.5s; 
+}
+
+.dropdown-menu .divider{
+    background-color: #bebebe;
+}
+
+.dropdown-menu>li>a:hover{
+    background-color: #cacaca;
+}
+
+.zx-header{
+    padding-top: 5px;
+}
+
+.zx-logo{
+    padding-right: 58px;
+    color: #428bca;
+    font-size: 32px;
+    text-shadow: 1px 1px 0 #D0E0F1;
+}
+
+.zx-logo:hover{
+    text-decoration: none;
+    color: #428bca;
+}
+
+.zx-slogan{
+    color: #555555;
+    margin-right: 20px;
+}
+
+.zx-navbar{
+    background-color: white;
+    box-shadow: 1px 1px 1px #b9b9b9;
+    border-bottom: solid 1px #b9b9b9;
+}
+
+.navbar-nav .active{
+    border-bottom: solid 3px #428bca;
+}
+
+.navbar-nav .active a{
+    color: #428bca;
+}
+
+.navbar-nav .active a:hover{
+    border-bottom: solid 0px #428bca;
+}
+
+.navbar-nav>li{
+    margin-right: 7px;
+}
+
+.navbar-nav>li>a:hover{
+    color: #428bca;
+    background-color: transparent;
+    border-bottom: solid 3px #428bca;
+}
+
+.navbar-nav>li>a{
+    font-size: 17px;
+    color: #555555;
+    transition: color 0.5s;
+}
+
+.login-user .user:hover{
+    background-color: none; 
+    color: #555555;
+    border-bottom: 0px;
+}
+
+.flash-badge{
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+    animation-duration: 3s;
+    animation-name: flashbadge;
+    animation-iteration-count: infinite;
+    -webkit-animation: flashbadge 3s infinite;
+    box-shadow: 50%;
+}
+
+
+@keyframes flashbadge{
+  from {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+  50%{
+    background-color: orange;
+    box-shadow: 0 0 10px orange;
+  }
+  to {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+}
+
+@-webkit-keyframes flashbadge{
+  from {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+  50%{
+    background-color: orange;
+    box-shadow: 0 0 10px orange;
+  }
+  to {
+    background-color: #999999;
+    box-shadow: 0 0 1px #666666;
+  }
+}
+
+.flashborder{
+    box-shadow: 0px 0px 4px  #f1f1f1;
+    animation-duration: 3s;
+    animation-name: flashborder;
+    animation-iteration-count: infinite;
+    -webkit-animation: flashborder 3s infinite;
+}
+
+@keyframes flashborder{
+  from {
+    box-shadow: 0 0 1px 1px #f1f1f1;
+  }
+  50%{
+    box-shadow: 0 0 10px 1px #dddddd;
+  }
+  to {
+    box-shadow: 0 0 1px 1px #dddddd;
+  }
+}
+
+@-webkit-keyframes flashborder{
+  from {
+    box-shadow: 0 0 4px #f1f1f1;
+  }
+  50%{
+    box-shadow: 0 0 15px #dddddd;
+  }
+  to {
+    box-shadow: 0 0 4px #f1f1f1;
+  }
+}

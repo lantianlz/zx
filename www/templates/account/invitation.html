@@ -2,73 +2,8 @@
 
 {% block title %}社区绑定{% endblock %}
 
-{% block css %}
-<style type="text/css">
-.zx-invitation .form-control[readonly]{
-	cursor: pointer;
-}
-
-.zx-invitation span.used{
-	color: #428bca;
-	font-size: 28px;
-	text-shadow: 2px 2px 4px #888888;
-}
-
-.zx-invitation span.un-used{
-	color: #666666;
-	font-size: 28px;
-	/*text-shadow: 0px 0px 2px #666666;*/
-}
-
-.zx-invitation input.used{
-	font-style: italic;
-}
-
-.zx-invitation input.used[readonly]{
-	font-style: italic;
-	cursor: not-allowed;
-}
-
-.zx-invitation{
-	padding-left: 20px;
-	padding-right: 20px;
-}
-
-.invited{
-	padding: 10px;
-	background-color: #428bca;
-	color: #ffffff;
-	box-shadow: 2px 2px 4px #666666;
-}
-
-.invited-persons{
-	padding-top: 10px;
-	padding-left: 10px;
-}
-
-.invited-persons .avatar{
-	width: 45px;
-	height: 45px;
-	margin-left: 5px;
-}
-
-.invited-persons .name{
-	font-size: 12px;
-	text-align: center;
-	width: 57px;
-}
-</style>
-{% endblock %}
-{% block javascript %}
-<script type="text/javascript">
-	$(document).ready(function(){
-		// 未使用的邀请链接单击选中全文本
-		$('.zx-invitation input').not('.used').bind('click', function(){
-			$(this).select();
-		})
-	});
-</script>
-{% endblock %}
+{% block css %}{% endblock %}
+{% block javascript %}{% endblock %}
 
 {% block settings_main %}
 <div class="zx-invitation">

@@ -2,65 +2,14 @@
 
 {% load custom_tags %}
 {% block title %}我要提问{% endblock %}
-{% block javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-    /*
-    var text_tags = new $.TextboxList('#question_tags_input', {
-        bitsOptions: {
-            box: {deleteButton: true}
-        },
-        unique: true, 
-        max: 10,
-        plugins: {
-            autocomplete: {
-                minLength: 1,
-                queryRemote: true,
-                placeholder: '添加标签',
-                highlight: false,
-                remote: {url: '/question/get_tags' }
-            }
-        }
-
-    });
-    //text_tags.add('John Doe').add('Jane Roe');
-    */
-
-    
-});
-</script>
-{% endblock %}
-{% block css %}
-<style type="text/css">
-.ask-title{
-    border-bottom: solid 1px #e6e6e6;
-}
-
-.ask-main{
-    margin-top: 35px;
-}
-
-.ask-btn{
-    padding-right: 0px;
-}
-
-.question-content{
-    border: solid 1px #ddd;
-    border-radius: 4px;
-}
-
-.tag-title{
-    margin-bottom: 5px;
-}
-
-</style>
-{% endblock %}
+{% block javascript %}{% endblock %}
+{% block css %}{% endblock %}
 {% block question_main%}
 <div class="ask-title">
     <h2>问个问题</h2>
 </div>
 
-<div class="ask-main">
+<div class="ask-main mt-35">
     <form role="form" method='post' action='/question/ask_question'>
         <div class="form-group">
             <select name="question_type" id="sel_question_type" class="form-control">
@@ -68,9 +17,9 @@ $(document).ready(function(){
                 {% question_type_option_display %}
             </select>
         </div>
-        <div class="form-group" id="div_tags">
+        <div class="form-group auto-hide" id="div_tags">
             <!-- <input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder=""> -->
-            <div class="tag-title">将你的提问归类至子话题 :</div>
+            <div class="tag-title mb-5">将你的提问归类至子话题 :</div>
             <label class="checkbox-inline">
                 <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
             </label>
@@ -91,7 +40,7 @@ $(document).ready(function(){
                     <span class="glyphicon glyphicon-question-sign cl_gray"></span>
                 </label>
             </div>
-            <div class="col-md-6 text-right ask-btn">
+            <div class="col-md-6 text-right ask-btn pr-0">
                 <button type="submit" class="btn btn-primary">我要提问</button>
             </div>
         </div>

@@ -1,0 +1,54 @@
+/**********************************************我的邀请*******************************************************/
+.zx-invitation .form-control[readonly]{
+	cursor: pointer;
+}
+
+.zx-invitation span.used{
+	color: #428bca;
+	font-size: 28px;
+	text-shadow: 2px 2px 4px #888888;
+}
+
+.zx-invitation span.un-used{
+	color: #666666;
+	font-size: 28px;
+	/*text-shadow: 0px 0px 2px #666666;*/
+}
+
+.zx-invitation input.used{
+	font-style: italic;
+}
+
+.zx-invitation input.used[readonly]{
+	font-style: italic;
+	cursor: not-allowed;
+}
+
+.zx-invitation{
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.invited{
+	padding: 10px;
+	background-color: #428bca;
+	color: #ffffff;
+	box-shadow: 2px 2px 4px #666666;
+}
+
+.invited-persons{
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.invited-persons .avatar{
+	width: 45px;
+	height: 45px;
+	margin-left: 5px;
+}
+
+.invited-persons .name{
+	font-size: 12px;
+	text-align: center;
+	width: 57px;
+}

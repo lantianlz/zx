@@ -1,0 +1,31 @@
+/**********************************************服务协议*******************************************************/
+.list-group-item{
+	border-top: solid 1px #f1f1f1;
+}
+
+.split-border{
+	padding-top: 10px;
+}
+
+.sub-title{
+	padding-bottom: 20px;
+	padding-top: 10px;
+	font-size: 22px;
+}
+
+.text{
+	color: #888888;
+	text-indent: 28px;
+	padding-bottom: 15px;
+}
+
+.text ul{
+	list-style: disc outside none;
+	padding-left: 57px;
+}
+
+.text ul>li{
+	margin: 0px;
+	padding: 0px;
+	text-indent: 0px;
+}

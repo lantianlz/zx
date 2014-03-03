@@ -3,528 +3,14 @@
 {% load custom_filters %}
 {% block title %}{{question.title|str_display:20}}{% endblock %}
 
-{% block javascript %}
-<script type="text/javascript" src="{{MEDIA_URL}}js/question.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
+{% block javascript %}{% endblock %}
 
-        // 导航事件
-        /*
-        $('.replies .nav-tabs a').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-
-        $('#ul_replies').hide('fast').show('fast');
-        });
-        */
-
-        // 按钮点击事件 IE直接点还不行,非要js
-        $('.not-login .btn-login').bind('click', function(){
-            window.location.href = '/login';
-        });
-        $('.not-login .btn-regist').bind('click', function(){
-            window.location.href = '/regist';
-        });
-
-        // 回答工具条显示隐藏事件
-        $('#ul_replies .list-group-item')
-        .bind('mouseenter', function(){
-          $(this).find('.reply-tools .autohide').show();
-        })
-        .bind('mouseleave', function(){
-          $(this).find('.reply-tools .autohide').hide();
-        });
-        // 评论工具条显示隐藏事件
-        $('.reply-comments .comment')
-        .bind('mouseenter', function(){
-          $(this).find('.comment-date .autohide').show();
-        })
-        .bind('mouseleave', function(){
-          $(this).find('.comment-date .autohide').hide();
-        });
-        
-      
-        // 评论打开关闭事件
-        $('.reply-tools .answer-comments').bind('click', function(){
-          var target = $(this).parent().next();
-          
-          if(target.css('display') === 'block'){
-            target.hide('fast');
-          } else {
-            target.show('fast');
-          }
-        });
-
-        // 邀请打开关闭事件
-        $('.question-tools .invite').bind('click', function(){
-          var target = $(".topic-invite");
-          
-          if(target.css('display') === 'block'){
-            target.hide();
-          } else {
-            target.show();
-          }
-        });
-
-        // 回复某人事件
-        $('.answer-say-to').bind('click', function(){
-          $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ");
-          $('.answer-main .zx-textarea').focusEnd();
-        });
-      
-        // 修改问题弹出层自动选中问题类型和标签
-        var selectedQuestionType = "{{question.question_type.id}}",
-            selectedQuestionTags = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}";
-        if (selectedQuestionType){
-          // 自动选中问题类型
-          $('#sel_question_type').val(selectedQuestionType);
-          $('#sel_question_type').change();
-
-          // 自动选中问题标签
-          if(selectedQuestionTags){
-            var tempTags = selectedQuestionTags.split('-'), 
-                tags = {};
-
-            for(var i=0; i<tempTags.length; i++){
-              if(tempTags[i]){
-                tags[tempTags[i]] = true;
-              }
-            }
-
-            $('#div_tags input').filter(function(i){ 
-                return tags[$(this).val()]
-              }).attr('checked', true);
-          }
-        }
-
-        // 红心显示隐藏动画
-        var parent = null,
-            isRotating = false,
-            transformFun = function(target, deg){
-              target[0].style.webkitTransform = String.format("rotateY({0}deg)", deg);
-              target[0].style.mozTransform = String.format("rotateY({0}deg)", deg);
-              target[0].style.msTransform = String.format("rotateY({0}deg)", deg);
-              target[0].style.transform = String.format("rotateY({0}deg)", deg);
-            },
-            animateFun = function(target, isShowHeart){
-              // 开始旋转
-              jQuery({p: 0}).animate({p: 90}, {
-                duration: 500,
-                step: function(now, fx) {
-                  transformFun(target, now);
-                },
-                complete: function(){
-                  // 旋转到90度后将数字隐藏，将红心显示，
-                  isShowHeart ? target.find('.answer-like').show() : target.find('.answer-like').hide();
-                  isShowHeart ? target.find('.answer-like-count').hide() : target.find('.answer-like-count').show();
-                  // 再旋转到0度
-                  jQuery({p: 90}).animate({p: 0}, {
-                    duration: 500,
-                    step: function(now, fx) {
-                      transformFun(target, now);
-                    }
-                  });
-                }
-
-              });
-              
-            };
-        $('.answer-like-border .answer-like-count').bind('mouseenter', function(){
-          animateFun($(this).parent(), true);
-        });
-        $('.answer-like-border .answer-like').bind('mouseleave', function(){
-          animateFun($(this).parent(), false);
-        });
-
-        // 点击赞动作
-        $('.answer-like-border .answer-like').bind('click', function(){
-          var parent = $(this).parent(), 
-              temp = null,
-              postData = {'answer_id': $(this).data('answer_id')};
-
-          ajaxSend("/question/like_answer", postData, function(data){
-            if(data['flag'] != '0'){
-              alert(data['result']);
-              return;
-            }
-
-            // 添加动画
-            parent.append('<span class="animate-like glyphicon glyphicon-heart"></span>');
-            temp = parent.find('.animate-like');
-            temp.animate({
-              opacity: 0.01,
-              fontSize: 25,
-              top: 11,
-              left: 10
-            }, 500, function(){
-              temp.remove();
-
-              parent.find('.answer-like')
-              .removeClass('glyphicon-heart-empty')
-              .addClass('glyphicon-heart')
-              .css({'color': 'red'});
-
-              parent.find('.answer-like-count')
-              .text(parseInt(parent.find('.answer-like-count').text()) + 1);
-            });
-
-          });
-
-        })
-
-        // 精华盖章动画
-        var jinghua = $('.jinghua img');
-        jinghua.show()
-        .css({'width': '444.5px', 'height': '385px'})
-        .animate({'width': '254', 'height': '220px', 'opacity': '0.6'}, 500)
-        .animate({'width': '102px', 'height': '88px', 'opacity': '0.99'}, 50);
-
-    });
-</script>
-{% endblock %}
-
-{% block css %}
-<style type="text/css">
-
-.zx-container-main .question-entry{
-    float: left;
-    /*padding-top: 25px;*/
-    width: 100%;
-}
-
-.zx-container-main .question-entry .topic{
-    border-radius: 4px;
-    padding: 15px;
-    border: solid 1px #ddd;
-}
-
-.zx-container-main .question-entry .topic-content{
-    padding-top: 25px;
-    font-size: 14px;
-    line-height: 25px;
-}
-
-.zx-container-main .question-entry .question-date{
-    font-size: 12px;
-}
-
-.zx-container-main .replies{
-    width: 100%;
-    padding-top: 25px;
-}
-
-.zx-container-main .reply-header{
-    padding: 15px 5px 5px 5px;
-}
-
-
-.zx-container-main .reply-header .user-name a{
-    color: #333333;
-    font-size: 12px;
-}
-
-.zx-container-main .reply-content{
-    font-size: 14px;
-    padding-top: 10px;
-    padding-bottom: 15px;
-    line-height: 25px;
-}
-
-.zx-container-main .reply-main .vote{
-    padding-left: 30px;
-    padding-top: 10px;
-}
-
-.zx-container-main .reply-main .vote .btn-group-vertical{
-    width: 90%;
-}
-
-
-.answer-title{
-  border-bottom: solid 1px #e6e6e6;
-}
-
-.answer-main{
-  margin-top: 15px;
-  border: solid 1px #e6e6e6;
-  border-radius: 5px;
-}
-
-.answer-main .editor{
-  margin-bottom: 0px;
-}
-
-.answer-main button{
-  margin-top: 15px;
-}
-
-.not-login{
-  font-size: 12px;
-}
-
-.not-login .title{
-  font-size: 12px;
-  padding: 25px 0 15px 0;
-}
-
-.not-login .content{
-  font-size: 12px;
-  padding-bottom: 15px;
-  line-height: 22px;
-}
-
-.not-login .links{
-  margin-bottom: 20px;
-}
-
-.not-login .lock{
-  padding: 15px 0 0 30px;
-}
-
-.vote .glyphicon{
-  font-size: 16px;
-}
-
-.vote .glyphicon-heart{
-  color: red;
-}
-
-.breadcrumb{
-  margin-top: 25px;
-  border: solid 1px #ddd;
-}
-
-.replies-sort{
-  margin-top: 5px;
-}
-
-.my-reply{
-  background-color: #f1f1f1;
-}
-
-.question-tools{
-    font-size: 12px;
-    /*float: right;*/
-    padding-right: 10px;
-}
-
-.remove-reply{
-    font-size: 12px;
-    padding-top: 15px;
-    width: 90%;
-    text-align: center;
-}
-
-.question-content{
-    border: solid 1px #ddd;
-    border-radius: 4px;
-}
-
-.jinghua img{
-  width: 127px;
-  height: 110px;
-  position: absolute;
-  right: 40px;
-  display: none;
-  opacity: 0.1;
-  top: 85px;
-  z-index: 99;
-}
-
-.topic-tags ul.list-flow{
-  padding: 10px 5px 10px 10px;
-}
-
-.topic-footer{
-  margin-bottom: 7px;
-}
-
-.topic-invite{
-  /*margin-top: 7px;*/
-  position: relative;
-}
-
-.topic-invite .invite-item{
-  border-bottom: 1px solid #f1f1f1;
-  padding-top: 10px;
-}
-
-.topic-invite .invite-person-info{
-  padding-left: 15px;
-  font-size: 12px;
-}
-
-.topic-invite .invite-person-info .name{
-  padding-top: 5px;
-}
-
-.topic-invite .invite-person-info .des{
-  padding-top: 10px;
-}
-
-.topic-invite .arrow-in{
-  width: 0px;
-  height: 0px;
-  border: 7px solid transparent;
-  border-top: 0px;
-  position: absolute;
-  top: -7px;
-  right: 165px;
-  z-index: 101;
-  border-bottom-color: #ffffff;
-}
-
-.topic-invite .arrow-out{
-  width: 0px;
-  height: 0px;
-  border: 7px solid transparent;
-  border-top: 0px;
-  position: absolute;
-  top: -8px;
-  right: 165px;
-  border-bottom-color: #dddddd;
-  z-index: 100;
-}
-
-.recommend-invite>ul>li{
-  width: 49.5%;
-}
-
-.filter-invite .search{
-  position: absolute;
-  left: 81%;
-  top: 27%;
-  font-size: 12px;
-  color: gray;
-  cursor: pointer;
-}
-
-.reply-tools .answer-date{
-  font-size: 12px;
-  color: #999999;
-  padding-right: 10px;
-}
-
-.reply-header .glyphicon-heart{
-  color: red;
-}
-
-.reply-header .answer-like{
-  font-size: 25px;
-  cursor: pointer;
-  position: absolute;
-  top: 11px;
-  left: 9px;
-}
-
-.reply-header .answer-like-count{
-  left: 2px;
-  position: absolute;
-  text-align: center;
-  top: 13px;
-  width: 40px;
-  cursor: pointer;
-}
-
-.reply-header .answer-like-border{
-  background-color: white;
-  padding: 22px;
-  position: absolute;
-  right: 10px;
-  top: -10px;
-  border-radius: 50%;
-  border: solid 1px #dddddd;
-  box-shadow: 0px 0px 0px 1px #dddddd;
-}
-
-.reply-header .animate-like{
-  position: absolute;
-  top: 5px;
-  left: 2px;
-  font-size: 40px;
-  opacity: 0.99;
-  color: red;
-  z-index: 99;
-  cursor: pointer;
-}
-
-.reply-tools{
-  font-size: 12px;
-  min-height: 16px;
-}
-
-.reply-comments{
-  padding-top: 5px;
-  display: none;
-  position: relative;
-}
-
-.reply-comments .arrow-in{
-  width: 0px;
-  height: 0px;
-  border: 7px solid transparent;
-  border-top: 0px;
-  position: absolute;
-  top: 6px;
-  left: 40px;
-  z-index: 101;
-  border-bottom-color: #ffffff;
-}
-
-.reply-comments .arrow-out{
-  width: 0px;
-  height: 0px;
-  border: 7px solid transparent;
-  border-top: 0px;
-  position: absolute;
-  top: 5px;
-  left: 40px;
-  border-bottom-color: #dddddd;
-  z-index: 100;
-}
-
-.reply-comments>ul{
-  padding-top: 7px;
-}
-
-.comment-main{
-  font-size: 12px;
-  padding-left: 0px;
-}
-
-.comment-username{
-  padding-bottom: 5px;
-}
-
-.comment-username a{
-  /*color: #224e73;*/
-}
-
-.comment-username a:hover{
-  /*color: #224e73;*/
-}
-
-.comment-content{
-  padding-bottom:  5px;
-}
-
-.comment-date{
-  color: #999999;
-}
-
-.comment-date .date{
-  padding-right: 10px;
-}
-
-.send-comment{
-  padding-left: 0px;
-}
-</style>
-{% endblock %}
+{% block css %}{% endblock %}
 
 {% block question_main%}
 <span class="jinghua">
-    <img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
+    <img src="{{MEDIA_URL}}img/common/jinghua1.png">
+</span>
 
 <ol class="breadcrumb">
     <li>
@@ -576,7 +62,7 @@
                 <span class="question-date">{{question.create_time}}</span>
             </div>
         </div>
-        <div class="topic-invite panel panel-default autohide">
+        <div class="topic-invite panel panel-default auto-hide">
             <span class="arrow-out"></span>
             <span class="arrow-in"></span>
             <div class="panel-body row">
@@ -714,7 +200,7 @@
                     </div>
                     <div class="col-md-6 text-right">
                         <span class="answer-like-border flashborder">
-                            <span class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} autohide answer-like" data-answer_id="{{answer.id}}"></span>
+                            <span class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like" data-answer_id="{{answer.id}}"></span>
                             <span class="answer-like-count">{{answer.like_count}}</span>
 
                         </span>
@@ -730,7 +216,7 @@
                         <span class="glyphicon glyphicon-share"></span>
                         回复
                     </a>
-                    <a class="answer-no-help autohide" href="javascript: void(0);">
+                    <a class="answer-no-help auto-hide" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-thumbs-down"></span>
                         没有帮助
                         <a class="answer-comments hide" href="javascript: void(0);">
@@ -738,20 +224,20 @@
                             88条评论
                         </a>
                     </a>
-                    <a class="answer-mark autohide hide" href="javascript: void(0);">
+                    <a class="answer-mark auto-hide hide" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-bookmark"></span>
                         收藏
                     </a>
-                    <a class="answer-share autohide hide" href="javascript: void(0);">
+                    <a class="answer-share auto-hide hide" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-share-alt"></span>
                         分享
                     </a>
-                    <a class="answer-report autohide hide" href="javascript: void(0);">
+                    <a class="answer-report auto-hide hide" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-flag"></span>
                         举报
                     </a>
                     {% if answer.from_user.id == request.user.id %}
-                    <a class="answer-remove autohide pull-right" href="javascript: void(0);">
+                    <a class="answer-remove auto-hide pull-right" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-trash"></span>
                         删除
                     </a>

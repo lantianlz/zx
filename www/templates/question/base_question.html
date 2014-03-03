@@ -4,181 +4,9 @@
 {% block title %}首页{% endblock %}
 
 {% block cheader %}
-<style type="text/css">
-body {background-color: #F0F4F7; font-family: "微软雅黑";}
-
-.zx-container-main{
-    min-height: 470px; 
-    padding-left: 25px;
-}
-
-.zx-container-main .search-bar{
-    height: 85px; 
-    width: 100%; 
-    padding: 20px;
-    background-color: #e7ecef;
-    margin-top: 25px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-.zx-container-main  .user-name{
-    display: inline;
-    /*color: #224e73;*/
-    font-size: 12px;
-}
-
-.zx-container-main .btn-default .badge{
-    background-color: lightgray;
-}
-.zx-container-right{
-    /*width: 400px; */
-    min-height: 470px; 
-    padding-right: 25px;
-}
-
-.zx-container-right .ask-question{
-    margin-top: 25px;
-    /*margin-right: 25px;*/
-}
-
-.zx-container-right .top5{
-    margin-top: 10px;
-    /*margin-right: 25px;*/
-}
-
-.zx-container-right .top5 .list-group-item{
-    border: 0;
-}
-
-.zx-container-right .top-num{
-    float: left; 
-    margin-right: 20px; 
-    width: 25px; 
-    height: 25px; 
-    background-color: #224e76; 
-    color: white; 
-    text-align: center; 
-    margin-top: 8px;
-    border-radius: 3px;
-}
-
-.zx-container-right .top-avatar{
-    float: left; 
-}
-
-.zx-container-right .top-info a{
-    font-size: 13px;
-    margin-left: 10px;
-}
-
-.zx-container-right .top-info span{
-    font-size: 12px;
-    margin-left: 10px;
-}
-
-.zx-container-right .intro .avatar img{
-    width: 65px;
-}
-
-.zx-container-right .intro .nick{
-    height: 65px;
-    line-height: 65px;
-    overflow: hidden;
-}
-
-.zx-container-right .intro a:hover{
-    text-decoration: none;
-}
-
-.zx-container-right .intro .bottom-border{
-    border-bottom: solid 1px #ddd;
-}
-
-.zx-container-right .intro .item{
-    border-left: solid 1px #ddd;
-    padding-top: 5px;
-}
-
-.zx-container-right .intro .item:first-child{
-    border-left: 0;
-}
-
-.statistics .title{
-    border-bottom: solid 1px #ddd;
-    padding: 5px;
-}
-
-.statistics .main .col-md-4{
-    padding-top: 5px;
-}
-
-.statistics .main .col-md-8{
-    padding-top: 5px;
-}
-
-.hot-tags .tag-title{
-    font-size: 12px
-}
-
-.hot-tags .panel-heading .tag-title{
-    margin-left: 10px;
-    font-size: 14px
-}
-
-.border-cover:before{
-    content: "";
-    position: absolute;
-    border-width: 30px;
-    border-radius: 50%;
-    transition: 0.5s ease;
-    border-color: transparent;
-    border-style: dashed;
-    width: 100%;
-    height: 100%;
-}
-
-.border-cover:hover:before{
-    border-width: 0px;
-    border-color: #999999;
-}
-</style>
-
-<script type="text/javascript">
-$(document).ready(function(){
-    $('.ask-question button').bind('click', function(){
-        window.location.href = '/question/ask_question';
-    });
-
-    var tags = {{tags|safe|default:"{}"}};
-
-    // 选择类型事件
-    $('#div_tags').hide();
-    $('#sel_question_type').bind("change", function(){
-        $('#div_tags').hide('fast');
-
-        var type = $(this).val();
-        if(!type) {
-            return;
-        }
-        var type_tags = tags[type];
-        if(!type_tags){
-            return;
-        }
-        $('#div_tags').show('fast').find('label').remove();
-        for (var i = type_tags.length - 1; i >= 0; i--) {
-            $('#div_tags').append(
-                String.format(
-                    '<label class="checkbox-inline"><input name="tag" type="checkbox" value="{0}"> {1}</label>', 
-                    type_tags[i][0], 
-                    type_tags[i][1]
-                )
-            );
-        };
-
-    });
-});
-</script>
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/question.css?v={{MEDIA_VERSION}}" />
+<script type="text/javascript" src="{{MEDIA_URL}}js/site/question.js?v={{MEDIA_VERSION}}"></script>
+<script type="text/javascript">var QUESTION_TAGS = {{tags|safe|default:"{}"}};</script>
 {% block javascript %}{% endblock %}
 {% block css %}{% endblock %}
 {% endblock %}
@@ -205,7 +33,9 @@ $(document).ready(function(){
     <div class="ask-question well">
         <div class="row">
             <div class="col-md-12">
-                <a href="/question/ask_question"><button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button></a>
+                <a href="/question/ask_question">
+                    <button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button>
+                </a>
             </div>
         </div>
     </div>
@@ -214,7 +44,9 @@ $(document).ready(function(){
     <div class="intro well">
         <div class="row">
             <div class="col-md-4 avatar">
-                <a href="{{request.user.get_url}}"><img class="avatar-circle" src="{{request.user.get_avatar}}"></a>
+                <a href="{{request.user.get_url}}">
+                    <img class="avatar-circle" src="{{request.user.get_avatar}}">
+                </a>
             </div>
             <div class="col-md-8 nick">
                 <a href="{{request.user.get_url}}">{{request.user.nick}}</a>
@@ -226,7 +58,10 @@ $(document).ready(function(){
     {% endif %}
 
     <div class="hot-tags panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-tags"></span><span class="tag-title">热门标签</span></div>
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-tags"></span>
+            <span class="tag-title">热门标签</span>
+        </div>
         <div class="panel-body">{% global_hotest_tags %}</div>
     </div>
     {% global_statistic %}

@@ -3,143 +3,27 @@
 {% load custom_filters %}
 {% block title %}收到的赞{% endblock %}
 
-{% block css %}
-<style type="text/css">
-.tml-message-list{
-	/*min-height: 400px;*/
-	list-style: none;
-	padding-left: 10px;
-	position: relative;
-}
-
-.tml-message-list:before{
-	content: '';
-	position: absolute;
-	width: 5px;
-	background-color: #3594cb;
-	top: 0px;
-	bottom: 0px;
-	margin-bottom: 60px;
-	left: 22%;
-	margin-left: -1.4%;
-}
-
-.tml-item{
-	height: 80px;
-	position: relative;
-	padding-right: 30px;
-}
-
-.tml-date{
-	position: absolute;
-	width: 14%;
-	/*background-color: red;*/
-}
-
-.tml-date .date{
-	display: block;
-	font-size: 12px;
-	color: #bdd0db;
-	text-align: right;
-}
-
-.tml-date .time{
-	display: block;
-	font-size: 21px;
-	color: #3594cb;
-	text-align: right;
-}
-
-.tml-user{
-	position: absolute;
-	left: 17%;
-	box-shadow: 0 0 5px #666666;
-	border-radius: 50%;
-	width: 45px;
-	height: 45px;
-	text-align: center;
-	padding-top: 5px;
-	background-color: #3594cb;
-	transition: background-color 0.5s;
-}
-
-.tml-user:hover{
-	background-color: white;
-}
-
-.tml-content{
-	position: relative;
-	margin-left: 26%;
-	line-height: 22px;
-	padding-top: 10px;
-	padding-left: 10px;
-	color: #ffffff;
-	min-height: 45px;
-	background-color: #3594cb;
-	box-shadow: 2px 2px 4px #666666;
-	border-radius: 3px;
-	font-size: 12px;
-	/*transition: box-shadow 0.5s;*/
-}
-
-.tml-content:after{
-	right: 100%;
-	border: solid transparent;
-	content: " ";
-	height: 0px;
-	width: 0px;
-	position: absolute;
-	border-width: 10px;
-	top: 10px;
-	border-right-color: #3594cb;
-}
-
-.tml-content:hover{
-	/*box-shadow: 2px 2px 4px #666666;*/
-}
-
-.tml-content a{
-	color: #ffffff;
-	text-decoration: underline;
-	padding-left: 4px;
-	padding-right: 4px;
-	font-size: 13px;
-}
-
-.tml-content a:hover{
-	color: #444444;
-}
-
-.tml-user .avatar{
-	width: 35px;
-	height: 35px;
-	border-radius: 50%;
-}
-</style>
-{% endblock %}
 {% block javascript %}{% endblock %}
 
 {% block message_main %}
 {% if likes %}
-<div>
-	<ul class="tml-message-list">
-		{% for like in likes %}
-		<li class="tml-item">
-			<div class="tml-date">
-				<span class="date">{{like.create_time|date:'Y-m-d'}}</span>
-				<span class="time">{{like.create_time|date:'H:i:s'}}</span>
-			</div>
-			<div class="tml-user"><img class="avatar" src="{{like.from_user.get_avatar}}"></div>
-			<div class="tml-content">用户
-				<a href="{{request.user.get_url}}">{{request.user.nick}}</a>
-				在提问 <a href="{{like.question.get_url}}">{{like.question.title|str_display:50}}</a>
-				中赞了你的回答
-			</div>
-		</li>
-		{% endfor %}
-	</ul>
-	{{page_params|paging:request}}
-</div>
+<ul class="tml-message-list">
+	{% for like in likes %}
+	<li class="tml-item">
+		<div class="tml-date">
+			<span class="date co8">{{like.create_time|date:'Y-m-d'}}</span>
+			<span class="time">{{like.create_time|date:'H:i:s'}}</span>
+		</div>
+		<div class="tml-user"><img class="avatar" src="{{like.from_user.get_avatar}}"></div>
+		<div class="tml-content">用户
+			<a href="{{like.from_user.get_url}}">{{like.from_user.nick}}</a>
+			在提问 <a href="{{like.question.get_url}}">{{like.question.title|str_display:50}}</a>
+			中赞了你的回答
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+{{page_params|paging:request}}
 {% else %}
 <div class="alert alert-success popmsg" id="divSuccess">暂无</div>
 {% endif %}

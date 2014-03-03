@@ -2,26 +2,8 @@
 
 {% block title %}帐号设置{% endblock %}
 
-{% block css %}
-<style type="text/css">
-.zx-settings-main .avatar img{
-	width: 300px;
-}
-</style>
-{% endblock %}
-{% block javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-	// 设置日期控件属性
-	$('#birthday-id').datetimepicker({
-    	format: 'yyyy-mm-dd',
-    	language: 'zh-CN',
-    	minView: 2,
-    	autoclose: true
-	});
-});
-</script>
-{% endblock %}
+{% block css %}{% endblock %}
+{% block javascript %}{% endblock %}
 
 {% block settings_main %}
 <form class="form-horizontal" role="form" method="post" action="/account/user_settings">
@@ -29,7 +11,7 @@ $(document).ready(function(){
 		<label class="col-sm-2 control-label">头像</label>
 		<div class="col-sm-10">
 			<p class="form-control-static avatar">
-				<img class="avatar-circle" src="{{MEDIA_URL}}{{request.user.avatar|default:'img/common/default.png'}}"></p>
+				<img class="avatar-300 avatar-circle" src="{{MEDIA_URL}}{{request.user.avatar|default:'img/common/default.png'}}"></p>
 			<div class="blank10"></div>
 			<input type="file"/>
 		</div>

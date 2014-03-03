@@ -1,135 +1,31 @@
-@charset "utf-8";
-
-body {
-    background: url("../img/common/login_bg.png") repeat scroll 0 0 #F6F7F1;
-}
-.container .bd{
-    margin: 0 auto;
-    text-align: center;
-    width: 320px;
-}
-.form .form-item {
-    margin-bottom: 20px;
-}
-.form .form-item {
-    margin-bottom: 20px;
-}
-.form .form-item input[type="email"] {
-    width: 320px;
-}
-.form .form-item input[type="password"] {
-    width: 320px;
-}
-.form .form-item input[type="input"] {
-    width: 320px;
-}
-.form .form-item input[readonly="1"] {
-    background: none repeat scroll 0 0 #F7F7F7;
-    color: #999999;
-}
-.form .form-item textarea {
-    height: 60px;
-    width: 500px;
-}
-.form .form-item .form-label {
-    color: #555555;
-    font-size: 16px;
-    margin: 0 0 0 2px;
-}
-.form .form-item .form-field {
-    margin-top: 5px;
-}
-.form .form-item p.desc {
-    color: #999999;
+.login-main{
+    margin-top: 100px;
     font-size: 12px;
-    margin: 5px 0 0 2px;
-}
-.form .form-item p.error {
-    color: #CC2211;
-    font-size: 12px;
-    margin: 5px 0 0 2px;
-}
-.form .form-buttons {
-    margin: 30px 0 20px;
-}
-.form.form-editor .notify-title {
-    color: #666666;
-    font-size: 12px;
-    line-height: 22px;
-    margin: 12px 0 0;
-}
-.form.form-editor .notify-title:before, .form.form-editor .notify-title:after {
-    content: "";
-    display: table;
-}
-.form.form-editor .notify-title:after {
-    clear: both;
-    height: 0;
-    visibility: hidden;
-}
-.form.form-editor .notify-title .notify-title-title {
-    float: left;
-    width: 75px;
+    /*min-height: 400px;*/
 }
 
-.form-item input[type="password"]{
-    width: 300px;
+.login-main .form-control{
+    height: 42px;
 }
 
-.bd .form-field textarea:focus, .bd .form-field input:focus, .bd .form-field textarea:focus, .bd .form-field input:focus {
-    border: 1px solid #8CB029;
-    box-shadow: 0 0 3px #8CB029;
+.login-main .form-group{
+    margin-top: 20px;
 }
 
- .bd .form-field input{
-    border: 1px solid #AAAAAA;
-    border-radius: 4px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;
-    float: left;
-    font-size: 18px;
-    height: 30px;
-    line-height: 30px;
-    padding: 6px 8px;
-    width: 300px;
+.login-main .xlwb{
+    /*
+    background: url({{MEDIA_URL}}img/common/is.png) no-repeat;
+    background-position: 0 -120px!important;
+    padding-left: 22px;
+    */
+    /*background-image: url({{MEDIA_URL}}img/common/xlwb.png);*/
 }
 
-.bd .btn-submit, .sign-page .bd .btn-submit {
-    background: none repeat scroll 0 0 #95B93D;
-    border: medium none;
-    color: #FFFFFF;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0;
-    padding: 10px;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
-    width: 340px;
-    display: inline-block;
-    border-radius: 5px;
-}
-
-
-.sign-in-btn .desc {
-    color: #999999;
-    font-size: 12px;
-    margin: 0 auto;
-    padding: 15px 0;
-    width: 318px;
-}
-
-.bd .sign-nav, .sign-page .bd .sign-nav {
-    color: #999999;
-    font-size: 14px;
-    margin: 50px 0 0;
-    padding: 20px 0;
-}
-
-.hd .logo, .sign-page .hd .logo {
-    background: url("../img/logo.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-    height: 56px;
-    margin: 0 auto 50px;
-    overflow: hidden;
-    width: 190px;
-    font-size: 36px;
-    color: #83A097;
+.login-main .txqq{
+    /*
+    background: url({{MEDIA_URL}}img/common/is.png) no-repeat;
+    background-position: 0 -2234px!important;
+    padding-left: 22px;
+    */
+    /*background-image: url({{MEDIA_URL}}img/common/txqq.png);*/
 }

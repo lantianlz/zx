@@ -4,24 +4,24 @@
     <head>
         <meta property="wb:webmaster" content="a8250d32b814c352" />
         <meta property="qc:admins" content="354154737762010516637570755" />
-        <meta charset="utf-8">
+        <meta charset="utf-8" />
         <title>{% block title %}{% endblock title %} - 智选网</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="author" content="simplejoy">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="author" content="simplejoy" />
         <meta name="keywords" content="股票问答 智选网" />
-        <meta name="description" content="智选网">
-        <link rel="shortcut icon" href="{{MEDIA_URL}}/img/common/favicon.ico">
+        <meta name="description" content="智选网" />
+        <link rel="shortcut icon" href="{{MEDIA_URL}}/img/common/favicon.ico" />
 
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/bootstrap/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/jquery.markitup/default.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/tooltipster.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/themes/tooltipster-shadow.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.Autocomplete.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/base.css">
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site.css">
-        <!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/kindeditor/kindeditor.css" rel="stylesheet"> -->
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/bootstrap/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/jquery.markitup/default.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/tooltipster.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/themes/tooltipster-shadow.css" />
+        <!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.css" /> -->
+        <!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.Autocomplete.css" /> -->
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/base.css?v={{MEDIA_VERSION}}" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site.css?v={{MEDIA_VERSION}}" />
+        <!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/kindeditor/kindeditor.css" rel="stylesheet" /> -->
 
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery-1.7.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.placeholder.js"></script>
@@ -31,10 +31,10 @@
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/respond.min.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/GrowingInput.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.Autocomplete.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.Autocomplete.Binary.js"></script>
+        <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/GrowingInput.js"></script> -->
+        <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.js"></script> -->
+        <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.Autocomplete.js"></script> -->
+        <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.Autocomplete.Binary.js"></script> -->
         <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/kindeditor/kindeditor-min.js"></script> -->
         <script type="text/javascript" src="{{MEDIA_URL}}js/common.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/site.js?v={{MEDIA_VERSION}}"></script>
@@ -69,9 +69,8 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">发送给</label>
                                 <div class="col-sm-9">
-                                    <!-- <input id='receiver_input' autocomplete="off" type="text" class="form-control" name="msm_receiver" placeholder="用户"> -->
                                     <label id="receiver_label" class="control-label"></label>
-                                    <input type="hidden" id="receiver_id" >
+                                    <input type="hidden" id="receiver_id">
                                 </div>
                             </div>
                             <div class="form-group">

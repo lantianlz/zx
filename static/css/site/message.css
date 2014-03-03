@@ -1,0 +1,179 @@
+/**********************************************系统消息*******************************************************/
+.tml-message-list{
+    /*min-height: 400px;*/
+    list-style: none;
+    padding-left: 10px;
+    position: relative;
+}
+
+.tml-message-list:before{
+    content: '';
+    position: absolute;
+    width: 5px;
+    background-color: #3594cb;
+    top: 0px;
+    bottom: 0px;
+    margin-bottom: 60px;
+    left: 22%;
+    margin-left: -1.4%;
+}
+
+.tml-item{
+    height: 80px;
+    position: relative;
+    padding-right: 30px;
+}
+
+.tml-date{
+    position: absolute;
+    width: 14%;
+    /*background-color: red;*/
+}
+
+.tml-date .date{
+    display: block;
+    font-size: 12px;
+    text-align: right;
+}
+
+.tml-date .time{
+    display: block;
+    font-size: 21px;
+    color: #3594cb;
+    text-align: right;
+}
+
+.tml-user{
+    position: absolute;
+    left: 17%;
+    box-shadow: 0 0 5px #666666;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    padding-top: 5px;
+    background-color: #3594cb;
+    transition: background-color 0.5s;
+}
+
+.tml-user:hover{
+    background-color: white;
+}
+
+.tml-content{
+    position: relative;
+    margin-left: 26%;
+    line-height: 22px;
+    padding-top: 10px;
+    padding-left: 10px;
+    color: #ffffff;
+    min-height: 45px;
+    background-color: #3594cb;
+    box-shadow: 2px 2px 4px #666666;
+    border-radius: 3px;
+    font-size: 12px;
+    /*transition: box-shadow 0.5s;*/
+}
+
+.tml-content:after{
+    right: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0px;
+    width: 0px;
+    position: absolute;
+    border-width: 10px;
+    top: 10px;
+    border-right-color: #3594cb;
+}
+
+.tml-content:hover{
+    /*box-shadow: 2px 2px 4px #666666;*/
+}
+
+.tml-content a{
+    color: #ffffff;
+    text-decoration: underline;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 13px;
+}
+
+.tml-content a:hover{
+    color: #444444;
+}
+
+.tml-user .avatar{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+/**********************************************收到的回答*******************************************************/
+
+.message-list{
+	min-height: 350px;
+	/*padding-top: 20px;*/
+	font-size: 13px;
+}
+
+.message-list .form-group{
+	padding-top: 0px;
+	border-top: 0px;
+}
+
+.message-list .list-group-item{
+	transition: 0.5s box-shadow;
+}
+
+.message-list .list-group-item:hover{
+	box-shadow: 2px 2px 4px #666666;
+	z-index: 99;
+}
+
+.message-list .avatar{
+	width: 45px;
+	height: 45px;
+	box-shadow: 0 0 4px #666666;
+	border-radius: 50%;
+}
+
+.message-list .from{
+	margin-bottom: 7px;
+	font-size: 12px;
+}
+
+.message-list .date{
+	margin-bottom: 7px;
+	font-size: 12px;
+}
+
+.message-list .delete{
+	font-size: 12px;
+}
+
+.message-list .fix-top{
+	padding-top: 8px;
+}
+
+.message-list .toolbar .checkbox{
+	margin-bottom: 0px;
+}
+
+.message-list .toolbar input[type=checkbox]{
+	/*margin-left: 0px;*/
+}
+
+.split-border{
+	padding-top: 15px;
+}
+
+.content>a{
+	text-decoration: none;
+	/*color: #2a6496;*/
+	font-size: 12px;
+}
+
+.content>a:hover{
+	text-decoration: underline;
+}

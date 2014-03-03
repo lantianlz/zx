@@ -1,0 +1,27 @@
+.regist-main{
+	font-size: 12px;
+	padding-top: 40px;
+}
+
+.regist-main .form-control{
+    height: 42px;
+}
+
+.regist-main .form-group{
+    margin-top: 20px;
+}
+
+.regist-main .sign-nav{
+	background: url({{MEDIA_URL}}img/common/sign-page-line.png) no-repeat 50% 0;
+	padding-top: 40px;
+	margin-top: 40px;
+}
+
+.regist-main .avatar{
+	width: 35px;
+	height: 35px;
+}
+
+.regist-main .inviter{
+	margin-right: 5px;
+}

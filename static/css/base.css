@@ -84,6 +84,7 @@
 .mt-5{margin-top: 5px;}
 .mt-10{margin-top: 10px;}
 .mt-15{margin-top: 15px;}
+.mt-35{margin-top: 35px;}
 .mb-0{margin-bottom: 0px;}
 .mb-5{margin-bottom: 5px;}
 .mb-10{margin-bottom: 10px;}
@@ -149,14 +150,14 @@
 	line-height: 25px;
 }
 
-a:focus {
-    outline: none;
-    -moz-outline: none;
-}
-
 a{
 	color: #259;
 	transition: color 0.5s;
+}
+
+a:focus {
+    outline: none;
+    -moz-outline: none;
 }
 
 a:hover{

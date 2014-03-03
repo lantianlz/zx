@@ -2,42 +2,10 @@
 
 {% block title %}注册{% endblock %}
 {% block css %}
-<style type="text/css">
-.regist-main{
-	font-size: 12px;
-	padding-top: 40px;
-}
-
-.regist-main .form-control{
-    height: 42px;
-}
-
-.regist-main .form-group{
-    margin-top: 20px;
-}
-
-.regist-main .sign-nav{
-	background: url({{MEDIA_URL}}img/common/sign-page-line.png) no-repeat 50% 0;
-	padding-top: 40px;
-	margin-top: 40px;
-}
-
-.regist-main .avatar{
-	width: 35px;
-	height: 35px;
-}
-
-.regist-main .inviter{
-	margin-right: 5px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/regist.css?v={{MEDIA_VERSION}}" />
 {% endblock %}
 
-{% block javascript %}
-<script type="text/javascript">
-
-</script>
-{% endblock %}
+{% block javascript %}{% endblock %}
 
 {% block container %}
 <div class="row regist-main">
