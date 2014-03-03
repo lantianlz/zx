@@ -259,8 +259,8 @@ body {background-color: #F0F4F7}
                 <li class="dropdown">
                     <a class="dropdown-toggle user" data-toggle="dropdown" data-target="#">
                         <img class='avatar avatar-circle' src="{{MEDIA_URL}}img/common/user3.jpg">
-                        <span class="pl-3">{{ request.user.nick|str_display:5 }}</span>
-                        <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
+                        <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
+                        <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span>
                         <!-- <span class="caret"></span> -->
                     </a>
                     

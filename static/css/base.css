@@ -72,6 +72,7 @@
 
 
 .ml-0{margin-left: 0px;}
+.ml--3{margin-left: -3px;}
 .ml-5{margin-left: 5px;}
 .ml-10{margin-left: 10px;}
 .ml-15{margin-left: 15px;}
@@ -151,6 +152,15 @@
 a:focus {
     outline: none;
     -moz-outline: none;
+}
+
+a{
+	color: #259;
+	transition: color 0.5s;
+}
+
+a:hover{
+	color: #259;
 }
 
 .animation-paused{

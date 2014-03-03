@@ -54,7 +54,7 @@
 }
 
 .question-list .item-question-profile a:hover{
-    text-decoration: none;
+    /*text-decoration: none;*/
 }
 
 .question-list .item-question-profile .statistic{
@@ -152,9 +152,8 @@
                         <div class="user-name">{{question.user.nick}}</div>
                     </a>
                     {% endif %}
-                    <span class="statistic" {% if question.is_hide_user %}style="margin-left:0;"{% endif %}>
-                        <a class="answers" href="#">{{question.answer_count}} 个回答</a>
-                        <a class="views" href="#">{{question.views_count}} 次浏览</a>
+                    <span class="statistic co8" {% if question.is_hide_user %}style="margin-left:0;"{% endif %}>
+                        {{question.answer_count}} 个回答 • {{question.views_count}} 次浏览
                     </span>
                     <span class="last-replay">{{question.create_time|time_format}}</span>
                 </div>
