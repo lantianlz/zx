@@ -1,5 +1,6 @@
 {% extends "base/base_home.html" %}
-
+{% load custom_tags %}
+{% load custom_filters %}
 {% block title %}个人主页{% endblock %}
 
 {% block cheader %}
@@ -8,173 +9,103 @@
 {% endblock %}
 
 {% block container_content %}
-
 <div class="user-profile-left col-md-4 text-center">
-	<div class="profile pt-80 ">
-		<img class="avatar-100 avatar-circle" src="/static/img/common/user3.jpg">
-	</div>
-	<div class="username">
-		<h3 class="ff-yahei fb">半夜没事瞎溜达</h3>
-	</div>
-	<div class="desc">
-		<p>漫漫人生路，谁不错几步！请关注我的微博 : http://weibo.com/zhejiushiwodeweibo</p>
-	</div>
-	<div class="stats pt-20">
-		<ul class="list-flow gray-a">
-			<li>
-				<a href="#questions"><span class="question-count block">14</span><span>提问</span></a>
-			</li>
-			<li>
-				<a href="#answers"><span class="question-count block">75</span><span>回答</span></a>
-			</li>
-			<li>
-				<a href="#following"><span class="question-count block">41</span><span>关注</span></a>
-			</li>
-			<li>
-				<a href="#followers"><span class="question-count block">177</span><span>粉丝</span></a>
-			</li>
-		</ul>
-	</div>
-	<div class="tools gray-a pl-50 pr-50 pt-10">
-		<button type="button" class="btn btn-default btn-xs unfollow pull-left">取消关注</button>
-		<a class="send-message pull-right f12" href="#" data-user_name="半夜没事乱溜达" data-user_id="1">
-			<span class="glyphicon glyphicon-envelope"></span> 私信ta
-		</a>
-	</div>
+    <div class="profile pt-80 ">
+        <img class="avatar-100 avatar-circle" src="{{user.get_avatar}}"></div>
+    <div class="username">
+        <h3 class="ff-yahei fb">{{user.nick}}</h3>
+    </div>
+    <div class="desc">
+        <p>{{user.des|default:"忙着发财，没能留下点介绍信息"}}</p>
+        {% if is_me and not uer.des %}<a href="/account/user_settings">立即设置</a>{% endif %}
+    </div>
+    <div class="stats pt-20">
+        <ul class="list-flow gray-a">
+            <li>
+                <a href="#questions">
+                    <span class="question-count block">{{user_question_count}}</span>
+                    <span>提问</span>
+                </a>
+            </li>
+            <li>
+                <a href="#answers">
+                    <span class="question-count block">{{user_answer_count}}</span>
+                    <span>回答</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% if is_me %}/message/received_like{% else %}javascript:void(0);{% endif %}">
+                    <span class="question-count block">{{user_liked_count}}</span>
+                    <span>被赞</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="tools gray-a pl-50 pr-50 pt-10 hide">
+        <button type="button" class="btn btn-default btn-xs unfollow pull-left">取消关注</button>
+        <a class="send-message pull-right f12" href="#" data-user_name="半夜没事乱溜达" data-user_id="1">
+            <span class="glyphicon glyphicon-envelope"></span>
+            私信ta
+        </a>
+    </div>
 </div>
 <div class="user-profile-main col-md-8">
-	<ul class="nav nav-pills pt-20 gray-a">
-	  <li class="active"><a href="#questions" data-toggle="pill">最新提问</a></li>
-	  <li><a href="#answers" data-toggle="pill">最新回答</a></li>
-	  <li><a href="#following" data-toggle="pill">TA的关注</a></li>
-	  <li><a href="#followers" data-toggle="pill">TA的粉丝</a></li>
-	</ul>
-	<div class="tab-content">
-		<div class="tab-pane active fade in" id="questions">
-			<ul class="list-group only-top-border">
-  				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">如何看待国金证券推出的佣金宝？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>13 个回答 • 165 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">从技术分析的角度，如何看待沪指2000点整数关口？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>25 个回答 • 312 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">奥赛康IPO被叫停，存量发行制度设计为何好心办坏事？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>332 个回答 • 3254 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">家具行业的出口转内销策略有用么？2014年如果海外市场回暖家具行业能否复苏？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>98 个回答 • 1165 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">农村用地资源比较丰富的上市公司具体如何从土改中受益？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>8 个回答 • 61 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">作为散户该如何看待券商的研报，如何参考研报来指导投资？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>32 个回答 • 241 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">个股期权的推出对于券商来说有哪些收益？这个业务最适合券商哪个部门开展？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>18 个回答 • 365 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a href="#">有观点认为第五轮牛市来了，如果这轮牛市到来和之前四轮有什么区别？</a>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>22 个回答 • 215 次浏览 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-			</ul>
-		</div>
-		<div class="tab-pane fade" id="answers">
-			<ul class="list-group only-top-border">
-  				<li class="list-group-item">
-  					<div class="content f16">
-  						<a class="inline-block" href="#">老师您好!我拿了中粮屯河好几年亏了好几万现又跌了，是继续等还是䃼仓还是抛呢?600737，谢谢!</a>
-  						<span class="co8 f13 pt-5 inline-block">中原特钢业绩很差的，去年每股收益1分钱的主儿 市场炒的题材是军工题材，还有人给分到航母...</span>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>13 个赞 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a class="inline-block" href="#">稳健投资选什么产品能保证安全又收益最大化？</a>
-  						<span class="co8 f13 pt-5 inline-block">首先要明确好预期，要求本金一分钱都不亏属于风险承受能力极低的客户，一般钱是用于子女...</span>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>54 个赞 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a class="inline-block" href="#">涨幅很高的新能源汽车，还有参与的价值么？</a>
-  						<span class="co8 f13 pt-5 inline-block">这一轮新能源行情的起源是新的补贴政策调整，而政策的有效期是从2013年至2015年，所以...</span>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>15 个赞 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a class="inline-block" href="#">益盛药业是否有市场前景，相对于康美药业，哪个更具成长空间？</a>
-  						<span class="co8 f13 pt-5 inline-block">益盛药业是做中成药和人参的，沾大消费的边，而且随着中药复苏，总体来说成长是看得见...</span>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>2 个赞 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-				<li class="list-group-item">
-  					<div class="content f16">
-  						<a class="inline-block" href="#">为什么每次中石化涨停后，都会引起大盘回落？</a>
-  						<span class="co8 f13 pt-5 inline-block">中石化已经五年没有涨停了，5年啊，长发都及腰了……昨天股市石油股开盘就集体涨停...</span>
-  					</div>
-  					<div class="stats pt-10">
-  						<span>32 个赞 • 2014-03-01 10:23:36</span>
-  					</div>
-				</li>
-			</ul>
-		</div>
-		<div class="tab-pane fade" id="following">
-			暂不开放
-		</div>
-		<div class="tab-pane fade" id="followers">
-			暂不开放
-		</div>
-	</div>
+    <ul class="nav nav-pills pt-20 gray-a">
+        <li class="active">
+            <a href="#questions" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的最新提问</a>
+        </li>
+        <li>
+            <a href="#answers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的最新回答</a>
+        </li>
+        <!-- 
+        <li>
+            <a href="#following" data-toggle="pill">TA的关注</a>
+        </li>
+        <li>
+            <a href="#followers" data-toggle="pill">TA的粉丝</a>
+        </li>
+         -->
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="questions">
+            {% if questions %}
+            <ul class="list-group only-top-border">
+                {% for question in questions %}
+                <li class="list-group-item">
+                    <div class="content f16">
+                        <a href="{{question.get_url}}">{{question.title|str_display:20}}</a>
+                    </div>
+                    <div class="stats pt-10">
+                        <span>
+                            {{question.answer_count}} 个回答 • {{question.views_count}} 次浏览 • {{question.create_time|time_format}}
+                        </span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="blank5"></div>
+            <div class="alert alert-success popmsg" id="divSuccess">暂无</div>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="answers">
+            <ul class="list-group only-top-border">
+                {% for answer in answers %}
+                <li class="list-group-item">
+                    <div class="content f16">
+                        <span class="pt-5 inline-block">{{answer.content|str_display:50|safe}}</span>
+                        <div class="blank5"></div>
+                        <a class="inline-block f13 co8" href="{{answer.question.get_url}}">{{answer.question.title}}</a>
+                    </div>
+                    <div class="stats pt-10">
+                        <span>{{answer.like_count}}个赞 • {{answer.create_time|time_format}}</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="following">暂不开放</div>
+        <div class="tab-pane fade" id="followers">暂不开放</div>
+    </div>
 </div>
-
-
 {% endblock %}

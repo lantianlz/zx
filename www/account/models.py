@@ -65,6 +65,9 @@ class Profile(models.Model):
     def get_avatar(self):
         return self.avatar or ('%s/img/common/default.png' % settings.MEDIA_URL)
 
+    def get_ta_display(self):
+        return {1:u'他'}.get(self.gender, u'她')
+
     def __unicode__(self):
         return u'%s, %s' % (self.id, self.nick)
 

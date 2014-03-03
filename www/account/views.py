@@ -110,6 +110,22 @@ def get_user_by_nick(request, nick):
 
 @member_required
 def user_profile(request, id=None, template_name='account/user_profile.html'):
+    if not id:
+        user = request.user
+    else:
+        user = ub.get_user_by_id(id)
+        if not user:
+            err_msg = u'未找到对应user'
+            return HttpResponse(err_msg)
+    is_me = (request.user == user)
+
+    from www.question.interface import QuestionBase, AnswerBase
+    qb = QuestionBase()
+    ab = AnswerBase()
+    user_question_count, user_answer_count, user_liked_count = qb.get_user_qa_count_info(user.id)
+    questions = qb.format_quesitons(qb.get_question_by_user_id(user.id))
+    answers = ab.format_answers(ab.get_user_sended_answer(user.id))
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

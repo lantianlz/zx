@@ -44,12 +44,12 @@
     <div class="intro well">
         <div class="row">
             <div class="col-md-4 avatar">
-                <a href="{{request.user.get_url}}">
+                <a href="/account/user_profile">
                     <img class="avatar-circle" src="{{request.user.get_avatar}}">
                 </a>
             </div>
             <div class="col-md-8 nick">
-                <a href="{{request.user.get_url}}">{{request.user.nick}}</a>
+                <a href="/account/user_profile">{{request.user.nick}}</a>
             </div>
         </div>
         <div class="blank10 bottom-border"></div>
