@@ -205,11 +205,4 @@ $(document).ready(function(){
         });
     });
 
-    // 精华盖章动画
-    var jinghua = $('.jinghua img');
-    jinghua.show()
-    .css({'width': '444.5px', 'height': '385px'})
-    .animate({'width': '254', 'height': '220px', 'opacity': '0.6'}, 500)
-    .animate({'width': '102px', 'height': '88px', 'opacity': '0.99'}, 50);
-
 });
