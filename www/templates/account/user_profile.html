@@ -92,11 +92,12 @@
             <ul class="list-group only-top-border">
                 {% for answer in answers %}
                 <li class="list-group-item">
-                    <div class="pb-5">
-                        <a class="f13" href="{{answer.question.get_url}}">{{answer.question.title}}</a>
-                    </div>
                     <div class="content f16">
                         <span class="pt-5">{{answer.content|str_display:50|safe}}</span>
+                    </div>
+                    <div class="blank5"></div>
+                    <div class="pb-5">
+                        回答了提问: <a class="f13" href="{{answer.question.get_url}}">{{answer.question.title}}</a>
                     </div>
                     <div class="stats pt-10">
                         <span>{{answer.like_count}}个赞 • {{answer.create_time|time_format}}</span>
