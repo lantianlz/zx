@@ -85,37 +85,67 @@ function addZero(data){
 
 
 /*
-	拓展Jquery方法 设置文本框光标位置
+	拓展Jquery方法 
 */
-$.fn.setSelection = function(selectionStart, selectionEnd) {
-    if(this.length == 0){
-    	return this;
-    }
+(function(){
+	// 设置文本框光标位置
+	$.fn.setSelection = function(selectionStart, selectionEnd) {
+	    if(this.length == 0){
+	    	return this;
+	    }
 
-    input = this[0];
+	    input = this[0];
 
-    // IE
-    if (input.createTextRange) {
-        var range = input.createTextRange();
-        range.collapse(true);
-        range.moveEnd('character', selectionEnd);
-        range.moveStart('character', selectionStart);
-        range.select();
-    } else if (input.setSelectionRange) {
-        input.focus();
-        input.setSelectionRange(selectionStart, selectionEnd);
-    }
+	    // IE
+	    if (input.createTextRange) {
+	        var range = input.createTextRange();
+	        range.collapse(true);
+	        range.moveEnd('character', selectionEnd);
+	        range.moveStart('character', selectionStart);
+	        range.select();
+	    } else if (input.setSelectionRange) {
+	        input.focus();
+	        input.setSelectionRange(selectionStart, selectionEnd);
+	    }
 
-    return this;
-}
+	    return this;
+	}
 
+	// 设置文本框光标到最后
+	$.fn.focusEnd = function() {
+	    return this.setSelection(this.val().length, this.val().length);
+	}
 
-/*
-	拓展Jquery方法 设置文本框光标到最后
-*/
-$.fn.focusEnd = function() {
-    this.setSelection(this.val().length, this.val().length);
-}
+	// 自定义checkbox
+	$.fn.zxCheckbox = function(){
+
+		this.find('input').live('change', function(){
+			var parent = $(this).parent();
+			
+			parent.hasClass('checked') ? parent.removeClass('checked') : parent.addClass('checked');
+		});
+
+		return this;
+	}
+
+	// 自定义radio
+	$.fn.zxRadio = function(){
+
+		this.find('input').live('change', function(){
+			
+			$('input[name='+$(this).attr('name')+']').each(function(){
+				var me = $(this), parent = me.parent();
+				console.log(me, me.attr("checked"), parent)
+				me.attr('checked') ? parent.addClass('checked') : parent.removeClass('checked');
+			});
+			
+		});
+
+		return this;
+	}
+
+})(jQuery);
+
 
 
 // 文本编辑器默认设置
@@ -338,5 +368,7 @@ $(document).ready(function(){
 
     // 隐藏所有 auto-hide 样式
     $('.auto-hide').hide();
+
+    
 });
 

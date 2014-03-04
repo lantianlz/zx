@@ -240,3 +240,26 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     color: #224e73;
 }
 
+/******自定义控件样式********/
+.zx-checkbox{
+    padding-left: 30px;
+    background: url(/static/img/common/check-off.png) no-repeat;
+}
+
+.zx-checkbox.checked{
+    background: url(/static/img/common/check-on.png) no-repeat;
+}
+
+.zx-radio{
+    padding-left: 30px;
+    background: url(/static/img/common/radio-off.png) no-repeat;
+}
+
+.zx-radio.checked{
+    background: url(/static/img/common/radio-on.png) no-repeat;
+}
+
+.zx-checkbox>input, .zx-radio>input{
+    opacity: 0;
+    filter: alpha(opacity=0); /*IE*/
+}

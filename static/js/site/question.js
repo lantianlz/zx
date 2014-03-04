@@ -25,8 +25,12 @@ $(document).ready(function(){
         window.location.href = '/question/ask_question';
     });
 
+    //
+    $('#div_tags .zx-checkbox').zxCheckbox();
+    $('#div_types .zx-radio').zxRadio();
+
     // 选择问题类型事件
-    $('#sel_question_type').bind("change", function(){
+    $('#div_types .zx-radio>input').bind("change", function(){
         $('#div_tags').hide('fast');
 
         var type = $(this).val();
@@ -41,7 +45,7 @@ $(document).ready(function(){
         for (var i = type_tags.length - 1; i >= 0; i--) {
             $('#div_tags').append(
                 String.format(
-                    '<label class="checkbox-inline"><input name="tag" type="checkbox" value="{0}"> {1}</label>', 
+                    '<label class="checkbox-inline zx-checkbox"><input name="tag" type="checkbox" value="{0}"> {1}</label>', 
                     type_tags[i][0], 
                     type_tags[i][1]
                 )
@@ -105,16 +109,16 @@ $(document).ready(function(){
     });
   
     // 修改问题弹出层自动选中问题类型和标签
-    var selectedQuestionType = "{{question.question_type.id}}",
-        selectedQuestionTags = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}";
-    if (selectedQuestionType){
+    if (SElECTED_QUESTION_TYPE){
         // 自动选中问题类型
-        $('#sel_question_type').val(selectedQuestionType);
-        $('#sel_question_type').change();
+        $('#div_types input').filter(function(i){
+            return $(this).val() == SElECTED_QUESTION_TYPE;
+        }).click();
+
 
         // 自动选中问题标签
-        if(selectedQuestionTags){
-            var tempTags = selectedQuestionTags.split('-'), 
+        if(SELECTED_QUESTION_TAGS){
+            var tempTags = SELECTED_QUESTION_TAGS.split('-'), 
                 tags = {};
 
             for(var i=0; i<tempTags.length; i++){
@@ -125,7 +129,7 @@ $(document).ready(function(){
 
             $('#div_tags input').filter(function(i){ 
                 return tags[$(this).val()]
-            }).attr('checked', true);
+            }).click();
         }
     }
 

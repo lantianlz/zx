@@ -34,12 +34,23 @@ def import_variable(context, name, value, json_flag=False):
 @register.simple_tag(takes_context=True)
 def question_type_option_display(context):
     """
-    @note: 问答类型options方式展现
+    @note: 问答类型option方式展现
     """
     from www.question.interface import QuestionTypeBase
     aqts = QuestionTypeBase().get_all_question_type()
 
     return render_to_response('question/_question_type_option_display.html', locals(),
+                              context_instance=context).content
+
+@register.simple_tag(takes_context=True)
+def question_type_radio_display(context):
+    """
+    @note: 问答类型radio方式展现
+    """
+    from www.question.interface import QuestionTypeBase
+    aqts = QuestionTypeBase().get_all_question_type()
+
+    return render_to_response('question/_question_type_radio_display.html', locals(),
                               context_instance=context).content
 
 
