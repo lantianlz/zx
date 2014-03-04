@@ -169,6 +169,9 @@ class QuestionBase(object):
                                                                LikeBase().get_user_liked_count, user_id)
         return user_question_count, user_answer_count, user_liked_count
 
+    def get_all_important_question(self):
+        return Question.objects.filter(is_important=True, state=True).order_by('-id')
+
 
 class AnswerBase(object):
 

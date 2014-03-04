@@ -1,0 +1,102 @@
+{% extends "question/base_important.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}每日精华{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.daily-main{
+    margin-top: 30px;
+}
+
+.daily-main-row{
+    padding-bottom: 15px;
+}
+
+.daily-title h4{
+    color: #475058;
+}
+
+.daily-profile{
+    color: #999;
+    font-size: 12px;
+}
+
+.daily-content{
+    padding-top: 8px;
+    color: #475058;
+    line-height: 24px;
+}
+
+
+.jinghua img{
+  width: 127px;
+  height: 110px;
+  position: absolute;
+  right: 20px;
+  display: none;
+  opacity: 0.1;
+  filter:alpha(opacity=0.1);
+  top: 1px;
+  z-index: 99;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // 精华盖章动画
+    var jinghua = $('.jinghua img');
+    for (var i = jinghua.length - 1; i >= 0; i--) {
+
+        (function(index){
+            var temp = jinghua.eq(i);
+            window.setTimeout(function(){
+                temp.show()
+                .css({'width': '444.5px', 'height': '262.5px'})
+                .animate({'width': '254px', 'height': '150px', 'opacity': '0.6'}, 500)
+                .animate({'width': '127px', 'height': '75px', 'opacity': '0.99'}, 50);
+            }, 300*i);
+
+        })(i);
+    };
+});
+</script>
+{% endblock %}
+
+{% block daily_main %}
+{% if questions %}
+<ul class="list-group daily-main">
+    {% for question in questions %}
+    <li class="list-group-item">
+        <div class='daily-item'>
+            <span class="jinghua">
+                <img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
+            <div class='daily-title'>
+                <a href="{{question.get_url}}">
+                    <h4>{{question.title}}</h4>
+                </a>
+            </div>
+            <div class='daily-main-row row'>
+                <div class='daily-img col-md-2'>
+                    <img src="{{MEDIA_URL}}img/common/daily.jpg"></div>
+                <div class='daily-right col-md-10'>
+                    <div class='daily-profile'>
+                        时间：{{question.create_time|time_format}} &nbsp;&nbsp;&nbsp;
+                        作者：<a href="{{question.user.get_url}}">{{question.user.nick}}</a>
+                    </div>
+                    <div class='daily-content'>{{question.get_summary}}</div>
+                </div>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+    <li class="list-group-item">{{page_params|paging:request}}</li>
+</ul>
+{% else %}
+<div class="blank10"></div>
+<div class="alert alert-success popmsg" id="divSuccess">暂无</div>
+{% endif %}
+
+{% endblock %}

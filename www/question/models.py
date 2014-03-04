@@ -13,6 +13,7 @@ class Question(models.Model):
     last_answer_time = models.DateTimeField(db_index=True)
     sort_num = models.IntegerField(default=-999, db_index=True)
     like_count = models.IntegerField(default=0)
+    is_important = models.BooleanField(default=False)   # 是否是精华帖
     ip = models.CharField(max_length=32, null=True)
     is_hide_user = models.BooleanField(default=False)
     state = models.BooleanField(default=True)

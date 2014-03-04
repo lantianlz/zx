@@ -103,7 +103,22 @@ def create_answer(request, question_id):
         return question_detail(request, question_id, error_msg=result, content=content)
 
 
+@member_required
+def important_question(request, template_name='question/important_question.html'):
+    questions = qb.get_all_important_question()
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(questions, count=3, page=page_num).info
+    questions = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    questions = qb.format_quesitons(questions)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
 # ===================================================ajax部分=================================================================#
+
+
 @member_required
 def like_answer(request):
     answer_id = request.POST.get('answer_id', '')

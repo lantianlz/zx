@@ -13,4 +13,5 @@ urlpatterns = patterns('www.question.views',
                        # url(r'^get_tags_by_question_type$', 'get_tags_by_question_type'),
                        url(r'^like_answer$', 'like_answer'),
                        url(r'^tag/(?P<tag_domain>\w+)$', 'tag_question'),
+                       url(r'^important$', 'important_question'),
                        )
