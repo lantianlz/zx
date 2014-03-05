@@ -73,7 +73,7 @@
                 {% for question in questions %}
                 <li class="list-group-item">
                     <div class="content f16">
-                        <a href="{{question.get_url}}">{{question.title|str_display:20}}</a>
+                        <a href="{{question.get_url}}">{{question.title|str_display:30}}</a>
                     </div>
                     <div class="stats pt-10">
                         <span>
@@ -93,15 +93,16 @@
             <ul class="list-group only-top-border">
                 {% for answer in answers %}
                 <li class="list-group-item">
-                    <div class="content f16">
+                    
+                    <div class="content f16 pb-10">
                         <span class="pt-5">{{answer.content|str_display:50|safe}}</span>
                     </div>
-                    <div class="blank5"></div>
-                    <div class="pb-5">
-                        回答了提问: <a class="f13" href="{{answer.question.get_url}}">{{answer.question.title}}</a>
+                    
+                    <div class="pb-10 f12">
+                        回答了提问：<a href="{{answer.question.get_url}}">{{answer.question.title}}</a>
                     </div>
-                    <div class="stats pt-10">
-                        <span>{{answer.like_count}}个赞 • {{answer.create_time|time_format}}</span>
+                    <div class="stats">
+                        <span>{{answer.like_count}} 个赞 • {{answer.create_time|time_format}}</span>
                     </div>
                 </li>
                 {% endfor %}

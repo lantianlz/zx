@@ -135,7 +135,7 @@ function addZero(data){
 			
 			$('input[name='+$(this).attr('name')+']').each(function(){
 				var me = $(this), parent = me.parent();
-				console.log(me, me.attr("checked"), parent)
+				
 				me.attr('checked') ? parent.addClass('checked') : parent.removeClass('checked');
 			});
 			
@@ -369,6 +369,5 @@ $(document).ready(function(){
     // 隐藏所有 auto-hide 样式
     $('.auto-hide').hide();
 
-    
 });
 

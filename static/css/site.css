@@ -72,6 +72,11 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     height: 35px;
 }
 
+.avatar-65{
+    width: 65px;
+    height: 65px;
+}
+
 .avatar-100{
     width: 100px;
     height: 100px;
@@ -234,10 +239,20 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 
 .blue-a>a{
     color: #224e73;
+    transition: color 0.5s;
 }
 
 .blue-a>a:hover{
     color: #224e73;
+}
+
+.black-blue{
+  color: #222;
+}
+
+.black-blue:hover{
+  text-decoration: none;
+  color: #349cd8;
 }
 
 /******自定义控件样式********/

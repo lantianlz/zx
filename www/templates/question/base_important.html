@@ -2,36 +2,8 @@
 {% load custom_tags %}
 {% load custom_filters %}
 {% block cheader %}
-<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/question.css?v={{MEDIA_VERSION}}" />
-<style type="text/css">
-body {background-color: #F0F4F7; font-family: "微软雅黑";}
-
-.container_content{
-    background-color: white;
-    border-radius: 5px;
-    border: solid 1px lightgray;
-    padding-bottom: 20px;
-    /*margin-left: 0px;*/
-    /*margin-right: 0px;*/
-}
-
-.zx-container-main{
-    padding-left: 25px;
-}
-
-.zx-container-right{
-    padding-right: 25px;
-}
-
-.daily-ad {
-    margin-top: 30px;
-}
-
-.daily-ad img{
-    width: 100%;
-    height: 100%;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/important.css?v={{MEDIA_VERSION}}" />
+<script type="text/javascript" src="{{MEDIA_URL}}js/site/important.js?v={{MEDIA_VERSION}}"></script>
 {% block javascript %}{% endblock %}
 {% block css %}{% endblock %}
 {% endblock %}
@@ -47,7 +19,7 @@ body {background-color: #F0F4F7; font-family: "微软雅黑";}
         <div class="row">
             <div class="col-md-4 avatar">
                 <a href="/account/user_profile">
-                    <img class="avatar-circle" src="{{request.user.get_avatar}}">
+                    <img class="avatar-65 avatar-circle" src="{{request.user.get_avatar}}">
                 </a>
             </div>
             <div class="col-md-8 nick">

@@ -68,10 +68,6 @@
     margin-left: 10px;
 }
 
-.zx-container-right .intro .avatar img{
-    width: 65px;
-}
-
 .zx-container-right .intro .nick{
     height: 65px;
     line-height: 65px;
@@ -155,16 +151,6 @@
 .question-list .item-question-title{
     width: 100%; 
     margin: 15px 0 0 0;
-}
-
-.question-list .item-question-title a{
-    cursor: pointer;
-    color: #222;
-}
-
-.question-list .item-question-title a:hover{
-    text-decoration: none;
-    color: #349cd8;
 }
 
 .question-list .item-question-content{

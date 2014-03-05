@@ -162,8 +162,6 @@ $(document).ready(function(){
                                 {% question_type_radio_display %}
                             </div>
                             <div class="form-group" id="div_tags">
-                                <!-- <input id='question_tags_input' autocomplete="off" type="text" class="form-control input-lg" name="question_tags" placeholder="">
-                                -->
                                 <div class="tag-title mb-5">将你的提问归类至子话题 :</div>
                                 <label class="checkbox-inline">
                                     <input type="checkbox" id="inlineCheckbox1" value="option1">1</label>
@@ -200,62 +198,22 @@ $(document).ready(function(){
                 </div>
             </li>
             {% for answer in answers %}
-            <li class="list-group-item {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" 
-                id="answer_{{answer.id}}">
-                <div class="reply-header row">
-                    <div class="col-md-6">
-                        <a href="{{answer.from_user.get_url}}">
-                            <img class="avatar-25 avatar-circle" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
-                        </a>
-                        <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
-                            <div class="user-name">{{answer.from_user.nick}}</div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <span class="answer-like-border flashborder">
-                            <span title="赞一下" class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like" data-answer_id="{{answer.id}}"></span>
-                            <span class="answer-like-count">{{answer.like_count}}</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="reply-main row">
-                    <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
-                </div>
-                <div class="reply-tools gray-a">
-                    <span class="answer-date">{{answer.create_time|time_format}}</span>
-                    <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}">
-                        <span class="glyphicon glyphicon-share"></span>
-                        回复
-                    </a>
-                    <a class="answer-no-help auto-hide" href="javascript: void(0);">
-                        <span class="glyphicon glyphicon-thumbs-down"></span>
-                        没有帮助
-                        <a class="answer-comments hide" href="javascript: void(0);">
-                            <span class="glyphicon glyphicon-comment"></span>
-                            88条评论
-                        </a>
-                    </a>
-                    <a class="answer-mark auto-hide hide" href="javascript: void(0);">
-                        <span class="glyphicon glyphicon-bookmark"></span>
-                        收藏
-                    </a>
-                    <a class="answer-share auto-hide hide" href="javascript: void(0);">
-                        <span class="glyphicon glyphicon-share-alt"></span>
-                        分享
-                    </a>
-                    <a class="answer-report auto-hide hide" href="javascript: void(0);">
-                        <span class="glyphicon glyphicon-flag"></span>
-                        举报
-                    </a>
-                    {% if answer.from_user.id == request.user.id %}
-                    <a class="answer-remove auto-hide pull-right" href="javascript: void(0);">
-                        <span class="glyphicon glyphicon-trash"></span>
-                        删除
-                    </a>
-                    {% endif %}
+                {% include "question/_question_answer.html" %}
+            {% endfor %}
+            <li class="list-group-item">
+                <div class="gray-a">
+                    <a class="collapse-answer" href="javascript: void(0)">共有 4 个回答被折叠 <span data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" class="glyphicon glyphicon-question-sign zx-tooltip"></span></a>
                 </div>
             </li>
+            {% for answer in bad_answers %}
+                {% include "question/_question_answer.html" %}
             {% endfor %}
+            <li class="list-group-item auto-hide">
+                需要隐藏的回答1
+            </li>
+            <li class="list-group-item auto-hide">
+                需要隐藏的回答2
+            </li>
         </ul>
     </div>
 

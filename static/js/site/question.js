@@ -25,9 +25,20 @@ $(document).ready(function(){
         window.location.href = '/question/ask_question';
     });
 
-    //
+
+    // 按钮点击事件 IE直接点还不行,非要js
+    $('.not-login .btn-login').bind('click', function(){
+        window.location.href = '/login';
+    });
+    $('.not-login .btn-regist').bind('click', function(){
+        window.location.href = '/regist';
+    });
+
+
+    // 初始化自定义的zxCheckbox
     $('#div_tags .zx-checkbox').zxCheckbox();
     $('#div_types .zx-radio').zxRadio();
+
 
     // 选择问题类型事件
     $('#div_types .zx-radio>input').bind("change", function(){
@@ -54,15 +65,7 @@ $(document).ready(function(){
     });
 
 
-    // 按钮点击事件 IE直接点还不行,非要js
-    $('.not-login .btn-login').bind('click', function(){
-        window.location.href = '/login';
-    });
-    $('.not-login .btn-regist').bind('click', function(){
-        window.location.href = '/regist';
-    });
-
-    // 回答工具条显示隐藏事件
+    // 回答工具条鼠标移动显示隐藏事件
     $('#ul_replies .list-group-item')
     .bind('mouseenter', function(){
         $(this).find('.reply-tools .auto-hide').show();
@@ -70,7 +73,7 @@ $(document).ready(function(){
     .bind('mouseleave', function(){
         $(this).find('.reply-tools .auto-hide').hide();
     });
-    // 评论工具条显示隐藏事件
+    // 评论工具条鼠标移动显示隐藏事件
     $('.reply-comments .comment')
     .bind('mouseenter', function(){
         $(this).find('.comment-date .auto-hide').show();
@@ -84,23 +87,25 @@ $(document).ready(function(){
     $('.reply-tools .answer-comments').bind('click', function(){
         var target = $(this).parent().next();
 
-        if(target.css('display') === 'block'){
-            target.hide('fast');
-        } else {
-            target.show('fast');
-        }
+        target.css('display') === 'block' ? target.hide('fast') : target.show('fast');
     });
+
 
     // 邀请打开关闭事件
     $('.question-tools .invite').bind('click', function(){
         var target = $(".topic-invite");
       
-        if(target.css('display') === 'block'){
-            target.hide();
-        } else {
-            target.show();
-        }
+        target.css('display') === 'block' ? target.hide() : target.show();
     });
+
+
+    // 折叠回答打开关闭事件
+    $('.collapse-answer').bind('click', function(){
+        var target = $('.replies li.auto-hide');
+
+        target.eq(0).css('display') === 'block' ? target.hide('fast') : target.show('fast'); 
+    });
+
 
     // 回复某人事件
     $('.answer-say-to').bind('click', function(){
@@ -108,13 +113,13 @@ $(document).ready(function(){
         $('.answer-main .zx-textarea').focusEnd();
     });
   
+
     // 修改问题弹出层自动选中问题类型和标签
     if (SElECTED_QUESTION_TYPE){
         // 自动选中问题类型
         $('#div_types input').filter(function(i){
             return $(this).val() == SElECTED_QUESTION_TYPE;
         }).click();
-
 
         // 自动选中问题标签
         if(SELECTED_QUESTION_TAGS){
@@ -133,6 +138,7 @@ $(document).ready(function(){
         }
     }
 
+
     // 红心显示隐藏动画
     var parent = null,
         isRotating = false,
@@ -145,17 +151,17 @@ $(document).ready(function(){
         animateFun = function(target, isShowHeart){
             // 开始旋转
             jQuery({p: 0}).animate({p: 90}, {
-                duration: 500,
+                duration: 300,
                 step: function(now, fx) {
                     transformFun(target, now);
                 },
                 complete: function(){
-                    // 旋转到90度后将数字隐藏，将红心显示，
+                    // 旋转到90度后将数字隐藏，将红心显示
                     isShowHeart ? target.find('.answer-like').show() : target.find('.answer-like').hide();
                     isShowHeart ? target.find('.answer-like-count').hide() : target.find('.answer-like-count').show();
                     // 再旋转到0度
                     jQuery({p: 90}).animate({p: 0}, {
-                        duration: 500,
+                        duration: 300,
                         step: function(now, fx) {
                             transformFun(target, now);
                         }
@@ -163,13 +169,13 @@ $(document).ready(function(){
                 }
             });
         };
-
     $('.answer-like-border .answer-like-count').bind('mouseenter', function(){
         animateFun($(this).parent(), true);
     });
     $('.answer-like-border .answer-like').bind('mouseleave', function(){
         animateFun($(this).parent(), false);
     });
+
 
     // 点击赞动作
     $('.answer-like-border .answer-like').bind('click', function(){
@@ -192,13 +198,16 @@ $(document).ready(function(){
                 top: 11,
                 left: 10
             }, 500, function(){
+                // 去除动画
                 temp.remove();
 
+                // 修改红心为实心
                 parent.find('.answer-like')
                 .removeClass('glyphicon-heart-empty')
                 .addClass('glyphicon-heart')
                 .css({'color': 'red'});
 
+                // 赞次数+1
                 parent.find('.answer-like-count')
                 .text(parseInt(parent.find('.answer-like-count').text()) + 1);
             });

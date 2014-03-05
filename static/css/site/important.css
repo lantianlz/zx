@@ -1,0 +1,30 @@
+.jinghua img{
+  width: 127px;
+  height: 110px;
+  position: absolute;
+  right: 20px;
+  display: none;
+  opacity: 0.1;
+  filter:alpha(opacity=0.1);
+  top: 1px;
+  z-index: 99;
+}
+
+.zx-container-right .intro .nick {
+	height: 65px;
+	line-height: 65px;
+	overflow: hidden;
+}
+
+.zx-container-right .intro .item{
+    border-left: solid 1px #ddd;
+    padding-top: 5px;
+}
+
+.zx-container-right .intro .item:first-child{
+    border-left: 0;
+}
+
+.zx-container-right .intro .bottom-border{
+    border-bottom: solid 1px #ddd;
+}
