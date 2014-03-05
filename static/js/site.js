@@ -340,23 +340,23 @@ $(document).ready(function(){
     */
     
     // 鼠标移动到导航条登录用户名时自动弹出下拉框
-    var dropdownTimeout = null;
-    function showDropdown(){
-    	$(".login-user .dropdown").addClass('open');
+    var dropdownTimeout = null,
+    	showDropdown = function(){
+	    	$(".login-user .dropdown").addClass('open');
 
-    	if(dropdownTimeout){
-    		window.clearTimeout(dropdownTimeout);
-    		dropdownTimeout = null;
-    	}
-    }
-    function hideDropdown(){
-    	if(!dropdownTimeout){
-    		dropdownTimeout = window.setTimeout(function(){
-    			$(".login-user .dropdown").removeClass('open');
-    			dropdownTimeout = null;
-    		}, 1000)
-    	}
-    }
+	    	if(dropdownTimeout){
+	    		window.clearTimeout(dropdownTimeout);
+	    		dropdownTimeout = null;
+	    	}
+	    },
+    	hideDropdown = function(){
+	    	if(!dropdownTimeout){
+	    		dropdownTimeout = window.setTimeout(function(){
+	    			$(".login-user .dropdown").removeClass('open');
+	    			dropdownTimeout = null;
+	    		}, 1000)
+	    	}
+   		};
     
     $('.login-user .dropdown-toggle')
     .bind('mouseenter', showDropdown)
@@ -369,5 +369,28 @@ $(document).ready(function(){
     // 隐藏所有 auto-hide 样式
     $('.auto-hide').hide();
 
+
+    // 拉取未读消息提示
+    var getUnreadCountTotal = function(){
+    	ajaxSend("/message/get_unread_count_total", '', function(data){
+    		$('#unread_count_total_nav_1').html(data['result']);
+			$('#unread_count_total_nav_2').html(data['result']);
+
+			if(String(data['result']) == '0'){
+				$('#unread_count_total_nav_1').hide();
+				$('#unread_count_total_nav_2').hide();
+			} else {
+				$('#unread_count_total_nav_1').show();
+				$('#unread_count_total_nav_2').show();
+				//$('.title').html('收到 ' + data['result'] + ' 条新消息');
+			}
+    	});
+    }
+    // 登录后才轮循
+    if(CURRENT_USER_ID){
+    	setInterval(getUnreadCountTotal, 60000);
+    	getUnreadCountTotal();
+    }
+    
 });
 

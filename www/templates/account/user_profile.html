@@ -93,11 +93,9 @@
             <ul class="list-group only-top-border">
                 {% for answer in answers %}
                 <li class="list-group-item">
-                    
                     <div class="content f16 pb-10">
                         <span class="pt-5">{{answer.content|str_display:50|safe}}</span>
                     </div>
-                    
                     <div class="pb-10 f12">
                         回答了提问：<a href="{{answer.question.get_url}}">{{answer.question.title}}</a>
                     </div>

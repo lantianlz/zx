@@ -38,7 +38,7 @@
         <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/kindeditor/kindeditor-min.js"></script> -->
         <script type="text/javascript" src="{{MEDIA_URL}}js/common.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/site.js?v={{MEDIA_VERSION}}"></script>
-        <script type="text/javascript">var media = '{{ MEDIA_URL }}';</script>
+        <script type="text/javascript">var media = '{{ MEDIA_URL }}'; var CURRENT_USER_ID="{{request.user.id|default:''}}";</script>
         
         {% block bheader %}{% endblock bheader %}
     </head>

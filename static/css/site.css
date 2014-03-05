@@ -276,5 +276,5 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 
 .zx-checkbox>input, .zx-radio>input{
     opacity: 0;
-    filter: alpha(opacity=0); /*IE*/
+    filter: 'alpha(opacity=0)'; /*IE*/
 }

@@ -358,6 +358,7 @@
   right: 40px;
   display: none;
   opacity: 0.1;
+  filter: 'alpha(opacity=10)'; /*IE*/
   top: 85px;
   z-index: 99;
 }
