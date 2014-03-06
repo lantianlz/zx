@@ -229,19 +229,30 @@ $(document).ready(function(){
 	});
 
 
+	// 给不支持placeholder的浏览器添加此属性
+  	$('input, textarea').placeholder();
+
 	// 初始化所有的 tooltip 
-	$('.zx-tooltip').tooltip('hide');
-	// 初始化所有的 popover 
-	/*
-	$('.zx-popover').popover({
-		html: true,
-		placement: 'auto left',
-		trigger: 'manual',
-		delay: { show: 500, hide: 100 },
-		title: '测试',
-		content: '呵呵'
+	//$('.zx-tooltip').tooltip('hide');
+	$('.zx-tooltip').tooltipsy({
+	    offset: [1, 0],
+	    css: {
+	        'padding': '10px',
+	        'max-width': '200px',
+	        'color': '#fff',
+	        'background-color': '#000',
+	        'border': '1px solid #deca7e',
+	        '-moz-box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
+	        '-webkit-box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
+	        'box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
+	        'border-radius': '4px',
+	        'font-size': '12px'
+	    }
 	});
-	*/
+	
+	// 初始化所有的 popover 
+	//$('.zx-popover').popover('hide');
+	
 
 	// 弹出名片设置
 	var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="{0}" ></div><div class="col-md-9"><div class="username">{1}</div><div class="question-info"><span>提问<a href="#">{2}</a></span><span>回答<a href="#">{3}</a></span><span>赞<a href="#">{4}</a></span></div></div></div><div class="desc">{5}</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow {8}">关注ta</button><button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button><a class="send-message" href="#" data-user_name="{6}" data-user_id="{7}"><span class="glyphicon glyphicon-envelope"></span> 私信ta</a></div></div>'
@@ -301,6 +312,7 @@ $(document).ready(function(){
 	})
 
 
+	/*
 	// 设置编辑器
   	$('.zx-textarea').markItUp(markItUpSettings);
   	// 设置文本框自动增加高度
@@ -309,26 +321,29 @@ $(document).ready(function(){
 			$(this).height($(this).height() + $(this).scrollTop() + 2);
 		}
 	});
+	*/
 
-  	// 给不支持placeholder的浏览器添加此属性
-  	$('input, textarea').placeholder();
+
+  	
 	/*
 	// KindEditor 编辑器设置
 	var editor;
 	KindEditor.ready(function(K) {
-	    editor = K.create('textarea[name=answer_content]', {
+	    editor = K.create('.zx-textarea', {
 			resizeType : 1,
 			width: '100%',
 			height: '260',
 			allowPreviewEmoticons : false,
 			allowImageUpload : false,
-			themesPath: "{{MEDIA_URL}}css/kindeditor/themes/",
-			pluginsPath: "{{MEDIA_URL}}js/kindeditor/plugins/",
-			langPath: "{{MEDIA_URL}}js/kindeditor/",
+			themesPath: MEDIA_URL + "css/kindeditor/themes/",
+			pluginsPath: MEDIA_URL + "js/kindeditor/plugins/",
+			langPath: MEDIA_URL + "js/kindeditor/",
 			items : [
-				'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
-				'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
-				'insertunorderedlist', '|', 'emoticons', 'image', 'link'],
+				'bold', 'italic', 'underline', 'removeformat', '|', 
+				'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', '|', 
+				'image', 'link', '|', 
+				'fullscreen'
+			],
 			afterCreate : function() { 
 			  	this.sync(); 
 			}, 
@@ -337,7 +352,57 @@ $(document).ready(function(){
 			}
 	    });
 	});
-    */
+	*/
+    
+
+    /* UE
+    var ue = UE.getEditor('zx-editor', {
+        toolbars: [[
+         	'bold', 'italic', 'underline', 'removeformat', '|',
+            'insertorderedlist', 'insertunorderedlist', '|' ,
+            'link', 'unlink', 'insertimage', 'insertvideo', '|',
+            'preview', 'cleardoc', 'fullscreen'
+        ]],
+        dropFileEnabled: false,
+        pasteplain: true
+    });
+
+    var ue2 = UE.getEditor('zx-editor2', {
+        toolbars: [
+            'bold', 'italic', 'underline', 'removeformat', '|',
+            'insertorderedlist', 'insertunorderedlist', '|' ,
+            'link', 'unlink', 'insertimage', 'insertvideo', '|',
+            'preview', 'cleardoc', 'fullscreen'
+        ],
+        initialFrameWidth: '100%',
+        dropFileEnabled: false,
+        pasteplain: true
+    });
+	*/
+
+	// UM
+    var um = UM.getEditor('zx-editor', {
+        toolbar:[
+            'bold italic underline removeformat |',
+            'insertorderedlist insertunorderedlist |' ,
+            'link unlink image insertvideo  |',
+            'preview cleardoc fullscreen'
+        ],
+        dropFileEnabled: false
+    });
+
+    var um = UM.getEditor('zx-editor2', {
+        toolbar:[
+            'bold italic underline removeformat |',
+            'insertorderedlist insertunorderedlist |' ,
+            'link unlink image insertvideo  |',
+            'preview cleardoc fullscreen'
+        ],
+        initialFrameWidth: '100%',
+        dropFileEnabled: false
+    });
+	
+
     
     // 鼠标移动到导航条登录用户名时自动弹出下拉框
     var dropdownTimeout = null,

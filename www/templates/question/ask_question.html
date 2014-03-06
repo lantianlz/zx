@@ -29,14 +29,15 @@
         <div class="form-group">
             <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
                     value='{{question_title}}'></div>
-        <div class="form-group question-content">
-            <textarea name="question_content" class="form-control zx-textarea auto-height-textarea cl_black f14" rows="10">{{question_content}}</textarea>
+        <div class="form-group">
+            <script type="text/plain" name="question_content" id="zx-editor" style="width:100%;height:300px;"></script>
+            <!-- <textarea name="question_content" id="zx_textarea" class="form-control zx-textarea auto-height-textarea cl_black f14" rows="10">{{question_content}}</textarea> -->
         </div>
         <div class="form-group">
             <div class="col-md-6 checkbox">
-                <label class="zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="勾选此项后，问题展现的时候将隐藏你的名字">
-                    <input type="checkbox" name="is_hide_user">匿名提问
-                    <span class="glyphicon glyphicon-question-sign cl_gray"></span>
+                <label>
+                    <input type="checkbox" name="is_hide_user">匿名提问?
+                    <span class="glyphicon glyphicon-question-sign cl_gray zx-tooltip" title="勾选此项后，问题展现的时候将隐藏你的名字"></span>
                 </label>
             </div>
             <div class="col-md-6 text-right ask-btn pr-0">

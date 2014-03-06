@@ -277,8 +277,8 @@
 
 .answer-main{
   margin-top: 15px;
-  border: solid 1px #e6e6e6;
-  border-radius: 5px;
+  /*border: solid 1px #e6e6e6;
+  border-radius: 5px;*/
 }
 
 .answer-main .editor{
