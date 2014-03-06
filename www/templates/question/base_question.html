@@ -9,7 +9,8 @@
 <script type="text/javascript">
     var QUESTION_TAGS = {{tags|safe|default:"{}"}},
         SElECTED_QUESTION_TYPE = "{{question.question_type.id}}",
-        SELECTED_QUESTION_TAGS = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}";
+        SELECTED_QUESTION_TAGS = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}",
+        QUESTION_CONTENT = '{{question.content|safe|default:""}}';
 </script>
 {% block javascript %}{% endblock %}
 {% block css %}{% endblock %}

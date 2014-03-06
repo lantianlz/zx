@@ -214,4 +214,7 @@ $(document).ready(function(){
         });
     });
 
+    
+    // 
+    UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
 });
