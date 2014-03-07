@@ -215,15 +215,15 @@ $(document).ready(function(){
     });
 
     
-    // 
-    UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
+    // 问题内容
+    if(QUESTION_CONTENT){
+        UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
+    }
 });
 
 
-function remove_answer(answer_id)
-{
-    if(!confirm('确定删除吗？'))
-    {
+function remove_answer(answer_id){
+    if(!confirm('确定删除吗？')){
         return;
     }
     var postData = {'answer_id': answer_id};
