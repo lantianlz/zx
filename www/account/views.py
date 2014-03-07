@@ -217,6 +217,10 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 
+def test500(request):
+    raise Exception, u'test500 for send error email'
+
+
 # ===================================================ajax部分=================================================================#
 @member_required
 def get_user_info_by_id(request):

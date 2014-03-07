@@ -68,6 +68,8 @@ def send_email(emails, title, content, type='text'):
         return
 
     if not isinstance(emails, (list, tuple)):
+        if 'mrzhixuan' in emails:
+            return
         emails = [emails, ]
 
     if type != 'html':

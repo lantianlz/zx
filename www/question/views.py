@@ -126,3 +126,12 @@ def like_answer(request):
     flag, result = lb.like_it(answer_id, request.user.id, ip=utils.get_clientip(request))
     r = dict(flag='0' if flag else '-1', result=result)
     return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@member_required
+def remove_answer(request):
+    answer_id = request.POST.get('answer_id', '')
+
+    flag, result = ab.remove_answer(answer_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')

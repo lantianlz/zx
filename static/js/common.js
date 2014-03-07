@@ -368,7 +368,7 @@ function CommonCoverDiv() {
 
 function common_callback(data) {
 	if (data['flag'] == '0') {
-		successMeg('成功');
+		alert('成功');
 		window.location.reload();
 	} else {
 		errorMeg(data['result']);

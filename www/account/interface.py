@@ -47,7 +47,7 @@ class UserBase(object):
         return self.hasher.check_password(raw_password, getattr(self, 'password', password))
 
     def set_profile_login_att(self, profile, user):
-        for key in ['email', 'mobilenumber', 'username', 'last_login', 'password']:
+        for key in ['email', 'mobilenumber', 'username', 'last_login', 'password', 'is_staff']:
             setattr(profile, key, getattr(user, key))
         setattr(profile, 'user_login', user)
 

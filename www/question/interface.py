@@ -19,8 +19,11 @@ dict_err = {
     104: u'喜欢一次足矣',
     105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
 
+
     800: u'问题不存在或者已删除',
     801: u'回答不存在或者已删除',
+    802: u'绝对不会让你得逞的，因为你没得权限',
+
     998: u'参数缺失',
     999: u'系统错误',
     000: u'成功'
@@ -34,7 +37,7 @@ def question_required(func):
         question = question_id_or_object
         if not isinstance(question_id_or_object, Question):
             try:
-                question = Question.objects.get(id=question_id_or_object)
+                question = Question.objects.get(id=question_id_or_object, state=True)
             except Question.DoesNotExist:
                 return False, dict_err.get(800)
         return func(self, question, *args, **kwargs)
@@ -46,10 +49,19 @@ def answer_required(func):
         answer = answer_id_or_object
         if not isinstance(answer_id_or_object, Question):
             try:
-                answer = Answer.objects.select_related('question').get(id=answer_id_or_object)
+                answer = Answer.objects.select_related('question').get(id=answer_id_or_object, state=True)
             except Answer.DoesNotExist:
                 return False, dict_err.get(801)
         return func(self, answer, *args, **kwargs)
+    return _decorator
+
+
+def answer_admin_required(func):
+    def _decorator(self, answer, user, *args, **kwargs):
+        flag, answer = AnswerBase().get_answer_admin_permission(answer, user)
+        if not flag:
+            return False, dict_err.get(802)
+        return func(self, answer, user, *args, **kwargs)
     return _decorator
 
 
@@ -251,6 +263,34 @@ class AnswerBase(object):
 
     def get_user_sended_answers_count(self, user_id):
         return self.get_user_sended_answer(user_id).count()
+
+    @answer_required
+    def get_answer_admin_permission(self, answer, user):
+        # 返回answer值用于answer对象赋值
+        return answer.from_user_id == user.id or answer.to_user_id == user.id or user.is_staff(), answer
+
+    @answer_admin_required
+    @transaction.commit_manually(using=QUESTION_DB)
+    def remove_answer(self, answer, user):
+        try:
+            answer.state = False
+            answer.save()
+
+            answer.question.answer_count -= 1
+            answer.question.save()
+
+            AtAnswer.objects.filter(user_id=user.id).delete()
+
+            # 更新用户回答统计总数
+            cache.get_or_update_data_from_cache('answer_count_%s' % answer.from_user_id, False, 3600 * 24,
+                                                self.get_user_sended_answers_count, answer.from_user_id)
+
+            transaction.commit(using=QUESTION_DB)
+            return True, dict_err.get(000)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return False, dict_err.get(999)
 
 
 class QuestionTypeBase(object):

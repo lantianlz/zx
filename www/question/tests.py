@@ -13,13 +13,22 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 user_id = '83baf86160e611e3b491f319607cbb35'
 
+
 def main():
     from www.question import interface
+    from www.account.interface import UserBase
+
+    user = UserBase().get_user_by_id(user_id)
 
     lb = interface.LikeBase()
-    flag, result = lb.like_it(7, from_user_id=user_id, ip='127.0.0.1')
+    ab = interface.AnswerBase()
+
+    # flag, result = lb.like_it(7, from_user_id=user_id, ip='127.0.0.1')
+    flag, result = ab.remove_answer(41, user)
+
+    print result.encode('utf8').__repr__()
     print result.encode('utf8')
 
 
 if __name__ == '__main__':
-	main()
+    main()

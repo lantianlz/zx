@@ -18,12 +18,11 @@ urlpatterns = patterns('',
                        url(r'^n/(?P<nick>.*)$', 'www.account.views.get_user_by_nick'),
                        url(r'^account/', include('account.urls')),
                        url(r'^question/', include('question.urls')),
-                       url(r'^daily/', include('daily.urls')),
                        url(r'^recommend/', include('recommend.urls')),
                        url(r'^message/', include('message.urls')),
                        url(r'^admin/', include('admin.urls')),
 
-
+                       url(r'^500$', 'www.account.views.test500'),
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
                            {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),

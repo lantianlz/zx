@@ -179,9 +179,9 @@ $(document).ready(function(){
 
     // 点击赞动作
     $('.answer-like-border .answer-like').bind('click', function(){
-        var parent = $(this).parent(), 
-            temp = null,
-            postData = {'answer_id': $(this).data('answer_id')};
+        var parent = $(this).parent();
+        temp = null;
+        postData = {'answer_id': $(this).data('answer_id')};
 
         ajaxSend("/question/like_answer", postData, function(data){
             if(data['flag'] != '0'){
@@ -218,3 +218,14 @@ $(document).ready(function(){
     // 
     UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
 });
+
+
+function remove_answer(answer_id)
+{
+    if(!confirm('确定删除吗？'))
+    {
+        return;
+    }
+    var postData = {'answer_id': answer_id};
+    ajaxSend("/question/remove_answer", postData, common_callback);
+}
