@@ -448,7 +448,13 @@ $(document).ready(function(){
 				$('#unread_count_total_nav_1').show();
 				$('#unread_count_total_nav_2').show();
 				// $('title').html('收到 ' + data['result'] + ' 条新消息');
-				document.title = '收到 ' + data['result'] + ' 条新消息';
+				try
+				{
+					document.title = '收到 ' + data['result'] + ' 条新消息';
+				}
+				catch (e) {
+					alert(e);
+				}
 			}
     	});
     }
