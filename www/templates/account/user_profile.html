@@ -97,7 +97,7 @@
                         <span class="pt-5">{{answer.get_summary|safe}}</span>
                     </div>
                     <div class="pb-10 f12">
-                        回答了提问：<a href="{{answer.question.get_url}}">{{answer.question.title}}</a>
+                        回答了提问：<a href="{{answer.question.get_url}}">{{answer.question.title|str_display:30}}</a>
                     </div>
                     <div class="stats">
                         <span>{{answer.like_count}} 个赞 • {{answer.create_time|time_format}}</span>

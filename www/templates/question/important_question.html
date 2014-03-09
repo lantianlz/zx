@@ -17,7 +17,7 @@
                 <img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
             <div class='daily-title'>
                 <a class="black-blue" href="{{question.get_url}}">
-                    <h4><strong>{{question.title}}</strong></h4>
+                    <h4><strong>{{question.title|str_display:30}}</strong></h4>
                 </a>
             </div>
             <div class='row pb-15'>
