@@ -2,7 +2,7 @@
 
 
 """
-@attention: utils方法封装
+@note: utils方法封装
 @author: lizheng
 @date: 2013-12-09
 """
@@ -123,7 +123,7 @@ def filter_script(htmlstr):
     re_expression = re.compile('<[^>]*( on)[^>]*>', re.I)
     s = re_expression.sub('', s)  # 去掉html带on事件的
 
-    # # 去掉多余的空行
+    # 去掉多余的空行
     # s = blank_line.sub('\n', s)
     return s
 
@@ -149,7 +149,7 @@ get_uid = lambda user: user.id if hasattr(user, 'id') else str(user)
 
 def select_at(s):
     """
-    @attention: 寻找at对象名称
+    @note: 寻找at对象名称
     """
     #@提到的用户名称必须是：中文，英文字符，数字，下划线，减号这四类
     p = re.compile(u'@([\w\-\u4e00-\u9fa5]+)', re.I)
@@ -158,11 +158,11 @@ def select_at(s):
 
 def replace_at_html(value):
     """
-    @attention: 从内容中提取@信息
+    @note: 从内容中提取@信息
     """
     def _re_sub(match):
         """
-        @attention: callback for re.sub
+        @note: callback for re.sub
         """
         nick = match.group(1)
         return '@<a href="/n/%(nick)s">%(nick)s</a>' % dict(nick=nick)
@@ -171,3 +171,46 @@ def replace_at_html(value):
     p = re.compile(tup_re[0], re.DOTALL | re.IGNORECASE)
     value = p.sub(tup_re[1], value)
     return value
+
+
+def get_summary_from_html(content, max_num=100):
+    """
+    @note: 通过内容获取摘要
+    """
+    summary = ''
+    # 提取标签中的文字
+    r = u'<.+?>([^\/\\\&\<\>]+?)</\w+?>'
+    p = re.compile(r, re.DOTALL | re.IGNORECASE)
+    rs = p.findall(content)
+    print rs
+    for s in rs:
+        if summary.__len__() > max_num:
+            summary += '......'
+            break
+        if s:
+            summary += s
+    # 没有标签的
+    if not summary:
+        r = u'[\u4e00-\u9fa5\w\@]+'
+        p = re.compile(r, re.DOTALL | re.IGNORECASE)
+        rs = p.findall(content)
+        for s in rs:
+            if summary.__len__() > max_num:
+                summary += '......'
+                break
+            if s:
+                summary += s
+    return summary
+
+
+def get_summary_from_html_by_sub(content, max_num=100):
+    """
+    @note: 通过内容获取摘要，采用替换标签的方式实现
+    """
+    tag_s = re.compile('<.+?>')
+    tag_e = re.compile('</\w+?>')
+    content = tag_s.sub('', content)
+    content = tag_e.sub(' ', content)
+    if content.__len__() > max_num:
+        content = content[:max_num] + '......'
+    return content

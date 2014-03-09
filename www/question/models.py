@@ -29,32 +29,8 @@ class Question(models.Model):
         """
         @attention: 通过内容获取摘要
         """
-        import re
-
-        summary = ''
-        # 提取标签中的文字
-        r = u'<.+?>([^\/\\\&\<\>]+?)</\w+?>'
-        p = re.compile(r, re.DOTALL | re.IGNORECASE)
-        rs = p.findall(self.content)
-        for s in rs:
-            if summary.__len__() > 100:
-                summary += '......'
-                break
-            if s:
-                summary += s
-        # 没有标签的
-        if not summary:
-            r = u'[\u4e00-\u9fa5\w]+'
-            p = re.compile(r, re.DOTALL | re.IGNORECASE)
-            rs = p.findall(self.content)
-            for s in rs:
-                if summary.__len__() > 100:
-                    summary += '......'
-                    break
-                if s:
-                    summary += s
-
-        return summary
+        from common import utils
+        return utils.get_summary_from_html_by_sub(self.content)
 
     def get_user(self):
         from www.account.interface import UserBase
@@ -81,6 +57,13 @@ class Answer(models.Model):
         from www.account.interface import UserBase
         user = UserBase().get_user_by_id(self.from_user_id)
         return user
+
+    def get_summary(self):
+        """
+        @attention: 通过内容获取摘要
+        """
+        from common import utils
+        return utils.get_summary_from_html_by_sub(self.content)
 
 
 class AtAnswer(models.Model):
