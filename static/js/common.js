@@ -372,7 +372,7 @@ function CommonCoverDiv() {
 
 function common_callback(data) {
 	if (data['flag'] == '0') {
-		alert('成功');
+		alert('操作成功');
 		window.location.reload();
 	} else {
 		alert(data['result']);
