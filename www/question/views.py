@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response
 
 from common import utils, page
 from www.question import interface
-from www.misc.decorators import member_required
+from www.misc.decorators import member_required, staff_required
 
 
 qb = interface.QuestionBase()
@@ -54,9 +54,9 @@ def tag_question(request, tag_domain, template_name='question/question_home.html
 def question_detail(request, question_id, template_name='question/question_detail.html',
                     error_msg=None, success_msg=None, content=''):
     question = qb.get_question_by_id(question_id)
-    question = qb.format_quesitons([question, ])[0]
     if not question:
         raise Http404
+    question = qb.format_quesitons([question, ])[0]
 
     answers = ab.get_answers_by_question_id(question_id)
     answers = ab.format_answers(answers, request.user)
@@ -109,7 +109,7 @@ def modify_question(request, question_id):
         else:
             return question_detail(request, question_id, error_msg=result)
     else:
-        return question_detail(request, question_id) 
+        return question_detail(request, question_id)
 
 
 @member_required
@@ -153,5 +153,32 @@ def remove_answer(request):
     answer_id = request.POST.get('answer_id', '')
 
     flag, result = ab.remove_answer(answer_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@member_required
+def remove_question(request):
+    question_id = request.POST.get('question_id', '')
+
+    flag, result = qb.remove_question(question_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@staff_required
+def set_important(request):
+    question_id = request.POST.get('question_id', '')
+
+    flag, result = qb.set_important(question_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@staff_required
+def cachel_important(request):
+    question_id = request.POST.get('question_id', '')
+
+    flag, result = qb.cachel_important(question_id, request.user)
     r = dict(flag='0' if flag else '-1', result=result)
     return HttpResponse(json.dumps(r), mimetype='application/json')

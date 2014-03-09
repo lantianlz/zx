@@ -4,8 +4,8 @@
 {% block title %}首页{% endblock %}
 
 {% block cheader %}
-<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/question.css?v={{MEDIA_VERSION}}" />
-<script type="text/javascript" src="{{MEDIA_URL}}js/site/question.js?v={{MEDIA_VERSION}}"></script>
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/question.css" />
+<script type="text/javascript" src="{{MEDIA_URL}}js/site/question.js"></script>
 <script type="text/javascript">
     var QUESTION_TAGS = {{tags|safe|default:"{}"}},
         SElECTED_QUESTION_TYPE = "{{question.question_type.id}}",

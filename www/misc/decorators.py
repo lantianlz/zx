@@ -29,6 +29,23 @@ def member_required(func):
     return _decorator
 
 
+def staff_required(func):
+    """
+    @attention: 过滤器, 是否是内部成员
+    @author: lizheng
+    @date: 2013-12-10
+    """
+    def _decorator(request, *args, **kwargs):
+        if not (hasattr(request, 'user') and request.user.is_authenticated() and request.user.is_staff()):
+            if request.is_ajax():
+                return HttpResponse('need_staff')
+            else:
+                HttpResponse(u'需要管理员权限才可')
+
+        return func(request, *args, **kwargs)
+    return _decorator
+
+
 def protected_view(func):
     """
     @attention: 过滤器, 站内的views，不对站外用户开发

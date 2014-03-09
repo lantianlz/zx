@@ -110,8 +110,8 @@ def filter_script(htmlstr):
     # re_expression = re.compile('<[^>]*(expression|javascript|document|cookie|\s+on)+[^>]*>[^<]*<\s*/\s*[^>]*\s*>', re.I)
 
     # 去掉多余的空行
-    blank_line = re.compile('\n+')
-    s = blank_line.sub('\n', htmlstr)
+    blank_line = re.compile('(\r?\n)+')
+    s = blank_line.sub(' ', htmlstr)
 
     s = re_cdata.sub('', s)  # 去掉CDATA
     s = re_script.sub('', s)  # 去掉SCRIPT
@@ -123,8 +123,8 @@ def filter_script(htmlstr):
     re_expression = re.compile('<[^>]*( on)[^>]*>', re.I)
     s = re_expression.sub('', s)  # 去掉html带on事件的
 
-    # 去掉多余的空行
-    s = blank_line.sub('\n', s)
+    # # 去掉多余的空行
+    # s = blank_line.sub('\n', s)
     return s
 
 
