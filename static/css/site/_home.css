@@ -152,7 +152,7 @@ body {background-color: #F0F4F7}
 }
 
 .flash-badge{
-    background-color: #999999;
+    background-color: orange;
     box-shadow: 0 0 1px #666666;
     animation-duration: 3s;
     animation-name: flashbadge;
@@ -164,35 +164,35 @@ body {background-color: #F0F4F7}
 
 @keyframes flashbadge{
   from {
-    background-color: #999999;
-    box-shadow: 0 0 1px #666666;
+    background-color: orange;
+    box-shadow: 0 0 1px orange;
   }
   50%{
-    background-color: orange;
-    box-shadow: 0 0 10px orange;
+    background-color: #999;
+    box-shadow: 0 0 10px #999;
   }
   to {
-    background-color: #999999;
-    box-shadow: 0 0 1px #666666;
+    background-color: orange;
+    box-shadow: 0 0 1px orange;
   }
 }
 
 @-webkit-keyframes flashbadge{
   from {
-    background-color: #999999;
-    box-shadow: 0 0 1px #666666;
+    background-color: orange;
+    box-shadow: 0 0 1px orange;
   }
   50%{
-    background-color: orange;
-    box-shadow: 0 0 10px orange;
+    background-color: #999;
+    box-shadow: 0 0 10px #999;
   }
   to {
-    background-color: #999999;
-    box-shadow: 0 0 1px #666666;
+    background-color: orange;
+    box-shadow: 0 0 1px orange;
   }
 }
 
-.flashborder{
+.flash-border{
     box-shadow: 0px 0px 4px  #f1f1f1;
     animation-duration: 3s;
     animation-name: flashborder;
