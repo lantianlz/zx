@@ -109,8 +109,15 @@ $(document).ready(function(){
 
     // 回复某人事件
     $('.answer-say-to').bind('click', function(){
+        /*
         $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ");
         $('.answer-main .zx-textarea').focusEnd();
+        */
+        
+        UM.getEditor('zx-editor').setContent("@" + $(this).data('user_name') + "  ");
+        UM.getEditor('zx-editor').focus(true);
+        // 滚动到输入框的位置框
+        $('html,body').animate({scrollTop: $('#zx-editor').offset().top});
     });
   
 
