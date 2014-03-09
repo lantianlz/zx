@@ -222,10 +222,28 @@ $(document).ready(function(){
 });
 
 
+function common_remove_question_callback(data) {
+    if (data['flag'] == '0') {
+        alert('成功');
+        window.location = '/question';
+    } else {
+        errorMeg(data['result']);
+    }
+}
+
 function remove_answer(answer_id){
     if(!confirm('确定删除吗？')){
         return;
     }
     var postData = {'answer_id': answer_id};
     ajaxSend("/question/remove_answer", postData, common_callback);
+}
+
+
+function remove_question(question_id){
+    if(!confirm('确定删除吗？')){
+        return;
+    }
+    var postData = {'question_id': question_id};
+    ajaxSend("/question/remove_question", postData, common_remove_question_callback);
 }

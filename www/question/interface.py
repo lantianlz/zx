@@ -174,7 +174,7 @@ class QuestionBase(object):
             new_tags = [str(tag_id) for tag_id in [tq.tag_id for tq in TagQuestion.objects.filter(question=question)]]
             new_tags.sort()
             tags.sort()
-            if tags !=  new_tags:
+            if tags != new_tags:
                 TagQuestion.objects.filter(question=question).delete()
                 for tag in tags:
                     try:
@@ -194,6 +194,24 @@ class QuestionBase(object):
         @note: 更新浏览次数
         '''
         Question.objects.filter(id=question_id).update(views_count=F('views_count') + 1)
+
+    @question_admin_required
+    @transaction.commit_manually(using=QUESTION_DB)
+    def remove_question(self, question, user):
+        try:
+            question.state = False
+            question.save()
+
+            # 更新用户回答统计总数
+            cache.get_or_update_data_from_cache('question_count_%s' % question.user_id, False, 3600 * 24,
+                                                self.get_user_question_count, question.user_id)
+
+            transaction.commit(using=QUESTION_DB)
+            return True, dict_err.get(000)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return False, dict_err.get(999)
 
     def get_question_by_user_id(self, user_id):
         return Question.objects.filter(user_id=user_id, state=True)
@@ -216,7 +234,7 @@ class QuestionBase(object):
 
     def get_question_by_id(self, id):
         try:
-            return Question.objects.select_related('question_type').get(id=id)
+            return Question.objects.select_related('question_type').get(id=id, state=True)
         except Question.DoesNotExist:
             return None
 
