@@ -28,7 +28,7 @@
                         时间：{{question.create_time|time_format}} &nbsp;&nbsp;&nbsp;
                         作者：<a href="{{question.user.get_url}}">{{question.user.nick}}</a>
                     </div>
-                    <div class='pt-10 line-height-25'>{{question.get_summary}}</div>
+                    <div class='pt-10 line-height-25'>{{question.get_summary|safe}}</div>
                 </div>
             </div>
         </div>
