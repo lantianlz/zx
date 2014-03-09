@@ -224,13 +224,22 @@ $(document).ready(function(){
     
     // 问题详情页面 的 问题内容
     if(QUESTION_CONTENT){
-        UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
+        try{
+            UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
+        }
+        catch(e){}
+    }
+
+    // 问题详情页的回答内容
+    if(ANSWER_CONTENT){
+        UM.getEditor('zx-editor').setContent(ANSWER_CONTENT);
     }
 
     // 提问页面 的 问题内容
     if(ASK_QUESTION_CONTENT){
         UM.getEditor('zx-editor').setContent(ASK_QUESTION_CONTENT);
     }
+
 });
 
 
@@ -280,4 +289,18 @@ function cachel_important(question_id){
     var postData = {'question_id': question_id};
     g_ajax_processing_obj_id = 'cancel_important_a_id';
     ajaxSend("/question/cachel_important", postData, common_callback);
+}
+
+
+function set_answer_bad(answer_id){
+    var postData = {'answer_id': answer_id};
+    g_ajax_processing_obj_id = 'set_answer_bad_id_' + answer_id;
+    ajaxSend("/question/set_answer_bad", postData, common_callback);
+}
+
+
+function cancel_answer_bad(answer_id){
+    var postData = {'answer_id': answer_id};
+    g_ajax_processing_obj_id = 'cancel_answer_bad_' + answer_id;
+    ajaxSend("/question/cancel_answer_bad", postData, common_callback);
 }

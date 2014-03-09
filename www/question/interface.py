@@ -8,7 +8,7 @@ from django.db.models import F
 from common import utils, debug, cache
 from www.account.interface import UserBase
 from www.message.interface import UnreadCountBase
-from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer
+from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad
 
 
 dict_err = {
@@ -18,6 +18,7 @@ dict_err = {
     103: u'内容过于冗长，稍微提炼一下',
     104: u'喜欢一次足矣',
     105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
+    106: u'不要重复给没有帮助的选项哦',
 
     800: u'问题不存在或者已删除',
     801: u'回答不存在或者已删除',
@@ -282,12 +283,14 @@ class AnswerBase(object):
         request_user_like_answer_ids = []
         if request_user and answers:
             request_user_likes = LikeBase().get_likes_by_question(answers[0].question, request_user.id)
-            request_user_like_answer_ids = [l.answer_id for l in request_user_likes]
+            request_user_like_answer_ids = [l.answer_id for l in request_user_likes]    # 用户是否赞了该问题
+            request_user_bads = [ab.answer_id for ab in AnswerBad.objects.filter(user_id=request_user.id)]
 
         for answer in answers:
             answer.from_user = answer.get_from_user()
             answer.content = utils.replace_at_html(answer.content)
             answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
+            answer.is_request_user_bad = (answer.id in request_user_bads)   # 用户是否认为该问题无帮助
         return answers
 
     @question_required
@@ -342,6 +345,12 @@ class AnswerBase(object):
     def get_answers_by_question_id(self, question_id):
         return Answer.objects.select_related('question').filter(question=question_id, state=True)
 
+    def get_good_answers_by_question_id(self, question_id):
+        return Answer.objects.select_related('question').filter(question=question_id, state=True, is_bad=False)
+
+    def get_bad_answers_by_question_id(self, question_id):
+        return Answer.objects.select_related('question').filter(question=question_id, state=True, is_bad=True)
+
     def get_user_received_answer(self, user_id):
         return Answer.objects.select_related('question').filter(to_user_id=user_id, state=True)\
             .exclude(from_user_id=user_id).order_by('-id')
@@ -375,6 +384,42 @@ class AnswerBase(object):
             # 更新用户回答统计总数
             cache.get_or_update_data_from_cache('answer_count_%s' % answer.from_user_id, False, 3600 * 24,
                                                 self.get_user_sended_answers_count, answer.from_user_id)
+
+            transaction.commit(using=QUESTION_DB)
+            return True, dict_err.get(000)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return False, dict_err.get(999)
+
+    @answer_required
+    @transaction.commit_manually(using=QUESTION_DB)
+    def set_answer_bad(self, answer, user):
+        try:
+            if AnswerBad.objects.filter(answer=answer, user_id=user.id):
+                transaction.rollback(using=QUESTION_DB)
+                return False, dict_err.get(106)
+
+            AnswerBad.objects.create(answer=answer, user_id=user.id)
+            if user.is_staff or AnswerBad.filter(answer=answer).count() >= 9:
+                answer.is_bad = True
+                answer.save()
+
+            transaction.commit(using=QUESTION_DB)
+            return True, dict_err.get(000)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return False, dict_err.get(999)
+
+    @answer_required
+    @transaction.commit_manually(using=QUESTION_DB)
+    def cancel_answer_bad(self, answer, user):
+        try:
+            AnswerBad.objects.filter(answer=answer, user_id=user.id).delete()
+            if user.is_staff or AnswerBad.filter(answer=answer).count() <= 10:
+                answer.is_bad = False
+                answer.save()
 
             transaction.commit(using=QUESTION_DB)
             return True, dict_err.get(000)

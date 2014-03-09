@@ -375,7 +375,7 @@ function common_callback(data) {
 		alert('成功');
 		window.location.reload();
 	} else {
-		errorMeg(data['result']);
+		alert(data['result']);
 	}
 }
 

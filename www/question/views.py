@@ -52,14 +52,16 @@ def tag_question(request, tag_domain, template_name='question/question_home.html
 
 @member_required
 def question_detail(request, question_id, template_name='question/question_detail.html',
-                    error_msg=None, success_msg=None, content=''):
+                    error_msg=None, success_msg=None, answer_content=''):
     question = qb.get_question_by_id(question_id)
     if not question:
         raise Http404
     question = qb.format_quesitons([question, ])[0]
 
-    answers = ab.get_answers_by_question_id(question_id)
-    answers = ab.format_answers(answers, request.user)
+    good_answers = ab.format_answers(ab.get_good_answers_by_question_id(question_id), request.user)
+    bad_answers = ab.format_answers(ab.get_bad_answers_by_question_id(question_id), request.user)
+    good_answers_count = len(good_answers)
+    bad_answers_count = len(bad_answers)
 
     # 异步更新浏览次数
     from www.tasks import async_add_question_view_count
@@ -114,13 +116,13 @@ def modify_question(request, question_id):
 
 @member_required
 def create_answer(request, question_id):
-    content = request.POST.get('answer_content', '')
+    answer_content = request.POST.get('answer_content', '')
 
-    flag, result = ab.create_answer(question_id, request.user.id, content, ip=utils.get_clientip(request))
+    flag, result = ab.create_answer(question_id, request.user.id, answer_content, ip=utils.get_clientip(request))
     if flag:
         return HttpResponseRedirect(result.question.get_url())
     else:
-        return question_detail(request, question_id, error_msg=result, content=content)
+        return question_detail(request, question_id, error_msg=result, answer_content=answer_content)
 
 
 @member_required
@@ -180,5 +182,23 @@ def cachel_important(request):
     question_id = request.POST.get('question_id', '')
 
     flag, result = qb.cachel_important(question_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@member_required
+def set_answer_bad(request):
+    answer_id = request.POST.get('answer_id', '')
+
+    flag, result = ab.set_answer_bad(answer_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@member_required
+def cancel_answer_bad(request):
+    answer_id = request.POST.get('answer_id', '')
+
+    flag, result = ab.cancel_answer_bad(answer_id, request.user)
     r = dict(flag='0' if flag else '-1', result=result)
     return HttpResponse(json.dumps(r), mimetype='application/json')

@@ -26,10 +26,19 @@
             <span class="glyphicon glyphicon-share"></span>
             回复
         </a>
-        <a class="answer-no-help auto-hide" href="javascript: void(0);">
+        {% if answer.is_request_user_bad %}
+        <a class="answer-no-help auto-hide" href="javascript: void(0);" onclick="cancel_answer_bad({{answer.id}});"
+            id="cancel_answer_bad_{{answer.id}}">
+            <span class="glyphicon glyphicon-thumbs-down"></span>
+            撤销没有帮助
+        </a>
+        {% else %}
+        <a class="answer-no-help auto-hide" href="javascript: void(0);" onclick="set_answer_bad({{answer.id}});"
+            id="set_answer_bad_id_{{answer.id}}">
             <span class="glyphicon glyphicon-thumbs-down"></span>
             没有帮助
         </a>
+        {% endif %}
         <a class="answer-comments hide" href="javascript: void(0);">
             <span class="glyphicon glyphicon-comment"></span>
             88条评论

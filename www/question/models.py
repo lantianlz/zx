@@ -47,6 +47,7 @@ class Answer(models.Model):
     like_count = models.IntegerField(verbose_name=u'赞的次数', default=0)
     ip = models.CharField(max_length=32, null=True)
     is_bad = models.BooleanField(default=False)  # 是否是无用回复，无用回复需要折叠
+    # bad_count = models.IntegerField(default=0)  # 被点击无用回复次数
     state = models.BooleanField(default=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
@@ -66,9 +67,18 @@ class Answer(models.Model):
         return utils.get_summary_from_html_by_sub(self.content)
 
 
+class AnswerBad(models.Model):
+    answer = models.ForeignKey(Answer)
+    user_id = models.CharField(verbose_name=u'给出无用答复的人', max_length=32, db_index=True)
+
+    class Meta:
+        unique_together = [('user_id', 'answer')]
+        ordering = ["-id"]
+
+
 class AtAnswer(models.Model):
     answer = models.ForeignKey(Answer)
-    user_id = models.CharField(max_length=36)
+    user_id = models.CharField(max_length=32)
 
     class Meta:
         unique_together = [('user_id', 'answer')]
