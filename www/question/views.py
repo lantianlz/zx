@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response
 
 from common import utils, page
 from www.question import interface
-from www.misc.decorators import member_required
+from www.misc.decorators import member_required, staff_required
 
 
 qb = interface.QuestionBase()
@@ -162,5 +162,23 @@ def remove_question(request):
     question_id = request.POST.get('question_id', '')
 
     flag, result = qb.remove_question(question_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@staff_required
+def set_important(request):
+    question_id = request.POST.get('question_id', '')
+
+    flag, result = qb.set_important(question_id, request.user)
+    r = dict(flag='0' if flag else '-1', result=result)
+    return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+@staff_required
+def cachel_important(request):
+    question_id = request.POST.get('question_id', '')
+
+    flag, result = qb.cachel_important(question_id, request.user)
     r = dict(flag='0' if flag else '-1', result=result)
     return HttpResponse(json.dumps(r), mimetype='application/json')

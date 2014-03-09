@@ -107,6 +107,10 @@ jQ(document).ajaxComplete(function(event, request, settings) {
 		alert('请先登录');
 		// window.location = login_url;
 	}
+	if (request.responseText == 'need_staff') {
+		alert('需要管理员权限才能执行');
+	}
+
 	if (window.g_ajax_processing_obj_id) {
 		hide_ajax_processing();
 	}

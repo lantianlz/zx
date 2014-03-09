@@ -17,4 +17,6 @@ urlpatterns = patterns('www.question.views',
                        url(r'^remove_question$', 'remove_question'),
 
                        url(r'^important$', 'important_question'),
+                       url(r'^set_important$', 'set_important'),
+                       url(r'^cachel_important$', 'cachel_important'),
                        )

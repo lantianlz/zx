@@ -47,7 +47,7 @@ $(document).ready(function(){
             </ul>
         </div>
         <div class="topic-footer row">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 {% if not question.is_hide_user %}
                 <a href="{{question.user.get_url}}">
                     <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
@@ -57,8 +57,21 @@ $(document).ready(function(){
                 </a>
                 {% endif %}
             </div>
-            <div class="col-md-6 text-right">
+            <div class="col-md-7 text-right">
                 <span class="question-tools gray-a">
+                    {% if request.user.is_staff %}
+                    {% if not question.is_important %}
+                    <a href="javascript: void(0);" 
+                        onclick="set_important('{{question.id}}')">
+                        设置精华
+                    </a>
+                    {% else %}
+                    <a href="javascript: void(0);" 
+                        onclick="cachel_important('{{question.id}}')">
+                        取消精华
+                    </a>
+                    {% endif %}
+                    {% endif %}
                     {% if request.user.id == question.user.id or request.user.is_staff %}
                     <a href="#" data-toggle="modal" data-target="#edit_modal">
                         <span class="glyphicon glyphicon-pencil"></span>

@@ -247,3 +247,21 @@ function remove_question(question_id){
     var postData = {'question_id': question_id};
     ajaxSend("/question/remove_question", postData, common_remove_question_callback);
 }
+
+
+function set_important(question_id){
+    if(!confirm('确定设置为精华吗？')){
+        return;
+    }
+    var postData = {'question_id': question_id};
+    ajaxSend("/question/set_important", postData, common_callback);
+}
+
+
+function cachel_important(question_id){
+    if(!confirm('确定取消精华吗？')){
+        return;
+    }
+    var postData = {'question_id': question_id};
+    ajaxSend("/question/cachel_important", postData, common_callback);
+}

@@ -81,6 +81,7 @@ class QuestionBase(object):
     def format_quesitons(self, questions):
         for question in questions:
             question.user = question.get_user()
+            question.content = utils.filter_script(question.content)
         return questions
 
     def validate_title(self, title):
@@ -260,6 +261,19 @@ class QuestionBase(object):
     def get_question_admin_permission(self, question, user):
         # 返回question值用于question对象赋值
         return question.user_id == user.id or user.is_staff(), question
+
+    @question_required
+    def set_important(self, question, user):
+        question.is_important = True
+        question.save()
+        return True, dict_err.get(000)
+
+    @question_required
+    def cachel_important(self, question, user):
+        question.is_important = False
+        question.save()
+
+        return True, dict_err.get(000)
 
 
 class AnswerBase(object):
