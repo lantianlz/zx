@@ -104,7 +104,7 @@ def user_qa_count_info_right_nav_dispaly(context):
 @register.simple_tag(takes_context=True)
 def global_hotest_tags(context):
     """
-    @note: 热门标签提取
+    @note: 热门话题提取
     """
     from www.question.interface import TagBase
     global_hotest_tags = TagBase().get_all_tags()

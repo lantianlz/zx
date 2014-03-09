@@ -1,0 +1,18 @@
+{% load custom_tags %}
+{% load custom_filters %}
+{% if request.user.is_authenticated %}
+<div class="intro well">
+    <div class="row">
+        <div class="col-md-4 avatar">
+            <a href="/p">
+                <img class="avatar-65 avatar-circle" src="{{request.user.get_avatar}}">
+            </a>
+        </div>
+        <div class="col-md-8 nick">
+            <a href="/p">{{request.user.nick}}</a>
+        </div>
+    </div>
+    <div class="blank10 bottom-border"></div>
+    {% user_qa_count_info_right_nav_dispaly %}
+</div>
+{% endif %}

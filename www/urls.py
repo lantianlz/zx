@@ -22,6 +22,9 @@ urlpatterns = patterns('',
                        url(r'^message/', include('message.urls')),
                        url(r'^admin/', include('admin.urls')),
 
+                       url(r'^p$', 'www.account.views.user_profile'),
+                       url(r'^p/(?P<id>\w+)$', 'www.account.views.user_profile'),
+
                        url(r'^500$', 'www.account.views.test500'),
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',

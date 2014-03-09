@@ -5,9 +5,10 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('www.question.views',
                        url(r'^$', 'question_home'),
+                       url(r'^(?P<question_id>\d+)$', 'question_detail'),
+                       # url(r'^question_detail/(?P<question_id>\w+)$', 'question_detail'),
                        url(r'^type/(?P<question_type>\w+)$', 'question_home'),
                        url(r'^tag/(?P<tag_domain>\w+)$', 'tag_question'),
-                       url(r'^question_detail/(?P<question_id>\w+)$', 'question_detail'),
                        url(r'^ask_question$', 'ask_question'),
                        url(r'^modify_question/(?P<question_id>\w+)$', 'modify_question'),
 

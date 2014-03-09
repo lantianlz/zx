@@ -60,7 +60,7 @@ class Profile(models.Model):
     create_time = models.DateTimeField(verbose_name=u'创建时间', db_index=True, default=datetime.datetime.now)
 
     def get_url(self):
-        return u'/account/user_profile/%s' % self.id
+        return u'/p/%s' % self.id
 
     def get_avatar(self):
         return self.avatar or ('%s/img/common/default.png' % settings.MEDIA_URL)

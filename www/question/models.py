@@ -23,7 +23,7 @@ class Question(models.Model):
         ordering = ["-sort_num", '-like_count', "-last_answer_time"]
 
     def get_url(self):
-        return u'/question/question_detail/%s' % self.id
+        return u'/question/%s' % self.id
 
     def get_summary(self):
         """
