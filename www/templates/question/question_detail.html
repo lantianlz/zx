@@ -60,7 +60,7 @@ $(document).ready(function(){
             </div>
             <div class="col-md-6 text-right">
                 <span class="question-tools gray-a">
-                    {% if request.user.id == question.user.id %}
+                    {% if request.user.id == question.user.id or request.user.is_staff %}
                     <a href="#" data-toggle="modal" data-target="#edit_modal">
                         <span class="glyphicon glyphicon-pencil"></span>
                         修改
@@ -104,12 +104,12 @@ $(document).ready(function(){
                 </div>
             </div>
         </div>
-        {% if request.user.id == question.user.id %}
+        {% if request.user.id == question.user.id or request.user.is_staff %}
         <!-- 弹出层 -->
         <div class="modal fade" id="edit_modal">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form role="form" method='post' action='/question/modify_question'>
+                    <form role="form" method='post' action='/question/modify_question/{{question.id}}'>
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title">修改提问</h4>
@@ -124,17 +124,14 @@ $(document).ready(function(){
                             </div>
                             <div class="form-group" id="div_tags">
                                 <div class="tag-title mb-5">将你的提问归类至子话题 :</div>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox1" value="option1">1</label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox2" value="option2">2</label>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" name="question_title" placeholder="你有什么想问的？写下问题的标题" 
                                     value='{{question.title}}'></div>
                             <div class="form-group">
                                 <!-- <textarea name="question_content" class="form-control zx-textarea auto-height-textarea" rows="10">{{question.content}}</textarea> -->
-                                <script type="text/plain" id="zx-editor2" name="question_content" style="width:100%;height:200px;"></script>
+                                <script type="text/plain" id="zx-editor2" name="question_content" 
+                                    style="width:100%;height:200px;"></script>
                             </div>
 
                         </div>
@@ -144,10 +141,11 @@ $(document).ready(function(){
                         </div>
                     </form>
                 </div>
-                <!-- /.modal-content --> </div>
-            <!-- /.modal-dialog --> </div>
-        <!-- /.modal -->
-        <!-- 弹出层结束 -->{% endif %}</div>
+            </div>
+        </div>
+        <!-- 弹出层结束 -->
+        {% endif %}
+    </div>
 
     <div class="replies">
         <ul class="list-group" id="ul_replies">

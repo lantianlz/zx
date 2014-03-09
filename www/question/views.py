@@ -52,7 +52,7 @@ def tag_question(request, tag_domain, template_name='question/question_home.html
 
 @member_required
 def question_detail(request, question_id, template_name='question/question_detail.html',
-                    error_msg=None, content=''):
+                    error_msg=None, success_msg=None, content=''):
     question = qb.get_question_by_id(question_id)
     question = qb.format_quesitons([question, ])[0]
     if not question:
@@ -75,15 +75,15 @@ def question_detail(request, question_id, template_name='question/question_detai
 def ask_question(request, template_name='question/ask_question.html'):
     if request.POST:
         question_type = int(request.POST.get('question_type', '0'))
-        question_title = request.POST.get('question_title')
-        question_content = request.POST.get('question_content')
+        question_title = request.POST.get('question_title', '')
+        question_content = request.POST.get('question_content', '')
         is_hide_user = request.POST.get('is_hide_user')
         tags = request.POST.getlist('tag')
 
         flag, result = qb.create_question(request.user.id, question_type, question_title, question_content,
                                           ip=utils.get_clientip(request), is_hide_user=is_hide_user, tags=tags)
         if flag:
-            return HttpResponseRedirect('/question/question_detail/%s' % result.id)
+            return HttpResponseRedirect(result.get_url())
         else:
             error_msg = result
 
@@ -93,12 +93,32 @@ def ask_question(request, template_name='question/ask_question.html'):
 
 
 @member_required
+def modify_question(request, question_id):
+    if request.POST:
+        question_type = int(request.POST.get('question_type', '0'))
+        question_title = request.POST.get('question_title', '')
+        question_content = request.POST.get('question_content', '')
+        is_hide_user = request.POST.get('is_hide_user')
+        tags = request.POST.getlist('tag')
+
+        flag, result = qb.modify_question(question_id, request.user, question_type, question_title, question_content,
+                                          ip=utils.get_clientip(request), is_hide_user=is_hide_user, tags=tags)
+        if flag:
+            return question_detail(request, question_id, success_msg=u'修改成功')
+            # return HttpResponseRedirect(result.get_url())
+        else:
+            return question_detail(request, question_id, error_msg=result)
+    else:
+        return question_detail(request, question_id) 
+
+
+@member_required
 def create_answer(request, question_id):
     content = request.POST.get('answer_content', '')
 
     flag, result = ab.create_answer(question_id, request.user.id, content, ip=utils.get_clientip(request))
     if flag:
-        return HttpResponseRedirect('/question/question_detail/%s' % question_id)
+        return HttpResponseRedirect(result.question.get_url())
     else:
         return question_detail(request, question_id, error_msg=result, content=content)
 
