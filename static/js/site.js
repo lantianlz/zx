@@ -402,17 +402,18 @@ $(document).ready(function(){
 				if(String(data['result']) == '0'){
 					$('#unread_count_total_nav_1').hide();
 					$('#unread_count_total_nav_2').hide();
-					if(flashTitleInterval){
-						window.clearInterval(flashTitleInterval);
-					}
+					// if(flashTitleInterval){
+					// 	window.clearInterval(flashTitleInterval);
+					// }
 				} else {
 					$('#unread_count_total_nav_1').show();
 					$('#unread_count_total_nav_2').show();
+					document.title = String.format("收到 {0} 条新消息", data['result'])
 
 					// 有新消息闪烁提示
-					if(!flashTitleInterval){
-						flashTitleInterval = window.setInterval(flashTitleFun, 1000);
-					}
+					// if(!flashTitleInterval){
+					// 	flashTitleInterval = window.setInterval(flashTitleFun, 1000);
+					// }
 					
 				}
 	    	});
