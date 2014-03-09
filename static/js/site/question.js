@@ -215,9 +215,14 @@ $(document).ready(function(){
     });
 
     
-    // 问题内容
+    // 问题详情页面 的 问题内容
     if(QUESTION_CONTENT){
         UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
+    }
+
+    // 提问页面 的 问题内容
+    if(ASK_QUESTION_CONTENT){
+        UM.getEditor('zx-editor').setContent(ASK_QUESTION_CONTENT);
     }
 });
 
