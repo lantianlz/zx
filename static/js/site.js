@@ -391,7 +391,7 @@ $(document).ready(function(){
         dropFileEnabled: false
     });
 
-    var um = UM.getEditor('zx-editor2', {
+    var um2 = UM.getEditor('zx-editor2', {
         toolbar:[
             'bold italic underline removeformat |',
             'insertorderedlist insertunorderedlist |' ,
@@ -448,11 +448,9 @@ $(document).ready(function(){
 				$('#unread_count_total_nav_1').show();
 				$('#unread_count_total_nav_2').show();
 				// $('title').html('收到 ' + data['result'] + ' 条新消息');
-				try
-				{
+				try{
 					document.title = '收到 ' + data['result'] + ' 条新消息';
-				}
-				catch (e) {
+				}catch (e) {
 					alert(e);
 				}
 			}

@@ -10,7 +10,8 @@
     var QUESTION_TAGS = {{tags|safe|default:"{}"}},
         SElECTED_QUESTION_TYPE = "{{question.question_type.id}}",
         SELECTED_QUESTION_TAGS = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}",
-        QUESTION_CONTENT = '{{question.content|safe|default:""}}';
+        QUESTION_CONTENT = '{{question.content|safe|default:""}}',
+        ASK_QUESTION_CONTENT = '{{question_content|safe|default:""}}';
 </script>
 {% block javascript %}{% endblock %}
 {% block css %}{% endblock %}

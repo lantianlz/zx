@@ -109,8 +109,15 @@ $(document).ready(function(){
 
     // 回复某人事件
     $('.answer-say-to').bind('click', function(){
+        /*
         $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ");
         $('.answer-main .zx-textarea').focusEnd();
+        */
+        
+        UM.getEditor('zx-editor').setContent("@" + $(this).data('user_name') + "  ");
+        UM.getEditor('zx-editor').focus(true);
+        // 滚动到输入框的位置框
+        $('html,body').animate({scrollTop: $('#zx-editor').offset().top});
     });
   
 
@@ -215,9 +222,14 @@ $(document).ready(function(){
     });
 
     
-    // 问题内容
+    // 问题详情页面 的 问题内容
     if(QUESTION_CONTENT){
         UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
+    }
+
+    // 提问页面 的 问题内容
+    if(ASK_QUESTION_CONTENT){
+        UM.getEditor('zx-editor').setContent(ASK_QUESTION_CONTENT);
     }
 });
 

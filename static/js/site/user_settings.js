@@ -11,4 +11,9 @@ $(document).ready(function(){
 	$('.zx-invitation input').not('.used').bind('click', function(){
 		$(this).select();
 	});
+
+	// 如果是从个人主页点击进来设置描述信息的时候, 让描述框自动获取焦点
+	if(window.location.href.indexOf('#set_des') > -1){
+		$('textarea[name=des]').focus();
+	}
 });

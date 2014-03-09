@@ -5,6 +5,10 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     z-index: 900;
 }
 
+.breadcrumb>li{
+    display: inline;
+}
+
 .zx-container{
     width: 1000px !important;
     min-width: 1000px !important;
