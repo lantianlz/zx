@@ -281,6 +281,7 @@ class AnswerBase(object):
 
     def format_answers(self, answers, request_user=None):
         request_user_like_answer_ids = []
+        request_user_bads = []
         if request_user and answers:
             request_user_likes = LikeBase().get_likes_by_question(answers[0].question, request_user.id)
             request_user_like_answer_ids = [l.answer_id for l in request_user_likes]    # 用户是否赞了该问题
@@ -289,6 +290,7 @@ class AnswerBase(object):
         for answer in answers:
             answer.from_user = answer.get_from_user()
             answer.content = utils.replace_at_html(answer.content)
+
             answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
             answer.is_request_user_bad = (answer.id in request_user_bads)   # 用户是否认为该问题无帮助
         return answers
