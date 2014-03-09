@@ -19,7 +19,6 @@ dict_err = {
     104: u'喜欢一次足矣',
     105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
 
-
     800: u'问题不存在或者已删除',
     801: u'回答不存在或者已删除',
     802: u'绝对不会让你得逞的，因为你没得权限',
@@ -41,6 +40,15 @@ def question_required(func):
             except Question.DoesNotExist:
                 return False, dict_err.get(800)
         return func(self, question, *args, **kwargs)
+    return _decorator
+
+
+def question_admin_required(func):
+    def _decorator(self, question, user, *args, **kwargs):
+        flag, question = QuestionBase().get_question_admin_permission(question, user)
+        if not flag:
+            return False, dict_err.get(802)
+        return func(self, question, user, *args, **kwargs)
     return _decorator
 
 
@@ -89,6 +97,20 @@ class QuestionBase(object):
             return False, dict_err.get(103)
         return True, dict_err.get(000)
 
+    def validata_question_element(self, question_type, question_title, question_content):
+        flag, result = self.validate_title(question_title)
+        if not flag:
+            return False, result
+
+        flag, result = self.validate_content(question_content)
+        if not flag:
+            return False, result
+
+        if not all((int(question_type), question_title, question_content)):
+            return False, dict_err.get(998)
+
+        return True, dict_err.get(000)
+
     @transaction.commit_manually(using=QUESTION_DB)
     def create_question(self, user_id, question_type, question_title, question_content,
                         ip='127.0.0.1', is_hide_user=None, tags=[]):
@@ -97,19 +119,11 @@ class QuestionBase(object):
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            flag, result = self.validate_title(question_title)
+            flag, result = self.validata_question_element(question_type, question_title, question_content)
+            transaction.rollback(using=QUESTION_DB)
             if not flag:
                 transaction.rollback(using=QUESTION_DB)
                 return False, result
-
-            flag, result = self.validate_content(question_content)
-            if not flag:
-                transaction.rollback(using=QUESTION_DB)
-                return False, result
-
-            if not all((int(question_type), question_title, question_content)):
-                transaction.rollback(using=QUESTION_DB)
-                return False, dict_err.get(998)
 
             question = Question.objects.create(user_id=user_id, question_type_id=question_type,
                                                title=question_title, content=question_content,
@@ -127,7 +141,47 @@ class QuestionBase(object):
             cache.get_or_update_data_from_cache('question_count_%s' % user_id, False, 3600 * 24,
                                                 self.get_user_question_count, user_id)
 
-            # todo 清理缓存、更新冗余信息等
+            transaction.commit(using=QUESTION_DB)
+            return True, question
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return False, dict_err.get(999)
+
+    @question_admin_required
+    @transaction.commit_manually(using=QUESTION_DB)
+    def modify_question(self, question, user, question_type, question_title, question_content,
+                        ip='127.0.0.1', is_hide_user=None, tags=[]):
+        try:
+            # 防止xss漏洞
+            question_title = utils.filter_script(question_title)
+            question_content = utils.filter_script(question_content)
+
+            flag, result = self.validata_question_element(question_type, question_title, question_content)
+            if not flag:
+                transaction.rollback(using=QUESTION_DB)
+                return False, result
+
+            question.question_type_id = question_type
+            question.title = question_title
+            question.content = question_content
+            question.ip = ip
+            if is_hide_user:
+                question.is_hide_user = True
+            question.save()
+
+            # 创建话题和tags关系
+            new_tags = [str(tag_id) for tag_id in [tq.tag_id for tq in TagQuestion.objects.filter(question=question)]]
+            new_tags.sort()
+            tags.sort()
+            if tags !=  new_tags:
+                TagQuestion.objects.filter(question=question).delete()
+                for tag in tags:
+                    try:
+                        TagQuestion.objects.create(tag_id=tag, question=question)
+                    except:
+                        pass
+
             transaction.commit(using=QUESTION_DB)
             return True, question
         except Exception, e:
@@ -183,6 +237,11 @@ class QuestionBase(object):
 
     def get_all_important_question(self):
         return Question.objects.filter(is_important=True, state=True).order_by('-id')
+
+    @question_required
+    def get_question_admin_permission(self, question, user):
+        # 返回question值用于question对象赋值
+        return question.user_id == user.id or user.is_staff(), question
 
 
 class AnswerBase(object):

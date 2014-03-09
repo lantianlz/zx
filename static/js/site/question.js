@@ -42,7 +42,7 @@ $(document).ready(function(){
 
     // 选择问题类型事件
     $('#div_types .zx-radio>input').bind("change", function(){
-        $('#div_tags').hide('fast');
+        $('#div_tags').hide('fast').find('label').remove();
 
         var type = $(this).val();
         if(!type) {
@@ -52,7 +52,7 @@ $(document).ready(function(){
         if(!type_tags){
             return;
         }
-        $('#div_tags').show('fast').find('label').remove();
+        $('#div_tags').show('fast');
         for (var i = type_tags.length - 1; i >= 0; i--) {
             $('#div_tags').append(
                 String.format(

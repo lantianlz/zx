@@ -60,7 +60,10 @@
         {% block container_head %}
         {% endblock container_head %}
         {% if success_msg %}
-        <div class="alert alert-success popmsg zx-alert" id="divSuccess">{{success_msg}}</div>
+        <div class="alert alert-success popmsg zx-alert container zx-container" id="divSuccess">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{success_msg}}
+        </div>
         {% endif %}
         {% if error_msg %}
             <div class="alert alert-danger alert-dismissable zx-alert container zx-container">
