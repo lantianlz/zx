@@ -124,7 +124,7 @@ function show_ajax_processing() {
 	var obj = jQ('#' + g_ajax_processing_obj_id);
 	obj.hide();
 	obj.next('img').remove();
-	obj.after(jQ('<img  src="' + media + '/img/loading.gif" alt="......" />'));
+	obj.after(jQ('<img  src="' + MEDIA_URL + '/img/common/loading.gif" alt="......" />'));
 }
 
 

@@ -248,6 +248,7 @@ function remove_answer(answer_id){
         return;
     }
     var postData = {'answer_id': answer_id};
+    g_ajax_processing_obj_id = 'remove_answer_a_id_' + answer_id;
     ajaxSend("/question/remove_answer", postData, common_callback);
 }
 
@@ -257,6 +258,7 @@ function remove_question(question_id){
         return;
     }
     var postData = {'question_id': question_id};
+    g_ajax_processing_obj_id = 'remove_question_a_id';
     ajaxSend("/question/remove_question", postData, common_remove_question_callback);
 }
 
@@ -266,6 +268,7 @@ function set_important(question_id){
         return;
     }
     var postData = {'question_id': question_id};
+    g_ajax_processing_obj_id = 'set_important_a_id';
     ajaxSend("/question/set_important", postData, common_callback);
 }
 
@@ -275,5 +278,6 @@ function cachel_important(question_id){
         return;
     }
     var postData = {'question_id': question_id};
+    g_ajax_processing_obj_id = 'cancel_important_a_id';
     ajaxSend("/question/cachel_important", postData, common_callback);
 }
