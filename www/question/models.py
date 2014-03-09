@@ -145,7 +145,7 @@ class Tag(models.Model):
 
     def get_url(self):
         # 标签
-        return u'/question/tag/%s' % self.domain
+        return u'/question/topic/%s' % self.domain
 
 
 class TagQuestion(models.Model):

@@ -10,7 +10,7 @@
 <!--问题列表开始-->
 <div class="question-list">
     <!--选项卡开始-->
-    {% if '/tag/' in request.path %}
+    {% if '/topic/' in request.path %}
     <ol class="breadcrumb">
         <li>
             <a href="/question">全部</a>
@@ -31,7 +31,7 @@
     <div class="alert alert-success popmsg" id="divSuccess">该分类暂无数据</div>
     {% endif %}
     <!--列表开始-->
-    <ul class="list-group {% if '/tag/' in request.path %}tag-ul{% endif %}" id="ul_question_list">
+    <ul class="list-group {% if '/topic/' in request.path %}tag-ul{% endif %}" id="ul_question_list">
         {% for question in questions %}
         <li class="list-group-item">
             <div class="item-container">
