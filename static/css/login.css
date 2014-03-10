@@ -34,10 +34,9 @@
 
 .container{
     /*background: red;*/
-    min-height: 500px;
+    /*min-height: 500px;*/
     width: inherit;
     height: inherit;
-    padding: 0px;
 }
 
 .footer{

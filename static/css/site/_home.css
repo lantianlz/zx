@@ -88,15 +88,15 @@ body {background-color: #F0F4F7}
     background-color: #cacaca;
 }
 
-.zx-header{
-    padding-top: 5px;
-}
-
 .zx-logo{
-    padding-right: 58px;
+    padding-right: 17px;
     color: #428bca;
     font-size: 32px;
     text-shadow: 1px 1px 0 #D0E0F1;
+}
+
+.zx-logo>img{
+  width: 105px;
 }
 
 .zx-logo:hover{
