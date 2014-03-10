@@ -223,11 +223,8 @@ $(document).ready(function(){
 
     
     // 问题详情页面 的 问题内容
-    if(QUESTION_CONTENT){
-        try{
-            UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
-        }
-        catch(e){}
+    if(QUESTION_CONTENT && ($('#zx-editor2').length > 0)){
+        UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
     }
 
     // 问题详情页的回答内容
