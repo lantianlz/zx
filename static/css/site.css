@@ -70,9 +70,16 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 
 .placeholder { color: #aaa; }
 
+.avatar-20{
+    width: 20px;
+}
+
 .avatar-25{
     width: 25px;
-    height: 25px;
+}
+
+.avatar-30{
+    width: 30px;
 }
 
 .avatar-35{

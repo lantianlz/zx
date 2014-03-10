@@ -76,6 +76,7 @@
 .ml-5{margin-left: 5px;}
 .ml-10{margin-left: 10px;}
 .ml-15{margin-left: 15px;}
+.ml-20{margin-left: 20px;}
 .mr-0{margin-right: 0px;}
 .mr-5{margin-right: 5px;}
 .mr-10{margin-right: 10px;}
@@ -107,6 +108,7 @@
 .pr-50{padding-right: 50px;}
 .pt-0{padding-top: 0px;}
 .pt-5{padding-top: 5px;}
+.pt-8{padding-top: 8px;}
 .pt-10{padding-top: 10px;}
 .pt-15{padding-top: 15px;}
 .pt-20{padding-top: 20px;}
@@ -138,6 +140,7 @@
 .co14{color:#333333;}
 .co15{color:#ff6600;}
 .co16{color:red;}
+.co17{color: #d1d1d1;}
 
 .textindent2{text-indent:32px;}
 .textindent0{text-indent: 0;}

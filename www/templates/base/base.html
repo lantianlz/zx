@@ -105,9 +105,11 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         <!-- 弹出层结束 -->
+        {% block base_container %}
         <div class="container zx-container" style="min-height:500px;" id="content_container_id">
             {% block container %}{% endblock container %}
         </div>
+        {% endblock base_container%}
         {% include "include/_footer.html" %}
         {% include "include/_tongji.html" %}
         {% block body_tail %}{% endblock body_tail %}

@@ -1,0 +1,58 @@
+{% extends "base/base_welcome.html" %}
+
+{% block title %}登录{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/login.css?v={{MEDIA_VERSION}}" />
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="{{MEDIA_URL}}js/login.js?v={{MEDIA_VERSION}}"></script>
+{% endblock %}
+
+{% block base_container %}
+<div class="container">
+    <div class="login-bg-1"><img src="/static/img/common/login-bg-1.png"></div>
+    <div class="login-bg-2"><img src="/static/img/common/login-bg-2.png"></div>
+</div>
+<div class="login-form">
+    <form class="form-horizontal" role="form" method="post" action="/login">
+        <div class="form-group mb-5">
+            <div class="col-md-offset-1 col-md-10 pt-20 co3">
+                <label>登录智选</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <input type="email" name="email" class="form-control" placeholder="登录邮箱" value='{{email}}' >
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <input type="password" name="password" class="form-control" placeholder="密码">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <button type="submit" class="btn btn-primary btn-block login">登录</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <button type="button" class="btn btn-primary btn-block regist">注册</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <a href="/account/oauth/qq">
+                    <img class="avatar-20 img-hover" title="使用腾讯QQ登录" data-type="qq" src="/static/img/common/qq.png">
+                </a>
+                <a href="/account/oauth/sina">
+                    <img class="avatar-25 img-hover ml-15" title="使用新浪微博登录" data-type="sina" src="/static/img/common/sina.png">
+                </a>
+                <a class="pull-right co17 f12 pt-8 forget-pwd" href="/forget_password">忘记密码?</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
