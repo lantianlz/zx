@@ -147,48 +147,21 @@ $(document).ready(function(){
 
 
     // 红心显示隐藏动画
-    var parent = null,
-        isRotating = false,
-        transformFun = function(target, deg){
-            target[0].style.webkitTransform = String.format("rotateY({0}deg)", deg);
-            target[0].style.mozTransform = String.format("rotateY({0}deg)", deg);
-            target[0].style.msTransform = String.format("rotateY({0}deg)", deg);
-            target[0].style.transform = String.format("rotateY({0}deg)", deg);
-        },
-        animateFun = function(target, isShowHeart){
-            // 开始旋转
-            jQuery({p: 0}).animate({p: 90}, {
-                duration: 300,
-                step: function(now, fx) {
-                    transformFun(target, now);
-                },
-                complete: function(){
-                    // 旋转到90度后将数字隐藏，将红心显示
-                    isShowHeart ? target.find('.answer-like').show() : target.find('.answer-like').hide();
-                    isShowHeart ? target.find('.answer-like-count').hide() : target.find('.answer-like-count').show();
-                    // 再旋转到0度
-                    jQuery({p: 90}).animate({p: 0}, {
-                        duration: 300,
-                        step: function(now, fx) {
-                            transformFun(target, now);
-                        }
-                    });
-                }
-            });
-        };
-    $('.answer-like-border .answer-like-count').bind('mouseenter', function(){
-        animateFun($(this).parent(), true);
-    });
-    $('.answer-like-border .answer-like').bind('mouseleave', function(){
-        animateFun($(this).parent(), false);
+    $('.answer-like-border').bind('mouseenter', function(){
+        $(this).find('.answer-like').fadeIn();
+        $(this).find('.answer-like-count').fadeOut();
+    })
+    .bind('mouseleave', function(){
+        $(this).find('.answer-like').fadeOut();
+        $(this).find('.answer-like-count').fadeIn();
     });
 
 
     // 点击赞动作
-    $('.answer-like-border .answer-like').bind('click', function(){
-        var parent = $(this).parent();
+    $('.answer-like-border').bind('click', function(){
+        var me = $(this);
         temp = null;
-        postData = {'answer_id': $(this).data('answer_id')};
+        postData = {'answer_id': me.data('answer_id')};
 
         ajaxSend("/question/like_answer", postData, function(data){
             if(data['flag'] != '0'){
@@ -197,8 +170,8 @@ $(document).ready(function(){
             }
 
             // 添加动画
-            parent.append('<span class="animate-like glyphicon glyphicon-heart"></span>');
-            temp = parent.find('.animate-like');
+            me.append('<span class="animate-like glyphicon glyphicon-heart"></span>');
+            temp = me.find('.animate-like');
             temp.animate({
                 opacity: 0.01,
                 fontSize: 25,
@@ -209,14 +182,14 @@ $(document).ready(function(){
                 temp.remove();
 
                 // 修改红心为实心
-                parent.find('.answer-like')
+                me.find('.answer-like')
                 .removeClass('glyphicon-heart-empty')
                 .addClass('glyphicon-heart')
                 .css({'color': 'red'});
 
                 // 赞次数+1
-                parent.find('.answer-like-count')
-                .text(parseInt(parent.find('.answer-like-count').text()) + 1);
+                me.find('.answer-like-count')
+                .text(parseInt(me.find('.answer-like-count').text()) + 1);
             });
         });
     });

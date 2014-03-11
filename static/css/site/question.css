@@ -442,31 +442,44 @@
 }
 
 .reply-header .answer-like{
+  background-color: white;
   font-size: 25px;
   cursor: pointer;
   position: absolute;
-  top: 11px;
-  left: 9px;
+  top: 0px;
+  border-radius: 50%;
+  left: 0px;
+  line-height: 45px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border: solid 1px #dddddd;
 }
 
 .reply-header .answer-like-count{
-  left: 2px;
-  position: absolute;
-  text-align: center;
-  top: 13px;
-  width: 40px;
+  background-color: white;
   cursor: pointer;
+  position: absolute;
+  top: 0px;
+  border-radius: 50%;
+  left: 0px;
+  line-height: 45px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border: solid 1px #dddddd;
 }
 
 .reply-header .answer-like-border{
-  background-color: white;
+  /*background-color: white;*/
   padding: 22px;
   position: absolute;
   right: 10px;
   top: -10px;
   border-radius: 50%;
-  border: solid 1px #dddddd;
-  box-shadow: 0px 0px 0px 1px #dddddd;
+  cursor: pointer;
+  /*border: solid 1px #dddddd;*/
+  /*box-shadow: 0px 0px 0px 1px #dddddd;*/
 }
 
 .reply-header .animate-like{

@@ -49,7 +49,7 @@ $(document).ready(function(){
         <div class="topic-footer row">
             <div class="col-md-5">
                 {% if not question.is_hide_user %}
-                <a href="{{question.user.get_url}}">
+                <a class="no-hover-unl" href="{{question.user.get_url}}">
                     <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
                 </a>
                 <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">

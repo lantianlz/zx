@@ -28,7 +28,8 @@
 .fb{font-weight:bold}
 .fn{font-weight:normal}
 .unl{text-decoration:underline}
-.no_unl{text-decoration:none}
+.no-unl{text-decoration:none}
+.no-hover-unl:hover{text-decoration:none}
 
 .f10{font-size: 10px}
 .f12{font-size: 12px}

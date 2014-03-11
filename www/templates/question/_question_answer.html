@@ -3,7 +3,7 @@
 <li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %}" id="answer_{{answer.id}}">
     <div class="reply-header row">
         <div class="col-md-6">
-            <a href="{{answer.from_user.get_url}}">
+            <a class="no-hover-unl" href="{{answer.from_user.get_url}}">
                 <img class="avatar-25 avatar-circle" src="{{answer.from_user.get_avatar}}" title="{{answer.from_user.nick}}" />
             </a>
             <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
@@ -11,8 +11,8 @@
             </a>
         </div>
         <div class="col-md-6 text-right">
-            <span class="answer-like-border flash-border">
-                <span title="赞一下" class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like" data-answer_id="{{answer.id}}"></span>
+            <span class="answer-like-border flash-border" data-answer_id="{{answer.id}}">
+                <span title="赞一下" class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like " ></span>
                 <span class="answer-like-count">{{answer.like_count}}</span>
             </span>
         </div>
