@@ -18,7 +18,7 @@
         <li class="active">{{tag.name|str_display:10}}</li>
     </ol>
     {% else %}
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs pl-15">
         <li {% if not question_type %} class="active"{% endif %}>
             <a href="/question">全部</a>
         </li>
@@ -33,15 +33,14 @@
     <!--列表开始-->
     <ul class="list-group {% if '/topic/' in request.path %}tag-ul{% endif %}" id="ul_question_list">
         {% for question in questions %}
-        <li class="list-group-item">
+        <li class="list-group-item pt-0 pb-0">
             <div class="item-container">
                 <div class="item-question-title">
-                    <a class="black-blue" href="{{question.get_url}}">
-                        <h4> <strong>{{question.title|str_display:30}}</strong>
-                        </h4>
+                    <a class="black-blue f16" href="{{question.get_url}}">
+                        <strong>{{question.title|str_display:30}}</strong>
                     </a>
                 </div>
-                <div class="item-question-content">{{question.get_summary|safe}}</div>
+                <div class="item-question-content f13">{{question.get_summary|safe}}</div>
                 <div class="item-question-tags"></div>
                 <div class="item-question-profile">
                     {% if not question.is_hide_user %}
@@ -53,9 +52,9 @@
                     </a>
                     {% endif %}
                     <span class="statistic co8" {% if question.is_hide_user %}style="margin-left:0;"{% endif %}>
-                        {{question.answer_count}} 个回答 • {{question.views_count}} 次浏览
+                        {{question.answer_count}} 个回答 • {{question.views_count}} 次浏览 • {{question.create_time|time_format}}
                     </span>
-                    <span class="last-replay">{{question.create_time|time_format}}</span>
+                    
                 </div>
             </div>
         </li>

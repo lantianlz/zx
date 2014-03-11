@@ -4,6 +4,11 @@
 {% block title %}我要提问{% endblock %}
 {% block javascript %}{% endblock %}
 {% block css %}{% endblock %}
+
+{% block ask_question %}
+<div class="mt-25"></div>
+{% endblock %}
+
 {% block question_main%}
 <div class="ask-title">
     <h2>问个问题</h2>
@@ -12,13 +17,13 @@
 <div class="ask-main mt-35">
     <form role="form" method='post' action='/question/ask_question'>
         <div class="form-group" >
-            <span>选择你想提问的类型:</span>
+            <span>选择你想提问的类型（必选）:</span>
         </div>
         <div class="form-group" id="div_types">
             {% question_type_radio_display %}
         </div>
         <div class="form-group auto-hide" id="div_tags">
-            <div class="tag-title mb-5">将你的提问归类至子话题 :</div>
+            <div class="tag-title mb-5">将你的提问归类至话题（非必选）:</div>
             <!-- 
             <label class="checkbox-inline zx-check">
                 <input type="checkbox" id="inlineCheckbox1" value="option1"> 1

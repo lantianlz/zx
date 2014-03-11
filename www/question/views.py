@@ -23,7 +23,7 @@ def question_home(request, question_type=0, template_name='question/question_hom
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(questions, count=3, page=page_num).info
+    page_objs = page.Cpt(questions, count=10, page=page_num).info
     questions = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
@@ -42,7 +42,7 @@ def tag_question(request, tag_domain, template_name='question/question_home.html
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(questions, count=3, page=page_num).info
+    page_objs = page.Cpt(questions, count=10, page=page_num).info
     questions = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
@@ -131,7 +131,7 @@ def important_question(request, template_name='question/important_question.html'
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(questions, count=3, page=page_num).info
+    page_objs = page.Cpt(questions, count=10, page=page_num).info
     questions = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
