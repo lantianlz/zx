@@ -53,7 +53,7 @@ $(document).ready(function(){
             return;
         }
         $('#div_tags').show('fast');
-        for (var i = type_tags.length - 1; i >= 0; i--) {
+        for (var i=0; i<type_tags.length; i++) {
             $('#div_tags').append(
                 String.format(
                     '<label class="checkbox-inline zx-checkbox"><input name="tag" type="checkbox" value="{0}"> {1}</label>', 
