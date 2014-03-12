@@ -50,14 +50,22 @@ class Profile(models.Model):
     auto_id = models.AutoField(primary_key=True)
     id = models.CharField(max_length=32, unique=True)
     nick = models.CharField(max_length=32, unique=True)
+    domain = models.CharField(max_length=32, unique=True, null=True)
     birthday = models.DateField(default='2000-01-01', db_index=True)
     gender = models.IntegerField(verbose_name=u'性别', default=0, choices=gender_choices, db_index=True)
     avatar = models.CharField(verbose_name=u'头像', max_length=256, default='')
     email_verified = models.BooleanField(verbose_name=u'邮箱是否验证过', default=False)
     mobile_verified = models.BooleanField(verbose_name=u'手机是否验证过', default=False)
     ip = models.CharField(verbose_name=u'登陆ip', max_length=32, null=True)
+    des = models.CharField(max_length=256, null=True)
     source = models.IntegerField(default=0, choices=source_choices)
     create_time = models.DateTimeField(verbose_name=u'创建时间', db_index=True, default=datetime.datetime.now)
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
 
     def get_url(self):
         return u'/p/%s' % self.id
@@ -66,7 +74,7 @@ class Profile(models.Model):
         return self.avatar or ('%s/img/common/default.png' % settings.MEDIA_URL)
 
     def get_ta_display(self):
-        return {1:u'他'}.get(self.gender, u'她')
+        return {1: u'他'}.get(self.gender, u'她')
 
     def __unicode__(self):
         return u'%s, %s' % (self.id, self.nick)
@@ -105,6 +113,31 @@ class ExternalToken(models.Model):
 
     class Meta:
         unique_together = [("source", "access_token"), ("source", "external_user_id")]
+
+
+class Invitation(models.Model):
+    user_id = models.CharField(max_length=32, unique=True)
+    code = models.CharField(max_length=32, unique=True)
+
+    def get_url(self):
+        from django.conf import settings
+        return u'%s/regist/%s' % (settings.MAIN_DOMAIN, self.code)
+
+    def get_user(self):
+        from www.account.interface import UserBase
+        user = UserBase().get_user_by_id(self.user_id)
+        return user
+
+
+class InvitationUser(models.Model):
+    user_id = models.CharField(max_length=32, db_index=True)
+    invitation = models.ForeignKey('Invitation')
+    state = models.BooleanField(default=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [('user_id', 'invitation')]
+        ordering = ["-id"]
 
 
 class BlackList(models.Model):

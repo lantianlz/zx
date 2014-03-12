@@ -31,9 +31,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    a = ['1', '2', '3']
-    b = [u'1', u'3', u'2']
-    print b
-    print b.sort()
-    print b
+    # main()
+
+    from common import utils
+    import random
+    # print random.randint(0, 2)
+    print utils.get_random_code()

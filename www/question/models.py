@@ -125,13 +125,14 @@ class Tag(models.Model):
     domain = models.CharField(max_length=16, unique=True)  # 自定义域名支持
     question_type = models.ForeignKey(QuestionType)
     img = models.CharField(max_length=128, default='')  # 子分类可能有图片
+    des = models.CharField(max_length=512, null=True)
     sort_num = models.IntegerField(default=-999, db_index=True)
     is_show = models.BooleanField(default=True)  # 过滤的时候是否显示
     state = models.BooleanField(default=True)
     data_body = models.TextField(default='')
 
     class Meta:
-        ordering = ['-sort_num', '-id']
+        ordering = ['-sort_num', 'id']
 
     def __unicode__(self):
         return '%s' % self.id

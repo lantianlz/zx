@@ -68,7 +68,7 @@ class Cache(object):
             return True
 
         #self.conn.setex(key, '0', time_out)
-        self.conn.set(key, 0, time_out)
+        self.set(key, 0, time_out)
         return False
 
     def flush(self):

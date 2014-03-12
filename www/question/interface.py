@@ -548,8 +548,9 @@ class TagBase(object):
     def format_tags_for_ask_page(self, tags):
         ftags = {}
         for tag in tags:
-            if str(tag.question_type_id) not in ftags:
-                ftags[str(tag.question_type_id)] = [(tag.id, tag.name), ]
-            else:
-                ftags[str(tag.question_type_id)].append((tag.id, tag.name),)
+            if tag.is_show:
+                if str(tag.question_type_id) not in ftags:
+                    ftags[str(tag.question_type_id)] = [(tag.id, tag.name), ]
+                else:
+                    ftags[str(tag.question_type_id)].append((tag.id, tag.name),)
         return ftags

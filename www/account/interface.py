@@ -7,8 +7,8 @@ from django.utils.encoding import smart_unicode
 from django.conf import settings
 
 from common import utils, debug, validators, cache
-from www.account.models import User, Profile, ExternalToken
-
+from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser
+from www.message.interface import UnreadCountBase
 
 dict_err = {
     100: u'邮箱重复',
@@ -126,7 +126,8 @@ class UserBase(object):
         return True, dict_err.get(000)
 
     @transaction.commit_manually(using=ACCOUNT_DB)
-    def regist_user(self, email, nick, password, ip, mobilenumber=None, username=None, source=0, gender=0):
+    def regist_user(self, email, nick, password, ip, mobilenumber=None, username=None,
+                    source=0, gender=0, invitation_code=None):
         '''
         @note: 注册
         '''
@@ -147,11 +148,20 @@ class UserBase(object):
                                        password=self.set_password(password)
                                        )
             profile = Profile.objects.create(id=id, nick=nick, ip=ip, source=source, gender=gender)
+            self.set_profile_login_att(profile, user)
+
+            if invitation_code:
+                invitation = InvitationBase().add_invitation_user(invitation_code, profile.id)
+                if invitation:
+                    # 发送系统通知
+                    print invitation, 1111, profile.get_url, profile.nick
+                    content = u'成功邀请一个注册用户 <a href="%s">%s</a>' % (profile.get_url(), profile.nick)
+                    print content
+                    UnreadCountBase().add_system_message(user_id=invitation.user_id, content=content)
+
             transaction.commit(using=ACCOUNT_DB)
 
-            # 发送验证邮件和通知邮件
-            # 其他触发事件
-            self.set_profile_login_att(profile, user)
+            # todo发送验证邮件
             return True, profile
         except Exception, e:
             debug.get_debug_detail(e)
@@ -214,7 +224,7 @@ class UserBase(object):
                     et.save()
         return et
 
-    def change_profile(self, user, nick, gender, birthday):
+    def change_profile(self, user, nick, gender, birthday, des=None):
         '''
         @note: 资料修改
         '''
@@ -242,6 +252,10 @@ class UserBase(object):
         user.nick = nick
         user.gender = int(gender)
         user.birthday = birthday
+        print des
+        if des:
+            user.des = utils.filter_script(des)[:128]
+            print user.des
         user.save()
 
         # todo:触发事件，比如清除缓存等
@@ -389,3 +403,35 @@ class UserBase(object):
         cache_obj.delete(key)
         cache_obj.delete(code)
         return True, user_login
+
+
+class InvitationBase(object):
+
+    def format_invitation_user(self, invitation_users):
+        for iu in invitation_users:
+            iu.user = UserBase().get_user_by_id(iu.user_id)
+        return invitation_users
+
+    def get_invitation_by_user_id(self, user_id):
+        try:
+            invitation = Invitation.objects.create(user_id=user_id, code=utils.get_random_code())
+        except:
+            invitation = Invitation.objects.get(user_id=user_id)
+        return invitation
+
+    def get_invitation_by_code(self, code):
+        try:
+            return Invitation.objects.get(code=code)
+        except Invitation.DoesNotExist:
+            return None
+
+    def add_invitation_user(self, code, user_id):
+        invitation = self.get_invitation_by_code(code)
+        try:
+            InvitationUser.objects.create(user_id=user_id, invitation=invitation)
+        except:
+            pass
+        return invitation
+
+    def get_invitation_user(self, user_id):
+        return InvitationUser.objects.select_related('invitation').filter(invitation__user_id=user_id)

@@ -1,5 +1,6 @@
 {% extends "account/base_settings.html" %}
-
+{% load custom_tags %}
+{% load custom_filters %}
 {% block title %}我的邀请{% endblock %}
 
 {% block css %}{% endblock %}
@@ -14,7 +15,7 @@
 	  	<li class="list-group-item">
 	  		<div class="row">
 		    	<div class="col-md-10">
-		    		<input type="text" class="form-control" readonly value="http://www.zhixuan.com/invitation/8FyfC4x">
+		    		<input type="text" class="form-control" readonly value="{{invitation.get_url}}">
 		    	</div>
 		    	<div class="col-md-2">
 		    		
@@ -22,6 +23,7 @@
 	    	</div>
 	  	</li>
 	</ul>
+	<!-- 
 	<div>
 		普通邀请注册链接 <span class="zx-tooltip glyphicon glyphicon-question-sign cl_gray" title="普通邀请注册链接为一次性的邀请注册链接，用户注册后即失效"></span>
 	</div>
@@ -57,25 +59,18 @@
 	    	</div>
 	  	</li>
 	</ul>
-	
-	<div class="invited split">已被邀请并注册用户</div>
+	 -->
+	<div class="invited split">已成功邀请 {{invitation_users_count}} 人</div>
 	<ul class="invited-persons list-inline">
+		{% for invitation_user in invitation_users %}
 		<li>
-			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user1.jpg">
-			<div class="name">半夜没事...</div>
+			<a href="{{invitation_user.user.get_url}}" 
+				title="{{invitation_user.user.nick}} 注册时间：{{invitation_user.user.create_time}}">
+				<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="{{invitation_user.user.get_avatar}}">
+				<div class="name">{{invitation_user.user.nick|str_display:4}}</div>
+			</a>
 		</li>
-		<li>
-			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user3.jpg">
-			<div class="name">习大大</div>
-		</li>
-		<li>
-			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user2.jpg">
-			<div class="name">女王大人</div>
-		</li>
-		<li>
-			<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user4.png">
-			<div class="name">莫文蔚</div>
-		</li>
+		{% endfor %}
 	</ul>
 	
 </div>

@@ -130,3 +130,8 @@ class UnreadCountBase(object):
 
     def get_system_message(self, user_id):
         return Notice.objects.filter(user_id=user_id)
+
+    def add_system_message(self, user_id, content, source=0):
+        notice = Notice.objects.create(user_id=user_id, content=content, source=source)
+        UnreadCountBase().update_unread_count(user_id, code='system_message')
+        return notice

@@ -9,6 +9,7 @@
 
 import re
 import datetime
+import random
 
 
 def uuid_without_dash():
@@ -214,3 +215,17 @@ def get_summary_from_html_by_sub(content, max_num=100):
     if content.__len__() > max_num:
         content = content[:max_num] + '......'
     return content
+
+
+def get_random_code(length=16):
+    # 去掉0, 1, l, o, O
+    str_src = ('23456789'
+               'abcdefghijkmnpqrstuvwxyz'
+               'ABCDEFGHIJKLMNPQRSTUVWXYZ')
+    postfix = ''
+    for i in xrange(length):
+        postfix += str_src[random.randint(0, len(str_src) - 1)]
+    # for id, value in enumerate(range(4)):
+    #     for i in range(4):
+    #         postfix += str_src[random.randint(0, 32)]
+    return postfix

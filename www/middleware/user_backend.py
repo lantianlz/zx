@@ -22,7 +22,7 @@ class AuthBackend(object):
 
     def get_user(self, user_id):
         user = UserBase().get_user_by_id(user_id)
-        if user:
-            setattr(user, "is_authenticated", lambda: True)
-            setattr(user, "is_active", True)
+        # if user:
+        #     setattr(user, "is_authenticated", lambda: True)
+        #     setattr(user, "is_active", True)
         return user

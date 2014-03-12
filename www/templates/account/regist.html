@@ -14,12 +14,14 @@
 			<h1>智选网</h1>
 		</div>
 		<form class="form-horizontal" role="form" method="post" action="/regist">
+			{% if invitation %}
 			<div class="form-group">
 				<div class="col-md-offset-1">
-					<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="/static/img/common/user3.jpg">
-					<span class="inviter">半夜没事瞎溜达</span>邀请你注册
+					<img class="avatar avatar-circle zx-cardtips" data-user_id="1" src="{{invitation.get_user.get_avatar}}">
+					<span class="inviter">{{invitation.get_user.nick}}</span>邀请你注册
 				</div>
 			</div>
+			{% endif %}
 			<div class="form-group">
 				<div class="col-md-offset-1">
 					<input type="email" name="email" class="form-control" placeholder="你的登录邮箱" name="email" value='{{email}}'></div>

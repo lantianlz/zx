@@ -13,6 +13,7 @@ from www.account import interface
 from www.misc.decorators import member_required
 
 ub = interface.UserBase()
+ib = interface.InvitationBase()
 
 
 def show_index(request):
@@ -43,17 +44,22 @@ def login(request, template_name='account/login_bg.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def regist(request, template_name='account/regist.html'):
+def regist(request, invitation_code=None, template_name='account/regist.html'):
     email = request.POST.get('email', '').strip()
     nick = request.POST.get('nick', '').strip()
     password = request.POST.get('password', '').strip()
+    if invitation_code:
+        invitation = ib.get_invitation_by_code(invitation_code)
+        if invitation:
+            request.session['invitation_code'] = invitation.code
     if request.POST:
-        flag, result = ub.regist_user(email, nick, password, ip=utils.get_clientip(request))
+        flag, result = ub.regist_user(email, nick, password, ip=utils.get_clientip(request),
+                                      invitation_code=request.session.get('invitation_code'))
         if flag:
             user = auth.authenticate(username=email, password=password)
             auth.login(request, user=user)
             next_url = request.session.get('next_url') or '/home'
-            request.session.update(dict(next_url=''))
+            request.session.update(dict(next_url='', invitation_code=''))
             return HttpResponseRedirect(next_url)
         else:
             error_msg = result
@@ -135,13 +141,15 @@ def user_settings(request, template_name='account/change_profile.html'):
         nick = request.POST.get('nick')
         gender = request.POST.get('gender')
         birthday = request.POST.get('birthday')
+        des = request.POST.get('des')
 
-        flag, result = ub.change_profile(request.user, nick, gender, birthday)
+        flag, result = ub.change_profile(request.user, nick, gender, birthday, des)
         if not flag:
             error_msg = result
         else:
             success_msg = u'修改资料成功'
             request.user = result
+            print request.user.des
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -208,6 +216,9 @@ def security_question(request, template_name='account/security_question.html'):
 
 @member_required
 def invitation(request, template_name='account/invitation.html'):
+    invitation = ib.get_invitation_by_user_id(request.user.id)
+    invitation_users = ib.format_invitation_user(ib.get_invitation_user(request.user.id))
+    invitation_users_count = len(invitation_users)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

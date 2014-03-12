@@ -45,10 +45,10 @@ def get_debug_detail(e, log_it=True):
     while tb.tb_next:
         tb = tb.tb_next
         fm = Frame(tb)
-        detail += fm.print_path()
+        detail += unicode(fm.print_path())
         detail += u"\nlocals variables:\n"
-        detail += fm.print_local()
-        detail += u"\n" + "-" * 100 + "\n"
+        detail += unicode(fm.print_local())
+        detail += u"\n" + u"-" * 100 + u"\n"
     if log_it:
         logging.error(detail)
     else:
