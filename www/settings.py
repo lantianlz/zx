@@ -9,6 +9,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+#配置是否采用本地模式
+LOCAL_FLAG = True
 
 # 引入父目录来引入其他模块
 import os
@@ -16,7 +18,7 @@ import sys
 SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 
-SERVER_NAME = 'ZHIXUAN_WEB0'
+SERVER_NAME = 'ZHIXUAN_WEB0' if not LOCAL_FLAG else 'DEVELOPER'
 SERVER_DOMAIN = 'a.com'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
 
@@ -27,7 +29,7 @@ EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = '25'
 NOTIFICATION_EMAIL = ['web@zhixuan.com']
 
-if DEBUG:
+if LOCAL_FLAG:
     DB_USER, DB_PWD, DB_HOST = 'root', '851129', '127.0.0.1'
 else:
     DB_USER, DB_PWD, DB_HOST = '****', '****', '****'
@@ -71,7 +73,7 @@ SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
 MEDIA_ROOT = os.path.abspath(os.path.join(SITE_ROOT, '../static'))
-MEDIA_URL = '/static/'
+MEDIA_URL = '/static/'  if LOCAL_FLAG else ('http://static.%s' % SERVER_DOMAIN)
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
