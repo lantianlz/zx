@@ -14,7 +14,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 def init_question_tag():
     from www.question.models import QuestionType, Tag
-    Tag.objects.all().delete()
+    # Tag.objects.all().delete()
     datas = [
         (u'股票', [[u'大盘走势', u'dpzs', True], [u'个股分析', u'ggfx', True], [u'行业分析', u'hyfx', True],
             [u'宏观经济', u'hgjj', True], [u'投资策略', u'tzcl', True],

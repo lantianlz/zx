@@ -14,7 +14,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 def init_question_type():
     from www.question.models import QuestionType
-    QuestionType.objects.all().delete()
+    # QuestionType.objects.all().delete()
     datas = [(1, u'股票', 'gupiao'), (2, u'债券', 'zhaiquan'), (3, u'期货', 'qihuo'),
              (4, u'期权', 'qiquan'), (5, u'其他', 'qita'), ]
     for data in datas:
