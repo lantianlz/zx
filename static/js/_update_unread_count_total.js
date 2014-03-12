@@ -28,7 +28,7 @@ function get_unread_count_total_callback(data)
 	{
 		$('#unread_count_total_nav_1').show();
 		$('#unread_count_total_nav_2').show();
-		$('title').html('收到 ' + data['result'] + ' 条新消息');
+		document.title = '收到 ' + data['result'] + ' 条新消息';
 	}
 }
 

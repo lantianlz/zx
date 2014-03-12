@@ -439,7 +439,7 @@
 	display: block;
 }
 .ke-toolbar-icon-url {
-	background-image: url(/static/img/common/kindeditor.png);
+	background-image: url(../img/common/kindeditor.png);
 }
 .ke-toolbar .ke-outline {
 	border: 1px solid #F0F0EE;
@@ -517,7 +517,7 @@
 	background-position: -0px -754px;
 	width: 15px;
 	height: 11px;
-	background-image: url(/static/img/common/kindeditor.png);
+	background-image: url(../img/common/kindeditor.png);
 }
 .ke-statusbar-right-icon {
 	position: absolute;
@@ -527,7 +527,7 @@
 	background-position: -5px -741px;
 	width: 11px;
 	height: 11px;
-	background-image: url(/static/img/common/kindeditor.png);
+	background-image: url(../img/common/kindeditor.png);
 }
 /* menu */
 .ke-menu {
@@ -686,7 +686,7 @@
 }
 .ke-dialog-icon-close {
 	display: block;
-	background: url(/static/img/common/kindeditor.png) no-repeat scroll 0px -688px;
+	background: url(../img/common/kindeditor.png) no-repeat scroll 0px -688px;
 	width: 16px;
 	height: 16px;
 	position: absolute;
@@ -981,7 +981,7 @@
 }
 .ke-swfupload-body .ke-delete {
 	display: block;
-	background: url(/static/img/common/kindeditor.png) no-repeat scroll 0px -688px;
+	background: url(../img/common/kindeditor.png) no-repeat scroll 0px -688px;
 	width: 16px;
 	height: 16px;
 	position: absolute;

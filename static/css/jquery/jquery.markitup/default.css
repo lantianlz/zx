@@ -45,7 +45,7 @@
   width:22px; height:5px;
   margin-left:auto;
   margin-right:auto;
-  background-image:url(/static/img/jquery.markitup/handle.png);
+  background-image:url(../img/jquery.markitup/handle.png);
   cursor:n-resize;
 }
 /***************************************************************************************/
@@ -70,7 +70,7 @@
   border: solid 1px #ddd;
 }
 .markItUpHeader ul .markItUpDropMenu {
-  background:transparent url(/static/img/jquery.markitup/menu.png) no-repeat 115% 50%;
+  background:transparent url(../img/jquery.markitup/menu.png) no-repeat 115% 50%;
   margin-right:5px;
 }
 .markItUpHeader ul .markItUpDropMenu li {
@@ -89,7 +89,7 @@
   border-bottom:1px solid #000;
 }
 .markItUpHeader ul ul .markItUpDropMenu {
-  background:#FFF url(/static/img/jquery.markitup/submenu.png) no-repeat 100% 50%;
+  background:#FFF url(../img/jquery.markitup/submenu.png) no-repeat 100% 50%;
 }
 .markItUpHeader ul .markItUpSeparator {
   margin:0 10px;
@@ -136,32 +136,32 @@
 // By Jay Salvat - http://markitup.jaysalvat.com/
 // ------------------------------------------------------------------*/
 .markItUp .markItUpButton1 a {
-  background-image:url(/static/img/jquery.markitup/bold.png);
+  background-image:url(../img/jquery.markitup/bold.png);
 }
 .markItUp .markItUpButton2 a {
-  background-image:url(/static/img/jquery.markitup/italic.png);
+  background-image:url(../img/jquery.markitup/italic.png);
 }
 .markItUp .markItUpButton3 a {
-  background-image:url(/static/img/jquery.markitup/underline.png);
+  background-image:url(../img/jquery.markitup/underline.png);
 }
 
 .markItUp .markItUpButton4 a {
-  background-image:url(/static/img/jquery.markitup/list-bullet.png); 
+  background-image:url(../img/jquery.markitup/list-bullet.png); 
 }
 .markItUp .markItUpButton5 a {
-  background-image:url(/static/img/jquery.markitup/list-numeric.png);
+  background-image:url(../img/jquery.markitup/list-numeric.png);
 }
 
 .markItUp .markItUpButton6 a {
-  background-image:url(/static/img/jquery.markitup/picture.png); 
+  background-image:url(../img/jquery.markitup/picture.png); 
 }
 .markItUp .markItUpButton7 a {
-  background-image:url(/static/img/jquery.markitup/link.png);
+  background-image:url(../img/jquery.markitup/link.png);
 }
 
 .markItUp .markItUpButton8 a {
-  background-image:url(/static/img/jquery.markitup/clean.png);
+  background-image:url(../img/jquery.markitup/clean.png);
 }
 .markItUp .preview a {
-  background-image:url(/static/img/jquery.markitup/preview.png);
+  background-image:url(../img/jquery.markitup/preview.png);
 }

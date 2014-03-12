@@ -49,7 +49,7 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 
 .scroll-top{
     position: fixed;
-    background: url(/static/img/common/rocket.png) no-repeat scroll 0 0 transparent;
+    background: url(../img/common/rocket.png) no-repeat scroll 0 0 transparent;
     z-index: 100;
     width: 149px;
     height: 220px;
@@ -273,20 +273,20 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
 /******自定义控件样式********/
 .zx-checkbox{
     padding-left: 30px;
-    background: url(/static/img/common/check-off.png) no-repeat;
+    background: url(../img/common/check-off.png) no-repeat;
 }
 
 .zx-checkbox.checked{
-    background: url(/static/img/common/check-on.png) no-repeat;
+    background: url(../img/common/check-on.png) no-repeat;
 }
 
 .zx-radio{
     padding-left: 30px;
-    background: url(/static/img/common/radio-off.png) no-repeat;
+    background: url(../img/common/radio-off.png) no-repeat;
 }
 
 .zx-radio.checked{
-    background: url(/static/img/common/radio-on.png) no-repeat;
+    background: url(../img/common/radio-on.png) no-repeat;
 }
 
 .zx-checkbox>input, .zx-radio>input{
