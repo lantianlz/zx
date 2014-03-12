@@ -149,7 +149,6 @@ def user_settings(request, template_name='account/change_profile.html'):
         else:
             success_msg = u'修改资料成功'
             request.user = result
-            print request.user.des
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

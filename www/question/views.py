@@ -91,7 +91,6 @@ def ask_question(request, template_name='question/ask_question.html'):
 
     # 标签
     tags = json.dumps(tb.format_tags_for_ask_page(tb.get_all_tags()))
-    print tags
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

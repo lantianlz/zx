@@ -154,9 +154,7 @@ class UserBase(object):
                 invitation = InvitationBase().add_invitation_user(invitation_code, profile.id)
                 if invitation:
                     # 发送系统通知
-                    print invitation, 1111, profile.get_url, profile.nick
                     content = u'成功邀请一个注册用户 <a href="%s">%s</a>' % (profile.get_url(), profile.nick)
-                    print content
                     UnreadCountBase().add_system_message(user_id=invitation.user_id, content=content)
 
             transaction.commit(using=ACCOUNT_DB)
@@ -252,10 +250,8 @@ class UserBase(object):
         user.nick = nick
         user.gender = int(gender)
         user.birthday = birthday
-        print des
         if des:
             user.des = utils.filter_script(des)[:128]
-            print user.des
         user.save()
 
         # todo:触发事件，比如清除缓存等

@@ -183,7 +183,6 @@ def get_summary_from_html(content, max_num=100):
     r = u'<.+?>([^\/\\\&\<\>]+?)</\w+?>'
     p = re.compile(r, re.DOTALL | re.IGNORECASE)
     rs = p.findall(content)
-    print rs
     for s in rs:
         if summary.__len__() > max_num:
             summary += '......'

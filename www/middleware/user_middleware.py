@@ -24,7 +24,7 @@ class UserMiddware(object):
         return response
 
     def process_exception(self, request, exception):
-        print '*' * 50 + 'debug info start' + '*' * 50
+        # print '*' * 50 + 'debug info start' + '*' * 50
         if type(exception) == Http404:
             return
 
@@ -33,7 +33,7 @@ class UserMiddware(object):
         #             "query_string": ",".join(["".join([k, request.REQUEST.get(k)]) for k in request.REQUEST])}
         title = u'%s error in %s' % (settings.SERVER_NAME, url)
         content = debug.get_debug_detail(exception)
-        print '*' * 50 + 'debug info end' + '*' * 50
+        # print '*' * 50 + 'debug info end' + '*' * 50
         if not settings.DEBUG or True:
             from www.tasks import async_send_email
             async_send_email(settings.NOTIFICATION_EMAIL, title, content)
