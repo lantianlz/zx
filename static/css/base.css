@@ -187,3 +187,11 @@ a:hover{
 	-ms-animation-play-state: running;
 	animation-play-state: running;
 }
+
+.box-shadow-224{
+	box-shadow: 2px 2px 4px;
+}
+
+.border-radius-0{
+	border-radius: 0px;
+}

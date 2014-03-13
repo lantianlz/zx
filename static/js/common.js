@@ -372,10 +372,13 @@ function CommonCoverDiv() {
 
 function common_callback(data) {
 	if (data['flag'] == '0') {
-		alert('操作成功');
-		window.location.reload();
+		$.ZXMsg.alert('提示', '操作成功!页面即将刷新', 3000);
+		
+		window.setTimeout(function(){
+            window.location.reload();
+        }, 2000)
 	} else {
-		alert(data['result']);
+		$.ZXMsg.alert('提示', data['result']);
 	}
 }
 

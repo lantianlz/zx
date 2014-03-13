@@ -59,13 +59,13 @@
         {% block container_head %}
         {% endblock container_head %}
         {% if success_msg %}
-        <div class="alert alert-success popmsg zx-alert container zx-container" id="divSuccess">
+        <div class="alert alert-success popmsg zx-alert container zx-container box-shadow-224 border-radius-0">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {{success_msg}}
         </div>
         {% endif %}
         {% if error_msg %}
-            <div class="alert alert-danger alert-dismissable zx-alert container zx-container">
+            <div class="alert alert-danger alert-dismissable zx-alert container zx-container box-shadow-224 border-radius-0">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 {{error_msg}}
             </div>

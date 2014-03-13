@@ -172,7 +172,7 @@ $(document).ready(function(){
 
         ajaxSend("/question/like_answer", postData, function(data){
             if(data['flag'] != '0'){
-                alert(data['result']);
+                $.ZXMsg.alert('提示', data['result']);
                 return;
             }
 
@@ -222,50 +222,57 @@ $(document).ready(function(){
 
 function common_remove_question_callback(data) {
     if (data['flag'] == '0') {
-        alert('成功');
-        window.location = '/question';
+        $.ZXMsg.alert('提示', '操作成功!页面即将刷新', 2000);
+        window.setTimeout(function(){
+            window.location = '/question';
+        }, 3000)
+        
     } else {
-        errorMeg(data['result']);
+        $.ZXMsg.alert('提示', data['result']);
     }
 }
 
 function remove_answer(answer_id){
-    if(!confirm('确定删除吗？')){
-        return;
-    }
-    var postData = {'answer_id': answer_id};
-    g_ajax_processing_obj_id = 'remove_answer_a_id_' + answer_id;
-    ajaxSend("/question/remove_answer", postData, common_callback);
+    $.ZXMsg.confirm('提示', '确认要删除回答吗?', function(result){ 
+        if(result){
+            var postData = {'answer_id': answer_id};
+            g_ajax_processing_obj_id = 'remove_answer_a_id_' + answer_id;
+            ajaxSend("/question/remove_answer", postData, common_callback);
+        }
+    });
 }
 
 
 function remove_question(question_id){
-    if(!confirm('确定删除吗？')){
-        return;
-    }
-    var postData = {'question_id': question_id};
-    g_ajax_processing_obj_id = 'remove_question_a_id';
-    ajaxSend("/question/remove_question", postData, common_remove_question_callback);
+    $.ZXMsg.confirm('提示', '确认要删除此问题吗?', function(result){ 
+        if(result){
+            var postData = {'question_id': question_id};
+            g_ajax_processing_obj_id = 'remove_question_a_id';
+            ajaxSend("/question/remove_question", postData, common_remove_question_callback);
+        }
+    });
 }
 
 
 function set_important(question_id){
-    if(!confirm('确定设置为精华吗？')){
-        return;
-    }
-    var postData = {'question_id': question_id};
-    g_ajax_processing_obj_id = 'set_important_a_id';
-    ajaxSend("/question/set_important", postData, common_callback);
+    $.ZXMsg.confirm('提示', '确定设置为精华吗?', function(result){ 
+        if(result){
+            var postData = {'question_id': question_id};
+            g_ajax_processing_obj_id = 'set_important_a_id';
+            ajaxSend("/question/set_important", postData, common_callback);
+        }
+    });
 }
 
 
 function cachel_important(question_id){
-    if(!confirm('确定取消精华吗？')){
-        return;
-    }
-    var postData = {'question_id': question_id};
-    g_ajax_processing_obj_id = 'cancel_important_a_id';
-    ajaxSend("/question/cachel_important", postData, common_callback);
+    $.ZXMsg.confirm('提示', '确定要将此问题取消此精华吗?', function(result){ 
+        if(result){
+            var postData = {'question_id': question_id};
+            g_ajax_processing_obj_id = 'cancel_important_a_id';
+            ajaxSend("/question/cachel_important", postData, common_callback);
+        }
+    });
 }
 
 
