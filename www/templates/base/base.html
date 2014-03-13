@@ -71,39 +71,7 @@
             </div>
         {% endif %}
         <div class="scroll-top"></div>
-        <!-- 私信弹出层 -->
-        <div class="modal fade" id="new_message_modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form role="form" class="form-horizontal" method='post' action=''>
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">发送私信</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">发送给</label>
-                                <div class="col-sm-9">
-                                    <label id="receiver_label" class="control-label"></label>
-                                    <input type="hidden" id="receiver_id">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">消息内容</label>
-                                <div class="col-sm-9">
-                                    <textarea rows="4" name='message' class="form-control" placeholder="请输入消息内容" value=''></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                            <button type="submit" class="btn btn-primary">发送</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-        <!-- 私信弹出层结束 -->
+
         {% block base_container %}
         <div class="container zx-container" style="min-height:500px;" id="content_container_id">
             {% block container %}{% endblock container %}

@@ -201,14 +201,6 @@ body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,A
     padding-right: 15px;
 }
 
-#new_message_modal .modal-body{
-    padding-bottom: 0px;
-}
-
-#new_message_modal .modal-content{
-    width: 400px;
-}
-
 .list-group.only-top-border>.list-group-item{
     border-bottom: 0px;
     border-left: 0px;

@@ -1,8 +1,7 @@
-
 /*
 	为字符串拓展format方法
 	用例：
-	String.format('{0}, {1}!', 'Hello', 'world')
+	String.format('{0}, {1}!', 'Hello', 'world');
 */
 if (!String.format) {
 	String.format = function(src){
@@ -93,6 +92,178 @@ function addZero(data){
 		return this;
 	}
 
+	// 
+	$.ZXMsg = {
+		version: '1.0.0',
+		author: 'stranger',
+		description: '取代浏览器自带的消息框'
+	};
+	/*
+		通用alert框
+		用例:
+		$.ZXMsg.alert('提示', '操作成功!');
+		$.ZXMsg.alert('提示', '操作成功, 5秒后自动关闭!', 5000);
+	*/
+	$.ZXMsg.alert = function(alertTitle, alertMsg, delayCloseSeconds){
+		var alertHtml = ''+
+		'<div class="modal fade" id="alert_modal" tabindex="-1" role="dialog">'+
+            '<div class="modal-dialog w400">'+
+                '<div class="modal-content">'+
+                    '<div class="modal-header pb-5">'+
+                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
+                        '<h4 class="modal-title">'+alertTitle+'</h4>'+
+                    '</div>'+
+                    '<div class="modal-body">'+
+                        alertMsg +
+                    '</div>'+
+                '</div>'+
+            '</div>'+
+        '</div>';
+
+        // 将alert框添加进body
+        $('body').append(alertHtml);
+        
+        // 关闭之后清除掉自己
+        $('#alert_modal').on('hidden.bs.modal', function (e) {
+        	$(this).remove();
+        });
+
+        // 显示alert框
+        $('#alert_modal').modal('show');
+
+        // 是否设置了自动关闭
+        if(delayCloseSeconds){
+        	window.setTimeout(function(){
+        		if($('#alert_modal').length > 0){
+        			$('#alert_modal').modal('hide');
+        		}
+        		
+        	}, delayCloseSeconds)
+        }
+	}
+
+	/*
+		通用confirm框
+		用例:
+		$.ZXMsg.confirm('提示', '确认要删除?', function(result){ //to do...});
+	*/
+	$.ZXMsg.confirm = function(confirmTitle, confirmMsg, callback){
+		var confirmHtml = ''+
+		'<div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog">'+
+            '<div class="modal-dialog w400">'+
+                '<div class="modal-content">'+
+                    '<div class="modal-header pb-5">'+
+                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
+                        '<h4 class="modal-title">'+confirmTitle+'</h4>'+
+                    '</div>'+
+                    '<div class="modal-body">'+
+                        confirmMsg +
+                    '</div>'+
+                    '<div class="modal-footer">'+
+                        '<button type="button" class="btn btn-default confirm-cancel">取消</button>'+
+                        '<button type="button" class="btn btn-primary confirm-ok">确定</button>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'+
+        '</div>';
+
+        // 将confirm框添加进body
+        $('body').append(confirmHtml);
+        
+        // 确定事件
+        $('#confirm_modal .confirm-ok').bind('click', function(){
+        	if(callback){
+        		callback(true);
+        	}
+
+        	$('#confirm_modal').modal('hide');
+        });
+
+        // 取消事件
+        $('#confirm_modal .confirm-cancel').bind('click', function(){
+        	if(callback){
+        		callback(false);
+        	}
+
+        	$('#confirm_modal').modal('hide');
+        });
+
+        // 关闭之后清除掉自己
+        $('#confirm_modal').on('hidden.bs.modal', function (e) {
+        	$(this).remove();
+        });
+
+        // 显示confirm框
+        $('#confirm_modal').modal('show');
+
+	}
+
+
+	/*
+		私信方法
+		用例：
+		$.ZXMsg.sendPrivateMsg('1', '半夜没事瞎溜达');
+	*/
+	$.ZXMsg.sendPrivateMsg = function(userId, userName){
+		var postUrl = '/',
+			privateMsgHtml = ''+
+		'<div class="modal fade" id="private_message_modal" role="dialog">'+
+            '<div class="modal-dialog w400">'+
+                '<div class="modal-content">'+
+                    '<form role="form" class="form-horizontal" method="post" action="">'+
+                        '<div class="modal-header">'+
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
+                            '<h4 class="modal-title">发送私信</h4>'+
+                        '</div>'+
+                        '<div class="modal-body pb-0">'+
+                            '<div class="form-group">'+
+                                '<label class="col-sm-3 control-label">发送给</label>'+
+                                '<div class="col-sm-9">'+
+                                    '<label id="receiver_label" class="control-label"></label>'+
+                                    '<input type="hidden" name="receiver">'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<label class="col-sm-3 control-label">消息内容</label>'+
+                                '<div class="col-sm-9">'+
+                                    '<textarea rows="4" name="message" class="form-control" placeholder="请输入消息内容" value=""></textarea>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="modal-footer">'+
+                            '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'+
+                            '<button type="button" class="btn btn-primary send">发送</button>'+
+                        '</div>'+
+                    '</form>'+
+                '</div>'+
+            '</div>'+
+        '</div>';
+
+        
+        // 是否第一次创建私信框
+        if($('#private_message_modal').length == 0){
+        	// 将私信框添加进body
+        	$('body').append(privateMsgHtml);
+
+        	// 绑定发送事件
+        	$('#private_message_modal .send').bind('click', function(){
+        		// todo ...
+        		$('#private_message_modal').modal('hide');
+
+        		$.ZXMsg.alert('提示', '给'+userName+'的私信发送成功!', 5000);
+        	})
+        }
+
+        // 设置值
+        $('#private_message_modal input[name=receiver]').val(userId);
+        $('#private_message_modal #receiver_label').html(userName);
+
+        // 显示
+        $('#private_message_modal').modal('show');
+
+	}
+
+
 })(jQuery);
 
 
@@ -121,7 +292,10 @@ var markItUpSettings = {
 */
 
 
-// KindEditor 编辑器设置
+/*
+	创建 KindEditor 编辑器
+	selector: textarea的选择器
+*/
 function createEditor(selector){
 
     return KindEditor.create(selector, {
@@ -215,7 +389,6 @@ $(document).ready(function(){
   	$('input, textarea').placeholder();
 
 	// 初始化所有的 tooltip 
-	//$('.zx-tooltip').tooltip('hide');
 	$('.zx-tooltip').tooltipsy({
 	    offset: [1, 0],
 	    css: {
@@ -232,13 +405,10 @@ $(document).ready(function(){
 	    }
 	});
 	
-	// 初始化所有的 popover 
-	//$('.zx-popover').popover('hide');
 	
-
 	// 弹出名片设置
-	var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="{0}" ></div><div class="col-md-9"><div class="username">{1}</div><div class="question-info"><span>提问<a href="#">{2}</a></span><span>回答<a href="#">{3}</a></span><span>赞<a href="#">{4}</a></span></div></div></div><div class="desc">{5}</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow {8}">关注ta</button><button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button><a class="send-message" href="#" data-user_name="{6}" data-user_id="{7}"><span class="glyphicon glyphicon-envelope"></span> 私信ta</a></div></div>'
-	$('.zx-cardtips1').tooltipster({
+	var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="{0}" ></div><div class="col-md-9"><div class="username">{1}</div><div class="question-info"><span>提问<a href="#">{2}</a></span><span>回答<a href="#">{3}</a></span><span>赞<a href="#">{4}</a></span></div></div></div><div class="desc">{5}</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow {8}">关注ta</button><button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button><a class="send-message" href="javascript: void(0)" data-user_name="{6}" data-user_id="{7}"><span class="glyphicon glyphicon-envelope"></span> 私信ta</a></div></div>'
+	$('.zx-cardtips').tooltipster({
 		animation: 'fade',
 		delay: 200,
 		trigger: 'hover',
@@ -285,12 +455,7 @@ $(document).ready(function(){
 	});
 	// 从名片上点击发私信事件 
 	$('.send-message').live('click', function(){
-		var user_name = $(this).data('user_name');
-		var user_id = $(this).data('user_id');
-		$('#new_message_modal').modal('show')
-
-		$('#receiver_label').text(user_name);
-		$('#receiver_id').val(user_id);
+		$.ZXMsg.sendPrivateMsg($(this).data('user_id'), $(this).data('user_name'));
 	})
 
 

@@ -21,9 +21,9 @@ $(document).ready(function(){
     */
 
     
-    var askEditor = createEditor('#ask-editor'),
-        answerEditor = createEditor('#answer-editor'),
-        questionEditor = createEditor('#question-editor');
+    var askEditor = createEditor('#ask_editor'),
+        answerEditor = createEditor('#answer_editor'),
+        questionEditor = createEditor('#question_editor');
 
 
     // 我要提问 IE 链接不过去问题，强制js跳转
