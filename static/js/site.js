@@ -97,6 +97,7 @@ function addZero(data){
 
 
 
+/*
 // 文本编辑器默认设置
 var markItUpSettings = {
     onShiftEnter:   {keepDefault:false, replaceWith:'<br />\n'},
@@ -117,6 +118,38 @@ var markItUpSettings = {
 		//,{name:'Preview', className:'preview',  call:'preview'}
     ]
 };
+*/
+
+
+// KindEditor 编辑器设置
+function createEditor(selector){
+
+    return KindEditor.create(selector, {
+		resizeType : 1,
+		width: '100%',
+		autoHeightMode : true,
+		allowPreviewEmoticons : false,
+		allowImageUpload : false,
+		pasteType : 1,
+		cssData: 'body{font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #222;}',
+		themesPath: MEDIA_URL + "css/kindeditor/themes/",
+		pluginsPath: MEDIA_URL + "js/kindeditor/plugins/",
+		langPath: MEDIA_URL + "js/kindeditor/",
+		items : [
+			'bold', 'italic', 'underline', 'removeformat', '|', 
+			'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', '|', 
+			'image', 'link', '|', 
+			'fullscreen'
+		],
+		afterCreate : function() { 
+			this.loadPlugin('autoheight');
+		  	this.sync(); 
+		}, 
+		afterBlur:function(){ 
+		  	this.sync(); 
+		}
+    });
+}
 
 
 $(document).ready(function(){
@@ -271,40 +304,10 @@ $(document).ready(function(){
 		}
 	});
 	*/
-
-
-  	
-	/*
-	// KindEditor 编辑器设置
-	var editor;
-	KindEditor.ready(function(K) {
-	    editor = K.create('.zx-textarea', {
-			resizeType : 1,
-			width: '100%',
-			height: '260',
-			allowPreviewEmoticons : false,
-			allowImageUpload : false,
-			themesPath: MEDIA_URL + "css/kindeditor/themes/",
-			pluginsPath: MEDIA_URL + "js/kindeditor/plugins/",
-			langPath: MEDIA_URL + "js/kindeditor/",
-			items : [
-				'bold', 'italic', 'underline', 'removeformat', '|', 
-				'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', '|', 
-				'image', 'link', '|', 
-				'fullscreen'
-			],
-			afterCreate : function() { 
-			  	this.sync(); 
-			}, 
-			afterBlur:function(){ 
-			  	this.sync(); 
-			}
-	    });
-	});
-	*/
     
 
-    /* UE
+    //UE
+    /*
     var ue = UE.getEditor('zx-editor', {
         toolbars: [[
          	'bold', 'italic', 'underline', 'removeformat', '|',
@@ -315,21 +318,22 @@ $(document).ready(function(){
         dropFileEnabled: false,
         pasteplain: true
     });
-
-    var ue2 = UE.getEditor('zx-editor2', {
-        toolbars: [
-            'bold', 'italic', 'underline', 'removeformat', '|',
-            'insertorderedlist', 'insertunorderedlist', '|' ,
-            'link', 'unlink', 'insertimage', 'insertvideo', '|',
-            'preview', 'cleardoc', 'fullscreen'
-        ],
-        initialFrameWidth: '100%',
-        dropFileEnabled: false,
-        pasteplain: true
-    });
 	*/
 
-	// UM
+    // var ue2 = UE.getEditor('zx-editor2', {
+    //     toolbars: [
+    //         'bold', 'italic', 'underline', 'removeformat', '|',
+    //         'insertorderedlist', 'insertunorderedlist', '|' ,
+    //         'link', 'unlink', 'insertimage', 'insertvideo', '|',
+    //         'preview', 'cleardoc', 'fullscreen'
+    //     ],
+    //     //initialFrameWidth: '100%',
+    //     dropFileEnabled: false,
+    //     pasteplain: true
+    // });
+
+	/* 
+	//UM
     var um = UM.getEditor('zx-editor', {
         toolbar:[
             'bold italic underline removeformat |',
@@ -350,6 +354,7 @@ $(document).ready(function(){
         initialFrameWidth: '100%',
         dropFileEnabled: false
     });
+	*/
 	
 
     

@@ -20,6 +20,12 @@ $(document).ready(function(){
     //text_tags.add('John Doe').add('Jane Roe');
     */
 
+    
+    var askEditor = createEditor('#ask-editor'),
+        answerEditor = createEditor('#answer-editor'),
+        questionEditor = createEditor('#question-editor');
+
+
     // 我要提问 IE 链接不过去问题，强制js跳转
     $('.ask-question button').bind('click', function(){
         window.location.href = '/question/ask_question';
@@ -114,10 +120,11 @@ $(document).ready(function(){
         $('.answer-main .zx-textarea').focusEnd();
         */
         
-        UM.getEditor('zx-editor').setContent("@" + $(this).data('user_name') + "  ");
-        UM.getEditor('zx-editor').focus(true);
         // 滚动到输入框的位置框
-        $('html,body').animate({scrollTop: $('#zx-editor').offset().top});
+        $('html,body').animate({scrollTop: $('.answer-main').offset().top});
+        answerEditor.focus();
+        answerEditor.html('');
+        answerEditor.appendHtml("<span>@" + $(this).data('user_name') + " </span>");
     });
   
 
@@ -196,18 +203,18 @@ $(document).ready(function(){
 
     
     // 问题详情页面 的 问题内容
-    if(QUESTION_CONTENT && ($('#zx-editor2').length > 0)){
-        UM.getEditor('zx-editor2').setContent(QUESTION_CONTENT);
+    if(QUESTION_CONTENT){
+        questionEditor.html(QUESTION_CONTENT);
     }
 
     // 问题详情页的回答内容
     if(ANSWER_CONTENT){
-        UM.getEditor('zx-editor').setContent(ANSWER_CONTENT);
+        answerEditor.html(ANSWER_CONTENT);
     }
 
     // 提问页面 的 问题内容
     if(ASK_QUESTION_CONTENT){
-        UM.getEditor('zx-editor').setContent(ASK_QUESTION_CONTENT);
+        askEditor.html(ASK_QUESTION_CONTENT);
     }
 
 });
