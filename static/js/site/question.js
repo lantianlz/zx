@@ -121,7 +121,7 @@ $(document).ready(function(){
         */
         
         // 滚动到输入框的位置框
-        $('html,body').animate({scrollTop: $('.answer-main').offset().top});
+        $('html,body').animate({scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0)});
         answerEditor.focus();
         answerEditor.html('');
         answerEditor.appendHtml("<span>@" + $(this).data('user_name') + " </span>");
@@ -203,17 +203,17 @@ $(document).ready(function(){
 
     
     // 问题详情页面 的 问题内容
-    if(QUESTION_CONTENT){
+    if(QUESTION_CONTENT && questionEditor){
         questionEditor.html(QUESTION_CONTENT);
     }
 
     // 问题详情页的回答内容
-    if(ANSWER_CONTENT){
+    if(ANSWER_CONTENT && answerEditor){
         answerEditor.html(ANSWER_CONTENT);
     }
 
     // 提问页面 的 问题内容
-    if(ASK_QUESTION_CONTENT){
+    if(ASK_QUESTION_CONTENT && askEditor){
         askEditor.html(ASK_QUESTION_CONTENT);
     }
 

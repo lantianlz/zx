@@ -17,6 +17,7 @@ $(document).ready(function(){
 
     // 登记按钮页面跳转
     $('.regist').bind('click', function(){
-        window.location.href = '/regist';
+        //window.location.href = '/regist';
+        $.ZXMsg.alert('提示', '网站内测中，只能被邀请注册', 5000);
     });
 });
