@@ -121,7 +121,9 @@ $(document).ready(function(){
         */
         
         // 滚动到输入框的位置框
-        $('html,body').animate({scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0)});
+        $('html,body').animate({
+            scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0)
+        });
         answerEditor.focus();
         answerEditor.html('');
         answerEditor.appendHtml("<span>@" + $(this).data('user_name') + " </span>");
