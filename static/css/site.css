@@ -1,5 +1,5 @@
 @charset "utf-8";
-body {padding-top: 0px; font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #222}
+body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft YaHei","微软雅黑",sans-serif; font-size: 14px; color: #222}
 
 .navbar-fixed-top, .navbar-fixed-bottom{
     z-index: 900;
