@@ -30,5 +30,5 @@ urlpatterns = patterns('',
                        url(r'^500$', 'www.account.views.test500'),
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-                           {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+                           {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
                        )
