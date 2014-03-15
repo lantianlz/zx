@@ -1,14 +1,12 @@
 todo list:
 
-1.邀请注册，新邀请的用户给出系统通知
+1.session替换为缓存backend
 
-2.session替换为缓存backend
+2.获取user增加缓存
 
-3.获取user增加缓存
+3.全局过一下sql
 
-4.全局过一下sql
-
-5.admin后台配置
+4.admin后台配置
 
 
 
