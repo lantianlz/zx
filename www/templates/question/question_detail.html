@@ -34,13 +34,13 @@ $(document).ready(function(){
     <li class="active">{{question.title|str_display:10}}</li>
 </ol>
 <div class="question-entry">
-    <div class="topic pb-5">
+    <div class="topic pb-15 pl-15 pr-15">
 
         <div class="topic-title">
             <h4 class="f22"> <strong>{{question.title}}</strong>
             </h4>
         </div>
-        <div class="topic-content line-height-25">{{question.content|safe}}</div>
+        <div class="f14 pt-10 line-height-25">{{question.content|safe}}</div>
         <div class="topic-tags row">
             <ul class="list-flow">
                 {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
@@ -160,9 +160,7 @@ $(document).ready(function(){
 <div class="replies w">
     <ul class="list-group" id="ul_replies">
         <li class="list-group-item no-l-r-bd bdc-eee">
-            <div class="row">
-                <h4>共{{good_answers_count}}个回答</h4>
-            </div>
+            <h4>共 {{good_answers_count}} 个回答</h4>
         </li>
         {% for answer in good_answers %}
             {% include "question/_question_answer.html" %}
@@ -214,7 +212,7 @@ $(document).ready(function(){
     <div class="answer-main">
         {% if request.user.is_authenticated %}
         <form role="form" method="post" action="/question/create_answer/{{question.id}}">
-            <div class="form-group">
+            <div class="form-group mb-0">
                 <textarea id="answer_editor" name="answer_content" class="form-control zx-textarea" style="height: 100px;"></textarea>
             </div>
             <div class="form-group pull-right">

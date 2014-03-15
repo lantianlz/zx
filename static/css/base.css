@@ -126,27 +126,28 @@
 
 .m_tc{margin:0 auto;}
 /*链接和常用文字颜色*/
-.cl_white{color:#fff;}
-.cl_black{color:#000;}
-.cl_gray{color:gray;}
-.cl_red{color:red;}
+.cl_white{color: #fff;}
+.cl_black{color: #000;}
+.cl_gray{color: gray;}
+.cl_red{color: red;}
 .co1{color: #919191;}
-.co2{color:#545454;}
-.co3{color:#fff;}
-.co4{color:#699000;}
-.co5{color:#000000;}
-.co6{color:#666666;}
-.co7{color:#59bedc;}
-.co8{color:#999999;}
-.co9{color:#f79700;}
-.co10{color:#b3d193;}
-.co11{color:#ffa200;}
-.co12{color:#92b452;}
-.co13{color:#e0b02e;}
-.co14{color:#333333;}
-.co15{color:#ff6600;}
-.co16{color:red;}
+.co2{color: #545454;}
+.co3{color: #fff;}
+.co4{color: #699000;}
+.co5{color: #000000;}
+.co6{color: #666666;}
+.co7{color: #59bedc;}
+.co8{color: #999999;}
+.co9{color: #f79700;}
+.co10{color: #b3d193;}
+.co11{color: #ffa200;}
+.co12{color: #92b452;}
+.co13{color: #e0b02e;}
+.co14{color: #333333;}
+.co15{color: #ff6600;}
+.co16{color: red;}
 .co17{color: #d1d1d1;}
+.co18{color: #222;}
 
 .textindent2{text-indent:32px;}
 .textindent0{text-indent: 0;}

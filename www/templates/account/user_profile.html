@@ -15,7 +15,7 @@
     <div class="username">
         <h3 class="ff-yahei fb">{{user.nick}}</h3>
     </div>
-    <div class="desc">
+    <div class="desc co8">
         <p>{{user.des|default:"忙着发财，没能留下点介绍信息"}}</p>
         {% if is_me and not user.des %}<a href="/account/user_settings#set_des">立即设置</a>{% endif %}
     </div>
@@ -72,7 +72,7 @@
             <ul class="list-group only-top-border">
                 {% for question in questions %}
                 <li class="list-group-item">
-                    <div class="content f16">
+                    <div class="content f14">
                         <a href="{{question.get_url}}">{{question.title|str_display:30}}</a>
                     </div>
                     <div class="stats pt-10">
@@ -93,7 +93,7 @@
             <ul class="list-group only-top-border">
                 {% for answer in answers %}
                 <li class="list-group-item">
-                    <div class="content f16 pb-10">
+                    <div class="content f14 pb-10">
                         <span class="pt-5">{{answer.get_summary|safe}}</span>
                     </div>
                     <div class="pb-10 f12">
