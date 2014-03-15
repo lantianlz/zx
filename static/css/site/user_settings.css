@@ -1,3 +1,7 @@
+body{
+	background-color: #f1f1f1;
+}
+
 /**********************************************我的邀请*******************************************************/
 .zx-invitation .form-control[readonly]{
 	cursor: pointer;

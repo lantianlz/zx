@@ -13,12 +13,6 @@
     border: 1px solid #ddd;
 }
 
-.zx-container-main  .user-name{
-    display: inline;
-    /*color: #224e73;*/
-    font-size: 12px;
-}
-
 .zx-container-main .btn-default .badge{
     background-color: lightgray;
 }
@@ -135,20 +129,15 @@
     float: left; 
     min-height: 370px; 
     width: 100%; 
-    padding-top: 25px;
+    padding-top: 15px;
 }
 
 .question-list .list-group-item:first-child{
     border-top: 0px;
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
-    padding: 
 }
 
-.question-list .list-group-item{
-    border-left: 0px;
-    border-right: 0px;
-}
 
 .question-list .item-container{
     width: 100%; 
@@ -223,10 +212,12 @@
     width: 100%;
 }
 
-.zx-container-main .question-entry .topic{
-    border-radius: 4px;
-    padding: 15px;
-    border: solid 1px #ddd;
+.question-entry .list-group-item:last-child{
+  border-radius: 0px;
+}
+
+.question-entry .list-group-item:first-child{
+  border-radius: 0px;
 }
 
 .zx-container-main .question-entry .topic-content{
@@ -237,11 +228,6 @@
 
 .zx-container-main .question-entry .question-date{
     font-size: 12px;
-}
-
-.zx-container-main .replies{
-    width: 100%;
-    padding-top: 25px;
 }
 
 .zx-container-main .reply-header{
@@ -330,7 +316,7 @@
 }
 
 .my-reply{
-  background-color: #f1f1f1;
+  /*background-color: #f1f1f1;*/
 }
 
 .question-tools{

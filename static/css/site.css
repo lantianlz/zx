@@ -1,5 +1,5 @@
 @charset "utf-8";
-body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,Arial,'Microsoft YaHei',sans-serif; font-size: 14px; color: #222}
+body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande","Luxi Sans",Arial,"Hiragino Sans GB",STHeiti,"Microsoft YaHei","Wenquanyi Micro Hei","WenQuanYi Micro Hei Mono","WenQuanYi Zen Hei","WenQuanYi Zen Hei Mono",LiGothicMed; font-size: 14px; color: #222}
 
 .navbar-fixed-top, .navbar-fixed-bottom{
     z-index: 900;
@@ -24,7 +24,7 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,Arial,'Microsoft
 
 .footer {
 	font-size: 12px;
-	margin-top:50px;
+	margin-top: 40px;
     background: none repeat scroll 0 0 #2F2F2F;
     color: #989898;
     line-height: 20px;
@@ -206,6 +206,7 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,Arial,'Microsoft
     border-left: 0px;
     border-right: 0px;
     border-radius: 0px;
+    border-color: #eee;
 }
 
 .list-group.only-top-border>.list-group-item:first-child{

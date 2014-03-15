@@ -195,3 +195,12 @@ a:hover{
 .border-radius-0{
 	border-radius: 0px;
 }
+
+.no-l-r-bd{
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.bdc-eee{
+    border-color: #eee;
+}

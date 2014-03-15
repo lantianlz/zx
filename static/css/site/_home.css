@@ -1,9 +1,9 @@
-body {background-color: #F0F4F7}
+/*body {background-color: #F0F4F7}*/
 
 .container_content{
     background-color: white;
     border-radius: 5px;
-    border: solid 1px lightgray;
+    /*border: solid 1px lightgray;*/
     padding-bottom: 20px;
     /*margin-left: 0px;*/
     /*margin-right: 0px;*/
@@ -140,14 +140,14 @@ body {background-color: #F0F4F7}
 }
 
 .navbar-nav>li>a{
-    font-size: 17px;
-    color: #555555;
+    font-size: 16px;
+    color: #222;
     transition: color 0.5s;
 }
 
 .login-user .user:hover{
     background-color: none; 
-    color: #555555;
+    color: #222;
     border-bottom: 0px;
 }
 

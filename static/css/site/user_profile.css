@@ -1,6 +1,11 @@
+
+body{
+	background-color: #f1f1f1;
+}
 .container_content{
 	padding-bottom: 0px;
 	border-radius: 0px;
+	border: solid 1px #ddd;
 }
 
 .gray-a>li>a{

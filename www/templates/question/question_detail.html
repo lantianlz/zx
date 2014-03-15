@@ -34,7 +34,7 @@ $(document).ready(function(){
     <li class="active">{{question.title|str_display:10}}</li>
 </ol>
 <div class="question-entry">
-    <div class="topic">
+    <div class="topic pb-5">
 
         <div class="topic-title">
             <h4 class="f22"> <strong>{{question.title}}</strong>
@@ -53,7 +53,7 @@ $(document).ready(function(){
                     <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
                 </a>
                 <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
-                    <div class="user-name">{{question.user.nick}}</div>
+                    <span class="f12">{{question.user.nick}}</span>
                 </a>
                 {% endif %}
             </div>
@@ -73,7 +73,7 @@ $(document).ready(function(){
                     {% endif %}
                     {% endif %}
                     {% if request.user.id == question.user.id or request.user.is_staff %}
-                    <a href="#" data-toggle="modal" data-target="#edit_modal">
+                    <a href="#" data-toggle="modal" data-target="#edit_question_modal">
                         <span class="glyphicon glyphicon-pencil"></span>
                         修改
                     </a>
@@ -123,7 +123,7 @@ $(document).ready(function(){
         </div>
         {% if request.user.id == question.user.id or request.user.is_staff %}
         <!-- 弹出层 -->
-        <div class="modal fade" id="edit_modal">
+        <div class="modal fade" id="edit_question_modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form role="form" method='post' action='/question/modify_question/{{question.id}}'>
@@ -132,7 +132,6 @@ $(document).ready(function(){
                             <h4 class="modal-title">修改提问</h4>
                         </div>
                         <div class="modal-body">
-
                             <div class="form-group" >
                                 <span>选择你想提问的类型:</span>
                             </div>
@@ -145,35 +144,31 @@ $(document).ready(function(){
                                     value='{{question.title}}'></div>
                             <div class="form-group">
                                 <textarea id="question_editor" name="question_content" class="form-control zx-textarea" style="height: 260px"></textarea>
+                            </div>
                         </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="submit" class="btn btn-primary">保存</button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+        {% endif %}
     </div>
-    <!-- 弹出层结束 -->{% endif %}</div>
 
-<div class="replies">
+<div class="replies w">
     <ul class="list-group" id="ul_replies">
-        <li class="list-group-item">
+        <li class="list-group-item no-l-r-bd bdc-eee">
             <div class="row">
-                <div class="col-md-6">
-                    <h4> <strong>共{{good_answers_count}}个回答</strong>
-                    </h4>
-                </div>
+                <h4>共{{good_answers_count}}个回答</h4>
             </div>
         </li>
         {% for answer in good_answers %}
             {% include "question/_question_answer.html" %}
         {% endfor %}
         {% if bad_answers %}
-        <div class="blank20"></div>
-        <li class="list-group-item">
+        <li class="list-group-item no-l-r-bd bdc-eee">
             <div class="gray-a">
                 <a class="collapse-answer zx-tooltip" title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" href="javascript: void(0)">
                     共有 {{bad_answers_count}} 个回答被折叠
@@ -186,13 +181,35 @@ $(document).ready(function(){
         {% endfor %}
         {% endif %}
     </ul>
+
+    <!-- 修改回答 -->
+    <div class="modal fade" id="edit_answer_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" method='post' action='/'>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">修改回答</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <textarea id="edit_answer_editor" name="edit_answer_content" class="form-control zx-textarea" style="height: 260px"></textarea>
+                            <input type="hidden" class="edit-answer-id" name="answer_id" value=""/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- 回复块 -->
 <div class="answer">
-    <div class="answer-title">
-        <h3>可以在下面添加你的回答</h3>
-    </div>
+    <h4>可以在下面添加你的回答</h4>
 
     <div class="answer-main">
         {% if request.user.is_authenticated %}

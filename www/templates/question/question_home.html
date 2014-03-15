@@ -28,12 +28,12 @@
     <!--选项卡结束-->
     {% if not questions %}
     <div class="blank10"></div>
-    <div class="alert alert-success popmsg" id="divSuccess">该分类暂无数据</div>
+    <div class="alert alert-info box-shadow-224 border-radius-0 popmsg" id="divSuccess">该分类暂无数据</div>
     {% endif %}
     <!--列表开始-->
     <ul class="list-group {% if '/topic/' in request.path %}tag-ul{% endif %}" id="ul_question_list">
         {% for question in questions %}
-        <li class="list-group-item pt-0 pb-0">
+        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
             <div class="item-container">
                 <div class="item-question-title">
                     <a class="black-blue f16" href="{{question.get_url}}">
@@ -48,7 +48,7 @@
                         <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar}}" title="{{question.user.nick}}" />
                     </a>
                     <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
-                        <div class="user-name">{{question.user.nick}}</div>
+                        <span class="f12">{{question.user.nick}}</span>
                     </a>
                     {% endif %}
                     <span class="statistic co8" {% if question.is_hide_user %}style="margin-left:0;"{% endif %}>

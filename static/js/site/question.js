@@ -24,6 +24,7 @@ $(document).ready(function(){
     var askEditor = createEditor('#ask_editor'),
         answerEditor = createEditor('#answer_editor'),
         questionEditor = createEditor('#question_editor');
+        editAnswerEditor = createEditor('#edit_answer_editor');
 
 
     // 我要提问 IE 链接不过去问题，强制js跳转
@@ -129,6 +130,14 @@ $(document).ready(function(){
         answerEditor.appendHtml("<span>@" + $(this).data('user_name') + " </span>");
     });
   
+
+    // 修改回答事件
+    $('.answer-edit').bind('click', function(){
+        $('#edit_answer_modal').modal('show');
+        editAnswerEditor.html($(this).parents('li').eq(0).find('.reply-content').html());
+        $('edit_answer_modal .edit-answer-id').val($(this).data('answer_id'));
+    });
+
 
     // 修改问题弹出层自动选中问题类型和标签
     if (SElECTED_QUESTION_TYPE){
