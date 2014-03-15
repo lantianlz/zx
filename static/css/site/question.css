@@ -220,12 +220,6 @@
   border-radius: 0px;
 }
 
-.zx-container-main .question-entry .topic-content{
-    padding-top: 25px;
-    font-size: 14px;
-    line-height: 25px;
-}
-
 .zx-container-main .question-entry .question-date{
     font-size: 12px;
 }
@@ -307,8 +301,10 @@
 }
 
 .breadcrumb{
-  margin-top: 25px;
-  border: solid 1px #ddd;
+  margin-top: 10px;
+  border-bottom: solid 1px #ddd;
+  border-radius: 0px;
+  background-color: transparent;
 }
 
 .replies-sort{

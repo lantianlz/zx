@@ -6,9 +6,11 @@ body{
 	padding-bottom: 0px;
 	border-radius: 0px;
 	border: solid 1px #ddd;
+	margin-top: 80px;
 }
 
 .gray-a>li>a{
+	color: #222;
 	padding-right: 0px;
 }
 

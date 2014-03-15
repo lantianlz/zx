@@ -1,7 +1,7 @@
 {% extends "question/base_important.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}每日精华{% endblock %}
+{% block title %}每日精选{% endblock %}
 
 {% block css %}{% endblock %}
 
@@ -9,9 +9,9 @@
 
 {% block daily_main %}
 {% if questions %}
-<ul class="list-group daily-main mt-30">
+<ul class="list-group daily-main mt-25">
     {% for question in questions %}
-    <li class="list-group-item">
+    <li class="list-group-item no-l-r-bd bdc-eee">
         <div class='daily-item'>
             <span class="jinghua">
                 <img src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
