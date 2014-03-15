@@ -4,7 +4,7 @@ import datetime
 from django.db import models
 from django.conf import settings
 
-import const
+from www.account import const
 
 
 class User(models.Model):
@@ -70,8 +70,23 @@ class Profile(models.Model):
     def get_url(self):
         return u'/p/%s' % self.id
 
-    def get_avatar(self):
-        return self.avatar or ('%s/img/common/default.png' % settings.MEDIA_URL)
+    def get_avatar(self, key=''):
+        if self.avatar:
+            return '%s%s' % (self.avatar, ('!%s' % key) if key else '')
+        else:
+            return '%s/img/common/default.png' % settings.MEDIA_URL
+
+    def get_avatar_300(self):
+        return self.get_avatar(key='300m300')
+
+    def get_avatar_100(self):
+        return self.get_avatar(key='100m100')
+
+    def get_avatar_65(self):
+        return self.get_avatar(key='65m65')
+
+    def get_avatar_25(self):
+        return self.get_avatar(key='25m25')
 
     def get_ta_display(self):
         return {1: u'他'}.get(self.gender, u'她')

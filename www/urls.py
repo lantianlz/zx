@@ -16,10 +16,12 @@ urlpatterns = patterns('',
                        url(r'^reset_password$', 'www.account.views.reset_password'),
                        url(r'^forget_password$', 'www.account.views.forget_password'),
                        url(r'^home$', 'www.question.views.question_home'),
+                       url(r'^qiniu_img_return$', 'www.misc.views.qiniu_img_return'),
 
                        url(r'^n/(?P<nick>.*)$', 'www.account.views.get_user_by_nick'),
                        url(r'^p$', 'www.account.views.user_profile'),
                        url(r'^p/(?P<id>\w+)$', 'www.account.views.user_profile'),
+                       url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
 
                        url(r'^account/', include('account.urls')),
                        url(r'^question/', include('question.urls')),
@@ -28,7 +30,6 @@ urlpatterns = patterns('',
 
                        url(r'^admin/', include('admin.urls')),
                        url(r'^500$', 'www.account.views.test500'),
-                       url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
                            {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
                        )

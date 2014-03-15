@@ -21,7 +21,7 @@
                     <a href="/question/">首页</a>
                 </li>
                 <li {% if '/question/important' in request.path %} class="active" {% endif %}>
-                    <a href="/question/important">每日精华</a>
+                    <a href="/question/important">每日精选</a>
                 </li>
                 <li {% if '/account/invitation' in request.path %} class="active" {% endif %}>
                     <a href="/account/invitation">邀请注册</a>
@@ -37,7 +37,7 @@
                 {% if request.user.is_authenticated %}
                 <li class="dropdown">
                     <a href="/p" class="dropdown-toggle user" data-target="#">
-                        <img class='avatar avatar-circle' src="{{MEDIA_URL}}img/common/user3.jpg">
+                        <img class='avatar avatar-circle' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
                         <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span>
                         <!-- <span class="caret"></span> -->

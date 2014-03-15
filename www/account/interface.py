@@ -53,7 +53,7 @@ class UserBase(object):
 
     def get_user_login_by_id(self, id):
         try:
-            user = User.objects.get(id=id)
+            user = User.objects.get(id=id, state__gt=0)
             return user
         except User.DoesNotExist:
             return None
@@ -61,7 +61,7 @@ class UserBase(object):
     def get_user_by_id(self, id):
         try:
             profile = Profile.objects.get(id=id)
-            user = User.objects.get(id=profile.id)
+            user = User.objects.get(id=profile.id, state__gt=0)
             self.set_profile_login_att(profile, user)
             return profile
         except (Profile.DoesNotExist, User.DoesNotExist):
@@ -70,7 +70,7 @@ class UserBase(object):
     def get_user_by_nick(self, nick):
         try:
             profile = Profile.objects.get(nick=nick)
-            user = User.objects.get(id=profile.id)
+            user = User.objects.get(id=profile.id, state__gt=0)
             self.set_profile_login_att(profile, user)
             return profile
         except (Profile.DoesNotExist, User.DoesNotExist):
@@ -78,7 +78,7 @@ class UserBase(object):
 
     def get_user_by_email(self, email):
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email, state__gt=0)
             profile = Profile.objects.get(id=user.id)
             self.set_profile_login_att(profile, user)
             return profile
@@ -88,7 +88,7 @@ class UserBase(object):
     def get_user_by_mobilenumber(self, mobilenumber):
         try:
             if mobilenumber:
-                user = User.objects.get(mobilenumber=mobilenumber)
+                user = User.objects.get(mobilenumber=mobilenumber, state__gt=0)
                 profile = Profile.objects.get(id=user.id)
                 self.set_profile_login_att(profile, user)
                 return profile

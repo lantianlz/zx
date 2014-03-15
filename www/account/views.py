@@ -2,13 +2,14 @@
 
 import urllib
 import json
-from pprint import pprint
+import hashlib
 from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import utils
+from www.misc import qiniu_client
 from www.account import interface
 from www.misc.decorators import member_required
 
@@ -140,6 +141,8 @@ def user_profile(request, id=None, template_name='account/user_profile.html'):
 
 @member_required
 def user_settings(request, template_name='account/change_profile.html'):
+    img_key = 'avatar_%s' % utils.uuid_without_dash()   # 七牛上传图片文件名
+    uptoken = qiniu_client.get_upload_token(img_key)    # 七牛图片上传token
     if request.POST:
         nick = request.POST.get('nick')
         gender = request.POST.get('gender')

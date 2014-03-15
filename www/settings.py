@@ -21,6 +21,7 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 SERVER_NAME = 'ZHIXUAN_WEB0' if not LOCAL_FLAG else 'DEVELOPER'
 SERVER_DOMAIN = 'a.com'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
+IMG0_DOMAIN = 'http://zimg0.qiniudn.com'    # 'http://img0.zhixuan.com'
 
 EMAIL_FROM = u'"智选网" <service@zhixuan.com>'
 EMAIL_HOST_USER = 'service@zhixuan.com'
@@ -73,7 +74,7 @@ SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
 MEDIA_ROOT = os.path.abspath(os.path.join(SITE_ROOT, '../static'))
-MEDIA_URL = '/static/'  if LOCAL_FLAG else ('http://static.%s' % SERVER_DOMAIN)
+MEDIA_URL = '/static/' if LOCAL_FLAG else ('http://static.%s/' % SERVER_DOMAIN)
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
