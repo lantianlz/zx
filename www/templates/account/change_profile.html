@@ -6,16 +6,25 @@
 {% block javascript %}{% endblock %}
 
 {% block settings_main %}
-<form class="form-horizontal" role="form" method="post" action="/account/user_settings">
-	<!-- <div class="form-group">
+<form class="form-horizontal" role="form" method="post" action="http://up.qiniu.com/" enctype="multipart/form-data">
+	<div class="form-group">
 		<label class="col-sm-2 control-label">头像</label>
 		<div class="col-sm-10">
 			<p class="form-control-static avatar">
-				<img class="avatar-300 avatar-circle" src="{{MEDIA_URL}}{{request.user.avatar|default:'img/common/default.png'}}"></p>
+				<img class="avatar-300 avatar-circle" 
+					src="{{request.user.get_avatar_300}}"></p>
 			<div class="blank10"></div>
-			<input type="file"/>
+			<input name="token" type="hidden" value="{{uptoken}}">
+			<input name="key" type="hidden" value="{{img_key}}">
+			<input name="x:user_id" type="hidden" value="{{request.user.id}}">
+			<input name="x:img_type" type="hidden" value="avatar">
+			<input name="file" type="file" />
+			<div class="blank5"></div>
+			<button type="submit" class="btn btn-primary">提交图像</button>
 		</div>
-	</div> -->
+	</div>
+</form>
+<form class="form-horizontal" role="form" method="post" action="/account/user_settings">
 	<div class="form-group">
 		<label class="col-sm-2 control-label">邮箱</label>
 		<div class="col-sm-10">
