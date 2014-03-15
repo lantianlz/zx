@@ -19,7 +19,7 @@ urlpatterns = patterns('www.account.views',
                        url(r'^get_user_info_by_id', 'get_user_info_by_id'),
                        )
 
-urlpatterns += patterns('www.account.views_oauth',
-                        url(r'^oauth/qq$', 'oauth_qq'),
-                        url(r'^oauth/sina$', 'oauth_sina'),
-                        )
+# urlpatterns += patterns('www.account.views_oauth',
+#                         url(r'^oauth/qq$', 'oauth_qq'),
+#                         url(r'^oauth/sina$', 'oauth_sina'),
+#                         )
