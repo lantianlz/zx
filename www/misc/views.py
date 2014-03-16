@@ -10,6 +10,7 @@ from django.shortcuts import render_to_response, HttpResponseRedirect
 from django.conf import settings
 
 from www.misc.decorators import member_required
+from www.misc import qiniu_client
 
 
 def static_view(request, template_name):
@@ -29,7 +30,7 @@ def qiniu_img_return(request):
         ur = json.loads(upload_ret)
     except:
         ur = {}
-    print ur
+    # print ur
     img_key = ur.get('key', '')
     img_type = ur.get('img_type', '')
     if img_key and img_type.startswith('avatar'):
@@ -43,8 +44,11 @@ def qiniu_img_return(request):
 
 @member_required
 def save_img(request):
-    result = {
-        "error": 0,
-        "url": "http://www.baidu.com/img/bdlogo.gif"
-    }
-    return HttpResponse(json.dumps(result))
+    imgFile = request.FILES.get('imgFile')
+    flag, img_name = qiniu_client.upload_img(imgFile)
+    if flag:
+        result = dict(error=0, url='%s/%s' % (settings.IMG0_DOMAIN, img_name))
+    else:
+        result = dict(error=-1, url='')
+
+    return HttpResponse(json.dumps(result), mimetype='application/json')
