@@ -39,3 +39,12 @@ def qiniu_img_return(request):
 
         return HttpResponseRedirect('/account/user_settings')
     return HttpResponse('上传图片出错，请重新上传 <a href="javascript:history.go(-1);">立即返回</a>')
+
+
+@member_required
+def save_img(request):
+    result = {
+        "error": 0,
+        "url": "http://www.baidu.com/img/bdlogo.gif"
+    }
+    return HttpResponse(json.dumps(result))

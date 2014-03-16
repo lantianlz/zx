@@ -37,7 +37,7 @@
                 {% if request.user.is_authenticated %}
                 <li class="dropdown">
                     <a href="/p" class="dropdown-toggle user" data-target="#">
-                        <img class='avatar avatar-circle' src="{{request.user.get_avatar_25}}">
+                        <img class='avatar-25 avatar-circle' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
                         <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span>
                         <!-- <span class="caret"></span> -->

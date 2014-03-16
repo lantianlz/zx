@@ -19,6 +19,10 @@
     text-decoration: none;
 }
 
+.login-user .badge{
+  padding: 1px 5px;
+}
+
 .un-login-user{
     margin-top: 15px;
 }
@@ -44,11 +48,6 @@
 
 .login-user1 .dropdown-toggle{
     line-height: 25px;
-}
-
-.login-user .avatar{
-    width: 25px;
-    height: 25px;
 }
 
 .login-user .user{
@@ -111,7 +110,7 @@
 
 .zx-navbar{
     background-color: white;
-    box-shadow: 1px 1px 1px #b9b9b9;
+    box-shadow: 1px 1px 2px #b9b9b9;
     border-bottom: solid 1px #b9b9b9;
     opacity: 0.95;
     /*filter: alpha(opacity = 98);*/

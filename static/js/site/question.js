@@ -135,7 +135,7 @@ $(document).ready(function(){
     $('.answer-edit').bind('click', function(){
         $('#edit_answer_modal').modal('show');
         editAnswerEditor.html($(this).parents('li').eq(0).find('.reply-content').html());
-        $('edit_answer_modal .edit-answer-id').val($(this).data('answer_id'));
+        $('#edit_answer_modal .edit-answer-id').val($(this).data('answer_id'));
     });
 
 
