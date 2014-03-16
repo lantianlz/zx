@@ -50,12 +50,13 @@ def regist(request, invitation_code=None, template_name='account/regist.html'):
     nick = request.POST.get('nick', '').strip()
     password = request.POST.get('password', '').strip()
     invitation = None
+    invitation_code = invitation_code or request.session.get('invitation_code', '')
     if invitation_code:
         invitation = ib.get_invitation_by_code(invitation_code)
         if invitation:
             request.session['invitation_code'] = invitation.code
     if not invitation:
-        return HttpResponse(u'网站内测中，只能通过邀请注册，邀请码获取可以联系QQ:18625817, 390973848')
+        return HttpResponse(u'网站内测中，只能通过邀请注册，邀请码获取可以联系QQ: 2659790310')
     if request.POST:
         flag, result = ub.regist_user(email, nick, password, ip=utils.get_clientip(request),
                                       invitation_code=request.session.get('invitation_code'))

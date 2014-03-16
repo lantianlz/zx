@@ -18,6 +18,6 @@ $(document).ready(function(){
     // 登记按钮页面跳转
     $('.regist').bind('click', function(){
         //window.location.href = '/regist';
-        $.ZXMsg.alert('提示', '网站内测中，只能通过邀请注册，邀请码获取可以联系QQ:18625817, 390973848', 0);
+        $.ZXMsg.alert('提示', '网站内测中，只能通过邀请注册，邀请码获取可以联系QQ: 2659790310', 0);
     });
 });
