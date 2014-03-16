@@ -17,7 +17,7 @@ lb = interface.LikeBase()
 tb = interface.TagBase()
 
 
-@member_required
+# @member_required
 def question_home(request, question_type=0, template_name='question/question_home.html'):
     questions = qb.get_questions_by_type(question_type_domain=question_type)
 
@@ -31,7 +31,7 @@ def question_home(request, question_type=0, template_name='question/question_hom
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@member_required
+# @member_required
 def tag_question(request, tag_domain, template_name='question/question_home.html'):
     """
     @note: 通过标签展现话题
@@ -50,7 +50,7 @@ def tag_question(request, tag_domain, template_name='question/question_home.html
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@member_required
+# @member_required
 def question_detail(request, question_id, template_name='question/question_detail.html',
                     error_msg=None, success_msg=None, answer_content=''):
     question = qb.get_question_by_id(question_id)
@@ -125,7 +125,7 @@ def create_answer(request, question_id):
         return question_detail(request, question_id, error_msg=result, answer_content=answer_content)
 
 
-@member_required
+# @member_required
 def important_question(request, template_name='question/important_question.html'):
     questions = qb.get_all_important_question()
 
