@@ -105,20 +105,21 @@ function addZero(data){
         $.ZXMsg.alert('提示', '操作成功, 5秒后自动关闭!', 5000);
     */
     $.ZXMsg.alert = function(alertTitle, alertMsg, delayCloseSeconds){
-        var alertHtml = ''+
-        '<div class="modal fade" id="alert_modal" tabindex="-1" role="dialog">'+
-            '<div class="modal-dialog w400">'+
-                '<div class="modal-content">'+
-                    '<div class="modal-header pb-5">'+
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
-                        '<h4 class="modal-title">'+alertTitle+'</h4>'+
-                    '</div>'+
-                    '<div class="modal-body">'+
-                        alertMsg +
-                    '</div>'+
-                '</div>'+
-            '</div>'+
-        '</div>';
+        var alertHtml = [
+            '<div class="modal fade" id="alert_modal" tabindex="-1" role="dialog">',
+                '<div class="modal-dialog w400">',
+                    '<div class="modal-content">',
+                        '<div class="modal-header pb-5">',
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
+                            '<h4 class="modal-title">'+alertTitle+'</h4>',
+                        '</div>',
+                        '<div class="modal-body">',
+                            alertMsg,
+                        '</div>',
+                    '</div>',
+                '</div>',
+            '</div>'
+        ].join('');
 
         // 将alert框添加进body
         $('body').append(alertHtml);
@@ -148,24 +149,26 @@ function addZero(data){
         $.ZXMsg.confirm('提示', '确认要删除?', function(result){ //to do...});
     */
     $.ZXMsg.confirm = function(confirmTitle, confirmMsg, callback){
-        var confirmHtml = ''+
-        '<div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog">'+
-            '<div class="modal-dialog w400">'+
-                '<div class="modal-content">'+
-                    '<div class="modal-header pb-5">'+
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
-                        '<h4 class="modal-title">'+confirmTitle+'</h4>'+
-                    '</div>'+
-                    '<div class="modal-body">'+
-                        confirmMsg +
-                    '</div>'+
-                    '<div class="modal-footer">'+
-                        '<button type="button" class="btn btn-default confirm-cancel">取消</button>'+
-                        '<button type="button" class="btn btn-primary confirm-ok">确定</button>'+
-                    '</div>'+
-                '</div>'+
-            '</div>'+
-        '</div>';
+        var confirmHtml = [
+            '<div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog">',
+                '<div class="modal-dialog w400">',
+                    '<div class="modal-content">',
+                        '<div class="modal-header pb-5">',
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
+                            '<h4 class="modal-title">'+confirmTitle+'</h4>',
+                        '</div>',
+                        '<div class="modal-body">',
+                            confirmMsg,
+                        '</div>',
+                        '<div class="modal-footer">',
+                            '<button type="button" class="btn btn-default confirm-cancel">取消</button>',
+                            '<button type="button" class="btn btn-primary confirm-ok">确定</button>',
+                        '</div>',
+                    '</div>',
+                '</div>',
+            '</div>'
+        ].join('');
+
 
         // 将confirm框添加进body
         $('body').append(confirmHtml);
@@ -206,38 +209,39 @@ function addZero(data){
     */
     $.ZXMsg.sendPrivateMsg = function(userId, userName){
         var postUrl = '/',
-            privateMsgHtml = ''+
-        '<div class="modal fade" id="private_message_modal" role="dialog">'+
-            '<div class="modal-dialog w400">'+
-                '<div class="modal-content">'+
-                    '<form role="form" class="form-horizontal" method="post" action="">'+
-                        '<div class="modal-header">'+
-                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
-                            '<h4 class="modal-title">发送私信</h4>'+
-                        '</div>'+
-                        '<div class="modal-body pb-0">'+
-                            '<div class="form-group">'+
-                                '<label class="col-sm-3 control-label">发送给</label>'+
-                                '<div class="col-sm-9">'+
-                                    '<label id="receiver_label" class="control-label"></label>'+
-                                    '<input type="hidden" name="receiver">'+
-                                '</div>'+
-                            '</div>'+
-                            '<div class="form-group">'+
-                                '<label class="col-sm-3 control-label">消息内容</label>'+
-                                '<div class="col-sm-9">'+
-                                    '<textarea rows="4" name="message" class="form-control" placeholder="请输入消息内容" value=""></textarea>'+
-                                '</div>'+
-                            '</div>'+
-                        '</div>'+
-                        '<div class="modal-footer">'+
-                            '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'+
-                            '<button type="button" class="btn btn-primary send">发送</button>'+
-                        '</div>'+
-                    '</form>'+
-                '</div>'+
-            '</div>'+
-        '</div>';
+            privateMsgHtml = [
+                '<div class="modal fade" id="private_message_modal" role="dialog">',
+                    '<div class="modal-dialog w400">',
+                        '<div class="modal-content">',
+                            '<form role="form" class="form-horizontal" method="post" action="">',
+                                '<div class="modal-header">',
+                                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
+                                    '<h4 class="modal-title">发送私信</h4>',
+                                '</div>',
+                                '<div class="modal-body pb-0">',
+                                    '<div class="form-group">',
+                                        '<label class="col-sm-3 control-label">发送给</label>',
+                                        '<div class="col-sm-9">',
+                                            '<label id="receiver_label" class="control-label"></label>',
+                                            '<input type="hidden" name="receiver">',
+                                        '</div>',
+                                    '</div>',
+                                    '<div class="form-group">',
+                                        '<label class="col-sm-3 control-label">消息内容</label>',
+                                        '<div class="col-sm-9">',
+                                            '<textarea rows="4" name="message" class="form-control" placeholder="请输入消息内容" value=""></textarea>',
+                                        '</div>',
+                                    '</div>',
+                                '</div>',
+                                '<div class="modal-footer">',
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>',
+                                    '<button type="button" class="btn btn-primary send">发送</button>',
+                                '</div>',
+                            '</form>',
+                        '</div>',
+                    '</div>',
+                '</div>'
+            ].join('');
 
         
         // 是否第一次创建私信框

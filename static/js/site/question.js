@@ -23,7 +23,7 @@ $(document).ready(function(){
     
     var askEditor = createEditor('#ask_editor'),
         answerEditor = createEditor('#answer_editor'),
-        questionEditor = createEditor('#question_editor');
+        questionEditor = createEditor('#question_editor'),
         editAnswerEditor = createEditor('#edit_answer_editor');
 
 
