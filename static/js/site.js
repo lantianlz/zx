@@ -306,7 +306,7 @@ function createEditor(selector){
         allowImageUpload : true,
         allowImageRemote: true,
         // basePath: '/',
-        uploadJson: '../save_img',
+        uploadJson: '/save_img',
         pasteType : 1,
         cssData: 'body{font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #222;}',
         themesPath: MEDIA_URL + "css/kindeditor/themes/",
