@@ -1,9 +1,14 @@
 {% extends "base/base_home.html" %}
-{% block cheader %}
-<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/_split.css?v={{MEDIA_VERSION}}" />
-{% block dheader %}{% endblock %}
 
+{% block home_css %}
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/_split.css?v={{MEDIA_VERSION}}" />
+{% block split_css %}{% endblock %}
 {% endblock %}
+
+{% block home_js %}
+{% block split_js %}{% endblock %}
+{% endblock %}
+
 {% block container_content %}
 <div class="zx-split">
 	<div class="zx-split-left col-md-2">

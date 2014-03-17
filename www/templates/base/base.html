@@ -22,9 +22,17 @@
         <!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.Autocomplete.css" /> -->
         <!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}js/ueditor/themes/default/css/ueditor.min.css" /> -->
         <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/base.css" />
-        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site.css" /> 
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site.css" />
+        {% block base_css %}{% endblock %}
 
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery-1.7.min.js"></script>
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/html5shiv.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/respond.min.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap.min.js"></script>
+
     </head>
 
     <body>
@@ -53,21 +61,13 @@
         {% include "include/_tongji.html" %}
         {% block body_tail %}{% endblock body_tail %}
 
-
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/html5shiv.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/respond.min.js"></script>
-        <![endif]-->
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+        
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.placeholder.js"></script>
         <!-- // <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.markitup.js"></script> -->
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.tooltipster.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.tooltipsy.min.js"></script>
-        
-        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap.min.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
-
         <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/GrowingInput.js"></script> -->
         <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.js"></script> -->
         <!-- <script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.Autocomplete.js"></script> -->
@@ -82,7 +82,6 @@
             var MEDIA_URL = '{{ MEDIA_URL|default:'' }}',
             CURRENT_USER_ID = "{{request.user.id|default:''}}";
         </script>
-        
-        {% block bheader %}{% endblock bheader %}
+        {% block base_js %}{% endblock %}
     </body>
 </html>

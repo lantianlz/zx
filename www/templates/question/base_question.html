@@ -3,8 +3,12 @@
 {% load custom_filters %}
 {% block title %}首页{% endblock %}
 
-{% block cheader %}
+{% block home_css %}
 <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/question.css" />
+{% block css %}{% endblock %}
+{% endblock %}
+
+{% block home_js%}
 <script type="text/javascript" src="{{MEDIA_URL}}js/site/question.js"></script>
 <script type="text/javascript">
     var QUESTION_TAGS = {{tags|safe|default:"{}"}},
@@ -15,7 +19,6 @@
         ANSWER_CONTENT = '{{answer_content|safe|default:""}}';
 </script>
 {% block javascript %}{% endblock %}
-{% block css %}{% endblock %}
 {% endblock %}
 
 {% block container_content %}

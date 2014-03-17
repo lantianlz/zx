@@ -1,10 +1,14 @@
 {% extends "base/base_split.html" %}
-{% block dheader %}
+
+{% block split_css %}
 <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/static.css?v={{MEDIA_VERSION}}" />
 {% block css %}{% endblock %}
-{% block javascript %}{% endblock %}
-
 {% endblock %}
+
+{% block split_js %}
+{% block javascript %}{% endblock %}
+{% endblock %}
+
 {% block split_left %}
 
 	<a class="list-group-item {% if '/s/agreement' == request.path %} active {% endif %}" href="/s/agreement">
