@@ -16,6 +16,9 @@ from common import utils
 from django.utils.encoding import smart_str
 
 
+from www.account import interface
+
+
 class SimpleTest(TestCase):
 
     def test_basic_addition(self):
@@ -30,11 +33,10 @@ class SimpleTest(TestCase):
         pass
 
     def test_regist(self):
-        from www.account import interface
         ub = interface.UserBase()
         # print ub.set_password(raw_password='123')
         # print ub.check_password(raw_password='123')
-        flag, result =  ub.regist_user(email='lantian-lz@163.com', nick='simplejoy', password='851129', ip='127.0.0.1')
+        flag, result = ub.regist_user(email='lantian-lz@163.com', nick='simplejoy', password='851129', ip='127.0.0.1')
         if not flag:
             print result.__repr__()
             print result.encode('utf-8')
@@ -42,10 +44,18 @@ class SimpleTest(TestCase):
             print result
         return 'ok'
 
-
     def re_test(self):
-        from www.tasks import async_send_email
-        async_send_email('286394973@qq.com', 'test', 'content')
+        from www.account.models import Profile
+        from cPickle import dumps, loads
+        p = Profile.objects.all()[0]
+
+        user = interface.UserBase().get_user_by_email('lantian-lz@163.com')
+        print user.is_authenticated
+        print type(user.is_authenticated)
+        print user.is_staff
+        print user.is_staff()
+        print dumps(user)
+
 
 if __name__ == '__main__':
     st = SimpleTest()

@@ -61,6 +61,10 @@ class Profile(models.Model):
     source = models.IntegerField(default=0, choices=source_choices)
     create_time = models.DateTimeField(verbose_name=u'创建时间', db_index=True, default=datetime.datetime.now)
 
+    def is_staff(self):
+        # 从user移植过来避免cPickle的dumps报错
+        return self.state in (const.INTERNAL_MEMBER, )
+
     def is_authenticated(self):
         return True
 
