@@ -19,7 +19,7 @@ SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 
 SERVER_NAME = 'ZHIXUAN_WEB0' if not LOCAL_FLAG else 'DEVELOPER'
-SERVER_DOMAIN = 'a.com'
+SERVER_DOMAIN = 'a.com:8000'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
 IMG0_DOMAIN = 'http://zimg0.qiniudn.com'    # 'http://img0.zhixuan.com'
 
