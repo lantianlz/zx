@@ -560,8 +560,8 @@ $(document).ready(function(){
     .bind('mouseenter', showDropdown)
     .bind('mouseleave', hideDropdown);
 
+
     // 隐藏所有 auto-hide 样式
     $('.auto-hide').hide();
-
 });
 
