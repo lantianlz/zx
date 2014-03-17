@@ -9,7 +9,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-#配置是否采用本地模式
+# 配置是否采用本地模式
 LOCAL_FLAG = True
 
 # 引入父目录来引入其他模块
@@ -21,7 +21,7 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 SERVER_NAME = 'ZHIXUAN_WEB0' if not LOCAL_FLAG else 'DEVELOPER'
 SERVER_DOMAIN = 'a.com'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
-IMG0_DOMAIN = 'http://zimg0.qiniudn.com'    # 'http://img0.zhixuan.com'
+IMG0_DOMAIN = 'http://img0.zhixuan.com'    # 'http://zimg0.qiniudn.com'
 
 EMAIL_FROM = u'"智选网" <service@zhixuan.com>'
 EMAIL_HOST_USER = 'service@zhixuan.com'
