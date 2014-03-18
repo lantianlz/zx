@@ -228,6 +228,17 @@ $(document).ready(function(){
         askEditor.html(ASK_QUESTION_CONTENT);
     }
 
+    // 验证表单
+    $('.ask-question-form').validate({
+        errorPlacement: function(error, element) {  
+            // 如果是单选按钮将错误信息添加到上上级
+            if (element.is(":radio")){
+                error.appendTo(element.parent().parent());
+            } else {
+                error.appendTo(element.parent());
+            }
+        }
+    })
 });
 
 

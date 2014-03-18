@@ -289,3 +289,8 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
     opacity: 0;
     filter: alpha(opacity=0); /*IE*/
 }
+
+label.error{
+    color: #863114;
+    font-size: 12px;
+}

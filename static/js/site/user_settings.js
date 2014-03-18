@@ -16,4 +16,9 @@ $(document).ready(function(){
 	if(window.location.href.indexOf('#set_des') > -1){
 		$('textarea[name=des]').focus();
 	}
+
+	// 表单验证
+	$('.change-profile-form').validate();
+	$('.change-pwd-form').validate();
+	$('.change-email-form').validate();
 });

@@ -6,23 +6,23 @@
 {% block javascript %}{% endblock %}
 
 {% block settings_main %}
-<form class="form-horizontal" role="form" method='post' action="/account/user_settings/change_pwd">
+<form class="form-horizontal change-pwd-form" role="form" method='post' action="/account/user_settings/change_pwd">
 	<div class="form-group">
 		<label class="col-sm-2 control-label">当前密码</label>
 		<div class="col-sm-5">
-			<input type="password" class="form-control" placeholder="请输入你的旧密码" name='old_password'>
+			<input type="password" required maxlength='20' class="form-control" placeholder="请输入你的旧密码" name='old_password'>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">新的密码</label>
 		<div class="col-sm-5">
-			<input type="password" class="form-control" placeholder="请输入你的新密码" name='new_password_1'>
+			<input type="password" required maxlength='20' class="form-control" placeholder="请输入你的新密码" name='new_password_1' id="password_1">
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">确认密码</label>
 		<div class="col-sm-5">
-			<input type="password" class="form-control" placeholder="请确认你的新密码" name='new_password_2'>
+			<input type="password" required maxlength='20' class="form-control" placeholder="请确认你的新密码" name='new_password_2' id="password_2" equalTo="#password_1">
 		</div>
 	</div>
 	<div class="form-group">
