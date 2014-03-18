@@ -344,6 +344,27 @@ class AnswerBase(object):
             transaction.rollback(using=QUESTION_DB)
             return False, dict_err.get(999)
 
+    @answer_admin_required
+    def modify_answer(self, answer, user, content):
+        try:
+            content = utils.filter_script(content)
+            if not content:
+                transaction.rollback(using=QUESTION_DB)
+                return False, dict_err.get(998)
+
+            flag, result = QuestionBase().validate_content(content)
+            if not flag:
+                transaction.rollback(using=QUESTION_DB)
+                return False, result
+
+            answer.content = content
+            answer.save()
+
+            return True, answer
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return False, dict_err.get(999)
+
     def get_answers_by_question_id(self, question_id):
         return Answer.objects.select_related('question').filter(question=question_id, state=True)
 

@@ -184,7 +184,7 @@ $(document).ready(function(){
     <div class="modal fade" id="edit_answer_modal">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form role="form" method='post' action='/'>
+                <form role="form" method='post' action='/question/modify_answer'>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">修改回答</h4>
@@ -193,6 +193,7 @@ $(document).ready(function(){
                         <div class="form-group">
                             <textarea id="edit_answer_editor" name="edit_answer_content" class="form-control zx-textarea" style="height: 260px"></textarea>
                             <input type="hidden" class="edit-answer-id" name="answer_id" value=""/>
+                            <input type="hidden" name="question_id" value="{{question.id}}"/>
                         </div>
                     </div>
                     <div class="modal-footer">

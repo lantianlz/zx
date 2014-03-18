@@ -13,6 +13,7 @@ urlpatterns = patterns('www.question.views',
                        url(r'^modify_question/(?P<question_id>\w+)$', 'modify_question'),
 
                        url(r'^create_answer/(?P<question_id>\w+)$', 'create_answer'),
+                       url(r'^modify_answer$', 'modify_answer'),
                        url(r'^like_answer$', 'like_answer'),
                        url(r'^remove_answer$', 'remove_answer'),
                        url(r'^remove_question$', 'remove_question'),
