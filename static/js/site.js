@@ -92,7 +92,7 @@ function addZero(data){
         return this;
     };
 
-    // 
+    // 弹窗插件
     $.ZXMsg = {
         version: '1.0.0',
         author: 'stranger',
@@ -350,6 +350,47 @@ function addZero(data){
                 }
             });
         });
+    };
+
+
+    // 分享插件
+    $.ZXShare = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '分享插件'
+    }
+    /*
+        分享到微博
+        url: 要分享的url
+        title: 要分享的描述
+        pic: 图片地址
+    */
+    $.ZXShare.sinaWeibo = function(url, title, pic){
+        var sinaUrl = String.format(
+            "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}",
+            url,
+            (title.length >= 130) ? (title.substring(0, 10) + '...') : title,
+            pic ? pic : '',
+            appkey ? appkey : '266639437',
+            ralateUid ? ralateUid : '2571221330'
+        );
+        window.open(sinaUrl, '_blank');
+    };
+
+    /*
+        分享到qq
+        url: 要分享的url
+        title: 要分享的描述
+    */
+    $.ZXShare.qq = function(url, title){
+        var qqUrl = String.format(
+            "http://connect.qq.com/widget/shareqq/index.html?url={0}&title={1}&desc={2}&source={3}",
+            url,
+            (title.length >= 130) ? (title.substring(0, 10) + '...') : title,
+            '在智选上看到点好东西, 推荐你看看',
+            'shareqq'
+        );
+        window.open(qqUrl, '_blank');
     }
 
 })(jQuery);

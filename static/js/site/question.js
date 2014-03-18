@@ -249,6 +249,13 @@ $(document).ready(function(){
         content: '#question-share-tools', 
         position: 'top'
     });
+    //
+    $('.share-sina').bind('click', function(){
+        $.ZXShare.sinaWeibo(window.location.href, $('.topic-title strong').html(), '');
+    });
+    $('.share-qq').bind('click', function(){
+        $.ZXShare.qq(window.location.href, $('.topic-title strong').html());
+    })
 
     // 鼠标移动到图片淡入淡出效果
     $('.img-fade-hover').imgFadeHover();
