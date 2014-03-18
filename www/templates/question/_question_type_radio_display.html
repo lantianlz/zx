@@ -1,5 +1,5 @@
 {% for aqt in aqts %}
 <label class="radio-inline zx-radio">
-    <input type="radio" name="question_type" value="{{aqt.id}}"> {{aqt.name}}
+    <input type="radio" name="question_type" required value="{{aqt.id}}"> {{aqt.name}}
 </label>
 {% endfor %}

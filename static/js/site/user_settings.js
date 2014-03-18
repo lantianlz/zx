@@ -22,6 +22,11 @@ $(document).ready(function(){
 		$('.avatar-file').parents('form').submit();
 	});
 
+	// 表单验证
+	$('.change-profile-form').validate();
+	$('.change-pwd-form').validate();
+	$('.change-email-form').validate();
+
 	// 图片剪裁
 	var jcropApi,
 		cropInfo = {},

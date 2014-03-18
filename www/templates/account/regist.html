@@ -5,7 +5,15 @@
 <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/regist.css?v={{MEDIA_VERSION}}" />
 {% endblock %}
 
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		// 表单验证
+		$('.regist-main form').validate();
+	});
+</script>
+
+{% endblock %}
 
 {% block container %}
 <div class="row regist-main">
@@ -24,15 +32,15 @@
 			{% endif %}
 			<div class="form-group">
 				<div class="col-md-offset-1">
-					<input type="email" name="email" class="form-control" placeholder="你的登录邮箱" name="email" value='{{email}}'></div>
+					<input type="email" required maxlength='50' class="form-control" placeholder="你的登录邮箱" name="email" value='{{email}}'></div>
 			</div>
 			<div class="form-group">
 				<div class="col-md-offset-1">
-					<input type="text" name="nick" class="form-control" placeholder="你的姓名或者昵称" value='{{nick}}'></div>
+					<input type="text" required minlength='2' maxlength='12' name="nick" class="form-control" placeholder="你的姓名或者昵称" value='{{nick}}'></div>
 			</div>
 			<div class="form-group">
 				<div class="col-md-offset-1">
-					<input type="password" name="password" class="form-control" placeholder="你的密码"></div>
+					<input type="password" required maxlength='20' name="password" class="form-control" placeholder="你的密码"></div>
 			</div>
 			<div class="form-group">
 				<div class="col-md-offset-1">

@@ -8,17 +8,19 @@
 {% block javascript %}{% endblock %}
 
 {% block alert %}
+    <!-- 
     {% if request.user.is_authenticated and not request.user.email_verified %}
     <div class="alert alert-info popmsg container zx-container box-shadow-224 border-radius-0">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         你的邮箱还没验证，验证邮箱之后，会有更好的通知体验哦!<a class="pl-15 co16" href="/account/user_settings/change_email">立即验证</a>
     </div>
     {% endif %}
+     -->
 
     {% if request.user.is_authenticated and not request.user.avatar %}
     <div class="alert alert-info popmsg container zx-container box-shadow-224 border-radius-0">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        你的头像还没设置，去设置个个性的头像吧!<a class="pl-15 co16" href="/account/user_settings">立即设置</a>
+        你的头像尚未设置，想在智选做一个有“头”有“脸”的人吗？<a class="pl-15 co16" href="/account/user_settings">立即设置</a>
     </div>
     {% endif %}
 {% endblock %}
