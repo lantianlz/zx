@@ -1,4 +1,7 @@
 $(document).ready(function(){
+    // 鼠标移动到图片淡入淡出效果
+    $('.img-fade-hover').imgFadeHover();
+    
 
     // 登记按钮页面跳转
     $('.regist').bind('click', function(){

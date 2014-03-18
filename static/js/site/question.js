@@ -245,9 +245,14 @@ $(document).ready(function(){
         content: '#question-share-tools', 
         position: 'top'
     });
+    $('.answer-share').toolbar({
+        content: '#question-share-tools', 
+        position: 'top'
+    });
 
-    // 分享图片hover效果
+    // 鼠标移动到图片淡入淡出效果
     $('.img-fade-hover').imgFadeHover();
+
 });
 
 

@@ -90,7 +90,10 @@ if ( typeof Object.create !== 'function' ) {
         
         getCoordinates: function( position, adjustment) {
             var self = this; 
-            self.coordinates = self.$elem.offset();
+            self.coordinates = {
+                top: self.$elem.offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0),
+                left: self.$elem.offset().left
+            };
             if(position == 'top') { 
                 return coordinates = {
                     left: self.coordinates.left-(self.toolbar.width()/2)+(self.$elem.width()/2),
