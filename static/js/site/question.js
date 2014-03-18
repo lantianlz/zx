@@ -238,7 +238,16 @@ $(document).ready(function(){
                 error.appendTo(element.parent());
             }
         }
-    })
+    });
+
+    // 分享事件
+    $('.question-share').toolbar({
+        content: '#question-share-tools', 
+        position: 'top'
+    });
+
+    // 分享图片hover效果
+    $('.img-fade-hover').imgFadeHover();
 });
 
 

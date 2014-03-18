@@ -4,6 +4,7 @@
 /*-----------------------------------base part-----------------------------------*/
 /*定位*/
 .hidden{visibility:hidden}
+.auto-hide{display: none;}
 .none{display:none}
 .block{display:block;}
 .inline-block{display: inline-block;}
@@ -55,6 +56,12 @@
 .h{height:100%}
 .w400{
 	width: 400px;
+}
+.w25{
+	width: 25px;
+}
+.w20{
+	width: 20px;
 }
 
 /*边距*/

@@ -57,12 +57,12 @@ function addZero(data){
         }
 
         return this;
-    }
+    };
 
     // 设置文本框光标到最后
     $.fn.focusEnd = function() {
         return this.setSelection(this.val().length, this.val().length);
-    }
+    };
 
     // 自定义checkbox
     $.fn.zxCheckbox = function(){
@@ -74,7 +74,7 @@ function addZero(data){
         });
 
         return this;
-    }
+    };
 
     // 自定义radio
     $.fn.zxRadio = function(){
@@ -90,7 +90,7 @@ function addZero(data){
         });
 
         return this;
-    }
+    };
 
     // 
     $.ZXMsg = {
@@ -141,7 +141,7 @@ function addZero(data){
                 
             }, delayCloseSeconds)
         }
-    }
+    };
 
     /*
         通用confirm框
@@ -199,7 +199,7 @@ function addZero(data){
         // 显示confirm框
         $('#confirm_modal').modal('show');
 
-    }
+    };
 
 
     /*
@@ -265,8 +265,92 @@ function addZero(data){
         // 显示
         $('#private_message_modal').modal('show');
 
-    }
+    };
 
+
+    /*
+        鼠标移动渐变换图片插件，效果参见第三方登录图标
+        
+        用例:
+        $('.img-fade-hover').imgFadeHover();
+
+        dom如下, 需要指定鼠标移上去显示的图片地址data-change_img:
+        <img class="avatar-20 img-fade-hover" 
+            data-change_img="{{MEDIA_URL}}img/common/qq-active.png" 
+            src="{{MEDIA_URL}}img/common/qq.png">
+    */
+    $.fn.imgFadeHover = function(){
+        var changeFun = function(target, temp){
+            // IE 只能设置filter属性
+            if($.browser.msie){
+                // target[0].filter = String.format("'alpha(opacity={0})'", Math.round(temp));
+                target[0].filter = String.format("' progid:DXImageTransform.Microsoft.Alpha(Opacity={0})'", Math.round(temp));
+            } else {
+                target.css('opacity', temp/100);
+            }
+        };
+
+        this.bind('mouseenter', function(){
+            var me = $(this),
+                originImg = me.attr('src'),
+                changeImg = me.data('change_img');
+
+            // me.clearQueue().animate({'opacity': '0.3'}, 200, function(){
+            //     me.data('change_img', originImg);
+            //     me.attr('src', changeImg);
+            //     me.animate({'opacity': '0.99'}, 200);
+            // });
+
+            // 兼容IE的蛋疼png透明问题写法
+            jQuery({p: 99}).animate({p: 30}, {
+                duration: 200,
+                step: function(now, fx) {
+                    changeFun(me, now);
+                },
+                complete: function(){
+                    me.data('change_img', originImg);
+                    me.attr('src', changeImg);
+
+                    jQuery({p: 30}).animate({p: 99}, {
+                        duration: 200,
+                        step: function(now, fx) {
+                            changeFun(me, now);
+                        }
+                    });
+                }
+            });
+        })
+        .bind('mouseleave', function(){
+            var me = $(this),
+                originImg = me.data('change_img'),
+                changeImg = me.attr('src');
+
+            // me.clearQueue().animate({'opacity': '0.3'}, 200, function(){
+            //     me.data('change_img', changeImg);
+            //     me.attr('src', originImg);
+            //     me.animate({'opacity': '0.99'}, 200);
+            // });
+
+            // 兼容IE的蛋疼png透明问题写法
+            jQuery({p: 99}).animate({p: 30}, {
+                duration: 200,
+                step: function(now, fx) {
+                    changeFun(me, now);
+                },
+                complete: function(){
+                    me.data('change_img', changeImg);
+                    me.attr('src', originImg);
+                    
+                    jQuery({p: 30}).animate({p: 99}, {
+                        duration: 200,
+                        step: function(now, fx) {
+                            changeFun(me, now);
+                        }
+                    });
+                }
+            });
+        });
+    }
 
 })(jQuery);
 
@@ -419,25 +503,13 @@ $(document).ready(function(){
 
 
     // 给不支持placeholder的浏览器添加此属性
-      $('input, textarea').placeholder();
+    $('input, textarea').placeholder();
 
     // 初始化所有的 tooltip 
-    $('.zx-tooltip').tooltipsy({
-        offset: [1, 0],
-        css: {
-            'padding': '10px',
-            'max-width': '200px',
-            'color': '#fff',
-            'background-color': '#000',
-            'border': '1px solid #BEBEBE',
-            '-moz-box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
-            '-webkit-box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
-            'box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
-            'border-radius': '4px',
-            'font-size': '12px'
-        }
-    });
+    $('.zx-tooltip').tooltip('hide');
     
+    // 鼠标移动到图片淡入淡出效果
+    $('.img-fade-hover').imgFadeHover();
 
     // 弹出名片设置
     var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="{0}" ></div><div class="col-md-9"><div class="username">{1}</div><div class="question-info"><span>提问<a href="#">{2}</a></span><span>回答<a href="#">{3}</a></span><span>赞<a href="#">{4}</a></span></div></div></div><div class="desc">{5}</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow {8}">关注ta</button><button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button><a class="send-message" href="javascript: void(0)" data-user_name="{6}" data-user_id="{7}"><span class="glyphicon glyphicon-envelope"></span> 私信ta</a></div></div>'
