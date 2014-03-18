@@ -56,7 +56,7 @@
             <span class="glyphicon glyphicon-flag"></span>
             举报
         </a>
-        {% if answer.from_user.id == request.user.id %}
+        {% if answer.from_user.id == request.user.id or request.user.is_staff %}
         <a class="answer-remove auto-hide pull-right" href="javascript: void(0);" id="remove_answer_a_id_{{anser.id}}"
             onclick="remove_answer('{{answer.id}}')">
             <span class="glyphicon glyphicon-trash"></span>

@@ -115,6 +115,20 @@ def modify_question(request, question_id):
 
 
 @member_required
+def modify_answer(request):
+    if request.POST:
+        question_id = request.POST.get('question_id')
+        answer_id = request.POST.get('answer_id')
+        edit_answer_content = request.POST.get('edit_answer_content', '')
+
+        flag, result = ab.modify_answer(answer_id, request.user, edit_answer_content)
+        if flag:
+            return question_detail(request, question_id, success_msg=u'修改成功')
+        else:
+            return question_detail(request, question_id, error_msg=result)
+
+
+@member_required
 def create_answer(request, question_id):
     answer_content = request.POST.get('answer_content', '')
 
