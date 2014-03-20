@@ -60,3 +60,13 @@ body{
 input.avatar-file{
 	display: inline;
 }
+
+.jcrop-preview-panel{
+/*	position: absolute;
+	right: 0px;*/
+}
+
+.preview-container{
+	overflow: hidden;
+	border: solid 1px #ddd;
+}
