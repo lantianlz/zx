@@ -54,15 +54,20 @@
 /*长度高度*/
 .w{width:100%}
 .h{height:100%}
-.w400{
-	width: 400px;
+
+.w20{
+	width: 20px;
 }
 .w25{
 	width: 25px;
 }
-.w20{
-	width: 20px;
+.w35{
+	width: 35px;
 }
+.w400{
+	width: 400px;
+}
+
 
 /*边距*/
 .m0{margin:0}
@@ -113,12 +118,14 @@
 .pl-15{padding-left: 15px;}
 .pl-20{padding-left: 20px;}
 .pl-30{padding-left: 30px;}
+.pl-40{padding-left: 40px;}
 .pl-50{padding-left: 50px;}
 .pl-80{padding-left: 80px;}
 .pr-0{padding-right: 0px;}
 .pr-5{padding-right: 5px;}
 .pr-10{padding-right: 10px;}
 .pr-15{padding-right: 15px;}
+.pr-25{padding-right: 25px;}
 .pr-30{padding-right: 30px;}
 .pr-50{padding-right: 50px;}
 .pt-0{padding-top: 0px;}
@@ -206,11 +213,31 @@ a:hover{
 	border-radius: 0px;
 }
 
+.border-radius-2{
+	border-radius: 2px;
+}
+
 .no-l-r-bd{
     border-left: 0px;
     border-right: 0px;
 }
 
+.top-border{
+	border-top: solid 1px;
+}
+
+.left-border{
+	border-left: solid 1px;
+}
+
+.bottom-border{
+	border-bottom: solid 1px;
+}
+
 .bdc-eee{
     border-color: #eee;
+}
+
+.no-border{
+	border: 0px;
 }
