@@ -238,7 +238,46 @@ $(document).ready(function(){
                 error.appendTo(element.parent());
             }
         }
-    })
+    });
+
+    // 分享事件
+    // 分享问题事件
+    $('.question-share-qq').bind('click', function(){
+        var url = window.location.origin + window.location.pathname,
+            title = $(this).parents('.topic').find('.topic-title').html();
+
+        $.ZXShare.qq(url, title);
+    });
+    $('.question-share-sina').bind('click', function(){
+        var url = window.location.origin + window.location.pathname,
+            title = $(this).parents('.topic').find('.topic-title').html();
+
+        $.ZXShare.sinaWeibo(url, title, '');
+    });
+    // 分享答案事件
+    $('.answer-share').toolbar({
+        content: '#question-share-tools', 
+        position: 'top'
+    }, function(target){
+        // 点击分享回答按钮保存到全局变量中
+        SHARE_ANSWER_ID = target.parents('li').attr('id');
+    });
+    $('.answer-share-qq').bind('click', function(){
+        var url = String.format('{0}%23{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
+            title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
+
+        $.ZXShare.qq(url, title);
+    });
+    $('.answer-share-sina').bind('click', function(){
+        var url = String.format('{0}%23{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
+            title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
+
+        $.ZXShare.sinaWeibo(url, title, '');
+    });
+
+    // 鼠标移动到图片淡入淡出效果
+    $('.img-fade-hover').imgFadeHover();
+
 });
 
 

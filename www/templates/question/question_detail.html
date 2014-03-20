@@ -47,17 +47,17 @@ $(document).ready(function(){
             </ul>
         </div>
         <div class="topic-footer row">
-            <div class="col-md-5">
+            <div class="col-md-3">
                 {% if not question.is_hide_user %}
-                <a class="no-hover-unl" href="{{question.user.get_url}}">
+                <!-- <a class="no-hover-unl" href="{{question.user.get_url}}">
                     <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar_25}}" title="{{question.user.nick}}" />
-                </a>
+                </a> -->
                 <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
                     <span class="f12">{{question.user.nick}}</span>
                 </a>
                 {% endif %}
             </div>
-            <div class="col-md-7 text-right">
+            <div class="col-md-9 text-right">
                 <span class="question-tools gray-a">
                     {% if request.user.is_staff %}
                     {% if not question.is_important %}
@@ -83,10 +83,17 @@ $(document).ready(function(){
                         删除
                     </a>
                     {% endif %}
+                    <a class="question-share-qq" href="javascript: void(0);">
+                        分享到QQ
+                    </a>
+                    <a class="question-share-sina" href="javascript: void(0);">
+                        分享到微博
+                    </a>
                     <a class="invite hide" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-transfer"></span>
                         邀请回答
                     </a>
+                    
 
                 </span>
                 <span class="question-date">{{question.create_time}}</span>
@@ -168,7 +175,7 @@ $(document).ready(function(){
         {% if bad_answers %}
         <li class="list-group-item no-l-r-bd bdc-eee">
             <div class="gray-a">
-                <a class="collapse-answer zx-tooltip" title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" href="javascript: void(0)">
+                <a class="collapse-answer zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" data-trigger="hover" title="" href="javascript: void(0)">
                     共有 {{bad_answers_count}} 个回答被折叠
                     <span class="glyphicon glyphicon-question-sign" ></span>
                 </a>
@@ -178,13 +185,27 @@ $(document).ready(function(){
             {% include "question/_question_answer.html" %}
         {% endfor %}
         {% endif %}
+
+        <!-- 分享问题菜单 -->
+        <div id="question-share-tools" class="gray-a none">
+            <a href="javascript: void(0)" class="answer-share-qq">
+                <img class="w20 img-fade-hover pt-5 share-qq" title="分享到QQ" data-change_img="{{MEDIA_URL}}img/common/qq-active.png" src="{{MEDIA_URL}}img/common/qq.png">
+            </a>
+            <a href="javascript: void(0)" class="answer-share-sina">
+                <img class="w25 img-fade-hover pt-5 share-sina" title="分享到微博" data-change_img="{{MEDIA_URL}}img/common/sina-active.png" src="{{MEDIA_URL}}img/common/sina.png">
+            </a>
+            <!-- <a href="javascript: void(0)" class="answer-share-wechat">
+                <img class="w25 img-fade-hover pt-5" title="分享到微信" data-change_img="{{MEDIA_URL}}img/common/wechat-active.png" src="{{MEDIA_URL}}img/common/wechat.png">
+            </a> -->
+        </div>
+
     </ul>
 
     <!-- 修改回答 -->
     <div class="modal fade" id="edit_answer_modal">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form role="form" method='post' action='/'>
+                <form role="form" method='post' action='/question/modify_answer'>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">修改回答</h4>
@@ -193,6 +214,7 @@ $(document).ready(function(){
                         <div class="form-group">
                             <textarea id="edit_answer_editor" name="edit_answer_content" class="form-control zx-textarea" style="height: 260px"></textarea>
                             <input type="hidden" class="edit-answer-id" name="answer_id" value=""/>
+                            <input type="hidden" name="question_id" value="{{question.id}}"/>
                         </div>
                     </div>
                     <div class="modal-footer">

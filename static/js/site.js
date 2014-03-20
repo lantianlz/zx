@@ -7,7 +7,7 @@ if (!String.format) {
     String.format = function(src){
         if (arguments.length == 0){
             return null;
-           }
+        }
 
         var args = Array.prototype.slice.call(arguments, 1);
         return src.replace(/\{(\d+)\}/g, function(m, i){
@@ -36,6 +36,31 @@ function addZero(data){
     拓展Jquery方法 
 */
 (function(){
+    /*
+    */
+    $.ZXUtils = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '工具包'
+    },
+    /*
+        去掉所有的html标签
+        用例:
+        '<div>1</div>'.clearHtmlTags()
+    */
+    $.ZXUtils.clearHtmlTags = function(target){
+        return target.replace(/<[^>].*?>/g,"");
+    },
+
+    /*
+        去掉所有的转义字符
+        用例:
+        '<div>1</div>'.clearEscapeCharacters()
+    */
+    $.ZXUtils.clearEscapeCharacters = function(target){
+        return target.replace(/&[^;].*?;/g, '');
+    }
+
     // 设置文本框光标位置
     $.fn.setSelection = function(selectionStart, selectionEnd) {
         if(this.length == 0){
@@ -57,12 +82,12 @@ function addZero(data){
         }
 
         return this;
-    }
+    };
 
     // 设置文本框光标到最后
     $.fn.focusEnd = function() {
         return this.setSelection(this.val().length, this.val().length);
-    }
+    };
 
     // 自定义checkbox
     $.fn.zxCheckbox = function(){
@@ -74,7 +99,7 @@ function addZero(data){
         });
 
         return this;
-    }
+    };
 
     // 自定义radio
     $.fn.zxRadio = function(){
@@ -90,9 +115,9 @@ function addZero(data){
         });
 
         return this;
-    }
+    };
 
-    // 
+    // 弹窗插件
     $.ZXMsg = {
         version: '1.0.0',
         author: 'stranger',
@@ -141,7 +166,7 @@ function addZero(data){
                 
             }, delayCloseSeconds)
         }
-    }
+    };
 
     /*
         通用confirm框
@@ -199,7 +224,7 @@ function addZero(data){
         // 显示confirm框
         $('#confirm_modal').modal('show');
 
-    }
+    };
 
 
     /*
@@ -265,8 +290,137 @@ function addZero(data){
         // 显示
         $('#private_message_modal').modal('show');
 
-    }
+    };
 
+
+    /*
+        鼠标移动渐变换图片插件，效果参见第三方登录图标
+        
+        用例:
+        $('.img-fade-hover').imgFadeHover();
+
+        dom如下, 需要指定鼠标移上去显示的图片地址data-change_img:
+        <img class="avatar-20 img-fade-hover" 
+            data-change_img="{{MEDIA_URL}}img/common/qq-active.png" 
+            src="{{MEDIA_URL}}img/common/qq.png">
+    */
+    $.fn.imgFadeHover = function(){
+        var changeFun = function(target, temp){
+            // IE 只能设置filter属性
+            if($.browser.msie){
+                // target[0].filter = String.format("'alpha(opacity={0})'", Math.round(temp));
+                target[0].filter = String.format("' progid:DXImageTransform.Microsoft.Alpha(Opacity={0})'", Math.round(temp));
+            } else {
+                target.css('opacity', temp/100);
+            }
+        };
+
+        this.bind('mouseenter', function(){
+            var me = $(this),
+                originImg = me.attr('src'),
+                changeImg = me.data('change_img');
+
+            // me.clearQueue().animate({'opacity': '0.3'}, 200, function(){
+            //     me.data('change_img', originImg);
+            //     me.attr('src', changeImg);
+            //     me.animate({'opacity': '0.99'}, 200);
+            // });
+
+            // 兼容IE的蛋疼png透明问题写法
+            jQuery({p: 99}).animate({p: 30}, {
+                duration: 200,
+                step: function(now, fx) {
+                    changeFun(me, now);
+                },
+                complete: function(){
+                    me.data('change_img', originImg);
+                    me.attr('src', changeImg);
+                    
+                    jQuery({p: 30}).animate({p: 99}, {
+                        duration: 200,
+                        step: function(now, fx) {
+                            changeFun(me, now);
+                        }
+                    });
+                }
+            });
+        })
+        .bind('mouseleave', function(){
+            var me = $(this),
+                originImg = me.data('change_img'),
+                changeImg = me.attr('src');
+
+            // me.clearQueue().animate({'opacity': '0.3'}, 200, function(){
+            //     me.data('change_img', changeImg);
+            //     me.attr('src', originImg);
+            //     me.animate({'opacity': '0.99'}, 200);
+            // });
+
+            // 兼容IE的蛋疼png透明问题写法
+            jQuery({p: 99}).animate({p: 30}, {
+                duration: 200,
+                step: function(now, fx) {
+                    changeFun(me, now);
+                },
+                complete: function(){
+                    me.data('change_img', changeImg);
+                    me.attr('src', originImg);
+                    
+                    jQuery({p: 30}).animate({p: 99}, {
+                        duration: 200,
+                        step: function(now, fx) {
+                            changeFun(me, now);
+                        }
+                    });
+                }
+            });
+        });
+    };
+
+
+    // 分享插件
+    $.ZXShare = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '分享插件'
+    }
+    /*
+        分享到微博
+        url: 要分享的url
+        title: 要分享的描述
+        pic: 图片地址
+    */
+    $.ZXShare.sinaWeibo = function(url, title, pic){
+        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)).replace(/\s/g, ''),
+            sinaUrl = String.format(
+                "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}",
+                url,
+                (clearTitle.length >= 110) ? (clearTitle.substring(0, 110) + '...') : clearTitle,
+                pic ? pic : '',
+                '266639437',
+                '2571221330'
+            );
+            
+        window.open(sinaUrl, '_blank');
+    };
+
+    /*
+        分享到qq
+        url: 要分享的url
+        title: 要分享的描述
+    */
+    $.ZXShare.qq = function(url, title){
+        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)).replace(/\s/g, ''),
+            qqUrl = String.format(
+                "http://connect.qq.com/widget/shareqq/index.html?url={0}&title={1}&desc={2}&source={3}",
+                url,
+                (clearTitle.length >= 110) ? (clearTitle.substring(0, 110) + '...') : clearTitle,
+                '在智选上看到点好东西, 推荐你看看',
+                'shareqq'
+            );
+
+        window.open(qqUrl, '_blank');
+    }
 
 })(jQuery);
 
@@ -419,24 +573,10 @@ $(document).ready(function(){
 
 
     // 给不支持placeholder的浏览器添加此属性
-      $('input, textarea').placeholder();
+    $('input, textarea').placeholder();
 
     // 初始化所有的 tooltip 
-    $('.zx-tooltip').tooltipsy({
-        offset: [1, 0],
-        css: {
-            'padding': '10px',
-            'max-width': '200px',
-            'color': '#fff',
-            'background-color': '#000',
-            'border': '1px solid #BEBEBE',
-            '-moz-box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
-            '-webkit-box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
-            'box-shadow': '0 0 10px rgba(0, 0, 0, .5)',
-            'border-radius': '4px',
-            'font-size': '12px'
-        }
-    });
+    $('.zx-tooltip').tooltip('hide');
     
 
     // 弹出名片设置
