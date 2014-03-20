@@ -400,7 +400,7 @@ function addZero(data){
                 '266639437',
                 '2571221330'
             );
-        console.log(clearTitle)
+            
         window.open(sinaUrl, '_blank');
     };
 
