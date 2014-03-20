@@ -556,3 +556,32 @@
     border: solid 1px #ddd;
     border-radius: 4px;
 }
+
+.gray-a>a.question-share-qq{
+  border: solid 1px #39B2E2;
+  color: #39B2E2;
+  border-radius: 50px;
+  text-align: center;
+  padding: 2px 5px;
+  text-decoration: none;
+  transition: background-color 0.5s, color 0.5s
+}
+.gray-a>a.question-share-qq:hover{
+  background-color: #39B2E2;
+  color: white;
+}
+
+.gray-a>a.question-share-sina{
+  border: solid 1px #d44137;
+  color: #d44137;
+  border-radius: 50px;
+  text-align: center;
+  padding: 2px 5px;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: background-color 0.5s, color 0.5s;
+}
+.gray-a>a.question-share-sina:hover{
+  background-color: #d44137;
+  color: white;
+}

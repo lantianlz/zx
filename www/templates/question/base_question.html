@@ -16,7 +16,8 @@
         SELECTED_QUESTION_TAGS = "{% for tag in question_tags %}{{tag.id}}-{% endfor %}",
         QUESTION_CONTENT = '{{question.content|safe|default:""}}',
         ASK_QUESTION_CONTENT = '{{question_content|safe|default:""}}',
-        ANSWER_CONTENT = '{{answer_content|safe|default:""}}';
+        ANSWER_CONTENT = '{{answer_content|safe|default:""}}',
+        SHARE_ANSWER_ID = 0;
 </script>
 {% block javascript %}{% endblock %}
 {% endblock %}

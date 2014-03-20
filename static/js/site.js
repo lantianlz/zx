@@ -7,7 +7,7 @@ if (!String.format) {
     String.format = function(src){
         if (arguments.length == 0){
             return null;
-           }
+        }
 
         var args = Array.prototype.slice.call(arguments, 1);
         return src.replace(/\{(\d+)\}/g, function(m, i){
@@ -36,6 +36,31 @@ function addZero(data){
     拓展Jquery方法 
 */
 (function(){
+    /*
+    */
+    $.ZXUtils = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '工具包'
+    },
+    /*
+        去掉所有的html标签
+        用例:
+        '<div>1</div>'.clearHtmlTags()
+    */
+    $.ZXUtils.clearHtmlTags = function(target){
+        return target.replace(/<[^>].*?>/g,"");
+    },
+
+    /*
+        去掉所有的转义字符
+        用例:
+        '<div>1</div>'.clearEscapeCharacters()
+    */
+    $.ZXUtils.clearEscapeCharacters = function(target){
+        return target.replace(/&[^;].*?;/g, '');
+    }
+
     // 设置文本框光标位置
     $.fn.setSelection = function(selectionStart, selectionEnd) {
         if(this.length == 0){
@@ -366,14 +391,16 @@ function addZero(data){
         pic: 图片地址
     */
     $.ZXShare.sinaWeibo = function(url, title, pic){
-        var sinaUrl = String.format(
-            "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}",
-            url,
-            (title.length >= 130) ? (title.substring(0, 10) + '...') : title,
-            pic ? pic : '',
-            appkey ? appkey : '266639437',
-            ralateUid ? ralateUid : '2571221330'
-        );
+        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)).replace(/\s/g, ''),
+            sinaUrl = String.format(
+                "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}",
+                url,
+                (clearTitle.length >= 110) ? (clearTitle.substring(0, 110) + '...') : clearTitle,
+                pic ? pic : '',
+                '266639437',
+                '2571221330'
+            );
+        console.log(clearTitle)
         window.open(sinaUrl, '_blank');
     };
 
@@ -383,13 +410,15 @@ function addZero(data){
         title: 要分享的描述
     */
     $.ZXShare.qq = function(url, title){
-        var qqUrl = String.format(
-            "http://connect.qq.com/widget/shareqq/index.html?url={0}&title={1}&desc={2}&source={3}",
-            url,
-            (title.length >= 130) ? (title.substring(0, 10) + '...') : title,
-            '在智选上看到点好东西, 推荐你看看',
-            'shareqq'
-        );
+        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)).replace(/\s/g, ''),
+            qqUrl = String.format(
+                "http://connect.qq.com/widget/shareqq/index.html?url={0}&title={1}&desc={2}&source={3}",
+                url,
+                (clearTitle.length >= 110) ? (clearTitle.substring(0, 110) + '...') : clearTitle,
+                '在智选上看到点好东西, 推荐你看看',
+                'shareqq'
+            );
+
         window.open(qqUrl, '_blank');
     }
 

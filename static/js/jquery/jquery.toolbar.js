@@ -25,11 +25,12 @@ if ( typeof Object.create !== 'function' ) {
 (function( $, window, document, undefined ) {
     
     var ToolBar = {
-        init: function( options, elem ) {
+        init: function(options, elem, afterShowFun) {
             var self = this;
 
             self.elem = elem;
             self.$elem = $( elem );
+            self.afterShowFun = afterShowFun;
 
             self.options = $.extend( {}, $.fn.toolbar.options, options );
             self.toolbar = $('<div class="tool-container gradient" />')
@@ -37,7 +38,7 @@ if ( typeof Object.create !== 'function' ) {
             .append('<div class="tool-items" />')
             .append('<div class="arrow" />')
             .appendTo('body')
-            .css('opacity', 0);                     
+            .hide()            
 
             self.initializeToolbar();
         },
@@ -45,7 +46,7 @@ if ( typeof Object.create !== 'function' ) {
         initializeToolbar: function() {
             var self = this;
             self.populateContent();           
-            self.setTrigger();            
+            self.setTrigger();
         },
         
         setTrigger: function() {
@@ -129,6 +130,11 @@ if ( typeof Object.create !== 'function' ) {
             }            
 
             self.toolbar.show().animate(animation, 200 );
+
+            // 显示之后的回调函数
+            if(self.afterShowFun){
+                self.afterShowFun(self.$elem);
+            }
         },
 
         hide: function() {
@@ -152,10 +158,10 @@ if ( typeof Object.create !== 'function' ) {
 
     }
     
-    $.fn.toolbar= function( options ) {      
+    $.fn.toolbar= function( options, afterShowFun) {      
         return this.each(function() {
             var toolbarObj = Object.create( ToolBar );
-            toolbarObj.init( options, this );
+            toolbarObj.init( options, this, afterShowFun);
         });
     };    
     
