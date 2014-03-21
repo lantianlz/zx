@@ -376,7 +376,7 @@ function addZero(data){
         pic: 图片地址
     */
     $.ZXShare.sinaWeibo = function(url, title, pic){
-        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)).replace(/\s/g, ''),
+        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)),
             sinaUrl = String.format(
                 "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}",
                 url,
@@ -395,7 +395,7 @@ function addZero(data){
         title: 要分享的描述
     */
     $.ZXShare.qq = function(url, title){
-        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)).replace(/\s/g, ''),
+        var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)),
             qqUrl = String.format(
                 "http://connect.qq.com/widget/shareqq/index.html?url={0}&title={1}&desc={2}&source={3}",
                 url,
