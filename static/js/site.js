@@ -315,66 +315,51 @@ function addZero(data){
             }
         };
 
-        this.bind('mouseenter', function(){
-            var me = $(this),
-                originImg = me.attr('src'),
-                changeImg = me.data('change_img');
+        return this.each(function(){
+            $(this).bind('mouseenter', function(){
+                var me = $(this),
+                    originImg = me.attr('src'),
+                    changeImg = me.data('change_img');
 
-            // me.clearQueue().animate({'opacity': '0.3'}, 200, function(){
-            //     me.data('change_img', originImg);
-            //     me.attr('src', changeImg);
-            //     me.animate({'opacity': '0.99'}, 200);
-            // });
+                // me.data('change_img', originImg);
+                // me.attr('src', changeImg);
+                // me.css({'opacity': '0'}).animate({'opacity': '0.99'}, 300)
+                        
+                // 兼容IE的蛋疼png透明问题写法
+                me.data('change_img', originImg);
+                me.attr('src', changeImg);
+                
+                jQuery({p: 0}).animate({p: 99}, {
+                    duration: 300,
+                    step: function(now, fx) {
+                        changeFun(me, now);
+                    }
+                });
+            })
+            .bind('mouseleave', function(){
+                var me = $(this),
+                    originImg = me.data('change_img'),
+                    changeImg = me.attr('src');
+                
+                // me.data('change_img', changeImg);
+                // me.attr('src', originImg);
+                // me.css({'opacity': '0'}).animate({'opacity': '0.99'}, 300);
 
-            // 兼容IE的蛋疼png透明问题写法
-            jQuery({p: 99}).animate({p: 30}, {
-                duration: 200,
-                step: function(now, fx) {
-                    changeFun(me, now);
-                },
-                complete: function(){
-                    me.data('change_img', originImg);
-                    me.attr('src', changeImg);
-                    
-                    jQuery({p: 30}).animate({p: 99}, {
-                        duration: 200,
-                        step: function(now, fx) {
-                            changeFun(me, now);
-                        }
-                    });
-                }
-            });
-        })
-        .bind('mouseleave', function(){
-            var me = $(this),
-                originImg = me.data('change_img'),
-                changeImg = me.attr('src');
+                // 兼容IE的蛋疼png透明问题写法
+                me.data('change_img', changeImg);
+                me.attr('src', originImg);
+                
+                jQuery({p: 0}).animate({p: 99}, {
+                    duration: 300,
+                    step: function(now, fx) {
+                        changeFun(me, now);
+                    }
+                });
 
-            // me.clearQueue().animate({'opacity': '0.3'}, 200, function(){
-            //     me.data('change_img', changeImg);
-            //     me.attr('src', originImg);
-            //     me.animate({'opacity': '0.99'}, 200);
-            // });
-
-            // 兼容IE的蛋疼png透明问题写法
-            jQuery({p: 99}).animate({p: 30}, {
-                duration: 200,
-                step: function(now, fx) {
-                    changeFun(me, now);
-                },
-                complete: function(){
-                    me.data('change_img', changeImg);
-                    me.attr('src', originImg);
-                    
-                    jQuery({p: 30}).animate({p: 99}, {
-                        duration: 200,
-                        step: function(now, fx) {
-                            changeFun(me, now);
-                        }
-                    });
-                }
             });
         });
+
+        
     };
 
 
