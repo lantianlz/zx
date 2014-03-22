@@ -22,7 +22,7 @@ body{
 }
 
 .tml-item{
-    height: 80px;
+    height: 70px;
     position: relative;
     padding-right: 30px;
 }
@@ -66,8 +66,7 @@ body{
 .tml-content{
     position: relative;
     margin-left: 26%;
-    line-height: 22px;
-    padding-top: 10px;
+    line-height: 45px;
     padding-left: 10px;
     color: #ffffff;
     min-height: 45px;
@@ -179,4 +178,35 @@ body{
 
 .content>a:hover{
 	text-decoration: underline;
+}
+
+a.like-share-qq{
+    border: solid 1px #39B2E2;
+    color: #39B2E2;
+    border-radius: 50px;
+    text-align: center;
+    padding: 2px 5px;
+    text-decoration: none;
+    font-size: 12px;
+    transition: background-color 0.5s, color 0.5s;
+}
+a.like-share-qq:hover{
+    background-color: #39B2E2;
+    color: white;
+}
+
+a.like-share-sina{
+    border: solid 1px #d44137;
+    color: #d44137;
+    border-radius: 50px;
+    text-align: center;
+    padding: 2px 5px;
+    text-decoration: none;
+    margin-left: 5px;
+    font-size: 12px;
+    transition: background-color 0.5s, color 0.5s;
+}
+a.like-share-sina:hover{
+    background-color: #d44137;
+    color: white;
 }

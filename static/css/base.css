@@ -28,6 +28,7 @@
 /*文字排版*/
 .fb{font-weight:bold}
 .fn{font-weight:normal}
+.fi{font-style: italic;}
 .unl{text-decoration:underline}
 .no-unl{text-decoration:none}
 .no-hover-unl:hover{text-decoration:none}
@@ -117,6 +118,7 @@
 .pl-10{padding-left: 10px;}
 .pl-15{padding-left: 15px;}
 .pl-20{padding-left: 20px;}
+.pl-25{padding-left: 25px;}
 .pl-30{padding-left: 30px;}
 .pl-40{padding-left: 40px;}
 .pl-50{padding-left: 50px;}
@@ -125,6 +127,7 @@
 .pr-5{padding-right: 5px;}
 .pr-10{padding-right: 10px;}
 .pr-15{padding-right: 15px;}
+.pr-20{padding-right: 20px;}
 .pr-25{padding-right: 25px;}
 .pr-30{padding-right: 30px;}
 .pr-50{padding-right: 50px;}
@@ -139,6 +142,7 @@
 .pb-5{padding-bottom: 5px;}
 .pb-10{padding-bottom: 10px;}
 .pb-15{padding-bottom: 15px;}
+.pb-20{padding-bottom: 20px;}
 
 .m_tc{margin:0 auto;}
 /*链接和常用文字颜色*/

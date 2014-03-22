@@ -71,6 +71,7 @@ $(document).ready(function(){
 
 		$('.btn-crop-save').bind('click', function(){
 			//$.ZXMsg.alert('aa', cropInfo.x);
+			g_ajax_processing_obj_id = 'btn-crop-save-id';
 			ajaxSend(
 				"/crop_img", {
 					'x': cropInfo.x,

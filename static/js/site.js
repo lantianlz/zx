@@ -49,6 +49,9 @@ function addZero(data){
         '<div>1</div>'.clearHtmlTags()
     */
     $.ZXUtils.clearHtmlTags = function(target){
+        if(!target){
+            return '';
+        }
         return target.replace(/<[^>].*?>/g,"");
     },
 
@@ -58,6 +61,9 @@ function addZero(data){
         '<div>1</div>'.clearEscapeCharacters()
     */
     $.ZXUtils.clearEscapeCharacters = function(target){
+        if(!target){
+            return '';
+        }
         return target.replace(/&[^;].*?;/g, '');
     }
 
@@ -375,7 +381,7 @@ function addZero(data){
         title: 要分享的描述
         pic: 图片地址
     */
-    $.ZXShare.sinaWeibo = function(url, title, pic){
+    $.ZXShare.sinaWeibo = function(url, title, pic, notOpenWin){
         var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)),
             sinaUrl = String.format(
                 "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}",
@@ -385,8 +391,13 @@ function addZero(data){
                 '266639437',
                 '2571221330'
             );
-            
-        window.open(sinaUrl, '_blank');
+
+        notOpenWin = notOpenWin ? notOpenWin : false;
+        if(!notOpenWin){
+            window.open(sinaUrl, '_blank');
+        }
+
+        return sinaUrl;
     };
 
     /*
@@ -394,17 +405,24 @@ function addZero(data){
         url: 要分享的url
         title: 要分享的描述
     */
-    $.ZXShare.qq = function(url, title){
+    $.ZXShare.qq = function(url, title, desc, notOpenWin){
         var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)),
+            clearDesc = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(desc)),
             qqUrl = String.format(
                 "http://connect.qq.com/widget/shareqq/index.html?url={0}&title={1}&desc={2}&source={3}",
                 url,
                 (clearTitle.length >= 110) ? (clearTitle.substring(0, 110) + '...') : clearTitle,
-                '在智选上看到点好东西, 推荐你看看',
+                clearDesc ? clearDesc : '在智选上看到点好东西, 推荐你看看',
                 'shareqq'
             );
 
-        window.open(qqUrl, '_blank');
+        notOpenWin = notOpenWin ? notOpenWin : false;
+
+        if(!notOpenWin){
+            window.open(qqUrl, '_blank');
+        } 
+
+        return qqUrl;
     }
 
 })(jQuery);

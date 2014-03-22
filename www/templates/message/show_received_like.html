@@ -1,0 +1,50 @@
+{% extends "message/base_message.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}收到的赞{% endblock %}
+
+{% block css %}
+<style type="text/css">
+	.container_content{
+		margin-top: 20px;
+	}
+	.zx-split-left{
+		margin-left: -85px; 
+	}
+	.footer{
+		display: none;
+	}
+</style>
+{% endblock %}
+{% block javascript %}{% endblock %}
+{% block container_head %}{% endblock %}
+{% block split_left %}{% endblock %}
+{% block message_main %}
+{% if likes %}
+<div class="like-stats bottom-border bdc-eee ml-10 mr-10 mb-15 pl-25 pb-5">
+	<span class="total">{{request.user.nick}} 在智选(www.zhixuan.com)总共收到 <strong class="fi f16">{{likes_count}}</strong> 个赞</span>
+	<span class="pull-right f12 pr-20">
+		
+	</span>
+</div>
+<ul class="tml-message-list mt-10">
+	{% for like in likes %}
+	<li class="tml-item">
+		<div class="tml-date">
+			<span class="date co8">{{like.create_time|date:'Y-m-d'}}</span>
+			<span class="time">{{like.create_time|date:'H:i:s'}}</span>
+		</div>
+		<div class="tml-user"><img class="avatar" src="{{like.from_user.get_avatar}}"></div>
+		<div class="tml-content">
+			<a href="{{like.from_user.get_url}}">{{like.from_user.nick}}</a>
+			在提问 <a href="{{like.question.get_url}}">{{like.question.title|str_display:20}}</a>
+			中赞了你的回答
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+{{page_params|paging:request}}
+{% else %}
+<div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+{% endif %}
+{% endblock %}
