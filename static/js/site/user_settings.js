@@ -39,7 +39,6 @@ $(document).ready(function(){
         	if (parseInt(c.w) > 0){
 		        var rx = xsize / c.w;
 		        var ry = ysize / c.h;
-		        console.log(c)
 		        cropInfo = c;
 
 		        preImg.css({
@@ -71,6 +70,7 @@ $(document).ready(function(){
 
 		$('.btn-crop-save').bind('click', function(){
 			//$.ZXMsg.alert('aa', cropInfo.x);
+			g_ajax_processing_obj_id = 'save_img_button_id';
 			ajaxSend(
 				"/crop_img", {
 					'x': cropInfo.x,
@@ -78,8 +78,8 @@ $(document).ready(function(){
 					'w': cropInfo.w,
 					'h': cropInfo.h,
 				}, function(data){
-					if(!data['success']){
-						$.ZXMsg.alert('提示', data['msg']);
+					if(data['flag'] != '0'){
+						$.ZXMsg.alert('提示', data['result']);
 					} else {
 						$('#crop_modal').modal('hide');
 

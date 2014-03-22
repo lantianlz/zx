@@ -44,7 +44,7 @@ def get_upload_token(img_key=None, img_type='avatar', scope='zimg0'):
     return uptoken
 
 
-def upload_img(file_data, img_type='editor'):
+def upload_img(file_data, img_type='other'):
     # extra = qiniu.io.PutExtra()
     # extra.mime_type = "image/jpeg"
 
@@ -53,7 +53,6 @@ def upload_img(file_data, img_type='editor'):
     uptoken = get_upload_token(img_type=img_type)
     key = '%s_%s' % (img_type, utils.uuid_without_dash())
     ret, err = qiniu.io.put(uptoken, key, data)
-    # print ret, err
     if err is not None:
         logging.error('upload_img error is:%s' % err)
         return False, err
@@ -64,6 +63,22 @@ def upload_img(file_data, img_type='editor'):
         if int(ret.get('w', 0)) > 600:
             key += '!600m0'
     return True, key
+
+
+def batch_delete(lst_names, bucket_name='zimg0'):
+    '''
+    @note: 批量删除文件
+    '''
+    lst_path = []
+    if not isinstance(lst_names, (list, tuple)):
+        return False, 'lst_names error'
+    for name in lst_names:
+        lst_path.append(qiniu.rs.EntryPath(bucket_name, name))
+
+    rets, err = qiniu.rs.Client().batch_delete(lst_path)
+    if not [ret['code'] for ret in rets] == [200, ] * len(lst_path):
+        return False, u'删除失败，%s\n%s' % (rets, err)
+    return True, u'ok'
 
 if __name__ == '__main__':
     get_upload_token()
