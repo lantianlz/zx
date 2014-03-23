@@ -200,10 +200,6 @@
     background-color: #dbdbdb;
 }
 
-.question-list .tag-ul li:first-child{
-    border-top: 1px solid #dddddd;
-    border-top-left-radius: 4px;
-}
 
 /**********************************************问答详细*******************************************************/
 .zx-container-main .question-entry{
