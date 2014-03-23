@@ -487,7 +487,6 @@ function createEditor(selector){
 			this.sync(); 
         },
         afterUpload : function(url) {
-            console.log(url);
         }
     });
 }

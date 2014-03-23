@@ -424,7 +424,7 @@ class AnswerBase(object):
                 return False, dict_err.get(106)
 
             AnswerBad.objects.create(answer=answer, user_id=user.id)
-            if user.is_staff() or AnswerBad.filter(answer=answer).count() >= 9:
+            if user.is_staff() or AnswerBad.objects.filter(answer=answer).count() >= 9:
                 answer.is_bad = True
                 answer.save()
 
@@ -440,7 +440,7 @@ class AnswerBase(object):
     def cancel_answer_bad(self, answer, user):
         try:
             AnswerBad.objects.filter(answer=answer, user_id=user.id).delete()
-            if user.is_staff() or AnswerBad.filter(answer=answer).count() <= 10:
+            if user.is_staff() or AnswerBad.objects.filter(answer=answer).count() <= 10:
                 answer.is_bad = False
                 answer.save()
 

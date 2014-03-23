@@ -70,3 +70,8 @@ input.avatar-file{
 	overflow: hidden;
 	border: solid 1px #ddd;
 }
+
+.jcrop-keymgr{
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
