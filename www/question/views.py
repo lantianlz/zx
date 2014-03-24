@@ -152,6 +152,11 @@ def important_question(request, template_name='question/important_question.html'
     questions = qb.format_quesitons(questions)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
+# @member_required
+def topics(request, template_name="question/topics.html"):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
 # ===================================================ajax部分=================================================================#
 
 

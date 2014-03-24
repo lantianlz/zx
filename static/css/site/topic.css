@@ -1,0 +1,24 @@
+a.large-topic{
+	border: solid 1px #9ECEFA;
+	color: #428bca;
+	border-radius: 50px;
+	text-align: center;
+	padding: 3px 10px;
+	text-decoration: none;
+	margin-left: 5px;
+	transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+a.large-topic:hover{
+	background-color: #428bca;
+	border-color: #428bca;
+	color: white;
+}
+
+.zx-topic-main .gray-a>a{
+	padding-right: 0px;
+}
+
+.topics .topic-item{
+	width: 49.5%;
+	border-bottom: 1px dotted #eee;
+}

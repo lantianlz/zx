@@ -1,0 +1,65 @@
+{% extends "base/base_home.html" %}
+
+{% load custom_tags %}
+
+{% block home_css %}
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/topic.css?v={{MEDIA_VERSION}}" />
+{% block css %}{% endblock %}
+{% endblock %}
+
+{% block home_js %}
+{% block javascript %}{% endblock %}
+{% endblock %}
+
+{% block container_content %}
+<div class="zx-topic-main col-md-8">
+    {% block topic_main %}{% endblock %}
+</div>
+
+<div class="zx-topic-right col-md-4 pl-50">
+	<div class=""><h4>热门话题</h4></div>
+	<div>
+		<ul class="list-group">
+			<li class="list-group-item no-l-r-bd bdc-eee">
+				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+				<div class="pl-55 pt-5">
+					<div><a href="#">大盘</a></div>
+					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
+				</div>
+			</li>
+			<li class="list-group-item no-l-r-bd bdc-eee">
+				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+				<div class="pl-55 pt-5">
+					<div><a href="#">大盘</a></div>
+					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
+				</div>
+			</li>
+			<li class="list-group-item no-l-r-bd bdc-eee">
+				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+				<div class="pl-55 pt-5">
+					<div><a href="#">大盘</a></div>
+					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
+				</div>
+			</li>
+			<li class="list-group-item no-l-r-bd bdc-eee">
+				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+				<div class="pl-55 pt-5">
+					<div><a href="#">大盘</a></div>
+					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
+				</div>
+			</li>
+			<li class="list-group-item no-l-r-bd bdc-eee">
+				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+				<div class="pl-55 pt-5">
+					<div><a href="#">大盘</a></div>
+					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+    {% block topic_right %}
+
+    {% endblock %}
+</div>
+    
+{% endblock %}
