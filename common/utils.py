@@ -228,3 +228,25 @@ def get_random_code(length=16):
     #     for i in range(4):
     #         postfix += str_src[random.randint(0, 32)]
     return postfix
+
+
+def exec_command(command, timeout=25):
+    """
+    call shell-command and either return its output or kill it
+    if it doesn't normally exit within timeout seconds and return None
+    带超时设置的执行命令
+    用例：
+    common.utils.exec_command('your command', 25)
+    """
+    import subprocess, datetime, os, time, signal, shlex
+    
+    start = datetime.datetime.now()
+    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    while process.poll() is None:
+        time.sleep(0.2)
+        now = datetime.datetime.now()
+        if (now - start).seconds > timeout:
+            os.kill(process.pid, signal.SIGKILL)
+            os.waitpid(-1, os.WNOHANG)
+            return False, u'执行超时'
+    return True, process.stdout.readlines()

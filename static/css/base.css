@@ -124,6 +124,7 @@
 .pl-50{padding-left: 50px;}
 .pl-80{padding-left: 80px;}
 .pr-0{padding-right: 0px;}
+.pr-3{padding-right: 3px;}
 .pr-5{padding-right: 5px;}
 .pr-10{padding-right: 10px;}
 .pr-15{padding-right: 15px;}
@@ -132,6 +133,7 @@
 .pr-30{padding-right: 30px;}
 .pr-50{padding-right: 50px;}
 .pt-0{padding-top: 0px;}
+.pt-3{padding-top: 3px;}
 .pt-5{padding-top: 5px;}
 .pt-8{padding-top: 8px;}
 .pt-10{padding-top: 10px;}
@@ -139,6 +141,7 @@
 .pt-20{padding-top: 20px;}
 .pt-80{padding-top: 80px;}
 .pb-0{padding-bottom: 0px;}
+.pb-3{padding-bottom: 3px;}
 .pb-5{padding-bottom: 5px;}
 .pb-10{padding-bottom: 10px;}
 .pb-15{padding-bottom: 15px;}
@@ -213,6 +216,10 @@ a:hover{
 	box-shadow: 2px 2px 4px;
 }
 
+.box-shadow-024{
+	box-shadow: 2px 2px 4px;
+}
+
 .border-radius-0{
 	border-radius: 0px;
 }
@@ -236,6 +243,10 @@ a:hover{
 
 .bottom-border{
 	border-bottom: solid 1px;
+}
+
+.border-1{
+	border: solid 1px;
 }
 
 .bdc-eee{

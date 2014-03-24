@@ -14,13 +14,14 @@
 
 		g_ajax_processing_obj_id = 'like-share-qq-id';
 		ajaxSend("/message/share_received_like", {}, function(data){
-			if(!data['success']){
-				$.ZXMsg.alert('提示', data['msg']);
+			if(data['flag'] != "0"){
+				$.ZXMsg.alert('提示', data['result']);
+				newWin.close();
 			} else {
 				var url = window.location.origin + window.location.pathname,
 		            title = me.parents('.like-stats').find('.total').html();
 
-		        newWin.location.href = $.ZXShare.qq(data['msg'], '我在智选'+title+', 求超越!', '我在智选'+title+', 求超越!', true);
+		        newWin.location.href = $.ZXShare.qq(data['result'], '我在智选'+title+', 求超越!', '我在智选'+title+', 求超越!', true);
 			}
 		});
         
@@ -32,14 +33,14 @@
 
     	g_ajax_processing_obj_id = 'like-share-sina-id';
 		ajaxSend("/message/share_received_like", {}, function(data){
-			if(!data['success']){
-				$.ZXMsg.alert('提示', data['msg']);
+			if(data['flag'] != "0"){
+				$.ZXMsg.alert('提示', data['result']);
 				newWin.close();
 			} else {
 				var url = window.location.origin + window.location.pathname,
 		            title = me.parents('.like-stats').find('.total').html();
 
-		        newWin.location.href = $.ZXShare.sinaWeibo(data['msg'], '我在智选(www.zhixuan.com)'+title+', 求超越!', data['msg'], true);
+		        newWin.location.href = $.ZXShare.sinaWeibo(data['result'], '我在智选(www.zhixuan.com)'+title+', 求超越!', data['result'], true);
 			}
 		});
         

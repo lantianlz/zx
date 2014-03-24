@@ -134,14 +134,10 @@ def share_received_like(request):
     后台生成分享的图片
     '''
     import os
-    import uuid
-    import shlex
-    import subprocess
-    from PyQt4 import QtCore, QtGui, QtWebKit
-    
     from django.conf import settings
-
-    result = {'success': True, 'msg': '操作成功'}
+    from common import utils
+    
+    result = {'flag': -1, 'result': '操作失败'}
 
     # 拼装获取指定用户赞的页面url
     url = "%s://%s/message/show_received_like?user_id=%s" % (
@@ -152,24 +148,28 @@ def share_received_like(request):
     #print url
 
     # 定义生成临时图片位置
-    file_name = '%s/static/temp_share/%s.png' % (os.path.dirname(settings.SITE_ROOT), str(uuid.uuid4()).replace('-', ''))
+    file_name = '%s/static/temp_share/%s.png' % (os.path.dirname(settings.SITE_ROOT), utils.uuid_without_dash())
     temp = None
 
     try:
         # 调用子程序 生成图片
         cmd = 'python %s/common/capty.py %s %s' % (os.path.dirname(settings.SITE_ROOT), url, file_name)
-        proc = subprocess.Popen(shlex.split(cmd))
-        proc.communicate()
+        # proc = subprocess.Popen(shlex.split(cmd))
+        # proc.communicate()
 
-        # 读取临时文件上传到七牛
-        temp = open(file_name, 'rb')
-        flag, img_name = qiniu_client.upload_img(temp)
-        if flag:
-            result = {'success': True, 'msg': '%s/%s' % (settings.IMG0_DOMAIN, img_name.split('!')[0])}
+        flag, msg = utils.exec_command(cmd, 20)
+        if not flag:
+            result = {'flag': -1, 'result': u'服务器响应超时, 请重试'}
         else:
-            result = {'success': False, 'msg': u'分享失败, 请重试'}
+            # 读取临时文件上传到七牛
+            temp = open(file_name, 'rb')
+            flag, img_name = qiniu_client.upload_img(temp)
+            if flag:
+                result = {'flag': 0, 'result': '%s/%s' % (settings.IMG0_DOMAIN, img_name.split('!')[0])}
+            else:
+                result = {'flag': -1, 'result': u'分享失败, 请重试'}
     except Exception, e:
-        result = {'success': False, 'msg': u'分享失败, 请重试'}
+        result = {'flag': -1, 'result': u'分享失败, 请重试'}
     finally:
         # 善后
         if temp:
