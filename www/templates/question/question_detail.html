@@ -73,7 +73,7 @@ $(document).ready(function(){
                     {% endif %}
                     {% endif %}
                     {% if request.user.id == question.user.id or request.user.is_staff %}
-                    <a href="#" data-toggle="modal" data-target="#edit_question_modal">
+                    <a href="#" data-toggle="modal" data-target="#edit_question_modal" data-backdrop="static">
                         <span class="glyphicon glyphicon-pencil"></span>
                         修改
                     </a>
@@ -235,7 +235,7 @@ $(document).ready(function(){
         {% if request.user.is_authenticated %}
         <form role="form" method="post" action="/question/create_answer/{{question.id}}">
             <div class="form-group mb-0">
-                <textarea id="answer_editor" name="answer_content" class="form-control zx-textarea" style="height: 100px;"></textarea>
+                <textarea id="answer_editor" name="answer_content" class="form-control zx-textarea" style="height: 200px;"></textarea>
             </div>
             <div class="form-group pull-right">
                 <button type="submit" class="btn btn-primary">提交你的回答</button>

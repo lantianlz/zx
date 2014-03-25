@@ -444,7 +444,7 @@ function createEditor(selector){
     return KindEditor.create(selector, {
         resizeType : 1,
         width: '100%',
-        autoHeightMode : true,
+        //autoHeightMode : true,
         allowPreviewEmoticons : false,
         allowImageUpload : true,
         allowImageRemote: true,
@@ -462,7 +462,7 @@ function createEditor(selector){
             'fullscreen'
         ],
         afterCreate : function() { 
-            this.loadPlugin('autoheight');
+            //this.loadPlugin('autoheight');
 			this.sync(); 
         }, 
         afterBlur:function(){ 
