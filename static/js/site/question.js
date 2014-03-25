@@ -133,7 +133,7 @@ $(document).ready(function(){
 
     // 修改回答事件
     $('.answer-edit').bind('click', function(){
-        $('#edit_answer_modal').modal('show');
+        $('#edit_answer_modal').modal({'show': true, 'backdrop': 'static'});
         editAnswerEditor.html($(this).parents('li').eq(0).find('.reply-content').html());
         $('#edit_answer_modal .edit-answer-id').val($(this).data('answer_id'));
     });
