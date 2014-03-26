@@ -13,42 +13,45 @@
 
 {% block container_content %}
 <div class="zx-topic-main col-md-8">
-    {% block topic_main %}{% endblock %}
+    {% block topic_main %}{% endblock topic_main %}
 </div>
 
 <div class="zx-topic-right col-md-4 pl-50">
-	<div class=""><h4>热门话题</h4></div>
+	{% block topic_right %}{% endblock topic_right %}
+
+	{% block hot-topics %}
+	<div class=""><div class="f16 pb-5 fb">热门话题</div></div>
 	<div>
 		<ul class="list-group">
-			<li class="list-group-item no-l-r-bd bdc-eee">
+			<li class="list-group-item no-l-r-bd bdc-eee pl-0">
 				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
 				<div class="pl-55 pt-5">
 					<div><a href="#">大盘</a></div>
 					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
 				</div>
 			</li>
-			<li class="list-group-item no-l-r-bd bdc-eee">
+			<li class="list-group-item no-l-r-bd bdc-eee pl-0">
 				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
 				<div class="pl-55 pt-5">
 					<div><a href="#">大盘</a></div>
 					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
 				</div>
 			</li>
-			<li class="list-group-item no-l-r-bd bdc-eee">
+			<li class="list-group-item no-l-r-bd bdc-eee pl-0">
 				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
 				<div class="pl-55 pt-5">
 					<div><a href="#">大盘</a></div>
 					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
 				</div>
 			</li>
-			<li class="list-group-item no-l-r-bd bdc-eee">
+			<li class="list-group-item no-l-r-bd bdc-eee pl-0">
 				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
 				<div class="pl-55 pt-5">
 					<div><a href="#">大盘</a></div>
 					<div class="f12 co8 pt-3">365人关注 • 1658个问题</div>
 				</div>
 			</li>
-			<li class="list-group-item no-l-r-bd bdc-eee">
+			<li class="list-group-item no-l-r-bd bdc-eee pl-0">
 				<img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
 				<div class="pl-55 pt-5">
 					<div><a href="#">大盘</a></div>
@@ -57,9 +60,7 @@
 			</li>
 		</ul>
 	</div>
-    {% block topic_right %}
-
-    {% endblock %}
+	{% endblock hot-topics %}
 </div>
     
-{% endblock %}
+{% endblock container_content %}

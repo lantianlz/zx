@@ -64,6 +64,9 @@
 .w35{
 	width: 35px;
 }
+.w300{
+	width: 300px;
+}
 .w400{
 	width: 400px;
 }
@@ -140,6 +143,7 @@
 .pt-20{padding-top: 20px;}
 .pt-80{padding-top: 80px;}
 .pb-0{padding-bottom: 0px;}
+.pb-3{padding-bottom: 3px;}
 .pb-5{padding-bottom: 5px;}
 .pb-10{padding-bottom: 10px;}
 .pb-15{padding-bottom: 15px;}

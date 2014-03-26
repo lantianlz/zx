@@ -410,31 +410,6 @@ function addZero(data){
 })(jQuery);
 
 
-
-/*
-// 文本编辑器默认设置
-var markItUpSettings = {
-    onShiftEnter:   {keepDefault:false, replaceWith:'<br />\n'},
-    onCtrlEnter:    {keepDefault:false, openWith:'\n<p>', closeWith:'</p>'},
-    onTab:        {keepDefault:false, replaceWith:'    '},
-    markupSet:  [   
-        {name:'粗体', key:'B', openWith:'<b>', closeWith:'</b>' },
-        {name:'斜体', key:'I', openWith:'<i>', closeWith:'</i>'  },
-        {name:'下划线', key:'U', openWith:'<u>', closeWith:'</u>' },
-        {separator:'---------------' },
-        {name:'无序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ul>\n', closeBlockWith:'\n</ul>'},
-        {name:'有序列表', openWith:'    <li>', closeWith:'</li>', multiline:true, openBlockWith:'<ol>\n', closeBlockWith:'\n</ol>'},
-        {separator:'---------------' },
-        {name:'插入图片', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
-        {name:'插入链接', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
-        {separator:'---------------' },
-        {name:'清除样式', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } }
-        //,{name:'Preview', className:'preview',  call:'preview'}
-    ]
-};
-*/
-
-
 /*
     创建 KindEditor 编辑器
     selector: textarea的选择器
@@ -451,7 +426,7 @@ function createEditor(selector){
         // basePath: '/',
         uploadJson: '/save_img',
         pasteType : 1,
-        cssData: 'body{font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #222;}',
+        cssData: 'body{font-family: "Helvetica Neue",Helvetica,"Lucida Grande","Luxi Sans",Arial,"Hiragino Sans GB",STHeiti,"Microsoft YaHei","Wenquanyi Micro Hei","WenQuanYi Micro Hei Mono","WenQuanYi Zen Hei","WenQuanYi Zen Hei Mono",LiGothicMed; font-size: 14px; color: #222;}',
         themesPath: MEDIA_URL + "css/kindeditor/themes/",
         pluginsPath: MEDIA_URL + "js/kindeditor/plugins/",
         langPath: MEDIA_URL + "js/kindeditor/",
@@ -563,9 +538,33 @@ $(document).ready(function(){
     $('.zx-tooltip').tooltip('hide');
     
 
-    // 弹出名片设置
-    var cardtipsHtml = '<div class="cardtips"><div class="profile row"><div class="col-md-3"><img class="avatar avatar-circle" src="{0}" ></div><div class="col-md-9"><div class="username">{1}</div><div class="question-info"><span>提问<a href="#">{2}</a></span><span>回答<a href="#">{3}</a></span><span>赞<a href="#">{4}</a></span></div></div></div><div class="desc">{5}</div><div class="tools"><button type="button" class="btn btn-primary btn-xs follow {8}">关注ta</button><button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button><a class="send-message" href="javascript: void(0)" data-user_name="{6}" data-user_id="{7}"><span class="glyphicon glyphicon-envelope"></span> 私信ta</a></div></div>'
-    $('.zx-cardtips1').tooltipster({
+    // 弹出用户名片设置
+    var cardtipsHtml = [
+        '<div class="cardtips f12">',
+            '<div class="profile row f14">',
+                '<div class="col-md-3">',
+                    '<img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" >',
+                '</div>',
+                '<div class="col-md-9">',
+                    '<div class="pt-10 pb-5"><a href="/p/{10}">{1}</a></div>',
+                    '<div class="pt-5">',
+                        '<span>提问<a href="#" class="pl-3 pr-15">{2}</a></span>',
+                        '<span>回答<a href="#" class="pl-3 pr-15">{3}</a></span>',
+                        '<span>赞<a href="#" class="pl-3 pr-15">{4}</a></span>',
+                    '</div>',
+                '</div>',
+            '</div>',
+            '<div class="desc pl-10 pt-5 w300 co6">{5}</div>',
+            '<div class="tools top-border bdc-eee pt-5 mt-5">',
+                '<button type="button" class="btn btn-primary btn-xs follow ml-10 {8}">关注ta</button>',
+                '<button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button>',
+                '<a class="send-message pull-right pr-10 pt-5" href="javascript: void(0)" data-user_name="{6}" data-user_id="{7}">',
+                    '<span class="glyphicon glyphicon-envelope"></span> 私信ta',
+                '</a>',
+            '</div>',
+        '</div>'
+    ].join('');
+    $('.zx-cardtips').tooltipster({
         animation: 'fade',
         delay: 200,
         trigger: 'hover',
@@ -588,7 +587,7 @@ $(document).ready(function(){
                     dataType: 'json',
                     url: '/account/get_user_info_by_id?user_id=' + origin.data('user_id'),
                     success: function(data) {
-                        if(data.success){
+                        if(data.flag=='0'){
                             origin.tooltipster('content', String.format(
                                 cardtipsHtml, 
                                 data.avatar,
@@ -600,7 +599,8 @@ $(document).ready(function(){
                                 data.name,
                                 data.id,
                                 data.is_follow?'hide':'', // 关注按钮
-                                data.is_follow?'':'hide' //取消关注按钮
+                                data.is_follow?'':'hide', //取消关注按钮
+                                data.id
                             )).data('ajax', 'cached');
                         } else {
                             origin.tooltipster('content', '加载名片失败');
@@ -611,75 +611,77 @@ $(document).ready(function(){
         }
     });
     // 从名片上点击发私信事件 
-    $('.send-message').live('click', function(){
+    $('.cardtips .send-message').live('click', function(){
         $.ZXMsg.sendPrivateMsg($(this).data('user_id'), $(this).data('user_name'));
-    })
+    });
 
+    // 弹出话题名片设置
+    var topictipsHtml = [
+        '<div class="topictips f12">',
+            '<div class="profile row f14">',
+                '<div class="col-md-3">',
+                    '<img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" >',
+                '</div>',
+                '<div class="col-md-9">',
+                    '<div class="pt-10 pb-5"><a href="/question/topic/1">{1}</a></div>',
+                    '<div class="question-info pt-5">',
+                        '<span>关注者<a href="#" class="pl-3 pr-15">{2}</a></span>',
+                        '<span>提问<a href="#" class="pl-3 pr-15">{3}</a></span>',
+                    '</div>',
+                '</div>',
+            '</div>',
+            '<div class="desc pl-10 pt-5 w300 co6">{4}</div>',
+            '<div class="tools top-border bdc-eee pt-5 mt-5 text-right">',
+                '<button type="button" class="btn btn-primary btn-xs follow ml-10 {5}">关注ta</button>',
+                '<button type="button" class="btn btn-default btn-xs unfollow {6}">取消关注</button>',
+            '</div>',
+        '</div>'
+    ].join('');
+    $('.zx-topictips').tooltipster({
+        animation: 'fade',
+        delay: 200,
+        trigger: 'hover',
+        theme: 'tooltipster-shadow',
+        interactive: true,
+        interactiveTolerance: 300,
+        autoClose: true,
+        //content: topictipsHtml,
+        contentAsHTML: true,
+        content: '信息加载中...',
+        functionBefore: function(origin, continueTooltip) {
 
-    /*
-    // 设置编辑器
-      $('.zx-textarea').markItUp(markItUpSettings);
-      // 设置文本框自动增加高度
-      $('.zx-textarea').bind('keyup', function(e){
-        if(e.keyCode == 13){
-            $(this).height($(this).height() + $(this).scrollTop() + 2);
+            // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+            continueTooltip();
+            
+            // next, we want to check if our data has already been cached
+            if (origin.data('ajax') !== 'cached') {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/question/get_topic_info_by_id?topic_id=' + origin.data('topic_id'),
+                    success: function(data) {
+                        if(data.flag=='0'){
+                            origin.tooltipster('content', String.format(
+                                topictipsHtml, 
+                                data.avatar,
+                                data.name, 
+                                data.follow_count,
+                                data.question_count,
+                                data.desc,
+                                data.is_follow?'hide':'', // 关注按钮
+                                data.is_follow?'':'hide' //取消关注按钮
+                            )).data('ajax', 'cached');
+                        } else {
+                            origin.tooltipster('content', '加载名片失败');
+                        }
+                    }
+                });
+            }
         }
     });
-    */
-    
 
-    //UE
-    /*
-    var ue = UE.getEditor('zx-editor', {
-        toolbars: [[
-             'bold', 'italic', 'underline', 'removeformat', '|',
-            'insertorderedlist', 'insertunorderedlist', '|' ,
-            'link', 'unlink', 'insertimage', 'insertvideo', '|',
-            'preview', 'cleardoc', 'fullscreen'
-        ]],
-        dropFileEnabled: false,
-        pasteplain: true
-    });
-    */
 
-    // var ue2 = UE.getEditor('zx-editor2', {
-    //     toolbars: [
-    //         'bold', 'italic', 'underline', 'removeformat', '|',
-    //         'insertorderedlist', 'insertunorderedlist', '|' ,
-    //         'link', 'unlink', 'insertimage', 'insertvideo', '|',
-    //         'preview', 'cleardoc', 'fullscreen'
-    //     ],
-    //     //initialFrameWidth: '100%',
-    //     dropFileEnabled: false,
-    //     pasteplain: true
-    // });
 
-    /* 
-    //UM
-    var um = UM.getEditor('zx-editor', {
-        toolbar:[
-            'bold italic underline removeformat |',
-            'insertorderedlist insertunorderedlist |' ,
-            'link unlink image insertvideo  |',
-            'preview cleardoc fullscreen'
-        ],
-        dropFileEnabled: false
-    });
-
-    var um2 = UM.getEditor('zx-editor2', {
-        toolbar:[
-            'bold italic underline removeformat |',
-            'insertorderedlist insertunorderedlist |' ,
-            'link unlink image insertvideo  |',
-            'preview cleardoc fullscreen'
-        ],
-        initialFrameWidth: '100%',
-        dropFileEnabled: false
-    });
-    */
-    
-
-    
     // 鼠标移动到导航条登录用户名时自动弹出下拉框
     var dropdownTimeout = null,
         showDropdown = function(){

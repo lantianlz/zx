@@ -242,7 +242,6 @@ def test500(request):
 
 
 # ===================================================ajax部分=================================================================#
-@member_required
 def get_user_info_by_id(request):
     '''
     根据用户id获取名片信息
@@ -250,12 +249,13 @@ def get_user_info_by_id(request):
     user_id = request.REQUEST.get('user_id', None)
 
     infos = {
-        'success': False
+        'flag': '-1',
+        'result': '参数错误'
     }
 
     if user_id:
         infos = {
-            'success': True,
+            'flag': '0',
             'id': 'e0f87ed0712b11e3b894000c290d194c',
             'name': '半夜没事乱溜达',
             'avatar': '/static/img/common/user3.jpg',

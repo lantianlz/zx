@@ -155,6 +155,17 @@ def important_question(request, template_name='question/important_question.html'
 
 # @member_required
 def topics(request, template_name="question/topics.html"):
+    '''
+    话题广场
+    '''
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+# @member_required
+def topic_question(request, tag_domain, template_name='question/topic_question.html'):
+    """
+    @note: 子话题页面
+    """
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 # ===================================================ajax部分=================================================================#
@@ -221,3 +232,29 @@ def cancel_answer_bad(request):
     flag, result = ab.cancel_answer_bad(answer_id, request.user)
     r = dict(flag='0' if flag else '-1', result=result)
     return HttpResponse(json.dumps(r), mimetype='application/json')
+
+
+def get_topic_info_by_id(request):
+    '''
+    根据话题id获取名片信息
+    '''
+    topic_id = request.REQUEST.get('topic_id', None)
+
+    infos = {
+        'flag': '-1',
+        'result': '参数无效'
+    }
+
+    if topic_id:
+        infos = {
+            'flag': '0',
+            'id': 'e0f87ed0712b11e3b894000c290d194c',
+            'name': '大盘走势',
+            'avatar': '/static/img/common/default-topic.jpg',
+            'desc': '大盘：是指沪市的“上证综合指数”和深市的“深证成份股指数”的股票。大盘指数是运用统计学中的指数方法编制而成的，反映股市总体价格或某类股价变动和走势的指标。',
+            'question_count': 52642,
+            'follow_count': 2563,
+            'is_follow': True
+        }
+
+    return HttpResponse(json.dumps(infos))

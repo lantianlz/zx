@@ -60,6 +60,9 @@
         <li>
             <a href="#answers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的最新回答</a>
         </li>
+        <li>
+            <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
+        </li>
         <!-- 
         <li>
             <a href="#following" data-toggle="pill">TA的关注</a>
@@ -113,8 +116,46 @@
             <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
             {% endif %}
         </div>
+        <div class="tab-pane fade" id="following_topics">
+            <ul class="list-inline pl-10">
+                <li class="topic-item pt-15">
+                    <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+                    <div class="pl-75 row pr-10">
+                        <div class="col-md-6"><a href="#" class="zx-topictips" data-topic_id='1'>大盘走势</a></div>
+                        <div class="col-md-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
+                        <div class="col-md-12 f12 pt-5 pb-15">大盘走势,是对在证交所交易的股票价格综合涨跌情况的描述. 判别指标有上证指数和深证指数等.</div>
+                    </div>
+                </li>
+                <li class="topic-item pt-15">
+                    <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+                    <div class="pl-75 row pr-10">
+                        <div class="col-md-6"><a href="#">大盘走势</a></div>
+                        <div class="col-md-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
+                        <div class="col-md-12 f12 pt-5 pb-15">大盘走势,是对在证交所交易的股票价格综合涨跌情况的描述. 判别指标有上证指数和深证指数等.</div>
+                    </div>
+                </li>
+                <li class="topic-item pt-15">
+                    <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+                    <div class="pl-75 row pr-10">
+                        <div class="col-md-6"><a href="#">大盘走势</a></div>
+                        <div class="col-md-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
+                        <div class="col-md-12 f12 pt-5 pb-15">大盘走势,是对在证交所交易的股票价格综合涨跌情况的描述. 判别指标有上证指数和深证指数等.</div>
+                    </div>
+                </li>
+                <li class="topic-item pt-15">
+                    <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/default-topic.jpg">
+                    <div class="pl-75 row pr-10">
+                        <div class="col-md-6"><a href="#">大盘走势</a></div>
+                        <div class="col-md-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
+                        <div class="col-md-12 f12 pt-5 pb-15">大盘走势,是对在证交所交易的股票价格综合涨跌情况的描述. 判别指标有上证指数和深证指数等.</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
         <div class="tab-pane fade" id="following">暂不开放</div>
         <div class="tab-pane fade" id="followers">暂不开放</div>
     </div>
+
+
 </div>
 {% endblock %}

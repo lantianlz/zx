@@ -75,10 +75,6 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
     overflow-y: hidden;
 }
 
-.markItUpEditor{
-    font-family: '微软雅黑';
-}
-
 .placeholder { color: #aaa; }
 
 .avatar-20{
@@ -104,6 +100,11 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
 .avatar-45{
     width: 45px;
     height: 45px;
+}
+
+.avatar-55{
+    width: 55px;
+    height: 55px;
 }
 
 .avatar-65{
@@ -162,62 +163,6 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
 
 .tooltipster-content{
     border: solid 1px #f1f1f1;
-}
-
-.cardtips{
-    font-size: 12px;
-}
-
-.cardtips .desc{
-    width: 320px;
-    padding-left: 10px;
-    padding-top: 5px;
-    color: #666666;
-}
-
-.cardtips .user-avatar{
-    float: left;
-}
-
-.cardtips .avatar{
-    width: 55px;
-    height: 55px;
-    margin-left: 10px;
-    margin-top: 5px;
-}
-
-.cardtips .username{
-    padding-top: 10px;
-    padding-bottom: 7px;
-}
-
-.cardtips .tools{
-    border-top: solid 1px #f1f1f1;
-    padding-top: 5px;
-    margin-top: 5px;
-}
-
-.cardtips .profile{
-    font-size: 14px;
-}
-
-.cardtips .send-message{
-    float: right;
-    padding-right: 10px;
-    padding-top: 5px;
-}
-
-.cardtips .follow{
-    margin-left: 10px;
-}
-
-.cardtips .question-info{
-    padding-top: 5px;
-}
-
-.cardtips .question-info a{
-    padding-left: 3px;
-    padding-right: 15px;
 }
 
 .list-group.only-top-border>.list-group-item{
@@ -305,8 +250,22 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
     opacity: 0;
     filter: alpha(opacity=0); /*IE*/
 }
-
+/******自定义控件样式结束********/
 label.error{
     color: #863114;
     font-size: 12px;
+}
+
+a.border-block-blue{
+    border: solid 1px #9ECEFA;
+    color: #428bca;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+a.border-block-blue:hover{
+    background-color: #428bca;
+    border-color: #428bca;
+    color: white;
 }
