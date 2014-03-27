@@ -109,3 +109,23 @@ def global_hotest_tags(context):
     from www.question.interface import TagBase
     global_hotest_tags = TagBase().get_all_tags()
     return render_to_response('question/_global_hotest_tags.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def global_hot_topics(context):
+    """
+    @note: 热门话题
+    """
+    #from www.question.interface import TagBase
+    #global_hotest_tags = TagBase().get_all_tags()
+    return render_to_response('question/_global_hot_topics.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def global_recommend_users(context):
+    """
+    @note: 推荐用户
+    """
+    #from www.question.interface import TagBase
+    #global_hotest_tags = TagBase().get_all_tags()
+    return render_to_response('account/_global_recommend_users.html', locals(), context_instance=context).content

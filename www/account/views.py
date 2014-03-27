@@ -259,11 +259,16 @@ def get_user_info_by_id(request):
             'id': 'e0f87ed0712b11e3b894000c290d194c',
             'name': '半夜没事乱溜达',
             'avatar': '/static/img/common/user3.jpg',
-            'desc': '在那山的这边海的那边有一群程序员，他们老实又胹腆，他们苦逼又没钱。他们一天到晚坐在那里熬夜写软件，饿了就咬一口方便面～～哦苦命的程序员，哦苦命的程序员，只要一改需求他们就要重新搞一遍，但是期限只剩下两天。',
+            'desc': '不想当CEO的程序员不是好产品经理',
             'question_count': 125,
             'answer_count': 326,
             'like_count': 224,
-            'is_follow': True
+            'is_follow': True,
+            'topics': [
+                {'topic_id': '1', 'topic_name': '大盘走势'},
+                {'topic_id': '2', 'topic_name': '个股分析'},
+                {'topic_id': '3', 'topic_name': '互联网金融'},
+            ]
         }
 
     return HttpResponse(json.dumps(infos))

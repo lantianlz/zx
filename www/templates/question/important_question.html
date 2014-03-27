@@ -3,13 +3,19 @@
 {% load custom_filters %}
 {% block title %}每日精选{% endblock %}
 
-{% block css %}{% endblock %}
+{% block css %}
+<style type="text/css">
+.hot-topics{
+    border-top: 0px;
+}
+</style>
+{% endblock %}
 
 {% block javascript %}{% endblock %}
 
 {% block daily_main %}
 {% if questions %}
-<ul class="list-group daily-main mt-25">
+<ul class="list-group daily-main">
     {% for question in questions %}
     <li class="list-group-item no-l-r-bd bdc-eee">
         <div class='daily-item'>

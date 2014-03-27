@@ -40,21 +40,18 @@
 <!--左侧主体结束-->
 
 <!--右侧主体开始-->
-<div class="zx-container-right col-md-4">
+<div class="zx-container-right col-md-4 pl-50">
     {% block ask_question %}
-    <div class="ask-question well">
-        <div class="row">
-            <div class="col-md-12">
-                <a href="/question/ask_question">
-                    <button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button>
-                </a>
-            </div>
-        </div>
+    <div class="ask-question mt-25 pb-10">
+        <a href="/question/ask_question">
+            <button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button>
+        </a>
     </div>
     {% endblock %}
 
-    {% include "question/_user_qa_info_right_nav_dispaly.html" %}
+    {#% include "question/_user_qa_info_right_nav_dispaly.html" %#}
 
+    <!--
     <div class="hot-tags panel panel-default">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-tags"></span>
@@ -62,8 +59,18 @@
         </div>
         <div class="panel-body">{% global_hotest_tags %}</div>
     </div>
+    -->
+
+    <!-- 推荐用户 -->
+    {% global_recommend_users %}
+
+    <!-- 热门话题 -->
+    {% global_hot_topics %}
+
+    <!-- 统计 -->
     {% global_statistic %}
 
+    <!-- 二维码 -->
     {% block erweima %}
     <div class="top-border bdc-eee">
         <div class="pt-10 text-center co8">关注智选日报</div>

@@ -16,10 +16,10 @@
 <div class="zx-container-main col-md-8">
     {% block daily_main %}{% endblock %}
 </div>
-<div class="zx-container-right col-md-4">
-    <div class="blank20"></div>
-    {% include "question/_user_qa_info_right_nav_dispaly.html" %}
+<div class="zx-container-right col-md-4 pl-50">
+    {#% include "question/_user_qa_info_right_nav_dispaly.html" %#}
 
+    <!--
     <div class="hot-tags panel panel-default">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-tags"></span>
@@ -27,6 +27,18 @@
         </div>
         <div class="panel-body">{% global_hotest_tags %}</div>
     </div>
+    -->
+
+    <!-- 热门话题 -->
+    {% global_hot_topics %}
+
+    <!-- 二维码 -->
+    {% block erweima %}
+    <div class="top-border bdc-eee">
+        <div class="pt-10 text-center co8">关注智选日报</div>
+        <img class="w" src="{{MEDIA_URL}}/img/common/zhixuanribao.jpg">
+    </div>
+    {% endblock erweima %}
 </div>
 
 {% endblock container_content %}

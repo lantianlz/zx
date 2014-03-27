@@ -378,7 +378,7 @@ function addZero(data){
     $.ZXShare.sinaWeibo = function(url, title, pic){
         var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)).replace(/\s/g, ''),
             sinaUrl = String.format(
-                "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}",
+                "http://service.weibo.com/share/share.php?url={0}&title={1}&pic={2}&appkey={3}&ralateUid={4}&searchPic=false",
                 url,
                 (clearTitle.length >= 110) ? (clearTitle.substring(0, 110) + '...') : clearTitle,
                 pic ? pic : '',
@@ -555,12 +555,13 @@ $(document).ready(function(){
                 '</div>',
             '</div>',
             '<div class="desc pl-10 pt-5 w300 co6">{5}</div>',
+            '<div class="topics pl-10 pt-10 pb-5 w300 co6">擅长话题: {11}</div>',
             '<div class="tools top-border bdc-eee pt-5 mt-5">',
-                '<button type="button" class="btn btn-primary btn-xs follow ml-10 {8}">关注ta</button>',
-                '<button type="button" class="btn btn-default btn-xs unfollow {9}">取消关注</button>',
-                '<a class="send-message pull-right pr-10 pt-5" href="javascript: void(0)" data-user_name="{6}" data-user_id="{7}">',
+                '<a class="send-message pr-10 pt-5 pl-5" href="javascript: void(0)" data-user_name="{6}" data-user_id="{7}">',
                     '<span class="glyphicon glyphicon-envelope"></span> 私信ta',
                 '</a>',
+                '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 pull-right {8}">关注ta</button>',
+                '<button type="button" class="btn btn-default btn-xs unfollow mr-5 pull-right {9}">取消关注</button>',
             '</div>',
         '</div>'
     ].join('');
@@ -600,7 +601,15 @@ $(document).ready(function(){
                                 data.id,
                                 data.is_follow?'hide':'', // 关注按钮
                                 data.is_follow?'':'hide', //取消关注按钮
-                                data.id
+                                data.id,
+                                // 拼装话题
+                                $(data.topics).map(function(){
+                                    return  String.format(
+                                        '<a class="border-block-blue ml-5 pl-5 pr-5" href="question/topic/{0}">{1}</a>', 
+                                        this['topic_id'], 
+                                        this['topic_name']
+                                    )
+                                }).get().join('')
                             )).data('ajax', 'cached');
                         } else {
                             origin.tooltipster('content', '加载名片失败');
@@ -625,15 +634,15 @@ $(document).ready(function(){
                 '<div class="col-md-9">',
                     '<div class="pt-10 pb-5"><a href="/question/topic/1">{1}</a></div>',
                     '<div class="question-info pt-5">',
-                        '<span>关注者<a href="#" class="pl-3 pr-15">{2}</a></span>',
-                        '<span>提问<a href="#" class="pl-3 pr-15">{3}</a></span>',
+                        '<span>关注者<span class="pl-3 pr-15 fb">{2}</span></span>',
+                        '<span>提问<span class="pl-3 pr-15 fb">{3}</span></span>',
                     '</div>',
                 '</div>',
             '</div>',
             '<div class="desc pl-10 pt-5 w300 co6">{4}</div>',
             '<div class="tools top-border bdc-eee pt-5 mt-5 text-right">',
-                '<button type="button" class="btn btn-primary btn-xs follow ml-10 {5}">关注ta</button>',
-                '<button type="button" class="btn btn-default btn-xs unfollow {6}">取消关注</button>',
+                '<button type="button" class="btn btn-primary btn-xs follow mr-5 ml-10 {5}">关注ta</button>',
+                '<button type="button" class="btn btn-default btn-xs unfollow mr-5 {6}">取消关注</button>',
             '</div>',
         '</div>'
     ].join('');

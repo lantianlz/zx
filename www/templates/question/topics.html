@@ -3,15 +3,26 @@
 {% load custom_tags %}
 {% block title %}话题广场{% endblock %}
 {% block javascript %}{% endblock %}
-{% block css %}{% endblock %}
+{% block css %}
+<style type="text/css">
+.hot-topics{
+    border-top: 0px;
+    padding-top: 10px;
+}
+
+.more-topics{
+    display: none;
+}
+</style>
+{% endblock %}
 
 {% block topic_main %}
-<div class="bottom-border bdc-bbb row">
+<div class="bottom-border bdc-bbb row pt-10">
     <div class="col-md-6">
-        <h4>话题广场</h4>
+        <span class="f16 fb">话题广场</span>
     </div>
-    <div class="col-md-6 text-right pt-10 gray-a">
-        <a href="#">我关注的话题</a>
+    <div class="col-md-6 text-right gray-a">
+        <a href="/p#following_topics">我关注的话题</a>
     </div>
 </div>
 
