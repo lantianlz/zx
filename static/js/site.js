@@ -259,8 +259,8 @@ function addZero(data){
                                     '</div>',
                                 '</div>',
                                 '<div class="modal-footer">',
-                                    '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>',
-                                    '<button type="button" class="btn btn-primary send">发送</button>',
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>',
+                                    '<button type="button" class="btn btn-primary send">发 送</button>',
                                 '</div>',
                             '</form>',
                         '</div>',
@@ -289,6 +289,63 @@ function addZero(data){
 
         // 显示
         $('#private_message_modal').modal('show');
+
+    };
+
+
+    /*
+        意见反馈方法
+        用例：
+        $.ZXMsg.feedback();
+    */
+    $.ZXMsg.feedback = function(){
+        var postUrl = '/',
+            privateMsgHtml = [
+                '<div class="modal fade" id="feedback_modal" role="dialog">',
+                    '<div class="modal-dialog w400">',
+                        '<div class="modal-content">',
+                            '<form role="form" class="form-horizontal" method="post" action="">',
+                                '<div class="modal-header">',
+                                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
+                                    '<h4 class="modal-title">意见反馈</h4>',
+                                '</div>',
+                                '<div class="modal-body pb-0">',
+                                    '<div class="form-group">',
+                                        '<label class="col-sm-12">填写你对智选的意见或建议:</label>',
+                                    '</div>',
+                                    '<div class="form-group">',
+                                        '<div class="col-sm-12">',
+                                            '<textarea rows="4" name="feedback_message" class="form-control" placeholder="你的期望、使用感受、任何想法都行" value=""></textarea>',
+                                        '</div>',
+                                    '</div>',
+                                '</div>',
+                                '<div class="modal-footer">',
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>',
+                                    '<button type="button" class="btn btn-primary send">提 交</button>',
+                                '</div>',
+                            '</form>',
+                        '</div>',
+                    '</div>',
+                '</div>'
+            ].join('');
+
+        
+        // 是否第一次创建反馈框
+        if($('#feedback_modal').length == 0){
+            // 将反馈框添加进body
+            $('body').append(privateMsgHtml);
+
+            // 绑定发送事件
+            $('#feedback_modal .send').bind('click', function(){
+                // todo ...
+                $('#feedback_modal').modal('hide');
+
+                $.ZXMsg.alert('提示', '我们会仔细阅读你的反馈，非常感谢你对智选的关注!', 3000);
+            })
+        }
+
+        // 显示
+        $('#feedback_modal').modal('show');
 
     };
 
@@ -721,5 +778,11 @@ $(document).ready(function(){
 
     // 隐藏所有 auto-hide 样式
     $('.auto-hide').hide();
+
+    
+    // 用户反馈
+    $('.follow-zx .feedback').bind('click', function(){
+        $.ZXMsg.feedback();
+    })
 });
 
