@@ -126,6 +126,12 @@ def global_recommend_users(context):
     """
     @note: 推荐用户
     """
-    #from www.question.interface import TagBase
-    #global_hotest_tags = TagBase().get_all_tags()
     return render_to_response('account/_global_recommend_users.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def global_QRcode(context):
+    """
+    @note: 二维码 QR码（学名为快速响应矩阵码；Quick Response Code）
+    """
+    return render_to_response('base/_global_QRcode.html', locals(), context_instance=context).content

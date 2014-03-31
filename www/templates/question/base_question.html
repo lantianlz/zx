@@ -71,17 +71,7 @@
     {% global_statistic %}
 
     <!-- 二维码 -->
-    {% block erweima %}
-    <div class="top-border bdc-eee">
-        <div class="pt-10 text-center co8">关注智选日报</div>
-        <img class="w" src="{{MEDIA_URL}}/img/common/zhixuanribao.jpg">
-        <div class="gray-a pl-15 follow-zx">
-            <a class="qq zx-tooltip" href="javascript: void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="关注智选用户交流群: 375931749" data-trigger="hover" title=""><img class="avatar-20" src="{{MEDIA_URL}}img/common/qq-active.png"></a>
-            <a class="sina zx-tooltip" target="_blank" href="http://weibo.com/5083374708" data-toggle="tooltip" data-placement="bottom" data-original-title="关注智选微博" data-trigger="hover" title=""><img class="avatar-20" src="{{MEDIA_URL}}img/common/sina-active.png"></a>
-            <a class="feedback f12 pull-right pr-15 pb-5 mr-10 pt-5" href="javascript: void(0);">意见反馈</a>
-        </div>
-    </div>
-    {% endblock erweima %}
+    {% global_QRcode %}
 
 </div>
 <!--右侧主体开始-->
