@@ -60,7 +60,7 @@
         <li>
             <a href="#answers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的最新回答</a>
         </li>
-        <li>
+        <li class="hide">
             <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
         </li>
         <!-- 
@@ -121,33 +121,49 @@
                 <li class="topic-item pt-15 col-md-6 col-xs-12">
                     <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/topic0.jpg">
                     <div class="pl-75 row pr-10">
-                        <div class="col-md-6 col-xs-6"><a href="#" class="zx-topictips" data-topic_id='1'>大盘走势</a></div>
-                        <div class="col-md-6 col-xs-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
+                        <div class="col-md-6 col-xs-6">
+                            <a href="#" class="zx-topictips" data-topic_id='12'>大盘走势</a>
+                        </div>
+                        <div class="col-md-6 col-xs-6 text-right gray-a">
+                            <button type="button" class="btn btn-default btn-xs pull-right btn-unfollow">取消关注</button>
+                        </div>
                         <div class="col-md-12 f12 pt-5 pb-15">大盘走势,是对在证交所交易的股票价格综合涨跌情况的描述. 判别指标有上证指数和深证指数等.</div>
                     </div>
                 </li>
                 <li class="topic-item pt-15 col-md-6 col-xs-12">
                     <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/topic1.jpg">
                     <div class="pl-75 row pr-10">
-                        <div class="col-md-6 col-xs-6"><a href="#">个股分析</a></div>
-                        <div class="col-md-6 col-xs-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
-                        <div class="col-md-12 f12 pt-5 pb-15">股票是一种无偿还期限的有价证券，按持有者可分为国家股、法人股、个人股。个人股投资资金来自个人，可以自由上市...</div>
+                        <div class="col-md-6 col-xs-6">
+                            <a href="#" class="zx-topictips" data-topic_id='1'>个股分析</a>
+                        </div>
+                        <div class="col-md-6 col-xs-6 text-right gray-a">
+                            <button type="button" class="btn btn-default btn-xs pull-right btn-unfollow">取消关注</button>
+                        </div>
+                        <div class="col-md-12 f12 pt-5 pb-15">股票是一种无偿还期限的有价证券，按持有者可分为国家股、法人股、个人股。个人股投资资金来自个人，可以自由上市流通。</div>
                     </div>
                 </li>
                 <li class="topic-item pt-15 col-md-6 col-xs-12">
                     <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/topic2.jpg">
                     <div class="pl-75 row pr-10">
-                        <div class="col-md-6 col-xs-6"><a href="#">互联网金融</a></div>
-                        <div class="col-md-6 col-xs-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
-                        <div class="col-md-12 f12 pt-5 pb-15">互联网金融是指以依托于支付、云计算以及搜索引擎等互联网工具，实现资金融通、支付和信息中介等业务的一种...</div>
+                        <div class="col-md-6 col-xs-6">
+                            <a href="#" class="zx-topictips" data-topic_id='1'>互联网金融</a>
+                        </div>
+                        <div class="col-md-6 col-xs-6 text-right gray-a">
+                            <button type="button" class="btn btn-default btn-xs pull-right btn-unfollow">取消关注</button>
+                        </div>
+                        <div class="col-md-12 f12 pt-5 pb-15">互联网金融是指以依托于支付、云计算以及搜索引擎等互联网工具，实现资金融通、支付和信息中介等业务的一种新兴金融。</div>
                     </div>
                 </li>
                 <li class="topic-item pt-15 col-md-6 col-xs-12">
                     <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/topic3.jpg">
                     <div class="pl-75 row pr-10">
-                        <div class="col-md-6 col-xs-6"><a href="#">P2P网贷</a></div>
-                        <div class="col-md-6 col-xs-6 text-right gray-a pt-3"><a href="#" class="f12">+ 关注</a></div>
-                        <div class="col-md-12 f12 pt-5 pb-15">个人通过网络平台相互借贷，贷款方在P2P网站上发布贷款需求，投资人则通过网站将资金借给贷款方完成交易要...</div>
+                        <div class="col-md-6 col-xs-6">
+                            <a href="#" class="zx-topictips" data-topic_id='1'>P2P网贷</a>
+                        </div>
+                        <div class="col-md-6 col-xs-6 text-right gray-a">
+                            <button type="button" class="btn btn-default btn-xs pull-right btn-unfollow">取消关注</button>
+                        </div>
+                        <div class="col-md-12 f12 pt-5 pb-15">个人通过网络平台相互借贷，贷款方在P2P网站上发布贷款需求，投资人则通过网站将资金借给贷款方完成交易要向P2P网贷平...</div>
                     </div>
                 </li>
             </ul>

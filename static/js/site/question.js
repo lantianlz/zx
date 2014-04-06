@@ -101,10 +101,18 @@ $(document).ready(function(){
     // 邀请打开关闭事件
     $('.question-tools .invite').bind('click', function(){
         var target = $(".topic-invite");
-      
+        
         target.css('display') === 'block' ? target.hide() : target.show();
     });
-
+    // 邀请某人回答事件
+    $('.recommend-invite .btn-invite').bind('click', function(){
+        var target = $(this).parents('.invite-person-info').find('.zx-cardtips');
+        $.ZXMsg.alert('邀请某人', target.data('user_id'));
+    });
+    // 邀请查询事件
+    $('.filter-invite .search').bind('click', function(){
+        $.ZXMsg.alert('查询某人', $(this).prev().val());
+    });
 
     // 折叠回答打开关闭事件
     $('.collapse-answer').bind('click', function(){

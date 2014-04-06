@@ -300,8 +300,8 @@ function addZero(data){
                 // todo ...
                 $('#private_message_modal').modal('hide');
 
-                $.ZXMsg.alert('提示', '给'+userName+'的私信发送成功!', 3000);
-            })
+                $.ZXMsg.alert('提示', '给 <strong>'+userName+'</strong> 的私信发送成功!', 3000);
+            });
         }
 
         // 设置值
@@ -640,8 +640,8 @@ $(document).ready(function(){
             '</div>',
             '<div class="desc pl-10 pt-5 w300 co6">{5}</div>',
             '<div class="topics pl-10 pt-10 pb-5 w300 co6">擅长话题: {11}</div>',
-            '<div class="tools top-border bdc-eee pt-5 mt-5">',
-                '<a class="send-message pr-10 pt-5 pl-5" href="javascript: void(0)" data-user_name="{6}" data-user_id="{7}">',
+            '<div class="tools top-border bdc-eee pt-5 mt-5" data-user_name="{6}" data-user_id="{7}">',
+                '<a class="send-message pr-10 pt-5 pl-5" href="javascript: void(0)">',
                     '<span class="glyphicon glyphicon-envelope"></span> 私信ta',
                 '</a>',
                 '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 pull-right {8}">关注ta</button>',
@@ -651,7 +651,7 @@ $(document).ready(function(){
     ].join('');
     // 除了手机其他设备都设置弹出名片
     if(!$.ZXUtils.isPhone()){
-        $('.zx-cardtips').tooltipster({
+        $('.zx-cardtips1').tooltipster({
             animation: 'fade',
             delay: 200,
             trigger: 'hover',
@@ -707,7 +707,18 @@ $(document).ready(function(){
         });
         // 从名片上点击发私信事件 
         $('.cardtips .send-message').live('click', function(){
-            $.ZXMsg.sendPrivateMsg($(this).data('user_id'), $(this).data('user_name'));
+            var target = $(this).parents('.tools').eq(0);
+            $.ZXMsg.sendPrivateMsg(target.data('user_id'), target.data('user_name'));
+        });
+        // 关注事件
+        $('.cardtips .follow').live('click', function(){
+            var target = $(this).parents('.tools').eq(0);
+            $.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
+        });
+        // 取消关注事件
+        $('.cardtips .unfollow').live('click', function(){
+            var target = $(this).parents('.tools').eq(0);
+            $.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
         });
     }
 
@@ -727,7 +738,7 @@ $(document).ready(function(){
                 '</div>',
             '</div>',
             '<div class="desc pl-10 pt-5 w300 co6">{4}</div>',
-            '<div class="tools top-border bdc-eee pt-5 mt-5 text-right">',
+            '<div class="tools top-border bdc-eee pt-5 mt-5 text-right" data-topic_id="{7}">',
                 '<button type="button" class="btn btn-primary btn-xs follow mr-5 ml-10 {5}">关注ta</button>',
                 '<button type="button" class="btn btn-default btn-xs unfollow mr-5 {6}">取消关注</button>',
             '</div>',
@@ -735,7 +746,7 @@ $(document).ready(function(){
     ].join('');
     // 除了手机其他设备都设置弹出名片
     if(!$.ZXUtils.isPhone()){
-        $('.zx-topictips').tooltipster({
+        $('.zx-topictips1').tooltipster({
             animation: 'fade',
             delay: 200,
             trigger: 'hover',
@@ -767,7 +778,8 @@ $(document).ready(function(){
                                     data.question_count,
                                     data.desc,
                                     data.is_follow?'hide':'', // 关注按钮
-                                    data.is_follow?'':'hide' //取消关注按钮
+                                    data.is_follow?'':'hide', //取消关注按钮
+                                    data.id
                                 )).data('ajax', 'cached');
                             } else {
                                 origin.tooltipster('content', '加载名片失败');
@@ -776,6 +788,16 @@ $(document).ready(function(){
                     });
                 }
             }
+        });
+        // 关注事件
+        $('.topictips .follow').live('click', function(){
+            var target = $(this).parents('.tools').eq(0);
+            $.ZXMsg.alert('关注话题', target.data('topic_id'));
+        });
+        // 取消关注事件
+        $('.topictips .unfollow').live('click', function(){
+            var target = $(this).parents('.tools').eq(0);
+            $.ZXMsg.alert('取消关注话题', target.data('topic_id'));
         });
     }
 
