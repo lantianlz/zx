@@ -325,7 +325,7 @@ class UserBase(object):
 
             context = {'verify_url': '%s/account/user_settings/verify_email?code=%s' % (settings.MAIN_DOMAIN, code), }
 
-            async_send_email(user.email, u'智选网邮箱验证',
+            async_send_email(user.email, u'智选邮箱验证',
                              utils.render_email_template('email/verify_email.html', context), 'html')
 
     def check_email_confim_code(self, user, code):
@@ -371,7 +371,7 @@ class UserBase(object):
                 'reset_url': '%s/reset_password?code=%s' % (settings.MAIN_DOMAIN, code),
             }
 
-            async_send_email(email, u'智选网找回密码',
+            async_send_email(email, u'智选找回密码',
                              utils.render_email_template('email/reset_password.html', context), 'html')
         return True, dict_err.get(000)
 
