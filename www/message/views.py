@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 
 from django.http import HttpResponse  # , HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from common import utils, page, capty
+from common import utils, page, debug
 from www.misc import qiniu_client
 from www.misc.decorators import member_required
 from www.tasks import async_clear_count_info_by_code
@@ -135,7 +136,6 @@ def share_received_like(request):
     '''
     import os
     from django.conf import settings
-    from common import utils
     
     result = {'flag': -1, 'result': '操作失败'}
 
@@ -145,18 +145,14 @@ def share_received_like(request):
         request.META['HTTP_HOST'],
         request.user.id
     )
-    #print url
 
     # 定义生成临时图片位置
-    file_name = '%s/static/temp_share/%s.png' % (os.path.dirname(settings.SITE_ROOT), utils.uuid_without_dash())
+    file_name = '%s/static_local/temp_share/capty_%s.png' % (os.path.dirname(settings.SITE_ROOT), utils.uuid_without_dash())
     temp = None
 
     try:
         # 调用子程序 生成图片
         cmd = 'python %s/common/capty.py %s %s' % (os.path.dirname(settings.SITE_ROOT), url, file_name)
-        # proc = subprocess.Popen(shlex.split(cmd))
-        # proc.communicate()
-
         flag, msg = utils.exec_command(cmd, 20)
         if not flag:
             result = {'flag': -1, 'result': u'服务器响应超时, 请重试'}
@@ -169,6 +165,7 @@ def share_received_like(request):
             else:
                 result = {'flag': -1, 'result': u'分享失败, 请重试'}
     except Exception, e:
+        logging.error(debug.get_debug_detail(e))
         result = {'flag': -1, 'result': u'分享失败, 请重试'}
     finally:
         # 善后
