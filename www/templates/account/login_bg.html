@@ -4,6 +4,18 @@
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/login.css?v={{MEDIA_VERSION}}" />
+<style type="text/css">
+    .container{
+        /*background: red;*/
+        /*min-height: 500px;*/
+        width: inherit;
+        height: inherit;
+    }
+
+    .form-control{
+        background-color: #E0E0E0;
+    }
+</style>
 {% endblock %}
 
 {% block javascript %}
@@ -11,7 +23,7 @@
 {% endblock %}
 
 {% block base_container %}
-<div class="container p0">
+<div class="p0">
     <div class="login-bg-1"><img class="w h" src="/static/img/common/login-bg-1.jpg"></div>
     <div class="login-bg-2"><img class="w h" src="/static/img/common/login-bg-2.jpg"></div>
 </div>

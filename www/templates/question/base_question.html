@@ -24,28 +24,26 @@
 
 {% block container_content %}
 <!--左侧主体开始-->
-<div class="zx-container-main col-md-8">
+<div class="zx-container-main col-xs-12 col-md-8 ">
     <!--查询框开始-->
-    <div class="search-bar hide">
+    <!-- <div class="search-bar hide">
         <div class="input-group input-group-lg">
             <input type="text" placeholder="各种问题..." class="form-control">
             <span class="input-group-btn">
                 <button class="btn btn-default" type="button">搜索</button>
             </span>
         </div>
-    </div>
+    </div> -->
     <!--查询框结束-->
     {% block question_main%}{% endblock %}
 </div>
 <!--左侧主体结束-->
 
 <!--右侧主体开始-->
-<div class="zx-container-right col-md-4 pl-50">
+<div class="zx-container-right col-xs-12 col-md-4 pl-50">
     {% block ask_question %}
     <div class="ask-question mt-25 pb-10">
-        <a href="/question/ask_question">
-            <button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button>
-        </a>
+        <button type="button" class="btn btn-primary btn-lg btn-block">我要提问</button>
     </div>
     {% endblock %}
 

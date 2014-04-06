@@ -67,8 +67,18 @@
 .w300{
 	width: 300px;
 }
+@media(max-width: 768px){
+    .w300{
+        width: auto;
+    }
+}
 .w400{
 	width: 400px;
+}
+@media(max-width: 768px){
+    .w400{
+        width: auto;
+    }
 }
 
 
@@ -141,12 +151,14 @@
 .pt-10{padding-top: 10px;}
 .pt-15{padding-top: 15px;}
 .pt-20{padding-top: 20px;}
+.pt-30{padding-top: 30px;}
 .pt-80{padding-top: 80px;}
 .pb-0{padding-bottom: 0px;}
 .pb-3{padding-bottom: 3px;}
 .pb-5{padding-bottom: 5px;}
 .pb-10{padding-bottom: 10px;}
 .pb-15{padding-bottom: 15px;}
+.pb-30{padding-bottom: 30px;}
 
 .m_tc{margin:0 auto;}
 /*链接和常用文字颜色*/
@@ -154,6 +166,7 @@
 .cl_black{color: #000;}
 .cl_gray{color: gray;}
 .cl_red{color: red;}
+.co-zx{color: #428bca;}
 .co1{color: #919191;}
 .co2{color: #545454;}
 .co3{color: #fff;}
@@ -173,6 +186,9 @@
 .co17{color: #d1d1d1;}
 .co18{color: #222;}
 
+.bgc-333{background-color: #333}
+.bgc-zx{background-color: #428bca}
+
 .textindent2{text-indent:32px;}
 .textindent0{text-indent: 0;}
 
@@ -181,6 +197,7 @@
 .pointer{cursor:pointer}
 .fixline{border-bottom:1px solid #EEEEEE; width: 100%;height:1px;}
 
+.line-height-20{line-height: 20px;}
 .line-height-25{line-height: 25px;}
 
 a{color: #259;transition: color 0.5s;}

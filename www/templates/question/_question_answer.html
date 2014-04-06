@@ -2,7 +2,7 @@
 {% load custom_filters %}
 <li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-eee" id="answer_{{answer.id}}">
     <div class="reply-header row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-8">
             <a class="no-hover-unl" href="{{answer.from_user.get_url}}">
                 <img class="avatar-25 avatar-circle" src="{{answer.from_user.get_avatar_25}}" title="{{answer.from_user.nick}}" />
             </a>
@@ -10,7 +10,7 @@
                 <span class="f12">{{answer.from_user.nick}}</span>
             </a>
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-6 col-xs-4 text-right">
             <span class="answer-like-border flash-border" data-answer_id="{{answer.id}}">
                 <span title="赞一下" class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like " ></span>
                 <span class="answer-like-count">{{answer.like_count}}</span>
@@ -21,7 +21,7 @@
         <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
     </div>
     <div class="reply-tools gray-a">
-        <span class="answer-date">{{answer.create_time|time_format}}</span>
+        <span class="co8">{{answer.create_time|time_format}}</span>
         <a class="answer-share" href="javascript: void(0);">
             <span class="glyphicon glyphicon-share-alt"></span>
             分享

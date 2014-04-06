@@ -31,11 +31,10 @@ $(document).ready(function(){
     <li>
         <a href="{{question.question_type.get_url}}">{{question.question_type.name}}</a>
     </li>
-    <li class="active">{{question.title|str_display:10}}</li>
+    <li class="active">{{question.title|str_display:8}}</li>
 </ol>
 <div class="question-entry">
-    <div class="topic pb-15 pl-15 pr-15">
-
+    <div class="topic pl-15 pr-15">
         <div class="topic-title">
             <h4 class="f22"> <strong>{{question.title}}</strong>
             </h4>
@@ -47,7 +46,17 @@ $(document).ready(function(){
             </ul>
         </div>
         <div class="topic-footer row">
-            <div class="col-md-3">
+            <div class="text-right gray-a pb-10 f12 col-md-12">
+                
+                <a class="question-share-qq" href="javascript: void(0);">
+                    分享到QQ
+                </a>
+                <a class="question-share-sina" href="javascript: void(0);">
+                    分享到微博
+                </a>
+                <span class="pl-15 question-date hidden-xs">{{question.create_time}}</span>
+            </div>
+            <div class="col-md-3 col-xs-12">
                 {% if not question.is_hide_user %}
                 <!-- <a class="no-hover-unl" href="{{question.user.get_url}}">
                     <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar_25}}" title="{{question.user.nick}}" />
@@ -55,10 +64,12 @@ $(document).ready(function(){
                 <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
                     <span class="f12">{{question.user.nick}}</span>
                 </a>
+                <span class="question-date pull-right visible-xs">{{question.create_time}}</span>
                 {% endif %}
             </div>
-            <div class="col-md-9 text-right">
-                <span class="question-tools gray-a">
+            <div class="col-md-9 col-xs-12 text-right">
+                
+                <span class="question-tools f12 gray-a">
                     {% if request.user.is_staff %}
                     {% if not question.is_important %}
                     <a id="set_important_a_id" href="javascript: void(0);" 
@@ -83,23 +94,19 @@ $(document).ready(function(){
                         删除
                     </a>
                     {% endif %}
-                    <a class="question-share-qq" href="javascript: void(0);">
-                        分享到QQ
-                    </a>
-                    <a class="question-share-sina" href="javascript: void(0);">
-                        分享到微博
-                    </a>
-                    <a class="invite hide" href="javascript: void(0);">
+                    
+                    <a class="invite" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-transfer"></span>
                         邀请回答
                     </a>
                     
 
                 </span>
-                <span class="question-date">{{question.create_time}}</span>
+                
             </div>
+            
         </div>
-        <div class="topic-invite panel panel-default auto-hide hide">
+        <div class="topic-invite panel panel-default auto-hide">
             <span class="arrow-out"></span>
             <span class="arrow-in"></span>
             <div class="panel-body row">
@@ -111,17 +118,53 @@ $(document).ready(function(){
                 </div>
                 <div class="recommend-invite col-md-12">
                     <ul class="list-flow">
-                        <li class="invite-item">
-                            <div class="col-md-2">
-                                <img class="avatar-35 avatar-circle" src="/static/img/common/user3.jpg"></div>
-                            <div class="col-md-10 invite-person-info">
-                                <div class="name blue-a">
+                        <li class="invite-item col-md-6 col-xs-12">
+                            <div class="invite-person-info">
+                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user3.jpg">
+                                <div class="name blue-a pl-40">
                                     <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">半夜没事瞎溜达</a>
                                     <span>
                                         <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
                                     </span>
                                 </div>
-                                <div class="des">漫漫人生路，谁不错几步</div>
+                                <div class="des pl-40">漫漫人生路，谁不错几步</div>
+                            </div>
+                        </li>
+                        <li class="invite-item col-md-6 col-xs-12">
+                            <div class="invite-person-info">
+                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user1.jpg">
+                                <div class="name blue-a pl-40">
+                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">章佳杰</a>
+                                    <span>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
+                                    </span>
+                                </div>
+                                <div class="des pl-40">我多年攒下的这一屋子的切糕给你了</div>
+                            </div>
+                        </li>
+                        <li class="invite-item col-md-6 col-xs-12">
+                            <div class="invite-person-info">
+                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user2.jpg">
+                                <div class="name blue-a pl-40">
+                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">祁圆圆</a>
+                                    <span>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
+                                    </span>
+                                </div>
+                                <div class="des pl-40">一只垂耳兔，正被一只大型犬圈养。</div>
+                            </div>
+                        </li>
+                        <li class="invite-item col-md-6 col-xs-12">
+                           
+                            <div class="invite-person-info">
+                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user4.png">
+                                <div class="name blue-a pl-40">
+                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">喵星人</a>
+                                    <span>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right">邀请回答</button>
+                                    </span>
+                                </div>
+                                <div class="des pl-40">注册会计师,现任职某上市公司</div>
                             </div>
                         </li>
                     </ul>

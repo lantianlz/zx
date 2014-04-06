@@ -250,7 +250,7 @@ def get_topic_info_by_id(request):
             'flag': '0',
             'id': 'e0f87ed0712b11e3b894000c290d194c',
             'name': '大盘走势',
-            'avatar': '/static/img/common/default-topic.jpg',
+            'avatar': '/static/img/common/topic0.jpg',
             'desc': '大盘：是指沪市的“上证综合指数”和深市的“深证成份股指数”的股票。大盘指数是运用统计学中的指数方法编制而成的，反映股市总体价格或某类股价变动和走势的指标。',
             'question_count': 52642,
             'follow_count': 2563,

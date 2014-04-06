@@ -61,6 +61,27 @@ function addZero(data){
         return target.replace(/&[^;].*?;/g, '');
     }
 
+    /*
+        屏幕宽度小于 768 归于手机
+    */
+    $.ZXUtils.isPhone = function(){
+        return ($(window).width() < 768) ? true : false;
+    }
+
+    /*
+        屏幕宽度 大于768 而 小于992 归于平板
+    */
+    $.ZXUtils.isPad = function(){
+        return (768 <= $(window).width() && $(window).width() < 992) ? true : false;
+    }
+
+    /*
+        屏幕宽度大于 992 归于桌面
+    */
+    $.ZXUtils.isDesktop= function(){
+        return (992 <= $(window).width()) ? true : false;
+    }
+
     // 设置文本框光标位置
     $.fn.setSelection = function(selectionStart, selectionEnd) {
         if(this.length == 0){
@@ -222,7 +243,7 @@ function addZero(data){
         });
 
         // 显示confirm框
-        $('#confirm_modal').modal('show');
+        $('#confirm_modal').modal({'show': true, 'backdrop': 'static'});
 
     };
 
@@ -245,15 +266,15 @@ function addZero(data){
                                 '</div>',
                                 '<div class="modal-body pb-0">',
                                     '<div class="form-group">',
-                                        '<label class="col-sm-3 control-label">发送给</label>',
-                                        '<div class="col-sm-9">',
+                                        '<label class="col-xs-3 control-label">发送给</label>',
+                                        '<div class="col-xs-9">',
                                             '<label id="receiver_label" class="control-label"></label>',
                                             '<input type="hidden" name="receiver">',
                                         '</div>',
                                     '</div>',
                                     '<div class="form-group">',
-                                        '<label class="col-sm-3 control-label">消息内容</label>',
-                                        '<div class="col-sm-9">',
+                                        '<label class="col-xs-3 control-label">消息</label>',
+                                        '<div class="col-xs-9">',
                                             '<textarea rows="4" name="message" class="form-control" placeholder="请输入消息内容" value=""></textarea>',
                                         '</div>',
                                     '</div>',
@@ -288,7 +309,7 @@ function addZero(data){
         $('#private_message_modal #receiver_label').html(userName);
 
         // 显示
-        $('#private_message_modal').modal('show');
+        $('#private_message_modal').modal({'show': true, 'backdrop': 'static'});
 
     };
 
@@ -345,7 +366,7 @@ function addZero(data){
         }
 
         // 显示
-        $('#feedback_modal').modal('show');
+        $('#feedback_modal').modal({'show': true, 'backdrop': 'static'});
 
     };
 
@@ -472,37 +493,43 @@ function addZero(data){
     selector: textarea的选择器
 */
 function createEditor(selector){
+    // 如果是手机端则直接使用html的textarea
+    if($.ZXUtils.isPhone()){
+        return $(selector);
+    } else {
+        return KindEditor.create(selector, {
+            resizeType : 1,
+            width: '100%',
+            //autoHeightMode : true,
+            allowPreviewEmoticons : false,
+            allowImageUpload : true,
+            allowImageRemote: true,
+            // basePath: '/',
+            uploadJson: '/save_img',
+            pasteType : 1,
+            cssData: 'body{font-family: "Helvetica Neue",Helvetica,"Lucida Grande","Luxi Sans",Arial,"Hiragino Sans GB",STHeiti,"Microsoft YaHei","Wenquanyi Micro Hei","WenQuanYi Micro Hei Mono","WenQuanYi Zen Hei","WenQuanYi Zen Hei Mono",LiGothicMed; font-size: 14px; color: #222;}',
+            themesPath: MEDIA_URL + "css/kindeditor/themes/",
+            pluginsPath: MEDIA_URL + "js/kindeditor/plugins/",
+            langPath: MEDIA_URL + "js/kindeditor/",
+            items : [
+                'bold', 'italic', 'underline', 'removeformat', '|', 
+                'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', '|', 
+                'image', 'link', '|', 
+                'fullscreen'
+            ],
+            afterCreate : function() { 
+                //this.loadPlugin('autoheight');
+                this.sync(); 
+            }, 
+            afterBlur:function(){ 
+                this.sync(); 
+            },
+            afterUpload : function(url) {
+            }
+        });
+    }
 
-    return KindEditor.create(selector, {
-        resizeType : 1,
-        width: '100%',
-        //autoHeightMode : true,
-        allowPreviewEmoticons : false,
-        allowImageUpload : true,
-        allowImageRemote: true,
-        // basePath: '/',
-        uploadJson: '/save_img',
-        pasteType : 1,
-        cssData: 'body{font-family: "Helvetica Neue",Helvetica,"Lucida Grande","Luxi Sans",Arial,"Hiragino Sans GB",STHeiti,"Microsoft YaHei","Wenquanyi Micro Hei","WenQuanYi Micro Hei Mono","WenQuanYi Zen Hei","WenQuanYi Zen Hei Mono",LiGothicMed; font-size: 14px; color: #222;}',
-        themesPath: MEDIA_URL + "css/kindeditor/themes/",
-        pluginsPath: MEDIA_URL + "js/kindeditor/plugins/",
-        langPath: MEDIA_URL + "js/kindeditor/",
-        items : [
-            'bold', 'italic', 'underline', 'removeformat', '|', 
-            'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', '|', 
-            'image', 'link', '|', 
-            'fullscreen'
-        ],
-        afterCreate : function() { 
-            //this.loadPlugin('autoheight');
-			this.sync(); 
-        }, 
-        afterBlur:function(){ 
-			this.sync(); 
-        },
-        afterUpload : function(url) {
-        }
-    });
+    
 }
 
 /*
@@ -622,64 +649,67 @@ $(document).ready(function(){
             '</div>',
         '</div>'
     ].join('');
-    $('.zx-cardtips').tooltipster({
-        animation: 'fade',
-        delay: 200,
-        trigger: 'hover',
-        theme: 'tooltipster-shadow',
-        interactive: true,
-        interactiveTolerance: 300,
-        autoClose: true,
-        //content: cardtipsHtml,
-        contentAsHTML: true,
-        content: '名片加载中...',
-        functionBefore: function(origin, continueTooltip) {
+    // 除了手机其他设备都设置弹出名片
+    if(!$.ZXUtils.isPhone()){
+        $('.zx-cardtips').tooltipster({
+            animation: 'fade',
+            delay: 200,
+            trigger: 'hover',
+            theme: 'tooltipster-shadow',
+            interactive: true,
+            interactiveTolerance: 300,
+            autoClose: true,
+            //content: cardtipsHtml,
+            contentAsHTML: true,
+            content: '名片加载中...',
+            functionBefore: function(origin, continueTooltip) {
 
-            // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
-            continueTooltip();
-            
-            // next, we want to check if our data has already been cached
-            if (origin.data('ajax') !== 'cached') {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    url: '/account/get_user_info_by_id?user_id=' + origin.data('user_id'),
-                    success: function(data) {
-                        if(data.flag=='0'){
-                            origin.tooltipster('content', String.format(
-                                cardtipsHtml, 
-                                data.avatar,
-                                data.name, 
-                                data.question_count,
-                                data.answer_count,
-                                data.like_count,
-                                data.desc,
-                                data.name,
-                                data.id,
-                                data.is_follow?'hide':'', // 关注按钮
-                                data.is_follow?'':'hide', //取消关注按钮
-                                data.id,
-                                // 拼装话题
-                                $(data.topics).map(function(){
-                                    return  String.format(
-                                        '<a class="border-block-blue ml-5 pl-5 pr-5" href="question/topic/{0}">{1}</a>', 
-                                        this['topic_id'], 
-                                        this['topic_name']
-                                    )
-                                }).get().join('')
-                            )).data('ajax', 'cached');
-                        } else {
-                            origin.tooltipster('content', '加载名片失败');
+                // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+                continueTooltip();
+                
+                // next, we want to check if our data has already been cached
+                if (origin.data('ajax') !== 'cached') {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/account/get_user_info_by_id?user_id=' + origin.data('user_id'),
+                        success: function(data) {
+                            if(data.flag=='0'){
+                                origin.tooltipster('content', String.format(
+                                    cardtipsHtml, 
+                                    data.avatar,
+                                    data.name, 
+                                    data.question_count,
+                                    data.answer_count,
+                                    data.like_count,
+                                    data.desc,
+                                    data.name,
+                                    data.id,
+                                    data.is_follow?'hide':'', // 关注按钮
+                                    data.is_follow?'':'hide', //取消关注按钮
+                                    data.id,
+                                    // 拼装话题
+                                    $(data.topics).map(function(){
+                                        return  String.format(
+                                            '<a class="border-block-blue ml-5 pl-5 pr-5" href="question/topic/{0}">{1}</a>', 
+                                            this['topic_id'], 
+                                            this['topic_name']
+                                        )
+                                    }).get().join('')
+                                )).data('ajax', 'cached');
+                            } else {
+                                origin.tooltipster('content', '加载名片失败');
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
-        }
-    });
-    // 从名片上点击发私信事件 
-    $('.cardtips .send-message').live('click', function(){
-        $.ZXMsg.sendPrivateMsg($(this).data('user_id'), $(this).data('user_name'));
-    });
+        });
+        // 从名片上点击发私信事件 
+        $('.cardtips .send-message').live('click', function(){
+            $.ZXMsg.sendPrivateMsg($(this).data('user_id'), $(this).data('user_name'));
+        });
+    }
 
     // 弹出话题名片设置
     var topictipsHtml = [
@@ -703,48 +733,51 @@ $(document).ready(function(){
             '</div>',
         '</div>'
     ].join('');
-    $('.zx-topictips').tooltipster({
-        animation: 'fade',
-        delay: 200,
-        trigger: 'hover',
-        theme: 'tooltipster-shadow',
-        interactive: true,
-        interactiveTolerance: 300,
-        autoClose: true,
-        //content: topictipsHtml,
-        contentAsHTML: true,
-        content: '信息加载中...',
-        functionBefore: function(origin, continueTooltip) {
+    // 除了手机其他设备都设置弹出名片
+    if(!$.ZXUtils.isPhone()){
+        $('.zx-topictips').tooltipster({
+            animation: 'fade',
+            delay: 200,
+            trigger: 'hover',
+            theme: 'tooltipster-shadow',
+            interactive: true,
+            interactiveTolerance: 300,
+            autoClose: true,
+            //content: topictipsHtml,
+            contentAsHTML: true,
+            content: '信息加载中...',
+            functionBefore: function(origin, continueTooltip) {
 
-            // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
-            continueTooltip();
-            
-            // next, we want to check if our data has already been cached
-            if (origin.data('ajax') !== 'cached') {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    url: '/question/get_topic_info_by_id?topic_id=' + origin.data('topic_id'),
-                    success: function(data) {
-                        if(data.flag=='0'){
-                            origin.tooltipster('content', String.format(
-                                topictipsHtml, 
-                                data.avatar,
-                                data.name, 
-                                data.follow_count,
-                                data.question_count,
-                                data.desc,
-                                data.is_follow?'hide':'', // 关注按钮
-                                data.is_follow?'':'hide' //取消关注按钮
-                            )).data('ajax', 'cached');
-                        } else {
-                            origin.tooltipster('content', '加载名片失败');
+                // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+                continueTooltip();
+                
+                // next, we want to check if our data has already been cached
+                if (origin.data('ajax') !== 'cached') {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/question/get_topic_info_by_id?topic_id=' + origin.data('topic_id'),
+                        success: function(data) {
+                            if(data.flag=='0'){
+                                origin.tooltipster('content', String.format(
+                                    topictipsHtml, 
+                                    data.avatar,
+                                    data.name, 
+                                    data.follow_count,
+                                    data.question_count,
+                                    data.desc,
+                                    data.is_follow?'hide':'', // 关注按钮
+                                    data.is_follow?'':'hide' //取消关注按钮
+                                )).data('ajax', 'cached');
+                            } else {
+                                origin.tooltipster('content', '加载名片失败');
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 
 
 

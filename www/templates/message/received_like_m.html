@@ -1,32 +1,31 @@
 {% extends "message/base_message.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}提到我的回答{% endblock %}
+{% block title %}收到的回答{% endblock %}
+
 {% block javascript %}
 {% endblock %}
 
 {% block message_main %}
-{% if answers %}
+{% if likes %}
 <ul class="message-list list-group only-top-border">
-	{% for answer in answers %}
+	{% for like in likes %}
 	<li class="list-group-item">
 		<div class="message-item row">
 			<div class="col-md-1 col-xs-3">
-				<a href="{{answer.from_user.get_url}}">
-					<img class="avatar" src="{{answer.from_user.get_avatar}}">
-				</a>
+				<a href="{{like.from_user.get_url}}">
+					<img class="avatar" src="{{like.from_user.get_avatar}}"></a>
 			</div>
 			<div class="col-md-9 col-xs-9">
 				<div class="from">
-					<a href="/n/{{answer.from_user.nick}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
+					<a href="/n/{{like.from_user.nick}}" class="zx-cardtips" data-user_id="{{like.from_user.id}}">{{like.from_user.nick}}</a>
 				</div>
-				<div class="f14 pb-10">{{answer.get_summary|safe}}</div>
                 <div class="content f12"> 
-                    在提问 <a href="{{answer.question.get_url}}">{{answer.question.title|str_display:30}}</a> 中@了我
+                    赞了我的回答 <a href="{{like.question.get_url}}">{{like.question.title|safe}}</a>
                 </div>
 			</div>
 			<div class="col-md-2">
-				<div class="date text-right co8">{{answer.create_time|time_format}}</div>
+				<div class="date text-right co8">{{like.create_time|time_format}}</div>
 				<div class="text-right hide">
 					<a href="#" class="delete">删除</a>
 					<input type="checkbox"></div>

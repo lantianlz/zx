@@ -27,7 +27,7 @@ def show_index(request):
         # return HttpResponseRedirect('/login')
 
 
-def login(request, template_name='account/login_bg.html'):
+def login(request, template_name='account/login.html'):
     email = request.POST.get('email', '').strip()
     password = request.POST.get('password', '').strip()
 

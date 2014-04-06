@@ -116,25 +116,35 @@ $(document).ready(function(){
 
     // 回复某人事件
     $('.answer-say-to').bind('click', function(){
-        /*
-        $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ");
-        $('.answer-main .zx-textarea').focusEnd();
-        */
-        
-        // 滚动到输入框的位置框
-        $('html,body').animate({
-            scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0)
-        });
-        answerEditor.focus();
-        answerEditor.html('');
-        answerEditor.appendHtml("<span>@" + $(this).data('user_name') + " </span>");
+        // 如果是手机端
+        if($('.answer-main .ke-container').length == 0){
+            $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ");
+            $('.answer-main .zx-textarea').focusEnd();
+        } else {
+            // 滚动到输入框的位置框
+            $('html,body').animate({
+                scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0) - parseInt($('.container_content').css('margin-top')) - 5
+            });
+            answerEditor.focus();
+            answerEditor.html('');
+            answerEditor.appendHtml("<span>@" + $(this).data('user_name') + " </span>");
+        }
     });
   
 
     // 修改回答事件
     $('.answer-edit').bind('click', function(){
         $('#edit_answer_modal').modal({'show': true, 'backdrop': 'static'});
-        editAnswerEditor.html($(this).parents('li').eq(0).find('.reply-content').html());
+
+        var temp = $(this).parents('li').eq(0).find('.reply-content').html();
+        // 如果是手机端
+        if($('#edit_answer_modal .ke-container').length == 0){
+            // 去掉html标签
+            temp = $.ZXUtils.clearHtmlTags(temp);
+        } 
+
+        editAnswerEditor.html(temp);
+
         $('#edit_answer_modal .edit-answer-id').val($(this).data('answer_id'));
     });
 
@@ -215,7 +225,11 @@ $(document).ready(function(){
     
     // 问题详情页面 的 问题内容
     if(QUESTION_CONTENT && questionEditor){
-        questionEditor.html(QUESTION_CONTENT);
+        var temp = QUESTION_CONTENT;
+        if($('#question_editor .ke-container').length == 0){
+            temp = $.ZXUtils.clearHtmlTags(temp);
+        }
+        questionEditor.html(temp);
     }
 
     // 问题详情页的回答内容

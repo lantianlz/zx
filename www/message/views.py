@@ -34,7 +34,7 @@ def system_message(request, template_name='message/system_message.html'):
 
 
 @member_required
-def received_like(request, template_name='message/received_like.html'):
+def received_like(request, template_name='message/received_like_m.html'):
 
     likes = lb.get_to_user_likes(request.user.id)
 
