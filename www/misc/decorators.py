@@ -22,7 +22,10 @@ def member_required(func):
             if request.is_ajax():
                 return HttpResponse('need_login')
             else:
-                url = urllib.quote_plus(request.get_full_path())
+                try:
+                    url = urllib.quote_plus(request.get_full_path())
+                except:
+                    url = '/'
                 return HttpResponseRedirect("/login?next_url=%s" % url)
 
         return func(request, *args, **kwargs)

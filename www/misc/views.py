@@ -82,10 +82,10 @@ def crop_img(request):
     if all((_verfiy_int(x, [0, 300]), _verfiy_int(y, [0, 300]), _verfiy_int(w, [25, 300]), _verfiy_int(h, [25, 300]))):
         img_name_original = request.user.avatar.rsplit('/', 1)[1]
         # 剪切不支持缩略图，修改成重新获取一次图片
-        flag, img_name_300 = qiniu_client.upload_img(urllib.urlopen(request.user.get_avatar_300()))
+        flag, img_name_450 = qiniu_client.upload_img(urllib.urlopen(request.user.get_avatar_450()))
         if flag:
             # 拼接给七牛的参数
-            post_url = '%s/%s?imageMogr2/crop/!%sx%sa%sa%s' % (settings.IMG0_DOMAIN, img_name_300, w, h, x, y)
+            post_url = '%s/%s?imageMogr2/crop/!%sx%sa%sa%s' % (settings.IMG0_DOMAIN, img_name_450, w, h, x, y)
 
             # 上传图片
             flag, img_name = qiniu_client.upload_img(urllib.urlopen(post_url), img_type='newest_avatar')
@@ -98,7 +98,7 @@ def crop_img(request):
                 result = dict(flag='0', result=u'ok')
 
                 # 删除多余的两张图片节省空间
-                qiniu_client.batch_delete([img_name_original, img_name_300])
+                qiniu_client.batch_delete([img_name_original, img_name_450])
             else:
                 result = dict(flag='-1', result=u'剪裁失败, 请稍后重试')
 

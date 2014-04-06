@@ -1,0 +1,530 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<head>
+  <meta property="wb:webmaster" content="a8250d32b814c352" />
+  <meta property="qc:admins" content="354154737762010516637570755" />
+  <meta charset="utf-8" />
+  <title>后台数据加载中 - 智选网</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="simplejoy" />
+  <meta name="keywords" content="股票问答 智选网" />
+  <meta name="description" content="智选网" />
+  <link rel="shortcut icon" href="{{MEDIA_URL}}/img/common/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/base.css" />
+  <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site.css" />
+  <style>
+#spinner-wrapper {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  margin: 5% auto;
+}
+#spinner {
+  width: 200px;
+  height: 200px;
+  background: #428bca;
+  background: transparent\9;
+  -webkit-animation: spin 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -moz-animation: spin 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -o-animation: spin 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -ms-animation: spin 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  animation: spin 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+}
+#spinner::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  -webkit-animation: spin-child1 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -moz-animation: spin-child1 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -o-animation: spin-child1 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -ms-animation: spin-child1 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  animation: spin-child1 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+}
+#spinner::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  -webkit-animation: spin-child2 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -moz-animation: spin-child2 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -o-animation: spin-child2 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  -ms-animation: spin-child2 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+  animation: spin-child2 8s cubic-bezier(0.8, 0.2, 0.4, 0.8) infinite;
+}
+@-moz-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(720deg) scale(0.7);
+    -moz-transform: rotate(720deg) scale(0.7);
+    -o-transform: rotate(720deg) scale(0.7);
+    -ms-transform: rotate(720deg) scale(0.7);
+    transform: rotate(720deg) scale(0.7);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+
+  100% {
+    -webkit-transform: rotate(1440deg) scale(1);
+    -moz-transform: rotate(1440deg) scale(1);
+    -o-transform: rotate(1440deg) scale(1);
+    -ms-transform: rotate(1440deg) scale(1);
+    transform: rotate(1440deg) scale(1);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(720deg) scale(0.7);
+    -moz-transform: rotate(720deg) scale(0.7);
+    -o-transform: rotate(720deg) scale(0.7);
+    -ms-transform: rotate(720deg) scale(0.7);
+    transform: rotate(720deg) scale(0.7);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+
+  100% {
+    -webkit-transform: rotate(1440deg) scale(1);
+    -moz-transform: rotate(1440deg) scale(1);
+    -o-transform: rotate(1440deg) scale(1);
+    -ms-transform: rotate(1440deg) scale(1);
+    transform: rotate(1440deg) scale(1);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(720deg) scale(0.7);
+    -moz-transform: rotate(720deg) scale(0.7);
+    -o-transform: rotate(720deg) scale(0.7);
+    -ms-transform: rotate(720deg) scale(0.7);
+    transform: rotate(720deg) scale(0.7);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+
+  100% {
+    -webkit-transform: rotate(1440deg) scale(1);
+    -moz-transform: rotate(1440deg) scale(1);
+    -o-transform: rotate(1440deg) scale(1);
+    -ms-transform: rotate(1440deg) scale(1);
+    transform: rotate(1440deg) scale(1);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(720deg) scale(0.7);
+    -moz-transform: rotate(720deg) scale(0.7);
+    -o-transform: rotate(720deg) scale(0.7);
+    -ms-transform: rotate(720deg) scale(0.7);
+    transform: rotate(720deg) scale(0.7);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+
+  100% {
+    -webkit-transform: rotate(1440deg) scale(1);
+    -moz-transform: rotate(1440deg) scale(1);
+    -o-transform: rotate(1440deg) scale(1);
+    -ms-transform: rotate(1440deg) scale(1);
+    transform: rotate(1440deg) scale(1);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(720deg) scale(0.7);
+    -moz-transform: rotate(720deg) scale(0.7);
+    -o-transform: rotate(720deg) scale(0.7);
+    -ms-transform: rotate(720deg) scale(0.7);
+    transform: rotate(720deg) scale(0.7);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+
+  100% {
+    -webkit-transform: rotate(1440deg) scale(1);
+    -moz-transform: rotate(1440deg) scale(1);
+    -o-transform: rotate(1440deg) scale(1);
+    -ms-transform: rotate(1440deg) scale(1);
+    transform: rotate(1440deg) scale(1);
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+  }
+}
+@-moz-keyframes spin-child1 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-transform: rotate(-1000deg) scale(1);
+    -moz-transform: rotate(-1000deg) scale(1);
+    -o-transform: rotate(-1000deg) scale(1);
+    -ms-transform: rotate(-1000deg) scale(1);
+    transform: rotate(-1000deg) scale(1);
+  }
+}
+@-webkit-keyframes spin-child1 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-transform: rotate(-1000deg) scale(1);
+    -moz-transform: rotate(-1000deg) scale(1);
+    -o-transform: rotate(-1000deg) scale(1);
+    -ms-transform: rotate(-1000deg) scale(1);
+    transform: rotate(-1000deg) scale(1);
+  }
+}
+@-o-keyframes spin-child1 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-transform: rotate(-1000deg) scale(1);
+    -moz-transform: rotate(-1000deg) scale(1);
+    -o-transform: rotate(-1000deg) scale(1);
+    -ms-transform: rotate(-1000deg) scale(1);
+    transform: rotate(-1000deg) scale(1);
+  }
+}
+@-ms-keyframes spin-child1 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-transform: rotate(-1000deg) scale(1);
+    -moz-transform: rotate(-1000deg) scale(1);
+    -o-transform: rotate(-1000deg) scale(1);
+    -ms-transform: rotate(-1000deg) scale(1);
+    transform: rotate(-1000deg) scale(1);
+  }
+}
+@keyframes spin-child1 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1);
+    -moz-transform: rotate(0deg) scale(1);
+    -o-transform: rotate(0deg) scale(1);
+    -ms-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-transform: rotate(-1000deg) scale(1);
+    -moz-transform: rotate(-1000deg) scale(1);
+    -o-transform: rotate(-1000deg) scale(1);
+    -ms-transform: rotate(-1000deg) scale(1);
+    transform: rotate(-1000deg) scale(1);
+  }
+}
+@-moz-keyframes spin-child2 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(0.5);
+    -moz-transform: rotate(0deg) scale(0.5);
+    -o-transform: rotate(0deg) scale(0.5);
+    -ms-transform: rotate(0deg) scale(0.5);
+    transform: rotate(0deg) scale(0.5);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 0%;
+    border-radius: 0%;
+    -webkit-transform: rotate(1400deg) scale(0.5);
+    -moz-transform: rotate(1400deg) scale(0.5);
+    -o-transform: rotate(1400deg) scale(0.5);
+    -ms-transform: rotate(1400deg) scale(0.5);
+    transform: rotate(1400deg) scale(0.5);
+  }
+}
+@-webkit-keyframes spin-child2 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(0.5);
+    -moz-transform: rotate(0deg) scale(0.5);
+    -o-transform: rotate(0deg) scale(0.5);
+    -ms-transform: rotate(0deg) scale(0.5);
+    transform: rotate(0deg) scale(0.5);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 0%;
+    border-radius: 0%;
+    -webkit-transform: rotate(1400deg) scale(0.5);
+    -moz-transform: rotate(1400deg) scale(0.5);
+    -o-transform: rotate(1400deg) scale(0.5);
+    -ms-transform: rotate(1400deg) scale(0.5);
+    transform: rotate(1400deg) scale(0.5);
+  }
+}
+@-o-keyframes spin-child2 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(0.5);
+    -moz-transform: rotate(0deg) scale(0.5);
+    -o-transform: rotate(0deg) scale(0.5);
+    -ms-transform: rotate(0deg) scale(0.5);
+    transform: rotate(0deg) scale(0.5);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 0%;
+    border-radius: 0%;
+    -webkit-transform: rotate(1400deg) scale(0.5);
+    -moz-transform: rotate(1400deg) scale(0.5);
+    -o-transform: rotate(1400deg) scale(0.5);
+    -ms-transform: rotate(1400deg) scale(0.5);
+    transform: rotate(1400deg) scale(0.5);
+  }
+}
+@-ms-keyframes spin-child2 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(0.5);
+    -moz-transform: rotate(0deg) scale(0.5);
+    -o-transform: rotate(0deg) scale(0.5);
+    -ms-transform: rotate(0deg) scale(0.5);
+    transform: rotate(0deg) scale(0.5);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 0%;
+    border-radius: 0%;
+    -webkit-transform: rotate(1400deg) scale(0.5);
+    -moz-transform: rotate(1400deg) scale(0.5);
+    -o-transform: rotate(1400deg) scale(0.5);
+    -ms-transform: rotate(1400deg) scale(0.5);
+    transform: rotate(1400deg) scale(0.5);
+  }
+}
+@keyframes spin-child2 {
+  0% {
+    -webkit-transform: rotate(0deg) scale(0.5);
+    -moz-transform: rotate(0deg) scale(0.5);
+    -o-transform: rotate(0deg) scale(0.5);
+    -ms-transform: rotate(0deg) scale(0.5);
+    transform: rotate(0deg) scale(0.5);
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  50% {
+    -webkit-transform: rotate(700deg) scale(0.7);
+    -moz-transform: rotate(700deg) scale(0.7);
+    -o-transform: rotate(700deg) scale(0.7);
+    -ms-transform: rotate(700deg) scale(0.7);
+    transform: rotate(700deg) scale(0.7);
+  }
+
+  100% {
+    -webkit-border-radius: 0%;
+    border-radius: 0%;
+    -webkit-transform: rotate(1400deg) scale(0.5);
+    -moz-transform: rotate(1400deg) scale(0.5);
+    -o-transform: rotate(1400deg) scale(0.5);
+    -ms-transform: rotate(1400deg) scale(0.5);
+    transform: rotate(1400deg) scale(0.5);
+  }
+}
+
+.site{
+  position: absolute;
+  top: 90px;
+  left: 77px;
+  text-align: center;
+  font-size: 16px;
+  color: #428bca;
+}
+</style>
+
+  <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery-1.7.min.js"></script>
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/html5shiv.js"></script>
+  <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+  <div id='spinner-wrapper'>
+    <div id='spinner'></div>
+    <div class="site">智选网</div>
+    <div class="mt-35 text-center">请耐心等待,正在很努力加载中</div>
+  </div>
+
+
+  <script type="text/javascript">
+            var MEDIA_URL = '{{ MEDIA_URL|default:'' }}',
+            CURRENT_USER_ID = "{{request.user.id|default:''}}";
+
+            
+        </script>
+  {% include "include/_tongji.html" %}
+</body>
+</html>

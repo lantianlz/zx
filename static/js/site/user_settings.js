@@ -69,7 +69,7 @@ $(document).ready(function(){
 		});
 
 		$('.btn-crop-save').bind('click', function(){
-			//$.ZXMsg.alert('aa', cropInfo.x);
+			
 			g_ajax_processing_obj_id = 'save_img_button_id';
 			ajaxSend(
 				"/crop_img", {

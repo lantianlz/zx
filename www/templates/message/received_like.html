@@ -3,10 +3,61 @@
 {% load custom_filters %}
 {% block title %}收到的赞{% endblock %}
 
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+	$('.like-share-qq').bind('click', function(){
+		/*
+			ajax弹窗会被浏览器阻拦，只能先弹出窗口,然后等待ajax完成之后修改子窗口的url实现
+		*/
+		var me = $(this);
+		newWin = window.open("/s/loading", 'share-win', 'height=600,width=800,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
+
+		g_ajax_processing_obj_id = 'like-share-qq-id';
+		ajaxSend("/message/share_received_like", {}, function(data){
+			if(data['flag'] != "0"){
+				$.ZXMsg.alert('提示', data['result']);
+				newWin.close();
+			} else {
+				var url = window.location.origin + window.location.pathname,
+		            title = me.parents('.like-stats').find('.total').html();
+
+		        newWin.location.href = $.ZXShare.qq(data['result'], '我在智选'+title+', 求超越!', '我在智选'+title+', 求超越!', true);
+			}
+		});
+        
+    });
+
+    $('.like-share-sina').bind('click', function(){
+    	var me = $(this),
+    		newWin = window.open("/s/loading", 'share-win', 'height=600,width=800,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
+
+    	g_ajax_processing_obj_id = 'like-share-sina-id';
+		ajaxSend("/message/share_received_like", {}, function(data){
+			if(data['flag'] != "0"){
+				$.ZXMsg.alert('提示', data['result']);
+				newWin.close();
+			} else {
+				var url = window.location.origin + window.location.pathname,
+		            title = me.parents('.like-stats').find('.total').html();
+
+		        newWin.location.href = $.ZXShare.sinaWeibo(data['result'], '我在智选(www.zhixuan.com)'+title+', 求超越!', data['result'], true);
+			}
+		});
+        
+    });
+</script>
+{% endblock %}
 
 {% block message_main %}
 {% if likes %}
+<div class="like-stats bottom-border bdc-eee ml-10 mr-10 mb-15 pl-25 pb-5">
+	<span class="total">总共收到 <strong class="fi f16">{{likes_count}}</strong> 个赞</span>
+	<span class="pull-right f12 pr-20">
+		分享给我的小伙伴
+		<a id="like-share-qq-id" class="like-share-qq" href="javascript: void(0);" title="分享到腾讯QQ好友">分享到QQ</a>
+		<a id="like-share-sina-id" class="like-share-sina" href="javascript: void(0);" title="分享到新浪微博">分享到微博</a>
+	</span>
+</div>
 <ul class="tml-message-list mt-10">
 	{% for like in likes %}
 	<li class="tml-item">
@@ -15,9 +66,9 @@
 			<span class="time">{{like.create_time|date:'H:i:s'}}</span>
 		</div>
 		<div class="tml-user"><img class="avatar" src="{{like.from_user.get_avatar}}"></div>
-		<div class="tml-content">用户
+		<div class="tml-content">
 			<a href="{{like.from_user.get_url}}">{{like.from_user.nick}}</a>
-			在提问 <a href="{{like.question.get_url}}">{{like.question.title|str_display:30}}</a>
+			在提问 <a href="{{like.question.get_url}}">{{like.question.title|str_display:20}}</a>
 			中赞了你的回答
 		</div>
 	</li>

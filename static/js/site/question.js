@@ -266,13 +266,13 @@ $(document).ready(function(){
     // 分享问题事件
     $('.question-share-qq').bind('click', function(){
         var url = window.location.origin + window.location.pathname,
-            title = $(this).parents('.topic').find('.topic-title').html();
+            title = $(this).parents('.topic').find('.topic-title strong').html();
 
         $.ZXShare.qq(url, title);
     });
     $('.question-share-sina').bind('click', function(){
         var url = window.location.origin + window.location.pathname,
-            title = $(this).parents('.topic').find('.topic-title').html();
+            title = $(this).parents('.topic').find('.topic-title strong').html();
 
         $.ZXShare.sinaWeibo(url, title, '');
     });

@@ -80,6 +80,12 @@ class Profile(models.Model):
         else:
             return '%s/img/common/default.png' % settings.MEDIA_URL
 
+    def get_avatar_600(self):
+        return self.get_avatar(key='600m0')
+
+    def get_avatar_450(self):
+        return self.get_avatar(key='450m0')
+
     def get_avatar_300(self):
         return self.get_avatar(key='300m300')
 
