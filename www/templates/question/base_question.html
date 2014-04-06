@@ -63,7 +63,12 @@
         <div class="panel-body">{% global_hotest_tags %}</div>
     </div>
     {% global_statistic %}
-
+    {% block erweima %}
+    <div class="top-border bdc-eee">
+        <div class="pt-10 text-center co8">关注智选日报</div>
+        <img class="w" src="{{MEDIA_URL}}/img/common/zhixuanribao.jpg">
+    </div>
+    {% endblock erweima %}
 </div>
 <!--右侧主体开始-->
 {% endblock container_content %}
