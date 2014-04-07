@@ -244,7 +244,7 @@ def exec_command(command, timeout=25):
     import time
     import signal
     import shlex
-
+    
     start = datetime.datetime.now()
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while process.poll() is None:
