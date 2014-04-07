@@ -23,7 +23,7 @@ SERVER_DOMAIN = 'zhixuan.com'
 MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
 IMG0_DOMAIN = 'http://img0.zhixuan.com'    # 'http://zimg0.qiniudn.com'
 
-EMAIL_FROM = u'"智选网" <service@zhixuan.com>'
+EMAIL_FROM = u'"智选" <service@zhixuan.com>'
 EMAIL_HOST_USER = 'service@zhixuan.com'
 EMAIL_HOST_PASSWORD = 'zhixuan2013'
 EMAIL_HOST = 'smtp.exmail.qq.com'
