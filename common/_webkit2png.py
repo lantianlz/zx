@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/opt/python2.7.2/bin/python2.7
 #
 # webkit2png.py
 #
