@@ -257,9 +257,9 @@ def exec_command(command, timeout=25):
     return True, process.stdout.readlines()
 
 
-# def exec_command(command, timeout=25):
-#     import commands
-#     content = commands.getoutput(command)
-#     print command
-#     print content
-#     return True, content
+def exec_command(command, timeout=25):
+    import commands
+    content = commands.getoutput(command)
+    print command
+    print content
+    return True, content
