@@ -156,6 +156,7 @@ def share_received_like(request):
         #cmd = 'python %s/common/_webkit2png.py -x 1366 768 -g 1366 0 -o %s %s' % (os.path.dirname(settings.SITE_ROOT), file_name, url)
         cmd = '/usr/bin/xvfb-run --auto-servernum --server-num 0 --server-args="-screen 0, 1366x768x24" %s/common/_webkit2png.py -g 1366 0 -o %s %s' % (os.path.dirname(settings.SITE_ROOT), file_name, url)
         flag, msg = utils.exec_command(cmd, 20)
+        logging.error(u'cmd is:\n%s\n msg is:%s' % (cmd, msg))
         if not flag:
             result = {'flag': -1, 'result': u'服务器响应超时, 请重试'}
         else:
