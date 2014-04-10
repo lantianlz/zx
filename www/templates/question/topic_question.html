@@ -23,6 +23,9 @@
     
     <!--列表开始-->
     <ul class="list-group" id="ul_question_list">
+        {% for question in questions %}
+            {% include "question/_question_li_display.html" %}
+        {% endfor %}
         <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
             <div class="item-container pt-10 pb-10">
                 <div class="item-question-title">

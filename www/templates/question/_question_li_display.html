@@ -1,0 +1,27 @@
+{% load custom_tags %}
+{% load custom_filters %}
+<li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
+    <div class="item-container">
+        <div class="item-question-title">
+            <a class="black-blue f16" href="{{question.get_url}}">
+                <strong>{{question.title|str_display:30}}</strong>
+            </a>
+        </div>
+        <div class="item-question-content f13 w mt-10">{{question.get_summary|safe}}</div>
+        <div class="item-question-tags"></div>
+        <div class="item-question-profile">
+            {% if not question.is_hide_user %}
+            <a class="no-hover-unl" href="{{question.user.get_url}}">
+                <img class="avatar-25 avatar-circle" src="{{question.user.get_avatar_25}}" title="{{question.user.nick}}" />
+            </a>
+            <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
+                <span class="f12">{{question.user.nick}}</span>
+            </a>
+            {% endif %}
+            <span class="statistic co8" {% if question.is_hide_user %}style="margin-left:0;"{% endif %}>
+                {{question.answer_count}} 个回答 • {{question.views_count}} 次浏览 • {{question.create_time|time_format}}
+            </span>
+            
+        </div>
+    </div>
+</li>

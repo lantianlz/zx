@@ -1,0 +1,40 @@
+{% extends "base/base_home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block title %}首页{% endblock title %}
+{% block home_css %}
+<style type="text/css">
+.hot-topics{
+	border-top: 0;
+}
+</style>
+{% endblock %}
+
+{% block home_js %}
+
+{% endblock %}
+{% block container_content %}
+<div class="col-md-8">
+	<div class="bottom-border bdc-bbb row pt-10">
+	    <div class="col-md-6">
+	        <span class="f16 fb">最新动态</span>
+	    </div>
+	</div>
+</div>
+
+<div class="col-md-4 pl-50">
+	<!-- 推荐用户 -->
+    {#% global_recommend_users %#}
+
+    <!-- 热门话题 -->
+    {% global_hot_topics %}
+
+    <!-- 二维码 -->
+    {% global_QRcode %}
+
+    <!-- 统计 -->
+    {% global_statistic %}
+    
+</div>
+{% endblock container_content %}

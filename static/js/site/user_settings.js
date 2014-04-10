@@ -19,6 +19,7 @@ $(document).ready(function(){
 
 	// 选择完文件之后自动提交
 	$('.avatar-file').bind('change', function(){
+		$.ZXMsg.alert('提示', '图片上传中,请稍后...');
 		$('.avatar-file').parents('form').submit();
 	});
 

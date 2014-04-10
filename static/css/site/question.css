@@ -79,11 +79,6 @@
     border-left: 0;
 }
 
-.statistics .title{
-    border-bottom: solid 1px #ddd;
-    padding: 5px;
-}
-
 .statistics .main .col-md-4{
     padding-top: 5px;
 }

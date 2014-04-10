@@ -836,7 +836,7 @@ $(document).ready(function(){
                 dropdownTimeout = window.setTimeout(function(){
                     $(".login-user .dropdown").removeClass('open');
                     dropdownTimeout = null;
-                }, 1000)
+                }, 500)
             }
            };
     
