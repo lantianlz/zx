@@ -10,7 +10,7 @@
 			ajax弹窗会被浏览器阻拦，只能先弹出窗口,然后等待ajax完成之后修改子窗口的url实现
 		*/
 		var me = $(this);
-		newWin = window.open("/s/loading", 'share-win', 'height=600,width=800,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
+		newWin = window.open("/s/loading", '_blank', 'height=600,width=800,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
 
 		g_ajax_processing_obj_id = 'like-share-qq-id';
 		ajaxSend("/message/share_received_like", {}, function(data){
@@ -29,7 +29,7 @@
 
     $('.like-share-sina').bind('click', function(){
     	var me = $(this),
-    		newWin = window.open("/s/loading", 'share-win', 'height=600,width=800,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
+    		newWin = window.open("/s/loading", '_blank', 'height=600,width=800,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
 
     	g_ajax_processing_obj_id = 'like-share-sina-id';
 		ajaxSend("/message/share_received_like", {}, function(data){
