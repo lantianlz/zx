@@ -19,9 +19,9 @@ ib = interface.InvitationBase()
 
 def show_index(request):
     if request.user.is_authenticated():
-        #from www.question.views import question_home
-        #return question_home(request)
-        return render_to_response('base/index.html', locals(), context_instance=RequestContext(request))
+        from www.question.views import question_home
+        return question_home(request)
+        #return render_to_response('base/index.html', locals(), context_instance=RequestContext(request))
     else:
         return login(request)
         # return HttpResponseRedirect('/login')
