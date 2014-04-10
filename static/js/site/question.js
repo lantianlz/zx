@@ -118,7 +118,7 @@ $(document).ready(function(){
     $('.collapse-answer').bind('click', function(){
         var target = $('.replies li.auto-hide');
 
-        target.eq(0).css('display') === 'block' ? target.hide('fast') : target.show('fast'); 
+        target.eq(0).css('display') === 'none' ? target.show('fast') : target.hide('fast'); 
     });
 
 

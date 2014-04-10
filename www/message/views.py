@@ -152,8 +152,11 @@ def share_received_like(request):
 
     try:
         # 调用子程序 生成图片
-        cmd = 'python %s/common/capty.py %s %s' % (os.path.dirname(settings.SITE_ROOT), url, file_name)
+        #cmd = 'python %s/common/capty.py %s %s' % (os.path.dirname(settings.SITE_ROOT), url, file_name)
+        #cmd = 'python %s/common/_webkit2png.py -x 1366 768 -g 1366 0 -o %s %s' % (os.path.dirname(settings.SITE_ROOT), file_name, url)
+        cmd = '/opt/python2.7.2/bin/python2.7 %s/common/_webkit2png.py -x 1366 768 -g 1366 0 -o %s %s' % (os.path.dirname(settings.SITE_ROOT), file_name, url)
         flag, msg = utils.exec_command(cmd, 20)
+        logging.error(u'cmd is:\n%s\n msg is:%s' % (cmd, msg))
         if not flag:
             result = {'flag': -1, 'result': u'服务器响应超时, 请重试'}
         else:

@@ -2,15 +2,16 @@
 {% load custom_filters %}
 <li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-eee" id="answer_{{answer.id}}">
     <div class="reply-header row">
-        <div class="col-md-6 col-xs-8">
+        <div class="col-md-9 col-xs-8">
             <a class="no-hover-unl" href="{{answer.from_user.get_url}}">
                 <img class="avatar-25 avatar-circle" src="{{answer.from_user.get_avatar_25}}" title="{{answer.from_user.nick}}" />
             </a>
             <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
                 <span class="f12">{{answer.from_user.nick}}</span>
             </a>
+            <span class="f12">{% if answer.from_user.des %}({{answer.from_user.des|str_display:20}}){% endif %}</span>
         </div>
-        <div class="col-md-6 col-xs-4 text-right">
+        <div class="col-md-3 col-xs-4 text-right">
             <span class="answer-like-border flash-border" data-answer_id="{{answer.id}}">
                 <span title="赞一下" class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like " ></span>
                 <span class="answer-like-count">{{answer.like_count}}</span>
