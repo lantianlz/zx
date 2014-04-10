@@ -28,6 +28,7 @@ urlpatterns = patterns('',
                        url(r'^account/', include('account.urls')),
                        url(r'^question/', include('question.urls')),
                        url(r'^message/', include('message.urls')),
+                       url(r'^timeline/', include('timeline.urls')),
                        # url(r'^recommend/', include('recommend.urls')),
 
                        url(r'^admin/', include('admin.urls')),
