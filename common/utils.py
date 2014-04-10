@@ -260,6 +260,5 @@ def exec_command(command, timeout=25):
 def exec_command(command, timeout=25):
     import commands
     content = commands.getoutput(command)
-    print command
-    print content
     return True, content
+

@@ -142,7 +142,8 @@ def share_received_like(request):
     # 拼装获取指定用户赞的页面url
     url = "%s://%s/message/show_received_like?user_id=%s" % (
         request.META['wsgi.url_scheme'], 
-        request.META['HTTP_HOST'],
+        'wwwinside.zhixuan.com',
+        # request.META['HTTP_HOST'],
         request.user.id
     )
 
