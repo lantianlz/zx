@@ -23,23 +23,41 @@
         {% if is_me and not user.des %}<a href="/account/user_settings#set_des">立即设置</a>{% endif %}
     </div>
     <div class="stats pt-20">
-        <ul class="list-flow gray-a">
+        <ul class="list-flow gray-a f13">
             <li>
                 <a href="#questions">
-                    <span class="question-count block">{{user_question_count}}</span>
+                    <span class="question-count block fi">{{user_question_count}}</span>
                     <span>提问</span>
                 </a>
             </li>
             <li>
                 <a href="#answers">
-                    <span class="question-count block">{{user_answer_count}}</span>
+                    <span class="answer-count block fi">{{user_answer_count}}</span>
                     <span>回答</span>
                 </a>
             </li>
             <li>
+                <a href="#following_topics">
+                    <span class="following_topics-count block fi">49</span>
+                    <span>话题</span>
+                </a>
+            </li>
+            <!-- <li>
                 <a href="{% if is_me %}/message/received_like{% else %}javascript:void(0);{% endif %}">
-                    <span class="question-count block">{{user_liked_count}}</span>
+                    <span class="like-count block fi">{{user_liked_count}}</span>
                     <span>被赞</span>
+                </a>
+            </li> -->
+            <li>
+                <a href="#following">
+                    <span class="following-count block fi">65</span>
+                    <span>关注</span>
+                </a>
+            </li>
+            <li>
+                <a href="#followers">
+                    <span class="followers-count block fi">21598</span>
+                    <span>粉丝</span>
                 </a>
             </li>
         </ul>
@@ -55,22 +73,24 @@
 <div class="user-profile-main col-md-8">
     <ul class="nav nav-pills pt-20 gray-a">
         <li class="active">
-            <a href="#questions" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的最新提问</a>
+            <a href="#questions" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的提问</a>
         </li>
         <li>
-            <a href="#answers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的最新回答</a>
+            <a href="#answers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的回答</a>
         </li>
         <li class="hide">
             <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
         </li>
-        <!-- 
         <li>
-            <a href="#following" data-toggle="pill">TA的关注</a>
+            <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
         </li>
         <li>
-            <a href="#followers" data-toggle="pill">TA的粉丝</a>
+            <a href="#following" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的关注</a>
         </li>
-         -->
+        <li>
+            <a href="#followers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的粉丝</a>
+        </li>
+        
     </ul>
     <div class="tab-content">
         <div class="tab-pane active fade in" id="questions">
@@ -168,7 +188,61 @@
                 </li>
             </ul>
         </div>
-        <div class="tab-pane fade" id="following">暂不开放</div>
+        <div class="tab-pane fade" id="following">
+            <ul class="pl-20 list-group">
+                <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
+                    <img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/user1.jpg">
+                    <div class="pl-55 col-md-9">
+                        <div><a href="#">半夜没事瞎溜达</a></div>
+                        <div class="f12 pt-5">
+                            <a class="black-blue pr-5" href="#">提问 32</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">回答 65</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">被赞 165</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">关注 99</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">粉丝 1958</a>
+                        </div>
+                        <div class="f12 co8 pt-5">漫漫人生路，谁不错几步？</div>
+                    </div>
+                    <div class="col-md-3 text-center pt-20">
+                        <button class="btn btn-primary btn-xs">添加关注</button>
+                    </div>
+                </li>
+                <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
+                    <img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/user2.jpg">
+                    <div class="pl-55 col-md-9">
+                        <div><a href="#">女王大人</a></div>
+                        <div class="f12 pt-5">
+                            <a class="black-blue pr-5" href="#">提问 25</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">回答 23</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">被赞 325</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">关注 29</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">粉丝 11958</a>
+                        </div>
+                        <div class="f12 co8 pt-5">未来很长很远，今朝有酒今朝醉又有何不可。</div>
+                    </div>
+                    <div class="col-md-3 text-center pt-20">
+                        <button class="btn btn-default btn-xs">取消关注</button>
+                    </div>
+                </li>
+                <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
+                    <img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/user3.jpg">
+                    <div class="pl-55 col-md-9">
+                        <div><a href="#">习大大</a></div>
+                        <div class="f12 pt-5">
+                            <a class="black-blue pr-5" href="#">提问 93</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">回答 514</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">被赞 32</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">关注 69</a> |
+                            <a class="black-blue pr-5 pl-5" href="#">粉丝 254</a>
+                        </div>
+                        <div class="f12 co8 pt-5">请在大人的陪同下与本人聊天，否则后果自负！</div>
+                    </div>
+                    <div class="col-md-3 text-center pt-20">
+                        <button class="btn btn-default btn-xs">取消关注</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
         <div class="tab-pane fade" id="followers">暂不开放</div>
     </div>
 

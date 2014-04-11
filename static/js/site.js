@@ -669,7 +669,7 @@ $(document).ready(function(){
     ].join('');
     // 除了手机其他设备都设置弹出名片
     if(!$.ZXUtils.isPhone()){
-        $('.zx-cardtips1').tooltipster({
+        $('.zx-cardtips').tooltipster({
             animation: 'fade',
             delay: 200,
             trigger: 'hover',
