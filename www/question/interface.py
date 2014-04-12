@@ -93,7 +93,7 @@ class QuestionBase(object):
         return True, dict_err.get(000)
 
     def validate_content(self, content):
-        if len(content) < 20:
+        if len(content) < 10:
             return False, dict_err.get(102)
         if len(content) > 65535:
             return False, dict_err.get(103)

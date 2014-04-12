@@ -41,6 +41,13 @@ $(document).ready(function(){
         window.location.href = '/regist';
     });
 
+    // 定位到答案
+    if(window.location.href.indexOf('#to_answer_') > -1){
+        $('html,body').animate({
+            scrollTop: $('#'+window.location.hash.substring('4')).offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0) - parseInt($('.container_content').css('margin-top')) + 15
+        });
+    }
+
 
     // 初始化自定义的zxCheckbox
     $('#div_tags .zx-checkbox').zxCheckbox();
@@ -285,13 +292,13 @@ $(document).ready(function(){
         SHARE_ANSWER_ID = target.parents('li').attr('id');
     });
     $('.answer-share-qq').bind('click', function(){
-        var url = String.format('{0}%23{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
+        var url = String.format('{0}%23to_{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
             title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
 
         $.ZXShare.qq(url, title);
     });
     $('.answer-share-sina').bind('click', function(){
-        var url = String.format('{0}%23{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
+        var url = String.format('{0}%23to_{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
             title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
 
         $.ZXShare.sinaWeibo(url, title, '');

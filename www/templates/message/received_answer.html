@@ -20,7 +20,12 @@
 				<div class="from">
 					<a href="/n/{{answer.from_user.nick}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
 				</div>
-				<div class="f14 pb-10">{{answer.get_summary|safe}}</div>
+				<div class="f14 pb-10">
+					{{answer.get_summary|safe}}
+					<a href="{{answer.question.get_url}}#to_answer_{{answer.id}}" class="pl-5 f12">
+						<span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
+					</a>
+				</div>
                 <div class="content f12"> 
                     回答了我的提问 <a href="{{answer.question.get_url}}">{{answer.question.title|safe}}</a>
                 </div>
