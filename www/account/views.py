@@ -127,6 +127,7 @@ def get_user_by_nick(request, nick):
 
 @member_required
 def user_profile(request, id=None, template_name='account/user_profile.html'):
+    from www.timeline.interface import UserFollowBase
     if not id:
         user = request.user
     else:
@@ -135,6 +136,8 @@ def user_profile(request, id=None, template_name='account/user_profile.html'):
             err_msg = u'未找到对应user'
             return HttpResponse(err_msg)
     is_me = (request.user == user)
+    if not is_me:
+        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
 
     from www.question.interface import QuestionBase, AnswerBase
     qb = QuestionBase()

@@ -372,14 +372,15 @@ function CommonCoverDiv() {
 
 
 function common_callback(data) {
-	if (data['flag'] == '0') {
+	if (data['flag'] == '0' || data['errcode'] == '0') {
 		$.ZXMsg.alert('提示', '操作成功!页面即将刷新', 3000);
 		
 		window.setTimeout(function(){
             window.location.reload();
         }, 2000)
 	} else {
-		$.ZXMsg.alert('提示', data['result']);
+		var result = data['result'] || data['errmsg']
+		$.ZXMsg.alert('提示', result);
 	}
 }
 

@@ -45,12 +45,12 @@ $(document).ready(function(){
 
     // 关注用户
     $('.user-profile-left .follow').bind('click', function(){
-    	$.ZXOperation.followPerson($(this).data('user_id'), common_callback);
+    	g_ajax_processing_obj_id = 'left_follow_button_id';
+    	$.ZXOperation.followPeople($(this).data('user_id'), common_callback);
     });
     // 取消关注用户
     $('.user-profile-left .unfollow').bind('click', function(){
-    	$.ZXOperation.unfollowPerson($(this).data('user_id'), function(){
-    		$.ZXMsg.alert('关注用户', '取消关注成功!');
-    	});
+    	g_ajax_processing_obj_id = 'left_unfollow_button_id';
+    	$.ZXOperation.unfollowPeople($(this).data('user_id'), common_callback);
     });
 });

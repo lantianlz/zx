@@ -62,10 +62,17 @@
             </li>
         </ul>
     </div>
+    {% if not is_me%}
     <div class="text-right pr-25 pt-10">
-        <button type="button" class="btn btn-primary btn-xs follow" data-user_id='1'>添加关注</button>
-        <button type="button" class="btn btn-default btn-xs unfollow hide" data-user_id='1'>取消关注</button>
+        {% if is_follow %}
+        <button id="left_unfollow_button_id" type="button" class="btn btn-default btn-xs unfollow" 
+            data-user_id='{{user.id}}'>取消关注</button>
+        {% else %}
+        <button id="left_follow_button_id" type="button" class="btn btn-primary btn-xs follow" 
+            data-user_id='{{user.id}}'>添加关注</button>
+        {% endif %}
     </div>
+    {% endif %}
     <!-- <div class="tools gray-a pl-50 pr-50 pt-10 hide">
         <button type="button" class="btn btn-default btn-xs unfollow pull-left">取消关注</button>
         <a class="send-message pull-right f12" href="#" data-user_name="半夜没事乱溜达" data-user_id="1">
