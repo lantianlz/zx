@@ -18,6 +18,7 @@ $(document).ready(function(){
 		
 	});
 
+
 	// 鼠标移动到头像旋转事件
 	$('.avatar-100')
 	.bind('mouseenter', function(){
@@ -27,14 +28,29 @@ $(document).ready(function(){
 		$(this).removeClass('avatar-spin');
 	});
 
+
+	// 关注话题事件
 	$('.topic-item .btn-follow').bind('click', function(){
         var target = $(this).parents('.topic-item').eq(0).find('.zx-topictips');
 
         $.ZXMsg.alert('关注话题', target.data('topic_id'));
     });
+    // 取消关注话题事件
     $('.topic-item .btn-unfollow').bind('click', function(){
         var target = $(this).parents('.topic-item').eq(0).find('.zx-topictips');
 
         $.ZXMsg.alert('取消关注话题', target.data('topic_id'));
-    })
+    });
+
+
+    // 关注用户
+    $('.user-profile-left .follow').bind('click', function(){
+    	$.ZXOperation.followPerson($(this).data('user_id'), common_callback);
+    });
+    // 取消关注用户
+    $('.user-profile-left .unfollow').bind('click', function(){
+    	$.ZXOperation.unfollowPerson($(this).data('user_id'), function(){
+    		$.ZXMsg.alert('关注用户', '取消关注成功!');
+    	});
+    });
 });

@@ -501,6 +501,45 @@ function addZero(data){
         } 
 
         return qqUrl;
+    };
+
+
+    /*
+        业务操作
+    */
+    $.ZXOperation = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '业务操作'
+    };
+    /*
+        关注用户
+    */
+    $.ZXOperation.followPerson = function(personId, callback){
+        //ajaxSend("/", {}, callback);
+        callback();
+    }
+
+    /*
+        取消关注用户
+    */
+    $.ZXOperation.unfollowPerson = function(personId, callback){
+        //ajaxSend("/", {}, callback);
+        callback();
+    }
+
+    /*
+        关注话题
+    */
+    $.ZXOperation.followTopic = function(topicId, callback){
+        
+    }
+
+    /*
+        取消关注话题
+    */
+    $.ZXOperation.unfollowTopic = function(topicId, callback){
+        
     }
 
 })(jQuery);
@@ -856,6 +895,6 @@ $(document).ready(function(){
     // 用户反馈
     $('.follow-zx .feedback').bind('click', function(){
         $.ZXMsg.feedback();
-    })
+    });
 });
 
