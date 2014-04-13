@@ -36,18 +36,20 @@
                     <span>回答</span>
                 </a>
             </li>
+            <!--
             <li>
                 <a href="#following_topics">
                     <span class="following_topics-count block fi">49</span>
                     <span>话题</span>
                 </a>
             </li>
-            <!-- <li>
+            <li>
                 <a href="{% if is_me %}/message/received_like{% else %}javascript:void(0);{% endif %}">
                     <span class="like-count block fi">{{user_liked_count}}</span>
                     <span>被赞</span>
                 </a>
-            </li> -->
+            </li> 
+            -->
             <li>
                 <a href="#following">
                     <span class="following-count block fi">65</span>
@@ -62,10 +64,17 @@
             </li>
         </ul>
     </div>
+    {% if not is_me%}
     <div class="text-right pr-25 pt-10">
-        <button type="button" class="btn btn-primary btn-xs follow" data-user_id='1'>添加关注</button>
-        <button type="button" class="btn btn-default btn-xs unfollow hide" data-user_id='1'>取消关注</button>
+        {% if is_follow %}
+        <button id="left_unfollow_button_id" type="button" class="btn btn-default btn-xs unfollow" 
+            data-user_id='{{user.id}}'>取消关注</button>
+        {% else %}
+        <button id="left_follow_button_id" type="button" class="btn btn-primary btn-xs follow" 
+            data-user_id='{{user.id}}'>添加关注</button>
+        {% endif %}
     </div>
+    {% endif %}
     <!-- <div class="tools gray-a pl-50 pr-50 pt-10 hide">
         <button type="button" class="btn btn-default btn-xs unfollow pull-left">取消关注</button>
         <a class="send-message pull-right f12" href="#" data-user_name="半夜没事乱溜达" data-user_id="1">
@@ -82,12 +91,11 @@
         <li>
             <a href="#answers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的回答</a>
         </li>
-        <li class="hide">
-            <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
-        </li>
+        <!-- 
         <li>
             <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
         </li>
+         -->
         <li>
             <a href="#following" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的关注</a>
         </li>

@@ -130,8 +130,8 @@ def global_recommend_users(context):
 
 
 @register.simple_tag(takes_context=True)
-def global_QRcode(context):
+def global_qrcode(context):
     """
     @note: 二维码 QR码（学名为快速响应矩阵码；Quick Response Code）
     """
-    return render_to_response('base/_global_QRcode.html', locals(), context_instance=context).content
+    return render_to_response('base/_global_qrcode.html', locals(), context_instance=context).content

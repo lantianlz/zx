@@ -515,17 +515,15 @@ function addZero(data){
     /*
         关注用户
     */
-    $.ZXOperation.followPerson = function(personId, callback){
-        //ajaxSend("/", {}, callback);
-        callback();
+    $.ZXOperation.followPeople = function(user_id, callback){
+        ajaxSend("/timeline/follow/" + user_id, {}, callback, 'GET');
     }
 
     /*
         取消关注用户
     */
-    $.ZXOperation.unfollowPerson = function(personId, callback){
-        //ajaxSend("/", {}, callback);
-        callback();
+    $.ZXOperation.unfollowPeople = function(user_id, callback){
+        ajaxSend("/timeline/unfollow/" + user_id, {}, callback, 'GET');
     }
 
     /*
