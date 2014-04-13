@@ -42,6 +42,7 @@ def question_type_option_display(context):
     return render_to_response('question/_question_type_option_display.html', locals(),
                               context_instance=context).content
 
+
 @register.simple_tag(takes_context=True)
 def question_type_radio_display(context):
     """
@@ -127,11 +128,3 @@ def global_recommend_users(context):
     @note: 推荐用户
     """
     return render_to_response('account/_global_recommend_users.html', locals(), context_instance=context).content
-
-
-@register.simple_tag(takes_context=True)
-def global_qrcode(context):
-    """
-    @note: 二维码 QR码（学名为快速响应矩阵码；Quick Response Code）
-    """
-    return render_to_response('base/_global_qrcode.html', locals(), context_instance=context).content
