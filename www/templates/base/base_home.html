@@ -48,9 +48,10 @@
             
             <ul class="nav navbar-nav navbar-right login-user">
                 {% if request.user.is_authenticated %}
+                <!-- 菜单 -->
                 <li class="user-menu dropdown">
                     <a href="#" class="dropdown-toggle user min-w140" data-toggle="dropdown" title="{{request.user.nick}}">
-                        <img class='avatar-25 avatar-circle user' src="{{request.user.get_avatar_25}}">
+                        <img class='avatar-25 avatar-circle user mt--2' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
                         <!-- <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span> -->
                         <!-- <span class="caret"></span> -->
@@ -81,9 +82,14 @@
                     </ul>
                 </li>
 
+                <!-- 消息中心 -->
                 <li class="user-notice dropdown ml--10">
                     <a href="#" class="dropdown-toggle user" data-target="#" title="">
-                        <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
+                        <!-- 有消息则会显示具体消息数量 -->
+                        <!-- <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span> -->
+                        
+                        <!-- 没有消息显示铃铛 -->
+                        <span class="glyphicon glyphicon-bell f16 mt--4"></span>
                     </a>
                     <ul class="dropdown-menu text-left min-w140" role="menu">
                         <li>
