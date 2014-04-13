@@ -838,7 +838,7 @@ $(document).ready(function(){
                     dropdownTimeout = null;
                 }, 500)
             }
-           };
+        };
     
     $('.login-user .dropdown-toggle')
     .bind('mouseenter', showDropdown)
