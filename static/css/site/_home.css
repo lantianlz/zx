@@ -52,10 +52,24 @@
 
 .login-user .user{
     font-size: 14px;
-    width: 160px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.login-user .user:hover{
+    background-color: none; 
+    color: #222;
+    border-bottom: 0px;
+}
+
+.user-notice .user{
+  padding-top: 21px;
+  padding-bottom: 22px;
+}
+
+.user-menu{
+  padding-right: 0px;
 }
 
 .img-logo img{
@@ -146,11 +160,7 @@
     transition: color 0.5s;
 }
 
-.login-user .user:hover{
-    background-color: none; 
-    color: #222;
-    border-bottom: 0px;
-}
+
 
 .flash-badge{
     background-color: orange;

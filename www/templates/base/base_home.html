@@ -45,17 +45,18 @@
                 </div>
                 <button type="submit" class="btn btn-default">查询</button>
             </form> -->
+            
             <ul class="nav navbar-nav navbar-right login-user">
                 {% if request.user.is_authenticated %}
-                <li class="dropdown">
-                    <a href="javascript: void(0);" class="dropdown-toggle user" data-target="#" title="{{request.user.nick}}">
-                        <img class='avatar-25 avatar-circle mt--2' src="{{request.user.get_avatar_25}}">
+                <li class="user-menu dropdown">
+                    <a href="#" class="dropdown-toggle user min-w140" data-toggle="dropdown" title="{{request.user.nick}}">
+                        <img class='avatar-25 avatar-circle user' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
-                        <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span>
+                        <!-- <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span> -->
                         <!-- <span class="caret"></span> -->
                     </a>
                     
-                    <ul class="dropdown-menu text-left" role="menu">
+                    <ul class="dropdown-menu text-left min-w140" role="menu">
                         <li>
                             <a href="/p">
                                 <span class="glyphicon glyphicon-user mr-10 f15"></span>我的主页
@@ -67,9 +68,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/message">
-                                <span class="glyphicon glyphicon-bell mr-10 f15"></span>消息中心
-                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                            <a href="/account/invitation">
+                                <span class="glyphicon glyphicon-log-in mr-10 f15"></span>邀请注册
                             </a>
                         </li>
                         <li role="presentation" class="divider"></li>
@@ -80,8 +80,47 @@
                         </li>
                     </ul>
                 </li>
+
+                <li class="user-notice dropdown ml--10">
+                    <a href="#" class="dropdown-toggle user" data-target="#" title="">
+                        <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
+                    </a>
+                    <ul class="dropdown-menu text-left min-w140" role="menu">
+                        <li>
+                            <a href="/message/">
+                                系统消息
+                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message/received_like">
+                                收到的赞
+                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message/received_answer">
+                                收到的回答
+                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message/at_answer">
+                                @我的回答
+                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li>
+                            <a href="p#followers">
+                                我的粉丝
+                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
                 <script type="text/javascript" src="{{MEDIA_URL}}js/_update_unread_count_total.js"></script>
-                
                 {% else %}
                 <li>
                     <div class="un-login-user">
@@ -91,6 +130,7 @@
                 </li>
                 {% endif %}
             </ul>
+            
         </div>
     </div>
 </div>

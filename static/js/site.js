@@ -862,30 +862,38 @@ $(document).ready(function(){
 
     // 鼠标移动到导航条登录用户名时自动弹出下拉框
     var dropdownTimeout = null,
-        showDropdown = function(){
-            $(".login-user .dropdown").addClass('open');
+        showDropdown = function(target){
+            $(target).addClass('open');
 
-            if(dropdownTimeout){
-                window.clearTimeout(dropdownTimeout);
-                dropdownTimeout = null;
-            }
+            // if(dropdownTimeout){
+            //     window.clearTimeout(dropdownTimeout);
+            //     dropdownTimeout = null;
+            // }
         },
-        hideDropdown = function(){
-            if(!dropdownTimeout){
-                dropdownTimeout = window.setTimeout(function(){
-                    $(".login-user .dropdown").removeClass('open');
-                    dropdownTimeout = null;
-                }, 500)
-            }
+        hideDropdown = function(target){
+            //if(!dropdownTimeout){
+                //dropdownTimeout = window.setTimeout(function(){
+                    $(target).removeClass('open');
+                    //dropdownTimeout = null;
+                //}, 1)
+            //}
         };
     
-    $('.login-user .dropdown-toggle')
-    .bind('mouseenter', showDropdown)
-    .bind('mouseleave', hideDropdown);
+    $('.user-menu .dropdown-toggle')
+    .bind('mouseenter', function(){showDropdown('.user-menu')})
+    .bind('mouseleave', function(){hideDropdown('.user-menu')});
 
-    $('.login-user .dropdown-menu')
-    .bind('mouseenter', showDropdown)
-    .bind('mouseleave', hideDropdown);
+    $('.user-menu .dropdown-menu')
+    .bind('mouseenter', function(){showDropdown('.user-menu')})
+    .bind('mouseleave', function(){hideDropdown('.user-menu')});
+
+    $('.user-notice .dropdown-toggle')
+    .bind('mouseenter', function(){showDropdown('.user-notice')})
+    .bind('mouseleave', function(){hideDropdown('.user-notice')});
+
+    $('.user-notice .dropdown-menu')
+    .bind('mouseenter', function(){showDropdown('.user-notice')})
+    .bind('mouseleave', function(){hideDropdown('.user-notice')});
 
 
     // 隐藏所有 auto-hide 样式
