@@ -47,7 +47,7 @@
     </div>
     {% endblock %}
 
-    {#% include "question/_user_qa_info_right_nav_dispaly.html" %#}
+    {% include "question/_user_qa_info_right_nav_dispaly.html" %}
 
     <!--
     <div class="hot-tags panel panel-default">
@@ -66,7 +66,7 @@
     {% global_hot_topics %}
 
     <!-- 二维码 -->
-    {% global_QRcode %}
+    {% global_qrcode %}
 
     <!-- 统计 -->
     {% global_statistic %}

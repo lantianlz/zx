@@ -36,18 +36,20 @@
                     <span>回答</span>
                 </a>
             </li>
+            <!--
             <li>
                 <a href="#following_topics">
                     <span class="following_topics-count block fi">49</span>
                     <span>话题</span>
                 </a>
             </li>
-            <!-- <li>
+            <li>
                 <a href="{% if is_me %}/message/received_like{% else %}javascript:void(0);{% endif %}">
                     <span class="like-count block fi">{{user_liked_count}}</span>
                     <span>被赞</span>
                 </a>
-            </li> -->
+            </li> 
+            -->
             <li>
                 <a href="#following">
                     <span class="following-count block fi">65</span>
@@ -89,12 +91,11 @@
         <li>
             <a href="#answers" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的回答</a>
         </li>
-        <li class="hide">
-            <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
-        </li>
+        <!-- 
         <li>
             <a href="#following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
         </li>
+         -->
         <li>
             <a href="#following" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的关注</a>
         </li>
