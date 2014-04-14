@@ -149,6 +149,96 @@ def user_profile(request, id=None, template_name='account/user_profile.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+def user_questions(request, id, template_name='account/user_questions.html'):
+    '''
+    提问 - 个人主页
+    '''
+    from www.timeline.interface import UserFollowBase
+    if not id:
+        user = request.user
+    else:
+        user = ub.get_user_by_id(id)
+        if not user:
+            err_msg = u'未找到对应user'
+            return HttpResponse(err_msg)
+    is_me = (request.user == user)
+    if not is_me:
+        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+
+    from www.question.interface import QuestionBase, AnswerBase
+    qb = QuestionBase()
+    ab = AnswerBase()
+    user_question_count, user_answer_count, user_liked_count = qb.get_user_qa_count_info(user.id)
+    questions = qb.format_quesitons(qb.get_question_by_user_id(user.id))
+    answers = ab.format_answers(ab.get_user_sended_answer(user.id))
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def user_answers(request, id, template_name='account/user_answers.html'):
+    '''
+    回答 - 个人主页
+    '''
+    from www.timeline.interface import UserFollowBase
+    if not id:
+        user = request.user
+    else:
+        user = ub.get_user_by_id(id)
+        if not user:
+            err_msg = u'未找到对应user'
+            return HttpResponse(err_msg)
+    is_me = (request.user == user)
+    if not is_me:
+        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+
+    from www.question.interface import QuestionBase, AnswerBase
+    qb = QuestionBase()
+    ab = AnswerBase()
+    user_question_count, user_answer_count, user_liked_count = qb.get_user_qa_count_info(user.id)
+    questions = qb.format_quesitons(qb.get_question_by_user_id(user.id))
+    answers = ab.format_answers(ab.get_user_sended_answer(user.id))
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def user_following(request, id, template_name='account/user_following.html'):
+    '''
+    关注 - 个人主页
+    '''
+    from www.timeline.interface import UserFollowBase
+    if not id:
+        user = request.user
+    else:
+        user = ub.get_user_by_id(id)
+        if not user:
+            err_msg = u'未找到对应user'
+            return HttpResponse(err_msg)
+    is_me = (request.user == user)
+    if not is_me:
+        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def user_followers(request, id, template_name='account/user_followers.html'):
+    '''
+    粉丝 - 个人主页
+    '''
+    from www.timeline.interface import UserFollowBase
+    if not id:
+        user = request.user
+    else:
+        user = ub.get_user_by_id(id)
+        if not user:
+            err_msg = u'未找到对应user'
+            return HttpResponse(err_msg)
+    is_me = (request.user == user)
+    if not is_me:
+        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+        
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
 @member_required
 def user_settings(request, template_name='account/change_profile.html'):
     img_key = 'avatar_%s' % utils.uuid_without_dash()   # 七牛上传图片文件名

@@ -45,8 +45,10 @@ function addZero(data){
     },
     /*
         去掉所有的html标签
+        target: 要操作的字符串
+
         用例:
-        '<div>1</div>'.clearHtmlTags()
+        $.ZXUtils.clearHtmlTags('<div>1</div>');
     */
     $.ZXUtils.clearHtmlTags = function(target){
         if(!target){
@@ -57,8 +59,10 @@ function addZero(data){
 
     /*
         去掉所有的转义字符
+        target: 要操作的字符串
+
         用例:
-        '<div>1</div>'.clearEscapeCharacters()
+        $.ZXUtils.clearEscapeCharacters('<div>1</div>');
     */
     $.ZXUtils.clearEscapeCharacters = function(target){
         if(!target){
@@ -88,7 +92,14 @@ function addZero(data){
         return (992 <= $(window).width()) ? true : false;
     }
 
-    // 设置文本框光标位置
+    /*
+        设置文本框光标位置
+        selectionStart: 光标开始位置
+        selectionEnd: 光标结束位置
+
+        用例:
+        $('#selector').setSelection(0, 1);
+    */
     $.fn.setSelection = function(selectionStart, selectionEnd) {
         if(this.length == 0){
             return this;
@@ -111,7 +122,12 @@ function addZero(data){
         return this;
     };
 
-    // 设置文本框光标到最后
+    /*
+        设置文本框光标位置到最后
+
+        用例:
+        $('#selector').focusEnd();
+    */
     $.fn.focusEnd = function() {
         return this.setSelection(this.val().length, this.val().length);
     };
@@ -152,6 +168,10 @@ function addZero(data){
     };
     /*
         通用alert框
+        alertTitle: 弹出框的标题
+        alertMsg: 弹出框的描述
+        delayCloseSeconds: 延迟几秒之后自动关闭
+
         用例:
         $.ZXMsg.alert('提示', '操作成功!');
         $.ZXMsg.alert('提示', '操作成功, 5秒后自动关闭!', 5000);
@@ -197,6 +217,10 @@ function addZero(data){
 
     /*
         通用confirm框
+        confirmTitle: 弹出框的标题
+        confirmMsg: 弹出框的描述
+        callback: 回调函数
+
         用例:
         $.ZXMsg.confirm('提示', '确认要删除?', function(result){ //to do...});
     */
@@ -256,6 +280,9 @@ function addZero(data){
 
     /*
         私信方法
+        userId: 用户id
+        userName: 用户名称
+
         用例：
         $.ZXMsg.sendPrivateMsg('1', '半夜没事瞎溜达');
     */
@@ -322,6 +349,7 @@ function addZero(data){
 
     /*
         意见反馈方法
+
         用例：
         $.ZXMsg.feedback();
     */
@@ -458,6 +486,10 @@ function addZero(data){
         url: 要分享的url
         title: 要分享的描述
         pic: 图片地址
+        notOpenWin: 是否要弹出窗口
+        
+        用例：
+        $.ZXShare.sinaWeibo('www.a.com', 'test', '1.jpg', true);
     */
     $.ZXShare.sinaWeibo = function(url, title, pic, notOpenWin){
         var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)),
@@ -482,6 +514,11 @@ function addZero(data){
         分享到qq
         url: 要分享的url
         title: 要分享的描述
+        desc: 要分享的描述
+        notOpenWin: 是否要弹出窗口
+
+        用例：
+        $.ZXShare.qq('www.a.com', 'test', 'test', true);
     */
     $.ZXShare.qq = function(url, title, desc, notOpenWin){
         var clearTitle = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(title)),
@@ -514,20 +551,35 @@ function addZero(data){
     };
     /*
         关注用户
+        userId: 用户id
+        callback: 回调函数
+
+        用例：
+        $.ZXOperation.followPeople('1', function(){alert('1')})
     */
-    $.ZXOperation.followPeople = function(user_id, callback){
-        ajaxSend("/timeline/follow/" + user_id, {}, callback, 'GET');
+    $.ZXOperation.followPeople = function(userId, callback){
+        ajaxSend("/timeline/follow/" + userId, {}, callback, 'GET');
     }
 
     /*
         取消关注用户
+        userId: 用户id
+        callback: 回调函数
+
+        用例：
+        $.ZXOperation.unfollowPeople('1', function(){alert('1')})
     */
-    $.ZXOperation.unfollowPeople = function(user_id, callback){
-        ajaxSend("/timeline/unfollow/" + user_id, {}, callback, 'GET');
+    $.ZXOperation.unfollowPeople = function(userId, callback){
+        ajaxSend("/timeline/unfollow/" + userId, {}, callback, 'GET');
     }
 
     /*
         关注话题
+        topicId: 话题id
+        callback: 回调函数
+
+        用例：
+        $.ZXOperation.followTopic('1', function(){alert('1')})
     */
     $.ZXOperation.followTopic = function(topicId, callback){
         
@@ -535,6 +587,11 @@ function addZero(data){
 
     /*
         取消关注话题
+        topicId: 话题id
+        callback: 回调函数
+
+        用例：
+        $.ZXOperation.unfollowTopic('1', function(){alert('1')})
     */
     $.ZXOperation.unfollowTopic = function(topicId, callback){
         
@@ -707,12 +764,14 @@ $(document).ready(function(){
     // 除了手机其他设备都设置弹出名片
     if(!$.ZXUtils.isPhone()){
         $('.zx-cardtips').tooltipster({
-            animation: 'fade',
-            delay: 200,
+            animation: 'swing',
+            delay: 150,
             trigger: 'hover',
             theme: 'tooltipster-shadow',
             interactive: true,
             interactiveTolerance: 300,
+            speed: 350,
+            updateAnimation: false,
             autoClose: true,
             //content: cardtipsHtml,
             contentAsHTML: true,

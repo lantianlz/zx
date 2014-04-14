@@ -21,8 +21,11 @@ urlpatterns = patterns('',
                        url(r'^crop_img$', 'www.misc.views.crop_img'),
 
                        url(r'^n/(?P<nick>.*)$', 'www.account.views.get_user_by_nick'),
-                       url(r'^p$', 'www.account.views.user_profile'),
-                       url(r'^p/(?P<id>\w+)$', 'www.account.views.user_profile'),
+                       url(r'^p/(?P<id>\w+)/?$', 'www.account.views.user_questions'),
+                       url(r'^p/(?P<id>\w+)/questions/?$', 'www.account.views.user_questions'),
+                       url(r'^p/(?P<id>\w+)/answers/?$', 'www.account.views.user_answers'),
+                       url(r'^p/(?P<id>\w+)/following/?$', 'www.account.views.user_following'),
+                       url(r'^p/(?P<id>\w+)/followers/?$', 'www.account.views.user_followers'),
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
 
                        url(r'^account/', include('account.urls')),

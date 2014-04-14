@@ -1,0 +1,115 @@
+{% extends "base/base_home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block home_css %}
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/user_profile.css?v={{MEDIA_VERSION}}" />
+{% endblock %}
+
+{% block home_js%}
+<script type="text/javascript" src="{{MEDIA_URL}}js/site/user_profile.js?v={{MEDIA_VERSION}}"></script>
+{% endblock %}
+
+{% block container_content %}
+<div class="user-profile-left col-md-4 text-center">
+    <div class="profile pt-80 ">
+        <img class="avatar-100 avatar-circle" src="{{user.get_avatar_100}}"></div>
+    <div class="username">
+        <h3 class="ff-yahei fb">{{user.nick}}</h3>
+    </div>
+    <div class="desc co8">
+        <p>{{user.des|default:"忙着发财，没能留下点介绍信息"}}</p>
+        {% if is_me and not user.des %}<a href="/account/user_settings#set_des">立即设置</a>{% endif %}
+    </div>
+    <div class="stats pt-20">
+        <ul class="list-flow gray-a f13">
+            <li>
+                <a href="/p/{{user.id}}/questions">
+                    <span class="question-count block fi">{{user_question_count}}</span>
+                    <span>提问</span>
+                </a>
+            </li>
+            <li>
+                <a href="/p/{{user.id}}/answers">
+                    <span class="answer-count block fi">{{user_answer_count}}</span>
+                    <span>回答</span>
+                </a>
+            </li>
+            <!--
+            <li>
+                <a href="/p/{{user.id}}/following_topics">
+                    <span class="following_topics-count block fi">49</span>
+                    <span>话题</span>
+                </a>
+            </li>
+            -->
+            <li>
+                <a href="{% if is_me %}/message/received_like{% else %}javascript:void(0);{% endif %}">
+                    <span class="like-count block fi">{{user_liked_count}}</span>
+                    <span>被赞</span>
+                </a>
+            </li> 
+            
+            <li>
+                <a href="/p/{{user.id}}/following">
+                    <span class="following-count block fi">65</span>
+                    <span>关注</span>
+                </a>
+            </li>
+            <li>
+                <a href="/p/{{user.id}}/followers">
+                    <span class="followers-count block fi">21598</span>
+                    <span>粉丝</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    {% if not is_me%}
+    <div class="text-right pr-25 pt-10">
+        {% if is_follow %}
+        <button id="left_unfollow_button_id" type="button" class="btn btn-default btn-xs unfollow" 
+            data-user_id='{{user.id}}'>取消关注</button>
+        {% else %}
+        <button id="left_follow_button_id" type="button" class="btn btn-primary btn-xs follow" 
+            data-user_id='{{user.id}}'>添加关注</button>
+        {% endif %}
+    </div>
+    {% endif %}
+    <!-- <div class="tools gray-a pl-50 pr-50 pt-10 hide">
+        <button type="button" class="btn btn-default btn-xs unfollow pull-left">取消关注</button>
+        <a class="send-message pull-right f12" href="#" data-user_name="半夜没事乱溜达" data-user_id="1">
+            <span class="glyphicon glyphicon-envelope"></span>
+            私信ta
+        </a>
+    </div> -->
+</div>
+<div class="user-profile-main col-md-8">
+    <ul class="nav nav-pills pt-20 gray-a">
+        <li {% if '/answers' not in request.path and  '/following' not in request.path and '/followers' not in request.path %} class="active" {% endif %} {% if '/questions' in request.path %} class="active" {% endif %}>
+            <a href="/p/{{user.id}}/questions" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的提问</a>
+        </li>
+        <li {% if '/answers' in request.path %} class="active" {% endif %}>
+            <a href="/p/{{user.id}}/answers" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的回答</a>
+        </li>
+        <!-- 
+        <li {% if '/following_topics/' in request.path %} class="active" {% endif %}>
+            <a href="/p/{{user.id}}/following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
+        </li>
+         -->
+        <li {% if '/following' in request.path %} class="active" {% endif %}>
+            <a href="/p/{{user.id}}/following" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的关注</a>
+        </li>
+        <li {% if '/followers' in request.path %} class="active" {% endif %}>
+            <a href="/p/{{user.id}}/followers" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的粉丝</a>
+        </li>
+        
+    </ul>
+    <div class="tab-content">
+        {% block tab_content %}
+        
+        {% endblock tab_content %}
+    </div>
+
+
+</div>
+{% endblock %}

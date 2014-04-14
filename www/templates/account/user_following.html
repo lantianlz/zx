@@ -1,0 +1,101 @@
+{% extends "account/base_profile.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}提问 - 个人主页{% endblock %}
+
+
+{% block tab_content %}
+<div class="tab-pane active fade in" id="questions">
+    <ul class="pl-20 pr-20 list-group">
+        <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
+            <img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/user1.jpg">
+            <div class="pl-55 row">
+                <div class="col-md-9">
+                    <div>
+                        <a href="#">半夜没事瞎溜达</a>
+                    </div>
+                    <div class="f12 pt-5">
+                        <a class="black-blue pr-5" href="#">提问 32</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">回答 65</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">被赞 165</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">关注 99</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">粉丝 1958</a>
+                    </div>
+                    <div class="f12 co8 pt-5">漫漫人生路，谁不错几步？</div>
+                </div>
+                <div class="col-md-3 text-center pt-20">
+                    <button class="btn btn-primary btn-xs">添加关注</button>
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
+            <img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/user2.jpg">
+            <div class="pl-55 row">
+                <div class="col-md-9">
+                    <div>
+                        <a href="#">女王大人</a>
+                        <span class="f12 co8 pl-5">(关注于 2014-04-01)</span>
+                    </div>
+                    <div class="f12 pt-5">
+                        <a class="black-blue pr-5" href="#">提问 25</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">回答 23</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">被赞 325</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">关注 29</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">粉丝 11958</a>
+                    </div>
+                    <div class="f12 co8 pt-5">未来很长很远，今朝有酒今朝醉又有何不可。</div>
+                </div>
+                <div class="col-md-3 text-center pt-20">
+                    <button class="btn btn-default btn-xs">取消关注</button>
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
+            <img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/user3.jpg">
+            <div class="pl-55 row">
+                <div class="col-md-9">
+                    <div>
+                        <a href="#">习大大</a>
+                        <span class="f12 co8 pl-5">(关注于 2014-03-28)</span>
+                    </div>
+                    <div class="f12 pt-5">
+                        <a class="black-blue pr-5" href="#">提问 93</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">回答 514</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">被赞 32</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">关注 69</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">粉丝 254</a>
+                    </div>
+                    <div class="f12 co8 pt-5">请在大人的陪同下与本人聊天，否则后果自负！</div>
+                </div>
+                <div class="col-md-3 text-center pt-20">
+                    <button class="btn btn-default btn-xs">取消关注</button>
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
+            <img class="pa avatar-45 avatar-circle" src="{{MEDIA_URL}}img/common/user3.jpg">
+            <div class="pl-55 row">
+                <div class="col-md-9">
+                    <div>
+                        <a href="#">习大大</a>
+                        <span class="f12 co8 pl-5">(关注于 2014-03-28)</span>
+                    </div>
+                    <div class="f12 pt-5">
+                        <a class="black-blue pr-5" href="#">提问 93</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">回答 514</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">被赞 32</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">关注 69</a> |
+                        <a class="black-blue pr-5 pl-5" href="#">粉丝 254</a>
+                    </div>
+                    <div class="f12 co8 pt-5">请在大人的陪同下与本人聊天，否则后果自负！</div>
+                </div>
+                <div class="col-md-3 text-center pt-20">
+                    <span class="glyphicon glyphicon-transfer"></span>
+                    <span class="f12">互相关注</span>
+                    <button class="btn btn-default btn-xs">取消关注</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+{% endblock tab_content %}

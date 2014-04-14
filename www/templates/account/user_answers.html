@@ -1,0 +1,30 @@
+{% extends "account/base_profile.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}提问 - 个人主页{% endblock %}
+
+
+{% block tab_content %}
+<div class="tab-pane active fade in" id="questions">
+    {% if answers %}
+    <ul class="list-group only-top-border">
+        {% for answer in answers %}
+        <li class="list-group-item">
+            <div class="content f14 pb-10">
+                <span class="pt-5">{{answer.get_summary|safe}}</span>
+            </div>
+            <div class="pb-10 f12">
+                回答了提问：<a href="{{answer.question.get_url}}">{{answer.question.title|str_display:30}}</a>
+            </div>
+            <div class="stats">
+                <span>{{answer.like_count}} 个赞 • {{answer.create_time|time_format}}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="blank5"></div>
+    <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+    {% endif %}
+</div>
+{% endblock tab_content %}
