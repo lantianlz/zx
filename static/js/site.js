@@ -37,62 +37,6 @@ function addZero(data){
 */
 (function(){
     /*
-    */
-    $.ZXUtils = {
-        version: '1.0.0',
-        author: 'stranger',
-        description: '工具包'
-    },
-    /*
-        去掉所有的html标签
-        target: 要操作的字符串
-
-        用例:
-        $.ZXUtils.clearHtmlTags('<div>1</div>');
-    */
-    $.ZXUtils.clearHtmlTags = function(target){
-        if(!target){
-            return '';
-        }
-        return target.replace(/<[^>].*?>/g,"");
-    },
-
-    /*
-        去掉所有的转义字符
-        target: 要操作的字符串
-
-        用例:
-        $.ZXUtils.clearEscapeCharacters('<div>1</div>');
-    */
-    $.ZXUtils.clearEscapeCharacters = function(target){
-        if(!target){
-            return '';
-        }
-        return target.replace(/&[^;].*?;/g, '');
-    }
-
-    /*
-        屏幕宽度小于 768 归于手机
-    */
-    $.ZXUtils.isPhone = function(){
-        return ($(window).width() < 768) ? true : false;
-    }
-
-    /*
-        屏幕宽度 大于768 而 小于992 归于平板
-    */
-    $.ZXUtils.isPad = function(){
-        return (768 <= $(window).width() && $(window).width() < 992) ? true : false;
-    }
-
-    /*
-        屏幕宽度大于 992 归于桌面
-    */
-    $.ZXUtils.isDesktop= function(){
-        return (992 <= $(window).width()) ? true : false;
-    }
-
-    /*
         设置文本框光标位置
         selectionStart: 光标开始位置
         selectionEnd: 光标结束位置
@@ -160,7 +104,153 @@ function addZero(data){
         return this;
     };
 
-    // 弹窗插件
+
+    /*
+        鼠标移动渐变换图片插件，效果参见第三方登录图标
+        
+        用例:
+        $('.img-fade-hover').imgFadeHover();
+
+        dom如下, 需要指定鼠标移上去显示的图片地址data-change_img:
+        <img class="avatar-20 img-fade-hover" 
+            data-change_img="{{MEDIA_URL}}img/common/qq-active.png" 
+            src="{{MEDIA_URL}}img/common/qq.png">
+    */
+    $.fn.imgFadeHover = function(){
+        var changeFun = function(target, temp){
+            // IE 只能设置filter属性
+            if($.browser.msie){
+                // target[0].filter = String.format("'alpha(opacity={0})'", Math.round(temp));
+                target[0].filter = String.format("' progid:DXImageTransform.Microsoft.Alpha(Opacity={0})'", Math.round(temp));
+            } else {
+                target.css('opacity', temp/100);
+            }
+        };
+
+        return this.each(function(){
+            $(this).bind('mouseenter', function(){
+                var me = $(this),
+                    originImg = me.attr('src'),
+                    changeImg = me.data('change_img');
+
+                // me.data('change_img', originImg);
+                // me.attr('src', changeImg);
+                // me.css({'opacity': '0'}).animate({'opacity': '0.99'}, 300)
+                        
+                // 兼容IE的蛋疼png透明问题写法
+                me.data('change_img', originImg);
+                me.attr('src', changeImg);
+                
+                jQuery({p: 0}).animate({p: 99}, {
+                    duration: 300,
+                    step: function(now, fx) {
+                        changeFun(me, now);
+                    }
+                });
+            })
+            .bind('mouseleave', function(){
+                var me = $(this),
+                    originImg = me.data('change_img'),
+                    changeImg = me.attr('src');
+                
+                // me.data('change_img', changeImg);
+                // me.attr('src', originImg);
+                // me.css({'opacity': '0'}).animate({'opacity': '0.99'}, 300);
+
+                // 兼容IE的蛋疼png透明问题写法
+                me.data('change_img', changeImg);
+                me.attr('src', originImg);
+                
+                jQuery({p: 0}).animate({p: 99}, {
+                    duration: 300,
+                    step: function(now, fx) {
+                        changeFun(me, now);
+                    }
+                });
+
+            });
+        });
+
+        
+    };
+
+
+    /*
+        给指定元素生成一个唯一id, 主要使用场景ajax需要一个id，防止多次点击
+
+        用例：
+        $('.someclass').setUUID();
+    */
+    $.fn.setUUID = function(){
+        return this.each(function(){
+            return $(this).attr('id', new Date().getTime());
+        });
+    }
+
+
+
+
+    /*
+        工具包
+    */
+    $.ZXUtils = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '工具包'
+    };
+    /*
+        去掉所有的html标签
+        target: 要操作的字符串
+
+        用例:
+        $.ZXUtils.clearHtmlTags('<div>1</div>');
+    */
+    $.ZXUtils.clearHtmlTags = function(target){
+        if(!target){
+            return '';
+        }
+        return target.replace(/<[^>].*?>/g,"");
+    };
+
+    /*
+        去掉所有的转义字符
+        target: 要操作的字符串
+
+        用例:
+        $.ZXUtils.clearEscapeCharacters('<div>1</div>');
+    */
+    $.ZXUtils.clearEscapeCharacters = function(target){
+        if(!target){
+            return '';
+        }
+        return target.replace(/&[^;].*?;/g, '');
+    };
+
+    /*
+        屏幕宽度小于 768 归于手机
+    */
+    $.ZXUtils.isPhone = function(){
+        return ($(window).width() < 768) ? true : false;
+    };
+
+    /*
+        屏幕宽度 大于768 而 小于992 归于平板
+    */
+    $.ZXUtils.isPad = function(){
+        return (768 <= $(window).width() && $(window).width() < 992) ? true : false;
+    };
+
+    /*
+        屏幕宽度大于 992 归于桌面
+    */
+    $.ZXUtils.isDesktop = function(){
+        return (992 <= $(window).width()) ? true : false;
+    };
+
+
+    /* 
+        弹窗插件
+    */
     $.ZXMsg = {
         version: '1.0.0',
         author: 'stranger',
@@ -405,82 +495,12 @@ function addZero(data){
     };
 
 
-    /*
-        鼠标移动渐变换图片插件，效果参见第三方登录图标
-        
-        用例:
-        $('.img-fade-hover').imgFadeHover();
-
-        dom如下, 需要指定鼠标移上去显示的图片地址data-change_img:
-        <img class="avatar-20 img-fade-hover" 
-            data-change_img="{{MEDIA_URL}}img/common/qq-active.png" 
-            src="{{MEDIA_URL}}img/common/qq.png">
-    */
-    $.fn.imgFadeHover = function(){
-        var changeFun = function(target, temp){
-            // IE 只能设置filter属性
-            if($.browser.msie){
-                // target[0].filter = String.format("'alpha(opacity={0})'", Math.round(temp));
-                target[0].filter = String.format("' progid:DXImageTransform.Microsoft.Alpha(Opacity={0})'", Math.round(temp));
-            } else {
-                target.css('opacity', temp/100);
-            }
-        };
-
-        return this.each(function(){
-            $(this).bind('mouseenter', function(){
-                var me = $(this),
-                    originImg = me.attr('src'),
-                    changeImg = me.data('change_img');
-
-                // me.data('change_img', originImg);
-                // me.attr('src', changeImg);
-                // me.css({'opacity': '0'}).animate({'opacity': '0.99'}, 300)
-                        
-                // 兼容IE的蛋疼png透明问题写法
-                me.data('change_img', originImg);
-                me.attr('src', changeImg);
-                
-                jQuery({p: 0}).animate({p: 99}, {
-                    duration: 300,
-                    step: function(now, fx) {
-                        changeFun(me, now);
-                    }
-                });
-            })
-            .bind('mouseleave', function(){
-                var me = $(this),
-                    originImg = me.data('change_img'),
-                    changeImg = me.attr('src');
-                
-                // me.data('change_img', changeImg);
-                // me.attr('src', originImg);
-                // me.css({'opacity': '0'}).animate({'opacity': '0.99'}, 300);
-
-                // 兼容IE的蛋疼png透明问题写法
-                me.data('change_img', changeImg);
-                me.attr('src', originImg);
-                
-                jQuery({p: 0}).animate({p: 99}, {
-                    duration: 300,
-                    step: function(now, fx) {
-                        changeFun(me, now);
-                    }
-                });
-
-            });
-        });
-
-        
-    };
-
-
     // 分享插件
     $.ZXShare = {
         version: '1.0.0',
         author: 'stranger',
         description: '分享插件'
-    }
+    };
     /*
         分享到微博
         url: 要分享的url
@@ -559,7 +579,7 @@ function addZero(data){
     */
     $.ZXOperation.followPeople = function(userId, callback){
         ajaxSend("/timeline/follow/" + userId, {}, callback, 'GET');
-    }
+    };
 
     /*
         取消关注用户
@@ -571,7 +591,7 @@ function addZero(data){
     */
     $.ZXOperation.unfollowPeople = function(userId, callback){
         ajaxSend("/timeline/unfollow/" + userId, {}, callback, 'GET');
-    }
+    };
 
     /*
         关注话题
@@ -583,7 +603,7 @@ function addZero(data){
     */
     $.ZXOperation.followTopic = function(topicId, callback){
         
-    }
+    };
 
     /*
         取消关注话题
@@ -595,7 +615,7 @@ function addZero(data){
     */
     $.ZXOperation.unfollowTopic = function(topicId, callback){
         
-    }
+    };
 
 })(jQuery);
 

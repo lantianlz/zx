@@ -45,7 +45,7 @@ $(document).ready(function(){
                 {% for tag in question_tags %}{% include "question/_tags.html" %}{% endfor %}
             </ul>
         </div>
-        <div class="topic-footer row">
+        <div class="topic-footer row" data-question_id="{{question.id}}">
             <div class="text-right gray-a pb-10 f12 col-md-12">
                 
                 <a class="question-share-qq" href="javascript: void(0);">
@@ -72,13 +72,11 @@ $(document).ready(function(){
                 <span class="question-tools f12 gray-a">
                     {% if request.user.is_staff %}
                     {% if not question.is_important %}
-                    <a id="set_important_a_id" href="javascript: void(0);" 
-                        onclick="set_important('{{question.id}}')">
+                    <a href="javascript: void(0);" class="set-important">
                         设置精华
                     </a>
                     {% else %}
-                    <a id="cancel_important_a_id" href="javascript: void(0);" 
-                        onclick="cachel_important('{{question.id}}')">
+                    <a href="javascript: void(0);" class="cancel-important">
                         取消精华
                     </a>
                     {% endif %}
@@ -88,8 +86,7 @@ $(document).ready(function(){
                         <span class="glyphicon glyphicon-pencil"></span>
                         修改
                     </a>
-                    <a href="javascript: void(0);" id="remove_question_a_id"
-                        onclick="remove_question('{{question.id}}')">
+                    <a href="javascript: void(0);" class="remove-question">
                         <span class="glyphicon glyphicon-trash"></span>
                         删除
                     </a>
@@ -112,7 +109,7 @@ $(document).ready(function(){
             <div class="panel-body row">
                 <div class="filter-invite col-md-12">
                     <div class="col-md-4">
-                        <input type="text" class="form-control input-sm" placeholder="输入你想邀请人的名字" value="">
+                        <input type="text" class="form-control input-sm search-input" placeholder="输入你想邀请人的名字" value="">
                         <span class="glyphicon glyphicon-search search"></span>
                     </div>
                 </div>
@@ -124,7 +121,7 @@ $(document).ready(function(){
                                 <div class="name blue-a pl-40">
                                     <a href="javascript: void(0);" class="zx-cardtips" data-user_id="12">半夜没事瞎溜达</a>
                                     <span>
-                                        <button type="button" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
+                                        <button type="button" class="btn btn-primary btn-xs pull-right btn-invite" data-user_id='12'>邀请回答</button>
                                     </span>
                                 </div>
                                 <div class="des pl-40">漫漫人生路，谁不错几步</div>
@@ -218,7 +215,7 @@ $(document).ready(function(){
         {% if bad_answers %}
         <li class="list-group-item no-l-r-bd bdc-eee">
             <div class="gray-a">
-                <a class="collapse-answer zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" data-trigger="hover" title="" href="javascript: void(0)">
+                <a class="answer-collapse zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" data-trigger="hover" title="" href="javascript: void(0)">
                     共有 {{bad_answers_count}} 个回答被折叠
                     <span class="glyphicon glyphicon-question-sign" ></span>
                 </a>
@@ -230,7 +227,7 @@ $(document).ready(function(){
         {% endif %}
 
         <!-- 分享问题菜单 -->
-        <div id="question-share-tools" class="gray-a none">
+        <div id="answer-share-tools" class="gray-a none">
             <a href="javascript: void(0)" class="answer-share-qq">
                 <img class="w20 img-fade-hover pt-5" title="分享到QQ" data-change_img="{{MEDIA_URL}}img/common/qq-active.png" src="{{MEDIA_URL}}img/common/qq.png">
             </a>

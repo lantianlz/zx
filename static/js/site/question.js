@@ -26,13 +26,10 @@ $(document).ready(function(){
         questionEditor = createEditor('#question_editor'),
         editAnswerEditor = createEditor('#edit_answer_editor');
 
-
     // 我要提问 IE 链接不过去问题，强制js跳转
     $('.ask-question button').bind('click', function(){
         window.location.href = '/question/ask_question';
     });
-
-
     // 按钮点击事件 IE直接点还不行,非要js
     $('.not-login .btn-login').bind('click', function(){
         window.location.href = '/login';
@@ -41,18 +38,40 @@ $(document).ready(function(){
         window.location.href = '/regist';
     });
 
-    // 定位到答案
+    // 根据url 定位到回答位置
     if(window.location.href.indexOf('#to_answer_') > -1){
         $('html,body').animate({
             scrollTop: $('#'+window.location.hash.substring('4')).offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0) - parseInt($('.container_content').css('margin-top')) + 15
         });
     }
 
-
     // 初始化自定义的zxCheckbox
     $('#div_tags .zx-checkbox').zxCheckbox();
     $('#div_types .zx-radio').zxRadio();
 
+    // 鼠标移动到图片淡入淡出效果
+    $('.img-fade-hover').imgFadeHover();
+
+    // 初始化分享答案事件
+    $('.answer-share').toolbar({
+        content: '#answer-share-tools', 
+        position: 'top'
+    }, function(target){
+        // 点击分享回答按钮保存到全局变量中
+        SHARE_ANSWER_ID = target.parents('li').attr('id');
+    });
+    $('.answer-share-qq').bind('click', function(){
+        var url = String.format('{0}%23to_{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
+            title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
+
+        $.ZXShare.qq(url, title);
+    });
+    $('.answer-share-sina').bind('click', function(){
+        var url = String.format('{0}%23to_{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
+            title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
+
+        $.ZXShare.sinaWeibo(url, title, '');
+    });
 
     // 选择问题类型事件
     $('#div_types .zx-radio>input').bind("change", function(){
@@ -77,93 +96,6 @@ $(document).ready(function(){
             );
         };
     });
-
-
-    // 回答工具条鼠标移动显示隐藏事件
-    $('#ul_replies .list-group-item')
-    .bind('mouseenter', function(){
-        $(this).find('.reply-tools .auto-hide').show();
-    })
-    .bind('mouseleave', function(){
-        $(this).find('.reply-tools .auto-hide').hide();
-    });
-    // 评论工具条鼠标移动显示隐藏事件
-    $('.reply-comments .comment')
-    .bind('mouseenter', function(){
-        $(this).find('.comment-date .auto-hide').show();
-    })
-    .bind('mouseleave', function(){
-        $(this).find('.comment-date .auto-hide').hide();
-    });
-    
-  
-    // 评论打开关闭事件
-    $('.reply-tools .answer-comments').bind('click', function(){
-        var target = $(this).parent().next();
-
-        target.css('display') === 'block' ? target.hide('fast') : target.show('fast');
-    });
-
-
-    // 邀请打开关闭事件
-    $('.question-tools .invite').bind('click', function(){
-        var target = $(".topic-invite");
-        
-        target.css('display') === 'block' ? target.hide() : target.show();
-    });
-    // 邀请某人回答事件
-    $('.recommend-invite .btn-invite').bind('click', function(){
-        var target = $(this).parents('.invite-person-info').find('.zx-cardtips');
-        $.ZXMsg.alert('邀请某人', target.data('user_id'));
-    });
-    // 邀请查询事件
-    $('.filter-invite .search').bind('click', function(){
-        $.ZXMsg.alert('查询某人', $(this).prev().val());
-    });
-
-    // 折叠回答打开关闭事件
-    $('.collapse-answer').bind('click', function(){
-        var target = $('.replies li.auto-hide');
-
-        target.eq(0).css('display') === 'none' ? target.show('fast') : target.hide('fast'); 
-    });
-
-
-    // 回复某人事件
-    $('.answer-say-to').bind('click', function(){
-        // 如果是手机端
-        if($('.answer-main .ke-container').length == 0){
-            $('.answer-main .zx-textarea').val("@" + $(this).data('user_name') + " ");
-            $('.answer-main .zx-textarea').focusEnd();
-        } else {
-            // 滚动到输入框的位置框
-            $('html,body').animate({
-                scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0) - parseInt($('.container_content').css('margin-top')) - 5
-            });
-            answerEditor.focus();
-            answerEditor.html('');
-            answerEditor.appendHtml("<span>@" + $(this).data('user_name') + " </span>");
-        }
-    });
-  
-
-    // 修改回答事件
-    $('.answer-edit').bind('click', function(){
-        $('#edit_answer_modal').modal({'show': true, 'backdrop': 'static'});
-
-        var temp = $(this).parents('li').eq(0).find('.reply-content').html();
-        // 如果是手机端
-        if($('#edit_answer_modal .ke-container').length == 0){
-            // 去掉html标签
-            temp = $.ZXUtils.clearHtmlTags(temp);
-        } 
-
-        editAnswerEditor.html(temp);
-
-        $('#edit_answer_modal .edit-answer-id').val($(this).data('answer_id'));
-    });
-
-
     // 修改问题弹出层自动选中问题类型和标签
     if (SElECTED_QUESTION_TYPE){
         // 自动选中问题类型
@@ -188,56 +120,6 @@ $(document).ready(function(){
         }
     }
 
-
-    // 红心显示隐藏动画
-    $('.answer-like-border').bind('mouseenter', function(){
-        $(this).find('.answer-like').fadeIn();
-        $(this).find('.answer-like-count').fadeOut();
-    })
-    .bind('mouseleave', function(){
-        $(this).find('.answer-like').fadeOut();
-        $(this).find('.answer-like-count').fadeIn();
-    });
-
-
-    // 点击赞动作
-    $('.answer-like-border').bind('click', function(){
-        var me = $(this);
-        temp = null;
-        postData = {'answer_id': me.data('answer_id')};
-
-        ajaxSend("/question/like_answer", postData, function(data){
-            if(data['flag'] != '0'){
-                $.ZXMsg.alert('提示', data['result']);
-                return;
-            }
-
-            // 添加动画
-            me.append('<span class="animate-like glyphicon glyphicon-heart"></span>');
-            temp = me.find('.animate-like');
-            temp.animate({
-                opacity: 0.01,
-                fontSize: 25,
-                top: 11,
-                left: 10
-            }, 500, function(){
-                // 去除动画
-                temp.remove();
-
-                // 修改红心为实心
-                me.find('.answer-like')
-                .removeClass('glyphicon-heart-empty')
-                .addClass('glyphicon-heart')
-                .css({'color': 'red'});
-
-                // 赞次数+1
-                me.find('.answer-like-count')
-                .text(parseInt(me.find('.answer-like-count').text()) + 1);
-            });
-        });
-    });
-
-    
     // 问题详情页面 的 问题内容
     if(QUESTION_CONTENT && questionEditor){
         var temp = QUESTION_CONTENT;
@@ -269,112 +151,313 @@ $(document).ready(function(){
         }
     });
 
-    // 分享事件
-    // 分享问题事件
-    $('.question-share-qq').bind('click', function(){
-        var url = window.location.origin + window.location.pathname,
-            title = $(this).parents('.topic').find('.topic-title strong').html();
-
-        $.ZXShare.qq(url, title);
-    });
-    $('.question-share-sina').bind('click', function(){
-        var url = window.location.origin + window.location.pathname,
-            title = $(this).parents('.topic').find('.topic-title strong').html();
-
-        $.ZXShare.sinaWeibo(url, title, '');
-    });
-    // 分享答案事件
-    $('.answer-share').toolbar({
-        content: '#question-share-tools', 
-        position: 'top'
-    }, function(target){
-        // 点击分享回答按钮保存到全局变量中
-        SHARE_ANSWER_ID = target.parents('li').attr('id');
-    });
-    $('.answer-share-qq').bind('click', function(){
-        var url = String.format('{0}%23to_{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
-            title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
-
-        $.ZXShare.qq(url, title);
-    });
-    $('.answer-share-sina').bind('click', function(){
-        var url = String.format('{0}%23to_{1}', window.location.origin + window.location.pathname, SHARE_ANSWER_ID),
-            title = $(String.format('#{0} .reply-content', SHARE_ANSWER_ID)).html();
-
-        $.ZXShare.sinaWeibo(url, title, '');
-    });
-
-    // 鼠标移动到图片淡入淡出效果
-    $('.img-fade-hover').imgFadeHover();
-
-});
 
 
-function common_remove_question_callback(data) {
-    if (data['flag'] == '0') {
-        $.ZXMsg.alert('提示', '操作成功!页面即将刷新', 2000);
-        window.setTimeout(function(){
-            window.location = '/question';
-        }, 3000)
+
+    // backbone 方式定义事件
+    // ================== 问题邀请事件绑定开始 ==================
+    var QuestionInviteView = Backbone.View.extend({
+        el: '.topic-invite',
+
+        events: {
+            'click .search': 'search',
+            'click .btn-invite': 'invitePerson'
+        },
+
+        // 显示或隐藏邀请框
+        toggleInvite: function(){
+            var target = this.$el;
         
-    } else {
-        $.ZXMsg.alert('提示', data['result']);
-    }
-}
+            target.css('display') === 'block' ? target.hide() : target.show();
+        },
 
-function remove_answer(answer_id){
-    $.ZXMsg.confirm('提示', '确认要删除回答吗?', function(result){ 
-        if(result){
-            var postData = {'answer_id': answer_id};
-            g_ajax_processing_obj_id = 'remove_answer_a_id_' + answer_id;
-            ajaxSend("/question/remove_answer", postData, common_callback);
+        // 查询邀请人
+        search: function(){
+            // todo
+            $.ZXMsg.alert('查询某人', this.$('.search-input').val());
+        },
+
+        // 邀请某人回答问题
+        invitePerson: function(){
+            // todo
+            $.ZXMsg.alert('邀请某人', this.$('.btn-invite').data('user_id'));
         }
     });
-}
+    var questionInviteView = new QuestionInviteView();
+    // ================== 问题邀请事件绑定开始 ==================
 
+    // ================== 问题事件绑定开始 =====================
+    var QuestionView = Backbone.View.extend({  
+        el: '.topic-footer',
 
-function remove_question(question_id){
-    $.ZXMsg.confirm('提示', '确认要删除此问题吗?', function(result){ 
-        if(result){
-            var postData = {'question_id': question_id};
-            g_ajax_processing_obj_id = 'remove_question_a_id';
-            ajaxSend("/question/remove_question", postData, common_remove_question_callback);
+        events: {  
+            'click .question-share-qq': 'shareQQ',
+            'click .question-share-sina': 'shareSina',
+            'click .set-important': 'setImportant',
+            'click .cancel-important': 'cancelImportant',
+            'click .remove-question': 'remoteQuestion',
+            'click .invite': 'invite',
+        },
+
+        // 分享问题到QQ
+        shareQQ: function(){
+            var url = window.location.origin + window.location.pathname,
+                title = this.$('.question-share-qq').parents('.topic').find('.topic-title strong').html();
+
+            $.ZXShare.qq(url, title);
+        },
+
+        // 分享问题到sina
+        shareSina: function(){
+            var url = window.location.origin + window.location.pathname,
+                title = this.$('.question-share-sina').parents('.topic').find('.topic-title strong').html();
+
+            $.ZXShare.sinaWeibo(url, title, '');
+        },
+
+        // 设置精华
+        setImportant: function(){
+            var questionId = this.$el.data('question_id');
+
+            $.ZXMsg.confirm('提示', '确定将此问题设置为精华吗?', function(result){ 
+                if(result){
+                    // 设置ajax元素id,防止多次点击
+                    g_ajax_processing_obj_id = this.$('.set-important').setUUID().attr('id');
+
+                    ajaxSend("/question/set_important", {'question_id': questionId}, common_callback);
+                }
+            });
+        },
+
+        // 取消设置精华
+        cancelImportant: function(){
+            var questionId = this.$el.data('question_id');
+
+            $.ZXMsg.confirm('提示', '确定要取消精华吗?', function(result){ 
+                if(result){
+                    // 设置ajax元素id,防止多次点击
+                    g_ajax_processing_obj_id = this.$('.cancel-important').setUUID().attr('id');
+
+                    ajaxSend("/question/cachel_important", {'question_id': questionId}, common_callback);
+                }
+            });
+        },
+
+        // 删除问题
+        remoteQuestion: function(){
+            var questionId = this.$el.data('question_id');
+
+            $.ZXMsg.confirm('提示', '确认要删除此问题吗?', function(result){ 
+                if(result){
+                    // 设置ajax元素id,防止多次点击
+                    g_ajax_processing_obj_id = this.$('.remove-question').setUUID().attr('id');
+
+                    ajaxSend(
+                        "/question/remove_question", 
+                        {'question_id': questionId},
+                        function(data){
+                            if (data['flag'] == '0') {
+                                $.ZXMsg.alert('提示', '操作成功!页面即将刷新', 2000);
+                                window.setTimeout(function(){
+                                    window.location = '/question';
+                                }, 3000)
+                                
+                            } else {
+                                $.ZXMsg.alert('提示', data['result']);
+                            }
+                        } 
+                    );
+
+                }
+            });
+        },
+
+        // 邀请框打开关闭事件
+        invite: function(){
+            questionInviteView.toggleInvite();
+        }
+
+    });  
+    new QuestionView();
+    // ================== 问题事件绑定结束 ========================
+
+    // ================== 问题各个回答事件绑定开始 ==================
+    var QuestionAnswerView = Backbone.View.extend({
+        el: '.list-group-item',
+
+        events: {
+            'click .answer-share': 'shareAnswer',
+            'click .answer-collapse': 'collapseAnswer',
+            'click .answer-say-to': 'sayTo',
+            'click .answer-no-help': 'noHelp',
+            'click .answer-cancel-no-help': 'cancelNoHelp',
+            'click .answer-edit': 'editAnswer',
+            'click .answer-remove': 'removeAnswer',
+            'click .answer-like-border': 'likeAnswer',
+            'mouseenter': 'showAnswerTools',
+            'mouseleave': 'hideAnswerTools',
+            'mouseenter .answer-like-border': 'showHeart',
+            'mouseleave .answer-like-border': 'hideHeart'
+        },
+
+        // 赞动画
+        _likeAnswerAnimate: function(target){
+            
+            target.append('<span class="animate-like glyphicon glyphicon-heart"></span>');
+
+            var temp = target.find('.animate-like');
+            temp.animate({
+                opacity: 0.01,
+                fontSize: 25,
+                top: 11,
+                left: 10
+            }, 500, function(){
+                // 去除动画
+                temp.remove();
+
+                // 修改红心为实心
+                target.find('.answer-like')
+                .removeClass('glyphicon-heart-empty')
+                .addClass('glyphicon-heart')
+                .css({'color': 'red'});
+
+                // 赞次数+1
+                target.find('.answer-like-count')
+                .text(parseInt(target.find('.answer-like-count').text()) + 1);
+            });
+        },
+
+        // 显示红心
+        showHeart: function(sender){
+            var target = $(sender.currentTarget);
+
+            target.find('.answer-like').fadeIn();
+            target.find('.answer-like-count').fadeOut();
+        },
+
+        // 隐藏红心
+        hideHeart: function(sender){
+            var target = $(sender.currentTarget);
+            
+            target.find('.answer-like').fadeOut();
+            target.find('.answer-like-count').fadeIn();
+        },
+
+        // 赞回答
+        likeAnswer: function(sender){
+            var target = $(sender.currentTarget),
+                view = this;
+
+            ajaxSend(
+                "/question/like_answer", 
+                {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
+                function(data){
+                    if(data['flag'] != '0'){
+                        $.ZXMsg.alert('提示', data['result']);
+                        return;
+                    }
+
+                    // 操作成功执行动画
+                    view._likeAnswerAnimate(target);
+                }
+            );
+        },
+
+        // 分享回答操作
+        shareAnswer: function(){
+
+        },
+
+        // 显示与折叠答案
+        collapseAnswer: function(){
+            var target = this.$el.parent().find('li.auto-hide');
+
+            target.eq(0).css('display') === 'none' ? target.show('fast') : target.hide('fast');
+        },
+
+        // 回复某人
+        sayTo: function(sender){
+            var target = $(sender.currentTarget);
+
+            // 如果是手机端
+            if($('.answer-main .ke-container').length == 0){
+                $('.answer-main .zx-textarea').val("@" + target.data('user_name') + " ");
+                $('.answer-main .zx-textarea').focusEnd();
+            } else {
+                // 滚动到输入框的位置框
+                $('html,body').animate({
+                    scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0) - parseInt($('.container_content').css('margin-top')) - 5
+                });
+                answerEditor.focus();
+                answerEditor.html('');
+                answerEditor.appendHtml("<span>@" + target.data('user_name') + " </span>");
+            }
+        },
+
+        // 设置回答没有帮助
+        noHelp: function(sender){
+            var target = $(sender.currentTarget);
+
+            // 设置ajax元素id,防止多次点击
+            g_ajax_processing_obj_id = target.setUUID().attr('id');
+
+            ajaxSend("/question/set_answer_bad", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+        },
+
+        // 取消回答没有帮助
+        cancelNoHelp: function(sender){
+            var target = $(sender.currentTarget);
+
+            // 设置ajax元素id,防止多次点击
+            g_ajax_processing_obj_id = target.setUUID().attr('id');
+
+            ajaxSend("/question/cancel_answer_bad", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+        },
+
+        // 编辑回答
+        editAnswer: function(sender){
+            var target = $(sender.currentTarget);
+
+            // 显示弹出框
+            $('#edit_answer_modal').modal({'show': true, 'backdrop': 'static'});
+
+            var content = target.parents('li').eq(0).find('.reply-content').html();
+            // 如果是手机端
+            if($('#edit_answer_modal .ke-container').length == 0){
+                // 去掉html标签
+                content = $.ZXUtils.clearHtmlTags(content);
+            } 
+
+            editAnswerEditor.html(content);
+
+            $('#edit_answer_modal .edit-answer-id').val($(sender.delegateTarget).data('answer_id'));
+
+        },
+
+        // 删除回答
+        removeAnswer: function(sender){
+            $.ZXMsg.confirm('提示', '确认要删除回答吗?', function(result){ 
+                if(result){
+                    var target = $(sender.currentTarget);
+
+                    // 设置ajax元素id,防止多次点击
+                    g_ajax_processing_obj_id = target.setUUID().attr('id');
+
+                    ajaxSend("/question/remove_answer", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+                }
+            });
+        },
+
+        // 显示回答工具条
+        showAnswerTools: function(sender){
+            $(sender.delegateTarget).find('.reply-tools .auto-hide').show();
+        },
+
+        // 隐藏回答工具条
+        hideAnswerTools: function(sender){
+            $(sender.delegateTarget).find('.reply-tools .auto-hide').hide();
         }
     });
-}
-
-
-function set_important(question_id){
-    $.ZXMsg.confirm('提示', '确定设置为精华吗?', function(result){ 
-        if(result){
-            var postData = {'question_id': question_id};
-            g_ajax_processing_obj_id = 'set_important_a_id';
-            ajaxSend("/question/set_important", postData, common_callback);
-        }
-    });
-}
-
-
-function cachel_important(question_id){
-    $.ZXMsg.confirm('提示', '确定要将此问题取消此精华吗?', function(result){ 
-        if(result){
-            var postData = {'question_id': question_id};
-            g_ajax_processing_obj_id = 'cancel_important_a_id';
-            ajaxSend("/question/cachel_important", postData, common_callback);
-        }
-    });
-}
-
-
-function set_answer_bad(answer_id){
-    var postData = {'answer_id': answer_id};
-    g_ajax_processing_obj_id = 'set_answer_bad_id_' + answer_id;
-    ajaxSend("/question/set_answer_bad", postData, common_callback);
-}
-
-
-function cancel_answer_bad(answer_id){
-    var postData = {'answer_id': answer_id};
-    g_ajax_processing_obj_id = 'cancel_answer_bad_' + answer_id;
-    ajaxSend("/question/cancel_answer_bad", postData, common_callback);
-}
+    new QuestionAnswerView();
+    // ================== 问题各个回答事件绑定结束 ==================
+});
