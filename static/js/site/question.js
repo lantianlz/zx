@@ -195,7 +195,7 @@ $(document).ready(function(){
             'click .question-share-sina': 'shareSina',
             'click .set-important': 'setImportant',
             'click .cancel-important': 'cancelImportant',
-            'click .remove-question': 'remoteQuestion',
+            'click .remove-question': 'removeQuestion',
             'click .invite': 'invite',
         },
 
@@ -244,7 +244,7 @@ $(document).ready(function(){
         },
 
         // 删除问题
-        remoteQuestion: function(){
+        removeQuestion: function(){
             var questionId = this.$el.data('question_id');
 
             $.ZXMsg.confirm('提示', '确认要删除此问题吗?', function(result){ 
@@ -365,7 +365,6 @@ $(document).ready(function(){
 
         // 分享回答操作
         shareAnswer: function(){
-
         },
 
         // 显示与折叠答案
