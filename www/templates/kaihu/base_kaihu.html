@@ -1,0 +1,23 @@
+{% extends "base/base_home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block home_css %}
+<!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/user_profile.css?v={{MEDIA_VERSION}}" /> -->
+{% endblock %}
+
+{% block home_js%}
+<!-- <script type="text/javascript" src="{{MEDIA_URL}}js/site/user_profile.js?v={{MEDIA_VERSION}}"></script> -->
+{% endblock %}
+
+{% block container_content %}
+<div class="zx-kaihu-main col-md-8 row">
+	{% block kaihu-main %}{% endblock %}
+</div>
+
+<div class="zx-kaihu-right col-md-4 pl-50">
+	{% block kaihu-right %}
+
+	{% endblock %}
+</div>
+{% endblock %}
