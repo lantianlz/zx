@@ -252,6 +252,11 @@ a.border-block-blue:hover{
     border-color: #428bca;
     color: white;
 }
+a.border-block-blue.active{
+  background-color: #428bca;
+  border-color: #428bca;
+  color: white;
+}
 
 /*文字滑动效果*/
 .shimmer {
