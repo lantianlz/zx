@@ -16,6 +16,19 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
     z-index: 900;
 }
 
+.btn{
+  box-shadow: 1px 1px 1px #eee;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.btn-lg{
+  border-radius: 4px;
+}
+
+.modal-content{
+  border-radius: 3px;
+}
+
 .breadcrumb>li{
     display: inline;
 }
