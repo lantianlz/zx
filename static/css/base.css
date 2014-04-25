@@ -48,15 +48,19 @@
 
 .ff-yahei{font-family: "Microsoft YaHei"}
 
+.ws-nowrap{white-space: nowrap}
+
 .lh150{line-height:150%}
 .lh180{line-height:180%}
 .lh200{line-height:200%}
 
 
 /*长度高度*/
-.h{height:100%}
+.h{height: 100%}
+.h25{height: 25px;}
+.min-h400{min-height: 400px;}
 
-.w{width:100%}
+.w{width: 100%}
 
 .w20{
 	width: 20px;
@@ -233,8 +237,9 @@ a:hover{color: #259;}
 	animation-play-state: running;
 }
 
-.box-shadow-224{box-shadow: 2px 2px 4px;}
-.box-shadow-024{box-shadow: 2px 2px 4px;}
+.box-shadow-224{box-shadow: 2px 2px 4px #888;}
+.box-shadow-024{box-shadow: 0px 2px 4px #888;}
+.box-shadow-559{box-shadow: 5px 5px 9px #bbb, -2px 2px 10px #eee}
 
 .border-radius-0{border-radius: 0px;}
 .border-radius-2{border-radius: 2px;}
@@ -250,4 +255,5 @@ a:hover{color: #259;}
 .border-1{border: solid 1px;}
 
 .bdc-eee{border-color: #eee;}
+.bdc-ddd{border-color: #ddd;}
 .bdc-bbb{border-color: #bbb;}
