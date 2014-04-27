@@ -443,6 +443,7 @@ def user_profile_required(func):
         from www.question.interface import QuestionBase
         from django.http import HttpResponse
 
+        ufb = UserFollowBase()
         ub = UserBase()
         if not user_id:
             user = request.user
@@ -453,9 +454,11 @@ def user_profile_required(func):
                 return HttpResponse(err_msg)
         request.is_me = (request.user == user)
         if not request.is_me:
-            request.is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+            request.is_follow = ufb.check_is_follow(request.user.id, user.id)
         request.user_question_count, request.user_answer_count, request.user_liked_count = QuestionBase().\
             get_user_qa_count_info(user.id)
+        request.following_count = ufb.get_following_count(user.id)
+        request.follower_count = ufb.get_follower_count(user.id)
 
         return func(request, user, *args, **kwargs)
     return _decorator

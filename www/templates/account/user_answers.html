@@ -1,11 +1,11 @@
 {% extends "account/base_profile.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}提问 - 个人主页{% endblock %}
+{% block title %}回答 - 个人主页{% endblock %}
 
 
 {% block tab_content %}
-<div class="tab-pane active fade in" id="questions">
+<div class="tab-pane active fade in">
     {% if answers %}
     <ul class="list-group only-top-border">
         {% for answer in answers %}

@@ -8,6 +8,7 @@ from django.db.models import F
 from common import utils, debug, cache
 from www.timeline.models import UserFollow
 from www.account.interface import UserBase
+from www.question.interface import QuestionBase
 
 
 dict_err = {
@@ -28,6 +29,24 @@ class UserFollowBase(object):
 
     def __init__(self):
         pass
+
+    def format_following(self, objs):
+        for obj in objs:
+            obj.user = UserBase().get_user_by_id(obj.to_user_id)
+            obj.user.user_question_count, obj.user.user_answer_count, obj.user.user_liked_count = QuestionBase().\
+                get_user_qa_count_info(obj.to_user_id)
+            obj.user.following_count = self.get_following_count(obj.to_user_id)
+            obj.user.follower_count = self.get_follower_count(obj.to_user_id)
+        return objs
+
+    def format_follower(self, objs):
+        for obj in objs:
+            obj.user = UserBase().get_user_by_id(obj.from_user_id)
+            obj.user.user_question_count, obj.user.user_answer_count, obj.user.user_liked_count = QuestionBase().\
+                get_user_qa_count_info(obj.from_user_id)
+            obj.user.following_count = self.get_following_count(obj.from_user_id)
+            obj.user.follower_count = self.get_follower_count(obj.from_user_id)
+        return objs
 
     @transaction.commit_manually(using=TIMELINE_DB)
     def follow_people(self, from_user_id, to_user_id):
@@ -88,3 +107,15 @@ class UserFollowBase(object):
 
     def check_is_follow(self, from_user_id, to_user_id):
         return True if UserFollow.objects.filter(from_user_id=from_user_id, to_user_id=to_user_id) else False
+
+    def get_following_by_user_id(self, user_id):
+        return UserFollow.objects.filter(from_user_id=user_id)
+
+    def get_followers_by_user_id(self, user_id):
+        return UserFollow.objects.filter(to_user_id=user_id)
+
+    def get_following_count(self, user_id):
+        return UserFollow.objects.filter(from_user_id=user_id).count()
+
+    def get_follower_count(self, user_id):
+        return UserFollow.objects.filter(to_user_id=user_id).count()
