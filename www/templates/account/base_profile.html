@@ -52,13 +52,13 @@
             
             <li>
                 <a href="/p/{{user.id}}/following">
-                    <span class="following-count block fi">65</span>
+                    <span class="following-count block fi">{{request.following_count}}</span>
                     <span>关注</span>
                 </a>
             </li>
             <li>
                 <a href="/p/{{user.id}}/followers">
-                    <span class="followers-count block fi">21598</span>
+                    <span class="followers-count block fi">{{request.follower_count}}</span>
                     <span>粉丝</span>
                 </a>
             </li>

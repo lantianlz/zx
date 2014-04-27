@@ -25,6 +25,7 @@ def follow_people(request, to_user_id):
     r = dict(errcode=errcode, errmsg='ok' if errcode == 0 else errmsg)
     return HttpResponse(json.dumps(r), mimetype='application/json')
 
+
 @member_required
 def unfollow_people(request, to_user_id):
     errcode, errmsg = ufb.unfollow_people(request.user.id, to_user_id)

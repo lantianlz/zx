@@ -13,9 +13,11 @@ from www.misc import qiniu_client
 from www.account import interface
 from www.misc.decorators import member_required
 from www.account.interface import user_profile_required
+from www.timeline.interface import UserFollowBase
 
 ub = interface.UserBase()
 ib = interface.InvitationBase()
+ufb = UserFollowBase()
 
 
 def show_index(request):
@@ -131,9 +133,6 @@ def get_user_by_nick(request, nick):
         return HttpResponse(err_msg)
 
 
-
-
-
 @member_required
 @user_profile_required
 def user_questions(request, user_id, template_name='account/user_questions.html'):
@@ -171,6 +170,8 @@ def user_following(request, user_id, template_name='account/user_following.html'
     关注 - 个人主页
     '''
     user = user_id  # 装饰器转换了对象
+
+    user_followings = ufb.format_following(ufb.get_following_by_user_id(user.id))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -181,6 +182,7 @@ def user_followers(request, user_id, template_name='account/user_followers.html'
     粉丝 - 个人主页
     '''
     user = user_id  # 装饰器转换了对象
+    user_followers = ufb.format_follower(ufb.get_followers_by_user_id(user.id))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

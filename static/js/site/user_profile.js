@@ -43,14 +43,27 @@ $(document).ready(function(){
     });
 
 
-    // 关注用户
+    // 用户空间左侧关注用户
     $('.user-profile-left .follow').bind('click', function(){
     	g_ajax_processing_obj_id = 'left_follow_button_id';
     	$.ZXOperation.followPeople($(this).data('user_id'), common_callback);
     });
-    // 取消关注用户
+
+    // 用户空间左侧取消关注用户
     $('.user-profile-left .unfollow').bind('click', function(){
     	g_ajax_processing_obj_id = 'left_unfollow_button_id';
+    	$.ZXOperation.unfollowPeople($(this).data('user_id'), common_callback);
+    });
+
+    // 用户空间右侧关注用户
+    $('.user-profile-right .follow').bind('click', function(){
+    	g_ajax_processing_obj_id = 'right_follow_button_id_' + $(this).data('user_id');
+    	$.ZXOperation.followPeople($(this).data('user_id'), common_callback);
+    });
+
+    // 用户空间右侧取消关注用户
+    $('.user-profile-right .unfollow').bind('click', function(){
+    	g_ajax_processing_obj_id = 'right_unfollow_button_id_' + $(this).data('user_id');
     	$.ZXOperation.unfollowPeople($(this).data('user_id'), common_callback);
     });
 });
