@@ -26,20 +26,30 @@
 .area>li.active .area-arrow{
     visibility: visible;
 }
+
+.tab-content li{
+    transition: background-color 0.5s;
+}
+.tab-content li:hover{
+    background-color: aliceblue;
+}
 </style>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
+    // 左侧区域鼠标移动导航
     $('.area li').bind('mouseenter', function(e){
         $(this).children('a').tab('show');
     });
+
 });
 </script>
 {% endblock %}
 
-{% block kaihu-main %}
+{% block container_content %}
+<div class="zx-kaihu-main col-md-12 row pt-10">
 <div class="col-md-2 pr-0">
     <div class="pt-3 pb-5 bottom-border bdc-ddd text-center f16">按区域查找券商信息</div>
     <ul class="list-group area bottom-border bdc-ddd">
@@ -89,11 +99,11 @@ $(document).ready(function(){
 </div>
 
 <div class="col-md-10 tab-content pl-0 pr-0 mt-30 border-1 bdc-ddd box-shadow-559">
-  <div class="tab-pane in active" id="huabei">
+  <div class="tab-pane in active col-md-12" id="huabei">
     <ul class="list-inline">
         <li class="col-md-6 col-xs-12">
             <div class="pt-10 pl-25">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">北京</a>
+                <a href="/kaihu/1" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">北京</a>
             </div>
             <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
                 <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">东城区</a><span class="co17 pr-10">|</span> 
@@ -214,7 +224,7 @@ $(document).ready(function(){
   </div>
 </div>
 
-
+</div>
 <!-- <a class="active border-block-blue pa ml-5 pl-10 pr-10 pt-3 pb-3" href="#">所有券商</a> -->
 
 {% endblock %}

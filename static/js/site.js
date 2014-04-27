@@ -495,6 +495,96 @@ function addZero(data){
     };
 
 
+    // 地图插件
+    $.ZXMap = (function(){
+        var map = null,
+            mapHtml = [
+            '<div class="modal fade" id="map_modal" role="dialog">',
+                '<div class="modal-dialog">',
+                    '<div class="modal-content">',
+                        '<div class="modal-header">',
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
+                            '<h4 class="modal-title"></h4>',
+                        '</div>',
+                        '<div class="modal-body pb-0">',
+                            '<div id="zx_map" style="height: 400px;"></div>',
+                        '</div>',
+                    '</div>',
+                '</div>',
+            '</div>'
+        ].join('');
+
+        return {
+            version: '1.0.0',
+            author: 'stranger',
+            description: '地图插件',
+            createMap: function(mapTitle){
+                if(!map){
+                    // 是否第一次创建反馈框
+                    if($('#map_modal').length == 0){
+                        // 将反馈框添加进body
+                        $('body').append(mapHtml);
+                    }
+
+                    // 创建百度地图对象
+                    map = new BMap.Map("zx_map");
+                }
+
+                // 设置地图title
+                $('#map_modal .modal-title').html(mapTitle);
+                // 显示
+                $('#map_modal').modal({'show': true, 'backdrop': 'static'});
+
+                return map;
+            }
+        };
+    })();
+    
+    /*
+        根据地址名称定位
+        addressName: 地址名称
+
+        用例:
+        $.ZXMap.locationByName("理想中心");
+    */
+    $.ZXMap.locationByName = function(addressName){
+        var map = $.ZXMap.createMap(addressName);
+
+        //地址解析器
+        var myGeo = new BMap.Geocoder();   
+        
+        myGeo.getPoint(addressName, function(point){    
+            
+            if(point){
+                //启用滚轮放大缩小
+                map.enableScrollWheelZoom();
+                //初始化地图,设置中心点坐标和地图级别
+                map.centerAndZoom(point,15);
+                //添加平移缩放控件
+                map.addControl(new BMap.NavigationControl());
+                //添加地图缩略图控件
+                map.addControl(new BMap.OverviewMapControl());
+
+                //创建标注（类似定位小红旗）
+                var marker = new BMap.Marker(point); 
+                //标注提示文本
+                //var label = new BMap.Label(lableName, {"offset":new BMap.Size(20,-20)});       
+                //marker.setLabel(label); //添加提示文本  
+
+                //创建消息框
+                var infoWindow = new BMap.InfoWindow(addressName);  
+                //绑定标注单击事件，设置显示的消息框
+                marker.addEventListener("click", function(){
+                    this.openInfoWindow(infoWindow);
+                });
+
+                //把标注添加到地图
+                map.addOverlay(marker);  
+            }
+        }, "成都");
+    };
+
+
     // 分享插件
     $.ZXShare = {
         version: '1.0.0',

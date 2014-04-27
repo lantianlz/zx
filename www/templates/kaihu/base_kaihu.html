@@ -4,6 +4,11 @@
 
 {% block home_css %}
 <!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/user_profile.css?v={{MEDIA_VERSION}}" /> -->
+<style type="text/css">
+.hot-topics{
+	border-top: 0;
+}
+</style>
 {% block css %}{% endblock %}
 {% endblock %}
 
@@ -13,8 +18,17 @@
 {% endblock %}
 
 {% block container_content %}
-<div class="zx-kaihu-main col-md-12 row pt-10">
+<div class="zx-kaihu-main col-md-8">
 	{% block kaihu-main %}{% endblock %}
 </div>
+<div class="zx-kaihu-right col-md-4 pl-50">
+	{% block kaihu-right %}
+		<!-- 热门话题 -->
+	    {% global_hot_topics %}
 
+	    <!-- 二维码 -->
+	    {% include 'include/_global_qrcode.html' %}
+
+	{% endblock %}
+</div>
 {% endblock %}

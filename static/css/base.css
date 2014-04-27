@@ -58,6 +58,7 @@
 /*长度高度*/
 .h{height: 100%}
 .h25{height: 25px;}
+.h90{height: 90px;}
 .min-h400{min-height: 400px;}
 
 .w{width: 100%}
@@ -70,6 +71,9 @@
 }
 .w35{
 	width: 35px;
+}
+.w150{
+	width: 150px;
 }
 .w200{
 	width: 200px;
@@ -152,6 +156,8 @@
 .pl-70{padding-left: 70px;}
 .pl-75{padding-left: 75px;}
 .pl-80{padding-left: 80px;}
+.pl-85{padding-left: 85px;}
+.pl-160{padding-left: 160px;}
 .pr-0{padding-right: 0px;}
 .pr-3{padding-right: 3px;}
 .pr-5{padding-right: 5px;}
@@ -204,9 +210,11 @@
 .co16{color: #fc8936;}
 .co17{color: #d1d1d1;}
 .co18{color: #222;}
+.co19{color: #FFA603;}
 
 .bgc-333{background-color: #333}
 .bgc-zx{background-color: #428bca}
+.bgc-0{background-color: transparent;}
 
 .textindent2{text-indent:32px;}
 .textindent0{text-indent: 0;}
@@ -254,6 +262,8 @@ a:hover{color: #259;}
 
 .border-1{border: solid 1px;}
 
+.bdc-zx{border-color: #428bca;}
+.bdc-light-zx{border-color: #39B2E2;}
 .bdc-eee{border-color: #eee;}
 .bdc-ddd{border-color: #ddd;}
 .bdc-bbb{border-color: #bbb;}
