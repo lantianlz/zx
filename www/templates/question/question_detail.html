@@ -34,7 +34,7 @@ $(document).ready(function(){
     <li class="active">{{question.title|str_display:8}}</li>
 </ol>
 <div class="question-entry">
-    <div class="topic pl-15 pr-15">
+    <div class="topic pl-15 pr-15 pb-10">
         <div class="topic-title">
             <h4 class="f22"> <strong>{{question.title}}</strong>
             </h4>
@@ -205,9 +205,9 @@ $(document).ready(function(){
     </div>
 
 <div class="replies w">
-    <ul class="list-group" id="ul_replies">
+    <ul class="list-group top-border bdc-eee" id="ul_replies">
         <li class="list-group-item no-l-r-bd bdc-eee">
-            <h4>共 {{good_answers_count}} 个回答</h4>
+            <h4 class="mt-0 mb-0">共 {{good_answers_count}} 个回答</h4>
         </li>
         {% for answer in good_answers %}
             {% include "question/_question_answer.html" %}

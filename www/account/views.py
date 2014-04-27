@@ -8,10 +8,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from common import utils
+from common import utils, user_agent_parser
 from www.misc import qiniu_client
 from www.account import interface
 from www.misc.decorators import member_required
+from www.account.interface import user_profile_required
 
 ub = interface.UserBase()
 ib = interface.InvitationBase()
@@ -20,11 +21,10 @@ ib = interface.InvitationBase()
 def show_index(request):
     if request.user.is_authenticated():
         #from www.question.views import question_home
-        #return question_home(request)
+        # return question_home(request)
 
         from www.timeline.views import user_timeline
         return user_timeline(request)
-        #return render_to_response('base/index.html', locals(), context_instance=RequestContext(request))
     else:
         return login(request)
         # return HttpResponseRedirect('/login')
@@ -48,6 +48,12 @@ def login(request, template_name='account/login_bg.html'):
         next_url = utils.get_next_url(request)
         if next_url:
             request.session['next_url'] = urllib.unquote_plus(next_url)
+
+    user_agent_dict = user_agent_parser.Parse(request.META.get('HTTP_USER_AGENT'))
+    # 手机客户端换模板
+    if user_agent_dict['device']['family'] != 'Other':
+        template_name = 'account/login.html'
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -121,121 +127,60 @@ def get_user_by_nick(request, nick):
     if user:
         return HttpResponseRedirect(user.get_url())
     else:
-        err_msg = u'未找到对应user'
+        err_msg = u'用户不存在'
         return HttpResponse(err_msg)
 
 
+
+
+
 @member_required
-def user_profile(request, id=None, template_name='account/user_profile.html'):
-    from www.timeline.interface import UserFollowBase
-    if not id:
-        user = request.user
-    else:
-        user = ub.get_user_by_id(id)
-        if not user:
-            err_msg = u'未找到对应user'
-            return HttpResponse(err_msg)
-    is_me = (request.user == user)
-    if not is_me:
-        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
-
-    from www.question.interface import QuestionBase, AnswerBase
-    qb = QuestionBase()
-    ab = AnswerBase()
-    user_question_count, user_answer_count, user_liked_count = qb.get_user_qa_count_info(user.id)
-    questions = qb.format_quesitons(qb.get_question_by_user_id(user.id))
-    answers = ab.format_answers(ab.get_user_sended_answer(user.id))
-
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-
-
-def user_questions(request, id, template_name='account/user_questions.html'):
+@user_profile_required
+def user_questions(request, user_id, template_name='account/user_questions.html'):
     '''
     提问 - 个人主页
     '''
-    from www.timeline.interface import UserFollowBase
-    if not id:
-        user = request.user
-    else:
-        user = ub.get_user_by_id(id)
-        if not user:
-            err_msg = u'未找到对应user'
-            return HttpResponse(err_msg)
-    is_me = (request.user == user)
-    if not is_me:
-        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+    user = user_id  # 装饰器转换了对象
 
-    from www.question.interface import QuestionBase, AnswerBase
+    from www.question.interface import QuestionBase
     qb = QuestionBase()
-    ab = AnswerBase()
-    user_question_count, user_answer_count, user_liked_count = qb.get_user_qa_count_info(user.id)
-    questions = qb.format_quesitons(qb.get_question_by_user_id(user.id))
-    answers = ab.format_answers(ab.get_user_sended_answer(user.id))
+    questions = QuestionBase().format_quesitons(qb.get_question_by_user_id(user.id))
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def user_answers(request, id, template_name='account/user_answers.html'):
+@member_required
+@user_profile_required
+def user_answers(request, user_id, template_name='account/user_answers.html'):
     '''
     回答 - 个人主页
     '''
-    from www.timeline.interface import UserFollowBase
-    if not id:
-        user = request.user
-    else:
-        user = ub.get_user_by_id(id)
-        if not user:
-            err_msg = u'未找到对应user'
-            return HttpResponse(err_msg)
-    is_me = (request.user == user)
-    if not is_me:
-        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+    user = user_id  # 装饰器转换了对象
 
-    from www.question.interface import QuestionBase, AnswerBase
-    qb = QuestionBase()
+    from www.question.interface import AnswerBase
     ab = AnswerBase()
-    user_question_count, user_answer_count, user_liked_count = qb.get_user_qa_count_info(user.id)
-    questions = qb.format_quesitons(qb.get_question_by_user_id(user.id))
     answers = ab.format_answers(ab.get_user_sended_answer(user.id))
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def user_following(request, id, template_name='account/user_following.html'):
+@member_required
+@user_profile_required
+def user_following(request, user_id, template_name='account/user_following.html'):
     '''
     关注 - 个人主页
     '''
-    from www.timeline.interface import UserFollowBase
-    if not id:
-        user = request.user
-    else:
-        user = ub.get_user_by_id(id)
-        if not user:
-            err_msg = u'未找到对应user'
-            return HttpResponse(err_msg)
-    is_me = (request.user == user)
-    if not is_me:
-        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
-
+    user = user_id  # 装饰器转换了对象
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def user_followers(request, id, template_name='account/user_followers.html'):
+@member_required
+@user_profile_required
+def user_followers(request, user_id, template_name='account/user_followers.html'):
     '''
     粉丝 - 个人主页
     '''
-    from www.timeline.interface import UserFollowBase
-    if not id:
-        user = request.user
-    else:
-        user = ub.get_user_by_id(id)
-        if not user:
-            err_msg = u'未找到对应user'
-            return HttpResponse(err_msg)
-    is_me = (request.user == user)
-    if not is_me:
-        is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
-        
+    user = user_id  # 装饰器转换了对象
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

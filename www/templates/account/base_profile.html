@@ -19,19 +19,19 @@
     </div>
     <div class="desc co8">
         <p>{{user.des|default:"忙着发财，没能留下点介绍信息"}}</p>
-        {% if is_me and not user.des %}<a href="/account/user_settings#set_des">立即设置</a>{% endif %}
+        {% if request.is_me and not user.des %}<a href="/account/user_settings#set_des">立即设置</a>{% endif %}
     </div>
     <div class="stats pt-20">
         <ul class="list-flow gray-a f13">
             <li>
                 <a href="/p/{{user.id}}/questions">
-                    <span class="question-count block fi">{{user_question_count}}</span>
+                    <span class="question-count block fi">{{request.user_question_count}}</span>
                     <span>提问</span>
                 </a>
             </li>
             <li>
                 <a href="/p/{{user.id}}/answers">
-                    <span class="answer-count block fi">{{user_answer_count}}</span>
+                    <span class="answer-count block fi">{{request.user_answer_count}}</span>
                     <span>回答</span>
                 </a>
             </li>
@@ -44,8 +44,8 @@
             </li>
             -->
             <li>
-                <a href="{% if is_me %}/message/received_like{% else %}javascript:void(0);{% endif %}">
-                    <span class="like-count block fi">{{user_liked_count}}</span>
+                <a href="{% if request.is_me %}/message/received_like{% else %}javascript:void(0);{% endif %}">
+                    <span class="like-count block fi">{{request.user_liked_count}}</span>
                     <span>被赞</span>
                 </a>
             </li> 
@@ -64,9 +64,9 @@
             </li>
         </ul>
     </div>
-    {% if not is_me%}
+    {% if not request.is_me %}
     <div class="text-right pr-25 pt-10">
-        {% if is_follow %}
+        {% if request.is_follow %}
         <button id="left_unfollow_button_id" type="button" class="btn btn-default btn-xs unfollow" 
             data-user_id='{{user.id}}'>取消关注</button>
         {% else %}
@@ -75,32 +75,25 @@
         {% endif %}
     </div>
     {% endif %}
-    <!-- <div class="tools gray-a pl-50 pr-50 pt-10 hide">
-        <button type="button" class="btn btn-default btn-xs unfollow pull-left">取消关注</button>
-        <a class="send-message pull-right f12" href="#" data-user_name="半夜没事乱溜达" data-user_id="1">
-            <span class="glyphicon glyphicon-envelope"></span>
-            私信ta
-        </a>
-    </div> -->
 </div>
 <div class="user-profile-main col-md-8">
     <ul class="nav nav-pills pt-20 gray-a">
         <li {% if '/answers' not in request.path and  '/following' not in request.path and '/followers' not in request.path %} class="active" {% endif %} {% if '/questions' in request.path %} class="active" {% endif %}>
-            <a href="/p/{{user.id}}/questions" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的提问</a>
+            <a href="/p/{{user.id}}/questions" >{% if request.is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的提问</a>
         </li>
         <li {% if '/answers' in request.path %} class="active" {% endif %}>
-            <a href="/p/{{user.id}}/answers" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的回答</a>
+            <a href="/p/{{user.id}}/answers" >{% if request.is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的回答</a>
         </li>
         <!-- 
         <li {% if '/following_topics/' in request.path %} class="active" {% endif %}>
-            <a href="/p/{{user.id}}/following_topics" data-toggle="pill">{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
+            <a href="/p/{{user.id}}/following_topics" data-toggle="pill">{% if request.is_me %}我{% else %}{{user.get_ta_display}}{% endif %}关注的话题</a>
         </li>
          -->
         <li {% if '/following' in request.path %} class="active" {% endif %}>
-            <a href="/p/{{user.id}}/following" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的关注</a>
+            <a href="/p/{{user.id}}/following" >{% if request.is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的关注</a>
         </li>
         <li {% if '/followers' in request.path %} class="active" {% endif %}>
-            <a href="/p/{{user.id}}/followers" >{% if is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的粉丝</a>
+            <a href="/p/{{user.id}}/followers" >{% if request.is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的粉丝</a>
         </li>
         
     </ul>

@@ -6,7 +6,7 @@ from django.http import HttpResponse  # , HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from common import utils, page, debug
+from common import utils, page, debug, user_agent_parser
 from www.misc import qiniu_client
 from www.misc.decorators import member_required
 from www.tasks import async_clear_count_info_by_code
@@ -53,6 +53,12 @@ def received_like(request, template_name='message/received_like.html'):
     # 异步清除未读消息数
     async_clear_count_info_by_code(request.user.id, code='received_like')
     unread_count_info = urb.get_unread_count_info(request.user)
+
+    user_agent_dict = user_agent_parser.Parse(request.META.get('HTTP_USER_AGENT'))
+    # 手机客户端换模板
+    if user_agent_dict['device']['family'] != 'Other':
+        template_name = 'message/received_like_m.html'
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
