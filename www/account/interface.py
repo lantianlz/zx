@@ -432,3 +432,30 @@ class InvitationBase(object):
 
     def get_invitation_user(self, user_id):
         return InvitationUser.objects.select_related('invitation').filter(invitation__user_id=user_id)
+
+
+def user_profile_required(func):
+    '''
+    @note: 访问用户控件装饰器
+    '''
+    def _decorator(request, user_id, *args, **kwargs):
+        from www.timeline.interface import UserFollowBase
+        from www.question.interface import QuestionBase
+        from django.http import HttpResponse
+
+        ub = UserBase()
+        if not user_id:
+            user = request.user
+        else:
+            user = ub.get_user_by_id(user_id)
+            if not user:
+                err_msg = u'用户不存在'
+                return HttpResponse(err_msg)
+        request.is_me = (request.user == user)
+        if not request.is_me:
+            request.is_follow = UserFollowBase().check_is_follow(request.user.id, user.id)
+        request.user_question_count, request.user_answer_count, request.user_liked_count = QuestionBase().\
+            get_user_qa_count_info(user.id)
+
+        return func(request, user, *args, **kwargs)
+    return _decorator

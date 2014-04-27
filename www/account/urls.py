@@ -4,8 +4,6 @@ from django.conf.urls import patterns, url
 # from django.conf import settings
 
 urlpatterns = patterns('www.account.views',
-                       # url(r'^user_profile$', 'user_profile'),
-                       # url(r'^user_profile/(?P<id>\w+)$', 'user_profile'),
                        url(r'^user_settings$', 'user_settings'),
                        url(r'^user_settings/change_pwd$', 'change_pwd'),
                        url(r'^user_settings/change_email$', 'change_email'),
