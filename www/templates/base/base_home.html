@@ -86,41 +86,41 @@
                 <li class="user-notice dropdown ml--10">
                     <a href="#" class="dropdown-toggle user" data-target="#" title="">
                         <!-- 有消息则会显示具体消息数量 -->
-                        <!-- <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span> -->
+                        <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
                         
                         <!-- 没有消息显示铃铛 -->
-                        <span class="glyphicon glyphicon-bell f16 mt--4"></span>
+                        <span class="glyphicon glyphicon-bell f16 mt--4" id="unread_count_total_nav_none"></span>
                     </a>
                     <ul class="dropdown-menu text-left min-w140" role="menu">
                         <li>
                             <a href="/message/">
                                 系统消息
-                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                                <span class="badge flash-badge none" id="unread_count_total_nav_system_message">0</span>
                             </a>
                         </li>
                         <li>
                             <a href="/message/received_like">
                                 收到的赞
-                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                                <span class="badge flash-badge none" id="unread_count_total_nav_received_like">0</span>
                             </a>
                         </li>
                         <li>
                             <a href="/message/received_answer">
                                 收到的回答
-                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                                <span class="badge flash-badge none" id="unread_count_total_nav_received_answer">0</span>
                             </a>
                         </li>
                         <li>
                             <a href="/message/at_answer">
                                 @我的回答
-                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                                <span class="badge flash-badge none" id="unread_count_total_nav_at_answer">0</span>
                             </a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>
                             <a href="/p/{{request.user.id}}/followers">
                                 我的粉丝
-                                <span class="badge flash-badge none" id="unread_count_total_nav_2">0</span>
+                                <span class="badge flash-badge none" id="unread_count_total_nav_fans">0</span>
                             </a>
                         </li>
                     </ul>

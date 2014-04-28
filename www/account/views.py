@@ -14,6 +14,7 @@ from www.account import interface
 from www.misc.decorators import member_required
 from www.account.interface import user_profile_required
 from www.timeline.interface import UserFollowBase
+from www.tasks import async_clear_count_info_by_code
 
 ub = interface.UserBase()
 ib = interface.InvitationBase()
@@ -183,6 +184,9 @@ def user_followers(request, user_id, template_name='account/user_followers.html'
     '''
     user = user_id  # 装饰器转换了对象
     user_followers = ufb.format_follower(ufb.get_followers_by_user_id(user.id))
+
+    # 异步清除未读消息数
+    async_clear_count_info_by_code(request.user.id, code='fans')
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

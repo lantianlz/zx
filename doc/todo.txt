@@ -14,6 +14,10 @@ todo list:
 
 7.增加用户注册地信息
 
+8.ajax返回值全局修改，flag--errcode
+
+
+
 
 
 
@@ -24,7 +28,6 @@ todo list:
 3.ctrl + enter快捷键
 
 4.分页数进行设置
-
 
 6.微博登陆强行要求修改邮箱和密码
 

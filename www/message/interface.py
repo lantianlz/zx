@@ -119,7 +119,8 @@ class UnreadCountBase(object):
 
     def get_unread_count_total(self, user):
         count_info = self.get_unread_count_info(user)
-        return sum(count_info.values())
+        return count_info
+        # return sum(count_info.values())
 
     def clear_count_info_by_code(self, user_id, code):
         """
