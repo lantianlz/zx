@@ -533,7 +533,7 @@ function addZero(data){
                 // 设置地图title
                 $('#map_modal .modal-title').html(mapTitle);
                 // 显示
-                $('#map_modal').modal({'show': true, 'backdrop': 'static'});
+                $('#map_modal').modal({'show': true});//, 'backdrop': 'static'});
 
                 return map;
             }
@@ -551,35 +551,35 @@ function addZero(data){
         var map = $.ZXMap.createMap(addressName);
 
         //地址解析器
-        var myGeo = new BMap.Geocoder();   
+        var myGeo = new BMap.Geocoder();
         
-        myGeo.getPoint(addressName, function(point){    
+        myGeo.getPoint(addressName, function(point){
             
             if(point){
                 //启用滚轮放大缩小
                 map.enableScrollWheelZoom();
                 //初始化地图,设置中心点坐标和地图级别
-                map.centerAndZoom(point,15);
+                map.centerAndZoom(point, 16);
                 //添加平移缩放控件
                 map.addControl(new BMap.NavigationControl());
                 //添加地图缩略图控件
                 map.addControl(new BMap.OverviewMapControl());
 
                 //创建标注（类似定位小红旗）
-                var marker = new BMap.Marker(point); 
+                var marker = new BMap.Marker(point);
                 //标注提示文本
-                //var label = new BMap.Label(lableName, {"offset":new BMap.Size(20,-20)});       
-                //marker.setLabel(label); //添加提示文本  
+                //var label = new BMap.Label(lableName, {"offset":new BMap.Size(20,-20)});
+                //marker.setLabel(label); //添加提示文本
 
                 //创建消息框
-                var infoWindow = new BMap.InfoWindow(addressName);  
+                var infoWindow = new BMap.InfoWindow(addressName);
                 //绑定标注单击事件，设置显示的消息框
                 marker.addEventListener("click", function(){
                     this.openInfoWindow(infoWindow);
                 });
 
                 //把标注添加到地图
-                map.addOverlay(marker);  
+                map.addOverlay(marker);
             }
         }, "成都");
     };
