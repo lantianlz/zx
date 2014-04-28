@@ -106,7 +106,7 @@
 }
 
 .zx-logo{
-    padding-right: 58px;
+    /*padding-right: 58px;*/
     color: #428bca;
     font-size: 32px;
     text-shadow: 1px 1px 0 #D0E0F1;
@@ -119,11 +119,6 @@
 .zx-logo:hover{
     text-decoration: none;
     color: #428bca;
-}
-
-.zx-slogan{
-    color: #555555;
-    margin-right: 20px;
 }
 
 .zx-navbar{
