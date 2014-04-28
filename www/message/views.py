@@ -100,9 +100,8 @@ def at_answer(request, template_name='message/at_answer.html'):
 @member_required
 def get_unread_count_total(request):
 
-    count = urb.get_unread_count_total(request.user)
-    r = dict(flag='0', result=count)
-    return HttpResponse(json.dumps(r), mimetype='application/json')
+    count_info = urb.get_unread_count_total(request.user)
+    return HttpResponse(json.dumps(count_info), mimetype='application/json')
 
 
 def show_received_like(request, template_name='message/show_received_like.html'):

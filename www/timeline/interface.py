@@ -7,6 +7,7 @@ from django.db.models import F
 
 from common import utils, debug, cache
 from www.timeline.models import UserFollow
+from www.message.interface import UnreadCountBase
 from www.account.interface import UserBase
 from www.question.interface import QuestionBase
 
@@ -70,6 +71,9 @@ class UserFollowBase(object):
             except:
                 transaction.rollback(using=TIMELINE_DB)
                 return 0, dict_err.get(0)
+
+            # 发送未读消息数通知
+            UnreadCountBase().update_unread_count(to_user_id, code='fans')
 
             transaction.commit(using=TIMELINE_DB)
             return 0, uf

@@ -20,10 +20,14 @@ def init_unread_type():
         ('received_like', '条', '收到的赞', '/message/received_like', '', 0),
         ('received_answer', '条', '收到的回答', '/question/received_answer', '', 0),
         ('at_answer', '条', '@我的回答', '/question/at_answer', '', 0),
+        ('fans', '个', '粉丝', '/timeline/myfans', '', 0),
     )
 
     for data in datas:
-        UnreadType.objects.create(code=data[0], measure=data[1], name=data[2], url=data[3], href_name=data[4], type=data[5])
+        try:
+            UnreadType.objects.create(code=data[0], measure=data[1], name=data[2], url=data[3], href_name=data[4], type=data[5])
+        except:
+            pass
     print 'ok'
 
 
