@@ -7,7 +7,7 @@ from django.utils.encoding import smart_unicode
 from django.conf import settings
 
 from common import utils, debug, validators, cache
-from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser
+from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
 from www.message.interface import UnreadCountBase
 
 dict_err = {
@@ -462,3 +462,30 @@ def user_profile_required(func):
 
         return func(request, user, *args, **kwargs)
     return _decorator
+
+
+class UserCountBase(object):
+
+    def __init__(self):
+        pass
+
+    def get_user_count_info(self, user_id):
+        try:
+            uc = UserCount.objects.get(user_id=user_id)
+            return dict(user_question_count=uc.user_question_count, user_answer_count=uc.user_answer_count,
+                        user_liked_count=uc.user_liked_count, following_count=uc.following_count,
+                        follower_count=uc.follower_count)
+        except UserCount.DoesNotExist:
+            return dict(user_question_count=0, user_answer_count=0, user_liked_count=0,
+                        following_count=0, follower_count=0)
+
+    def update_user_count(self, user_id, code, operate="add"):
+        assert (user_id and code)
+        uc = UserCount.objects.get_or_create(user_id=user_id)
+        count = getattr(uc, code)
+        if operate == 'add':
+            count += 1
+        else:
+            count -= 1
+        setattr(uc, code, count)
+        uc.save()
