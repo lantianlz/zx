@@ -240,6 +240,7 @@ a:hover{color: #259;}
 
 .border-radius-0{border-radius: 0px;}
 .border-radius-2{border-radius: 2px;}
+.border-radius-4{border-radius: 4px;}
 
 .no-l-r-bd{border-left: 0px;border-right: 0px;}
 
@@ -252,4 +253,5 @@ a:hover{color: #259;}
 .border-1{border: solid 1px;}
 
 .bdc-eee{border-color: #eee;}
+.bdc-ddd{border-color: #ddd;}
 .bdc-bbb{border-color: #bbb;}
