@@ -11,6 +11,7 @@ urlpatterns = patterns('www.question.views',
                        url(r'^topic/(?P<tag_domain>\w+)$', 'topic_question'),
                        url(r'^topics', 'topics'),
                        url(r'^get_topic_info_by_id', 'get_topic_info_by_id'),
+                       url(r'^get_topic_info_by_name', 'get_topic_info_by_name'),
                        url(r'^ask_question$', 'ask_question'),
                        url(r'^modify_question/(?P<question_id>\w+)$', 'modify_question'),
 

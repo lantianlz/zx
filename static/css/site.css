@@ -337,3 +337,24 @@ a.border-block-blue:hover{
     background-position: top right;
   }
 }
+
+.zx-nav-pills{
+    border-bottom: 2px solid #d9d9d9;
+}
+.zx-nav-pills>li>a{
+    border-radius: 0px;
+    margin-bottom: -2px;
+}
+.zx-nav-pills>li>a:hover{
+    background-color: transparent;
+    border-bottom: 2px solid #428bca;
+}
+.zx-nav-pills>li.active>a:hover{
+    color: #428bca;
+    background-color: transparent;
+}
+.zx-nav-pills>li.active>a{
+    background-color: transparent;
+    color: #428bca;
+    border-bottom: 2px solid #428bca;
+}

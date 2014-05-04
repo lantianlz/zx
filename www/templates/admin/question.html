@@ -1,0 +1,361 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}问题管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.search-question{
+    right: 0;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+    // 初始化日期控件
+    $('#ask_question_date').datetimepicker({
+        format: 'yyyy-mm-dd hh:mm:s',
+        language: 'zh-CN',
+        minView: 0,
+        autoclose: true
+    });
+
+    // 初始化
+    function initTextboxList(){
+        var text_topics = new $.TextboxList('#question_topics', {
+            bitsOptions: {
+                box: {deleteButton: true}
+            },
+            unique: true, 
+            max: 100,
+            plugins: {
+                autocomplete: {
+                    minLength: 1, // 最小字符
+                    queryRemote: true, // 远程查询
+                    placeholder: '添加话题',
+                    highlight: false,
+                    onlyFromValues: true, // 是否默认选中第一个结果
+                    remote: {
+                        url: '/question/get_topic_info_by_name', 
+                        param: 'topic_name',
+                        loadPlaceholder: '正在加载...',
+                    }
+                }
+            }
+
+        });
+
+        return text_topics;
+    }
+
+    // 提问 models
+    var Question = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'userId': '',
+            'userName': '',
+            'title': '',
+            'description': '',
+            'questionTypes': [],
+            'tags': [],
+            'viewCount': 0,
+            'answerCount': 0,
+            'isImportant': false,
+            'isHideUser': false,
+            'createdTime': new Date()
+        }
+
+    });
+
+    // 提问 collection
+    var Questions = Backbone.Collection.extend({
+        model: Question,
+
+        // 查询方法
+        search: function(){
+            this.reset([
+                {'userId': '1', 'userName': '胡萝卜分你一半', 'title': '炒股的逻辑到底是什么？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 9, 'isImportant': true, 'createdTime': '2014-03-16 23:23:26'},
+                {'userId': '2', 'userName': '李小侃', 'title': '单独二胎还能创造人口红利吗？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 2, 'isImportant': false, 'createdTime': '2014-04-28 09:02:24'},
+                {'userId': '3', 'userName': '嘎嘎', 'title': '成都，杭州的楼市都有降价的个案了，今年是楼市拐点？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 13, 'isImportant': true, 'createdTime': '2014-03-16 23:23:26'},
+            ]);
+
+            return this;
+        },
+
+        // 获取一个提问的model
+        getOne: function(questionId){
+            return this.find(function(question){
+                return question.get('userId') == questionId
+            });
+        }
+
+    });
+    
+    
+
+    // 提问 view
+    var QuestionListView = Backbone.View.extend({
+        el: '#question_list',
+
+        template: _.template($('#temp_item_question').html()),
+
+        // 渲染函数
+        render: function(data){
+            this.$('tbody').html(this.template({'questions': data}))
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#question_list"]').tab('show');
+        }
+
+    });
+
+    // 提问修改 view
+    var QuestionModifyView = Backbone.View.extend({
+        
+        el: '#modify_question',
+
+        template: _.template($('#temp_modify_question').html()),
+
+        events: {
+            'click .save-question': 'saveQuestion',
+            'click .remove-question': 'removeQuestion'
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_question"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+
+            initTextboxList();
+        },
+
+        // 显示提问信息
+        modifyQuestion: function(questionId){
+            this.showPanel();
+            this.render(questions.getOne(questionId).toJSON());
+        },
+
+        // 保存提问
+        saveQuestion: function(){
+            var questionId = this.$('form').data('question_id');
+
+            $.ZXMsg.alert('提示', questionId+"保存成功!");
+
+            // 重新加载
+            this.modifyQuestion(questionId);
+        },
+
+        // 删除提问
+        removeQuestion: function(){
+            var questionId = this.$('form').data('question_id');
+
+            $.ZXMsg.confirm('提示', '确认要删除此提问吗?', function(result){
+                //todo...
+                if(result){
+                    $.ZXMsg.alert('提示', questionId+"删除成功!");
+                    
+                    listView.showPanel();
+                }
+                
+            });
+        }
+
+    });
+
+
+    // 提问的 路由
+    var questionRouter = Backbone.Router.extend({
+
+        routes: {
+            "":                     "listQuestions",
+            "modify/:questionId":   "modify"
+        },
+
+        // 初始化
+        listQuestions: function(){
+            var data = questions.search();
+
+            listView.showPanel();
+            listView.render(data.toJSON());
+        },
+
+        // 显示修改界面
+        modify: function(questionId){
+            modifyView.modifyQuestion(questionId);
+        }
+
+    });
+
+    // 初始化
+    var questions = new Questions(),
+        listView = new QuestionListView(),
+        modifyView = new QuestionModifyView(),
+        router = new questionRouter();
+
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#question_list" class="black-blue" data-toggle="pill">提问列表</a>
+    </li>
+    <li>
+        <a href="#modify_question" class="black-blue" data-toggle="pill">修改提问</a>
+    </li>
+    <div class="pa search-question col-md-3">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control border-radius-0" placeholder="输入提问标题...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">查询</button>
+            </span>
+        </div>
+    </div>
+</ul>
+
+<div class="tab-content">
+    <!-- 提问列表 -->
+    <div class="tab-pane fade pt-15 in active" id="question_list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>提问标题</th>
+                    <th>提问者</th>
+                    <th>提问时间</th>
+                    <th>回答个数</th>
+                    <th>是否精华</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm">
+                <li class="disabled">
+                    <a href="#">&laquo;</a>
+                </li>
+                <li class="active">
+                    <a href="#">1</a>
+                </li>
+                <li>
+                    <a href="#">2</a>
+                </li>
+                <li>
+                    <a href="#">3</a>
+                </li>
+                <li>
+                    <a href="#">4</a>
+                </li>
+                <li>
+                    <a href="#">5</a>
+                </li>
+                <li>
+                    <a href="#">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改提问 -->
+    <div class="tab-pane fade" id="modify_question">
+        
+    </div>
+</div>
+
+<!-- 问题列表模板 -->
+<script type="text/template" id="temp_item_question">
+    <% _.each(questions, function(question){ %>
+        <tr data-question_id="<%= question.userId %>">
+            <td><%= question.userId %></td>
+            <td><a class="black-blue pointer question-edit" href="#/modify/<%= question.userId %>"><%= question.title %></a></td>
+            <td><%= question.userName %></td>
+            <td><%= question.createdTime %></td>
+            <td><%= question.answerCount %></td>
+            <td>
+                <% if (question.isImportant) { %>
+                    <span class="glyphicon glyphicon-ok co-zx"></span>
+                <% } %>
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="temp_modify_question">
+    <form class="form-horizontal modify-question-form" data-question_id="<%= userId %>" role="form" method="post" action="">
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问ID</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= userId %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">关联话题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="question_topics" value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问标题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" value='<%= title %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问描述</label>
+            <div class="col-sm-6">
+                <textarea name="des" rows="6" class="form-control"><%= description %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问者</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= userName %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问时间</label>
+            <div class="col-sm-3">
+                <input type="text" id="ask_question_date" class="form-control" value='<%= createdTime %>' readonly>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">回答个数</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= answerCount %>个</p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">是否精华</label>
+            <div class="col-sm-3 form-control-static">
+                <label class="checkbox-inline zx-checkbox">
+                    <input name="tag" type="checkbox" <% if (isImportant){ %>checked="checked"<% } %>>
+                </label>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save-question">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove-question">删除此提问</button>
+            </div>
+        </div>
+    </form>
+</script>
+{% endblock admin-right %}

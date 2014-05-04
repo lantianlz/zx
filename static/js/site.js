@@ -18,21 +18,6 @@ if (!String.format) {
 
 
 /*
-  自动补零
-*/
-function addZero(data){
-    var temp = data + '';
-    if(temp.length === 0){
-        return '00'
-    } else if(temp.length === 1){
-        return  '0' + temp;
-    } else{
-        return data;
-    }
-}
-
-
-/*
     拓展Jquery方法 
 */
 (function(){
@@ -246,6 +231,26 @@ function addZero(data){
     $.ZXUtils.isDesktop = function(){
         return (992 <= $(window).width()) ? true : false;
     };
+
+
+    /*
+        自动补零
+        始终返回两位字符串，不够自动补零
+
+        用例:
+        $.ZXUtils.addZero('0');
+    */
+    $.ZXUtils.addZero = function(data){
+        var temp = data + '';
+        if(temp.length === 0){
+            return '00'
+        } else if(temp.length === 1){
+            return  '0' + temp;
+        } else{
+            return data;
+        }
+    }
+
 
 
     /* 

@@ -1,0 +1,355 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}问题管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.search-important{
+    right: 0;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    
+    // models
+    var Important = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'userId': '',
+            'userName': '',
+            'title': '',
+            'description': '',
+            'topics': [],
+            'img': 0,
+            'createdTime': new Date()
+        }
+
+    });
+
+    // collections
+    var Importants = Backbone.Collection.extend({
+        model: Important,
+
+        // 查询
+        search: function(pageIndex){
+            this.reset([
+                {'userId': '1', 'userName': '胡萝卜分你一半', 'title': '炒股的逻辑到底是什么？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢111？', 'createdTime': '2014-03-16 23:23:26', 'img': '/static/img/common/topic1.jpg', 'imgTitle': '图片描述1', 'order': '8', 'topics': []},
+                {'userId': '2', 'userName': '李小侃', 'title': '单独二胎还能创造人口红利吗？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢222？', 'createdTime': '2014-04-28 09:02:24', 'img': '/static/img/common/topic2.jpg', 'imgTitle': '图片描述2', 'order': '6', 'topics': []},
+                {'userId': '3', 'userName': '嘎嘎', 'title': '成都，杭州的楼市都有降价的个案了，今年是楼市拐点？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢333？', 'createdTime': '2014-03-16 23:23:26', 'img': '/static/img/common/topic3.jpg', 'imgTitle': '图片描述3', 'order': '7', 'topics': []},
+                {'userId': '4', 'userName': '多高兴', 'title': '基本面选股和技术图形选股的实质区别是什么？', 'description': '我个人理解是： 1、基本面基于自己对该公司各方面的认识做出投资决策，是一个相对自信的过程。 2、技术图形选股，是看别人买卖，尤其是所谓机构或者主力买卖做出投资决策。', 'createdTime': '2014-03-16 23:23:26', 'img': '/static/img/common/topic4.jpg', 'imgTitle': '图片描述4', 'order': '3', 'topics': []}
+            ]);
+
+            return this;
+        },
+
+        // 获取一个提问的model
+        getOne: function(importantId){
+            return this.find(function(important){
+                return important.get('userId') == importantId
+            });
+        }
+
+    });
+
+    // listView
+    var ImportantListView = Backbone.View.extend({
+        el: '#important_list',
+
+        template: _.template($('#temp_item_important').html()),
+
+        // 渲染函数
+        render: function(data){
+            this.$('tbody').html(this.template({'importants': data}))
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#important_list"]').tab('show');
+        }
+
+    });
+
+    // modifyView
+    var ImportantModifyView = Backbone.View.extend({
+        
+        el: '#modify_important',
+
+        template: _.template($('#temp_modify_important').html()),
+
+        events: {
+            'click .save-important': 'saveImportant',
+            'click .remove-important': 'removeImportant'
+        },
+
+        // 初始化日期控件
+        initDatetimepicker: function(){
+           
+            $('.datetimepicker').datetimepicker({
+                format: 'yyyy-mm-dd hh:mm:s',
+                language: 'zh-CN',
+                minView: 0,
+                autoclose: true
+            });
+        },
+
+        // 初始化话题控件
+        initTextboxList: function(){
+            var text_topics = new $.TextboxList('#important_topics', {
+                bitsOptions: {
+                    box: {deleteButton: true}
+                },
+                unique: true, 
+                max: 100,
+                plugins: {
+                    autocomplete: {
+                        minLength: 1, // 最小字符
+                        queryRemote: true, // 远程查询
+                        placeholder: '添加话题',
+                        highlight: false,
+                        onlyFromValues: true, // 是否默认选中第一个结果
+                        remote: {
+                            url: '/question/get_topic_info_by_name', 
+                            param: 'topic_name',
+                            loadPlaceholder: '正在加载...',
+                        }
+                    }
+                }
+
+            });
+
+            return text_topics;
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_important"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+            this.initDatetimepicker();
+            this.initTextboxList();
+        },
+
+        // 显示提问信息
+        modifyImportant: function(importantId){
+            this.showPanel();
+            this.render(importants.getOne(importantId).toJSON());
+        },
+
+        // 保存提问
+        saveImportant: function(){
+            var importantId = this.$('form').data('important_id');
+
+            $.ZXMsg.alert('提示', importantId+"保存成功!");
+
+            // 重新加载
+            this.modifyImportant(importantId);
+        },
+
+        // 删除提问
+        removeImportant: function(){
+            var importantId = this.$('form').data('important_id');
+
+            $.ZXMsg.confirm('提示', '确认要删除此提问吗?', function(result){
+                //todo...
+                if(result){
+                    $.ZXMsg.alert('提示', importantId+"删除成功!");
+                    
+                    listView.showPanel();
+                }
+                
+            });
+        }
+
+    });
+
+    // router
+    var importantRouter = Backbone.Router.extend({
+
+        routes: {
+            "":                     "listImportants",
+            "modify/:importantId":  "modify"
+        },
+
+        // 初始化
+        listImportants: function(){
+            var data = importants.search();
+            
+            listView.showPanel();
+            listView.render(data.toJSON());
+        },
+
+        // 显示修改界面
+        modify: function(importantId){
+            modifyView.modifyImportant(importantId);
+        }
+
+    });
+    
+    // 初始化
+    var importants = new Importants(),
+        listView = new ImportantListView(),
+        modifyView = new ImportantModifyView(),
+        router = new importantRouter();
+
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#important_list" class="black-blue" data-toggle="pill">每日精选列表</a>
+    </li>
+    <li>
+        <a href="#modify_important" class="black-blue" data-toggle="pill">修改每日精选</a>
+    </li>
+    <div class="pa search-important col-md-3">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control border-radius-0" placeholder="输入每日精选标题...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">查询</button>
+            </span>
+        </div>
+    </div>
+</ul>
+
+<div class="tab-content">
+    <!-- 提问列表 -->
+    <div class="tab-pane fade pt-15 in active" id="important_list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>标题</th>
+                    <th>提问者</th>
+                    <th>提问时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm">
+                <li class="disabled">
+                    <a href="#">&laquo;</a>
+                </li>
+                <li class="active">
+                    <a href="#">1</a>
+                </li>
+                <li>
+                    <a href="#">2</a>
+                </li>
+                <li>
+                    <a href="#">3</a>
+                </li>
+                <li>
+                    <a href="#">4</a>
+                </li>
+                <li>
+                    <a href="#">5</a>
+                </li>
+                <li>
+                    <a href="#">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改提问 -->
+    <div class="tab-pane fade" id="modify_important">
+        
+    </div>
+</div>
+
+<!-- 问题列表模板 -->
+<script type="text/template" id="temp_item_important">
+    <% _.each(importants, function(important){ %>
+        <tr data-important_id="<%= important.userId %>">
+            <td><%= important.userId %></td>
+            <td><a class="black-blue pointer important-edit" href="#/modify/<%= important.userId %>"><%= important.title %></a></td>
+            <td><%= important.userName %></td>
+            <td><%= important.createdTime %></td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="temp_modify_important">
+    <form class="form-horizontal modify-important-form" data-important_id="<%= userId %>" role="form" method="post" action="">
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问ID</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= userId %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">关联话题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="important_topics" value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">精选图片</label>
+            <div class="col-sm-6">
+                <img src="<%= img %>" class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee">
+                <input class="pt-15" name="file" type="file" class="important-file" />
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">图片描述</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" value='<%= imgTitle %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问标题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" value='<%= title %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问描述</label>
+            <div class="col-sm-6">
+                <textarea name="des" rows="6" class="form-control"><%= description %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">排序权重</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" value='<%= order %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问者</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= userName %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问时间</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control datetimepicker" value='<%= createdTime %>' readonly>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save-important">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove-important">删除此精华</button>
+            </div>
+        </div>
+    </form>
+</script>
+{% endblock admin-right %}

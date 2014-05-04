@@ -258,3 +258,37 @@ def get_topic_info_by_id(request):
         }
 
     return HttpResponse(json.dumps(infos))
+
+
+def get_topic_info_by_name(request):
+    '''
+    根据话题名字模糊查找
+    '''
+
+    topic_name = request.REQUEST.get('topic_name', None)
+    
+    infos = {
+        'flag': '-1',
+        'result': '参数无效'
+    }
+
+    topics = [
+        {'id': 'e0f87ed0712b11e3b894000c290d194a', 'name': u'大盘走势'},
+        {'id': 'e0f87ed0712b11e3b894000c290d194b', 'name': u'个股分析'},
+        {'id': 'e0f87ed0712b11e3b894000c290d194f', 'name': u'期权分析'},
+        {'id': 'e0f87ed0712b11e3b894000c290d194c', 'name': u'债券分析'},
+        {'id': 'e0f87ed0712b11e3b894000c290d194d', 'name': u'商品期货'}
+    ]
+
+    if topic_name:
+        temp = filter(lambda x: x['name'].find(topic_name) > -1, topics)
+        if temp:
+            infos = [[x['id'], x['name'], x['name'], x['name']] for x in temp]
+        else:
+            infos = {
+                'flag': '0',
+                'result': u'无结果'
+            }
+        
+
+    return HttpResponse(json.dumps(infos))
