@@ -8,6 +8,7 @@ from django.db.models import F
 from common import utils, debug, cache
 from www.account.interface import UserBase
 from www.message.interface import UnreadCountBase
+from www.account.interface import UserCountBase
 from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad
 
 
@@ -140,8 +141,7 @@ class QuestionBase(object):
                     pass
 
             # 更新用户话题数信息
-            cache.get_or_update_data_from_cache('question_count_%s' % user_id, False, 3600 * 24,
-                                                self.get_user_question_count, user_id)
+            UserCountBase().update_user_count(user_id=user_id, code='user_question_count')
 
             transaction.commit(using=QUESTION_DB)
             return True, question
@@ -204,9 +204,8 @@ class QuestionBase(object):
             question.state = False
             question.save()
 
-            # 更新用户回答统计总数
-            cache.get_or_update_data_from_cache('question_count_%s' % question.user_id, False, 3600 * 24,
-                                                self.get_user_question_count, question.user_id)
+            # 更新用户话题数信息
+            UserCountBase().update_user_count(user_id=question.user_id, code='user_question_count', operate='minus')
 
             transaction.commit(using=QUESTION_DB)
             return True, dict_err.get(000)
@@ -329,8 +328,7 @@ class AnswerBase(object):
                 UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
 
             # 更新用户回答统计总数
-            cache.get_or_update_data_from_cache('answer_count_%s' % from_user_id, False, 3600 * 24,
-                                                self.get_user_sended_answers_count, from_user_id)
+            UserCountBase().update_user_count(user_id=from_user_id, code='user_answer_count')
 
             # 更新回答数冗余信息
             question.answer_count += 1
@@ -405,8 +403,7 @@ class AnswerBase(object):
             AtAnswer.objects.filter(user_id=user.id).delete()
 
             # 更新用户回答统计总数
-            cache.get_or_update_data_from_cache('answer_count_%s' % answer.from_user_id, False, 3600 * 24,
-                                                self.get_user_sended_answers_count, answer.from_user_id)
+            UserCountBase().update_user_count(user_id=answer.from_user_id, code='user_answer_count', operate='minus')
 
             transaction.commit(using=QUESTION_DB)
             return True, dict_err.get(000)
@@ -505,13 +502,12 @@ class LikeBase(object):
                                 from_user_id=from_user_id, to_user_id=to_user_id, ip=ip)
             Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
 
+            # 更新被赞次数
+            UserCountBase().update_user_count(user_id=to_user_id, code='user_liked_count')
+
             # 更新未读消息
             from www.message.interface import UnreadCountBase
             UnreadCountBase().update_unread_count(to_user_id, code='received_like')
-
-            # 更新被赞次数
-            cache.get_or_update_data_from_cache('liked_count_%s' % to_user_id, False, 3600 * 24,
-                                                self.get_user_liked_count, to_user_id)
 
             transaction.commit(QUESTION_DB)
             return True, dict_err.get(000)

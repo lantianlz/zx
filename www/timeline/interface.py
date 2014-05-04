@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import logging
 from django.db import transaction
-from django.db.models import F
 
-from common import utils, debug, cache
+from common import debug
 from www.timeline.models import UserFollow
 from www.message.interface import UnreadCountBase
-from www.account.interface import UserBase
-from www.question.interface import QuestionBase
+from www.account.interface import UserBase, UserCountBase
 
 
 dict_err = {
@@ -31,23 +28,27 @@ class UserFollowBase(object):
     def __init__(self):
         pass
 
-    def format_following(self, objs):
+    def format_followobjs(self, objs, following_or_follower):
         for obj in objs:
-            obj.user = UserBase().get_user_by_id(obj.to_user_id)
-            obj.user.user_question_count, obj.user.user_answer_count, obj.user.user_liked_count = QuestionBase().\
-                get_user_qa_count_info(obj.to_user_id)
-            obj.user.following_count = self.get_following_count(obj.to_user_id)
-            obj.user.follower_count = self.get_follower_count(obj.to_user_id)
+            if following_or_follower == 'following':
+                obj.user = UserBase().get_user_by_id(obj.to_user_id)
+
+            if following_or_follower == 'follower':
+                obj.user = UserBase().get_user_by_id(obj.from_user_id)
+
+            user_count_info = UserCountBase().get_user_count_info(obj.user.id)
+            obj.user.user_question_count = user_count_info['user_question_count']
+            obj.user.user_answer_count = user_count_info['user_answer_count']
+            obj.user.user_liked_count = user_count_info['user_liked_count']
+            obj.user.following_count = user_count_info['following_count']
+            obj.user.follower_count = user_count_info['follower_count']
         return objs
 
+    def format_following(self, objs):
+        return self.format_followobjs(objs, following_or_follower='following')
+
     def format_follower(self, objs):
-        for obj in objs:
-            obj.user = UserBase().get_user_by_id(obj.from_user_id)
-            obj.user.user_question_count, obj.user.user_answer_count, obj.user.user_liked_count = QuestionBase().\
-                get_user_qa_count_info(obj.from_user_id)
-            obj.user.following_count = self.get_following_count(obj.from_user_id)
-            obj.user.follower_count = self.get_follower_count(obj.from_user_id)
-        return objs
+        return self.format_followobjs(objs, following_or_follower='follower')
 
     @transaction.commit_manually(using=TIMELINE_DB)
     def follow_people(self, from_user_id, to_user_id):
@@ -71,6 +72,10 @@ class UserFollowBase(object):
             except:
                 transaction.rollback(using=TIMELINE_DB)
                 return 0, dict_err.get(0)
+
+            # 更新关注和粉丝总数信息
+            UserCountBase().update_user_count(user_id=from_user_id, code='following_count')
+            UserCountBase().update_user_count(user_id=to_user_id, code='follower_count')
 
             # 发送未读消息数通知
             UnreadCountBase().update_unread_count(to_user_id, code='fans')
@@ -102,6 +107,11 @@ class UserFollowBase(object):
                 uf.save()
             except UserFollow.DoesNotExist:
                 pass
+
+            # 更新关注和粉丝总数信息
+            UserCountBase().update_user_count(user_id=from_user_id, code='following_count', operate='minus')
+            UserCountBase().update_user_count(user_id=to_user_id, code='follower_count', operate='minus')
+
             transaction.commit(using=TIMELINE_DB)
             return 0, dict_err.get(0)
         except Exception, e:

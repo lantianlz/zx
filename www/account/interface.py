@@ -455,10 +455,13 @@ def user_profile_required(func):
         request.is_me = (request.user == user)
         if not request.is_me:
             request.is_follow = ufb.check_is_follow(request.user.id, user.id)
-        request.user_question_count, request.user_answer_count, request.user_liked_count = QuestionBase().\
-            get_user_qa_count_info(user.id)
-        request.following_count = ufb.get_following_count(user.id)
-        request.follower_count = ufb.get_follower_count(user.id)
+
+        user_count_info = UserCountBase().get_user_count_info(user_id)
+        request.user_question_count = user_count_info['user_question_count']
+        request.user_answer_count = user_count_info['user_answer_count']
+        request.user_liked_count = user_count_info['user_liked_count']
+        request.following_count = user_count_info['following_count']
+        request.follower_count = user_count_info['follower_count']
 
         return func(request, user, *args, **kwargs)
     return _decorator
@@ -481,7 +484,7 @@ class UserCountBase(object):
 
     def update_user_count(self, user_id, code, operate="add"):
         assert (user_id and code)
-        uc = UserCount.objects.get_or_create(user_id=user_id)
+        uc, created = UserCount.objects.get_or_create(user_id=user_id)
         count = getattr(uc, code)
         if operate == 'add':
             count += 1
