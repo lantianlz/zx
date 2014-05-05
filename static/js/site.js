@@ -647,7 +647,7 @@ if (!String.format) {
                         '<img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" >',
                     '</div>',
                     '<div class="col-md-9">',
-                        '<div class="pt-10 pb-5"><a href="/p/{10}">{1}</a></div>',
+                        '<div class="pt-10 pb-5"><a href="/p/{10}">{1}</a>{12}</div>',
                         '<div class="pt-5">',
                             '<span>提问<a href="#" class="pl-3 pr-15">{2}</a></span>',
                             '<span>回答<a href="#" class="pl-3 pr-15">{3}</a></span>',
@@ -656,9 +656,9 @@ if (!String.format) {
                     '</div>',
                 '</div>',
                 '<div class="desc pl-10 pt-5 w300 co6">{5}</div>',
-                '<div class="topics pl-10 pt-10 pb-5 w300 co6">擅长话题: {11}</div>',
+                '<div class="topics pl-10 pt-10 pb-5 w300 co6 none">擅长话题: {11}</div>',
                 '<div class="tools top-border bdc-eee pt-5 mt-5" data-user_name="{6}" data-user_id="{7}">',
-                    '<a class="send-message pr-10 pt-5 pl-5" href="javascript: void(0)">',
+                    '<a class="send-message pr-10 pt-5 pl-5 none" href="javascript: void(0)">',
                         '<span class="glyphicon glyphicon-envelope"></span> 私信ta',
                     '</a>',
                     '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 pull-right {8}">关注ta</button>',
@@ -719,7 +719,8 @@ if (!String.format) {
                                             this['topic_id'], 
                                             this['topic_name']
                                         )
-                                    }).get().join('')
+                                    }).get().join(''),
+                                    data.gender == '1' ? ('<img class="w15 mt--2" src="'+MEDIA_URL+'img/common/male.png" title="男" />') : ('<img class="w15 mt--2" src="'+MEDIA_URL+'img/common/female.png" title="女" />')
                                 )).data('ajax', 'cached');
                             } else {
                                 origin.tooltipster('content', '加载名片失败');
@@ -786,7 +787,7 @@ if (!String.format) {
 
         // 设置插件
         $('.zx-topictips').tooltipster({
-            animation: 'fade',
+            animation: 'swing',
             delay: 200,
             trigger: 'hover',
             theme: 'tooltipster-shadow',
@@ -794,6 +795,7 @@ if (!String.format) {
             interactiveTolerance: 300,
             autoClose: true,
             //content: topictipsHtml,
+            updateAnimation: false,
             contentAsHTML: true,
             content: '信息加载中...',
             functionBefore: function(origin, continueTooltip) {
