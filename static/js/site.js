@@ -843,6 +843,95 @@ if (!String.format) {
     };
 
 
+    /*
+        分页组件
+    */
+    $.ZXPagination = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '分页组件'
+    }
+    /**/
+    $.ZXPagination.PaginationView = Backbone.View.extend({
+        el: '.zx-pagination',
+
+        step: 4,
+
+        totalStep: 10,
+
+        searchUrl: 'search',
+
+        // 防止超出范围
+        _protectRange: function(tempMin, tempMax, min, max){
+            if(tempMin < min){
+                tempMin = min;
+            }
+
+            if(tempMax > max){
+                tempMax = max
+            }
+
+            return [tempMin, tempMax]
+        },
+
+        // 生成分页区间
+        _generateRange: function(current, total){
+            var pages = [], 
+                current = parseInt(current),
+                total = parseInt(total),
+                min = current - this.step,
+                max = current + this.step,
+                temp = [];
+
+            // 防止超出范围
+            temp = this._protectRange(min, max, 1, total);
+            min = temp[0]
+            max = temp[1]
+
+            // 维持列表在 totalStep-1 这个长度
+            var tempCount = max - min + 2;
+            if(tempCount < this.totalStep){
+                if(max >= total){
+                    max = total;
+                    min = max - this.totalStep + 2;
+                } else {
+                    max = this.totalStep - 1;
+                }
+            }
+
+            // 防止超出范围
+            temp = this._protectRange(min, max, 1, total);
+
+            // 生成列表
+            pages = _.range(temp[0], temp[1]+1);
+
+            return pages;
+        },
+
+        render: function(pageIndex, pageCount, searchUrl){
+            var url = searchUrl || this.searchUrl,
+                pageHtml = '',
+                pages = this._generateRange(pageIndex, pageCount);
+
+            for (var i = 0; i < pages.length; i++) {
+
+                pageHtml += String.format(
+                    '<li {3}><a href="#/{0}/{1}">{2}</a></li>', 
+                    url, 
+                    pages[i], 
+                    pages[i],
+                    pages[i] == pageIndex ? 'class="active"' : '' // 当前第几页
+                );
+            };
+
+            // 首页
+            pageHtml = String.format('<li><a href="#/{0}/1">&laquo;</a>', url) + pageHtml;
+            // 末页
+            pageHtml += String.format('<li><a href="#/{0}/{1}">&raquo;</a>', url, pageCount);
+
+            this.$el.html(pageHtml);
+        }
+    });
 })(jQuery);
 
 

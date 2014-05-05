@@ -23,34 +23,6 @@ $(document).ready(function(){
         autoclose: true
     });
 
-    // 初始化
-    function initTextboxList(){
-        var text_topics = new $.TextboxList('#question_topics', {
-            bitsOptions: {
-                box: {deleteButton: true}
-            },
-            unique: true, 
-            max: 100,
-            plugins: {
-                autocomplete: {
-                    minLength: 1, // 最小字符
-                    queryRemote: true, // 远程查询
-                    placeholder: '添加话题',
-                    highlight: false,
-                    onlyFromValues: true, // 是否默认选中第一个结果
-                    remote: {
-                        url: '/question/get_topic_info_by_name', 
-                        param: 'topic_name',
-                        loadPlaceholder: '正在加载...',
-                    }
-                }
-            }
-
-        });
-
-        return text_topics;
-    }
-
     // 提问 models
     var Question = Backbone.Model.extend({
 
@@ -101,11 +73,13 @@ $(document).ready(function(){
     var QuestionListView = Backbone.View.extend({
         el: '#question_list',
 
-        template: _.template($('#temp_item_question').html()),
+        template: _.template($('#item_question_template').html()),
 
         // 渲染函数
         render: function(data){
-            this.$('tbody').html(this.template({'questions': data}))
+            this.$('tbody').html(this.template({'questions': data}));
+
+            this.pageView.render()
         },
 
         // 显示面板
@@ -120,7 +94,7 @@ $(document).ready(function(){
         
         el: '#modify_question',
 
-        template: _.template($('#temp_modify_question').html()),
+        template: _.template($('#modify_question_template').html()),
 
         events: {
             'click .save-question': 'saveQuestion',
@@ -132,17 +106,45 @@ $(document).ready(function(){
             $('.zx-nav-pills a[href="#modify_question"]').tab('show');
         },
 
+        //
+        initTextboxList: function(){
+            var text_topics = new $.TextboxList('#question_topics', {
+                bitsOptions: {
+                    box: {deleteButton: true}
+                },
+                unique: true, 
+                max: 100,
+                plugins: {
+                    autocomplete: {
+                        minLength: 1, // 最小字符
+                        queryRemote: true, // 远程查询
+                        placeholder: '添加话题',
+                        highlight: false,
+                        onlyFromValues: true, // 是否默认选中第一个结果
+                        remote: {
+                            url: '/question/get_topic_info_by_name', 
+                            param: 'topic_name',
+                            loadPlaceholder: '正在加载...',
+                        }
+                    }
+                }
+
+            });
+
+            return text_topics;
+        },
+
         // 渲染
         render: function(data){
             this.$el.html(this.template(data));
 
-            initTextboxList();
+            this.initTextboxList();
         },
 
         // 显示提问信息
         modifyQuestion: function(questionId){
             this.showPanel();
-            this.render(questions.getOne(questionId).toJSON());
+            this.render(this.collection.getOne(questionId).toJSON());
         },
 
         // 保存提问
@@ -172,21 +174,28 @@ $(document).ready(function(){
 
     });
 
+    
+
 
     // 提问的 路由
     var questionRouter = Backbone.Router.extend({
 
         routes: {
-            "":                     "listQuestions",
-            "modify/:questionId":   "modify"
+            "":                     "search",
+            "modify/:questionId":   "modify",
+            "search/:pageIndex": "search"
         },
 
-        // 初始化
-        listQuestions: function(){
-            var data = questions.search();
+        // 分页显示
+        search: function(pageIndex){
+            console.log(pageIndex)
+            var data = this.collection.search(),
+                pageCount = 5;
 
             listView.showPanel();
             listView.render(data.toJSON());
+
+            listView.pagination.render(pageIndex, pageCount);
         },
 
         // 显示修改界面
@@ -198,9 +207,12 @@ $(document).ready(function(){
 
     // 初始化
     var questions = new Questions(),
-        listView = new QuestionListView(),
-        modifyView = new QuestionModifyView(),
-        router = new questionRouter();
+        listView = new QuestionListView({'collection': questions}),
+        modifyView = new QuestionModifyView({
+            'collection': questions, 
+            'pagination': new PaginationView({'searchUrl': 'search'})
+        }),
+        router = new questionRouter({'collection': questions});
 
     Backbone.history.start();
 
@@ -247,28 +259,8 @@ $(document).ready(function(){
         </table>
 
         <div class="text-center">
-            <ul class="pagination pagination-sm">
-                <li class="disabled">
-                    <a href="#">&laquo;</a>
-                </li>
-                <li class="active">
-                    <a href="#">1</a>
-                </li>
-                <li>
-                    <a href="#">2</a>
-                </li>
-                <li>
-                    <a href="#">3</a>
-                </li>
-                <li>
-                    <a href="#">4</a>
-                </li>
-                <li>
-                    <a href="#">5</a>
-                </li>
-                <li>
-                    <a href="#">&raquo;</a>
-                </li>
+            <ul class="pagination pagination-sm zx-pagination">
+                
             </ul>
         </div>
     </div>
@@ -280,7 +272,7 @@ $(document).ready(function(){
 </div>
 
 <!-- 问题列表模板 -->
-<script type="text/template" id="temp_item_question">
+<script type="text/template" id="item_question_template">
     <% _.each(questions, function(question){ %>
         <tr data-question_id="<%= question.userId %>">
             <td><%= question.userId %></td>
@@ -298,7 +290,7 @@ $(document).ready(function(){
 </script>
 
 <!-- 修改问题模板 -->
-<script type="text/template" id="temp_modify_question">
+<script type="text/template" id="modify_question_template">
     <form class="form-horizontal modify-question-form" data-question_id="<%= userId %>" role="form" method="post" action="">
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">提问ID</label>

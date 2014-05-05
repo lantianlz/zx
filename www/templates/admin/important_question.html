@@ -14,7 +14,6 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-    
     // models
     var Important = Backbone.Model.extend({
 
@@ -25,7 +24,7 @@ $(document).ready(function(){
             'title': '',
             'description': '',
             'topics': [],
-            'img': 0,
+            'img': '',
             'createdTime': new Date()
         }
 
@@ -60,11 +59,13 @@ $(document).ready(function(){
     var ImportantListView = Backbone.View.extend({
         el: '#important_list',
 
-        template: _.template($('#temp_item_important').html()),
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#item_important_template').html()),
 
         // 渲染函数
         render: function(data){
-            this.$('tbody').html(this.template({'importants': data}))
+            this.$('tbody').html(this.template({'importants': data}));
         },
 
         // 显示面板
@@ -79,7 +80,7 @@ $(document).ready(function(){
         
         el: '#modify_important',
 
-        template: _.template($('#temp_modify_important').html()),
+        template: _.template($('#modify_important_template').html()),
 
         events: {
             'click .save-important': 'saveImportant',
@@ -140,7 +141,7 @@ $(document).ready(function(){
         // 显示提问信息
         modifyImportant: function(importantId){
             this.showPanel();
-            this.render(importants.getOne(importantId).toJSON());
+            this.render(this.collection.getOne(importantId).toJSON());
         },
 
         // 保存提问
@@ -170,20 +171,26 @@ $(document).ready(function(){
 
     });
 
+    
+
     // router
     var importantRouter = Backbone.Router.extend({
 
         routes: {
-            "":                     "listImportants",
-            "modify/:importantId":  "modify"
+            "":                     "search",
+            "modify/:importantId":  "modify",
+            "search/:importantId":  "search"
         },
 
-        // 初始化
-        listImportants: function(){
-            var data = importants.search();
-            
+        // 查询
+        search: function(pageIndex){
+            var data = importants.search(pageIndex),
+                pageCount = 30;
+
             listView.showPanel();
             listView.render(data.toJSON());
+            
+            listView.pagination.render(pageIndex||1, pageCount, 'search');
         },
 
         // 显示修改界面
@@ -195,8 +202,8 @@ $(document).ready(function(){
     
     // 初始化
     var importants = new Importants(),
-        listView = new ImportantListView(),
-        modifyView = new ImportantModifyView(),
+        listView = new ImportantListView({'collection': importants}),
+        modifyView = new ImportantModifyView({'collection': importants}),
         router = new importantRouter();
 
     Backbone.history.start();
@@ -242,28 +249,8 @@ $(document).ready(function(){
         </table>
 
         <div class="text-center">
-            <ul class="pagination pagination-sm">
-                <li class="disabled">
-                    <a href="#">&laquo;</a>
-                </li>
-                <li class="active">
-                    <a href="#">1</a>
-                </li>
-                <li>
-                    <a href="#">2</a>
-                </li>
-                <li>
-                    <a href="#">3</a>
-                </li>
-                <li>
-                    <a href="#">4</a>
-                </li>
-                <li>
-                    <a href="#">5</a>
-                </li>
-                <li>
-                    <a href="#">&raquo;</a>
-                </li>
+            <ul class="pagination pagination-sm zx-pagination">
+                
             </ul>
         </div>
     </div>
@@ -275,7 +262,7 @@ $(document).ready(function(){
 </div>
 
 <!-- 问题列表模板 -->
-<script type="text/template" id="temp_item_important">
+<script type="text/template" id="item_important_template">
     <% _.each(importants, function(important){ %>
         <tr data-important_id="<%= important.userId %>">
             <td><%= important.userId %></td>
@@ -287,7 +274,7 @@ $(document).ready(function(){
 </script>
 
 <!-- 修改问题模板 -->
-<script type="text/template" id="temp_modify_important">
+<script type="text/template" id="modify_important_template">
     <form class="form-horizontal modify-important-form" data-important_id="<%= userId %>" role="form" method="post" action="">
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">提问ID</label>
