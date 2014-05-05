@@ -96,9 +96,11 @@ def user_qa_count_info_right_nav_dispaly(context):
     """
     @note: 个人问答相关统计总数信息获取
     """
-    from www.question import interface
-    user_question_count, user_answer_count, user_liked_count = interface.QuestionBase()\
-        .get_user_qa_count_info(context['request'].user.id)
+    from www.account.interface import UserCountBase
+    user_count_info = UserCountBase().get_user_count_info(context['request'].user.id)
+    user_question_count, user_answer_count, user_liked_count = user_count_info['user_question_count'],\
+        user_count_info['user_answer_count'], user_count_info['user_liked_count']
+
     return render_to_response('question/_user_qa_count_info_right_nav_dispaly.html', locals(), context_instance=context).content
 
 

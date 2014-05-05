@@ -2,7 +2,6 @@
 
 import urllib
 import json
-import hashlib
 from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext

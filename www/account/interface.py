@@ -7,7 +7,7 @@ from django.utils.encoding import smart_unicode
 from django.conf import settings
 
 from common import utils, debug, validators, cache
-from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser
+from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
 from www.message.interface import UnreadCountBase
 
 dict_err = {
@@ -455,10 +455,40 @@ def user_profile_required(func):
         request.is_me = (request.user == user)
         if not request.is_me:
             request.is_follow = ufb.check_is_follow(request.user.id, user.id)
-        request.user_question_count, request.user_answer_count, request.user_liked_count = QuestionBase().\
-            get_user_qa_count_info(user.id)
-        request.following_count = ufb.get_following_count(user.id)
-        request.follower_count = ufb.get_follower_count(user.id)
+
+        user_count_info = UserCountBase().get_user_count_info(user_id)
+        request.user_question_count = user_count_info['user_question_count']
+        request.user_answer_count = user_count_info['user_answer_count']
+        request.user_liked_count = user_count_info['user_liked_count']
+        request.following_count = user_count_info['following_count']
+        request.follower_count = user_count_info['follower_count']
 
         return func(request, user, *args, **kwargs)
     return _decorator
+
+
+class UserCountBase(object):
+
+    def __init__(self):
+        pass
+
+    def get_user_count_info(self, user_id):
+        try:
+            uc = UserCount.objects.get(user_id=user_id)
+            return dict(user_question_count=uc.user_question_count, user_answer_count=uc.user_answer_count,
+                        user_liked_count=uc.user_liked_count, following_count=uc.following_count,
+                        follower_count=uc.follower_count)
+        except UserCount.DoesNotExist:
+            return dict(user_question_count=0, user_answer_count=0, user_liked_count=0,
+                        following_count=0, follower_count=0)
+
+    def update_user_count(self, user_id, code, operate="add"):
+        assert (user_id and code)
+        uc, created = UserCount.objects.get_or_create(user_id=user_id)
+        count = getattr(uc, code)
+        if operate == 'add':
+            count += 1
+        else:
+            count -= 1
+        setattr(uc, code, count)
+        uc.save()

@@ -172,3 +172,12 @@ class BlackList(models.Model):
     state = models.BooleanField(default=True)
     expire_time = models.DateTimeField()
     create_time = models.DateTimeField(auto_now_add=True)
+
+
+class UserCount(models.Model):
+    user_id = models.CharField(max_length=32, unique=True)
+    user_question_count = models.IntegerField(default=0, db_index=True)
+    user_answer_count = models.IntegerField(default=0, db_index=True)
+    user_liked_count = models.IntegerField(default=0, db_index=True)
+    following_count = models.IntegerField(default=0, db_index=True)
+    follower_count = models.IntegerField(default=0, db_index=True)
