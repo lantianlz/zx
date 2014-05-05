@@ -42,6 +42,7 @@ $(document).ready(function(){
             'userId': '',           // 用户id
             'userName': '',         // 用户名称
             'userAvatar': '',       // 用户头像
+            'userGender': '',       // 用户性别
             'userDesc': '',         // 用户简介
             'likeCount': 0,         // 获赞个数
             'answerCount': 0,       // 回答个数
@@ -125,30 +126,34 @@ $(document).ready(function(){
                 'userName': '半夜没事瞎溜达',         
                 'userDesc': '漫漫人生路，谁不错几步',    
                 'userAvatar': '/static/img/common/user1.jpg',     
+                'userGender': 1,
                 'likeCount': 53,        
                 'answerCount': 254,       
                 'questionCount': 24
             }, {
-                'userId': '1',          
+                'userId': '2',          
                 'userName': '习大大',         
                 'userDesc': '我多年攒下的这一屋子的切糕给你了',    
-                'userAvatar': '/static/img/common/user2.jpg',     
+                'userAvatar': '/static/img/common/user3.jpg',     
+                'userGender': '1',
                 'likeCount': 452,        
                 'answerCount': 653,       
                 'questionCount': 234
             }, {
-                'userId': '1',          
+                'userId': '3',          
                 'userName': '祁圆圆',         
                 'userDesc': '一只垂耳兔，正被一只大型犬圈养。',    
-                'userAvatar': '/static/img/common/user3.jpg',     
+                'userAvatar': '/static/img/common/user2.jpg',  
+                'userGender': '2',   
                 'likeCount': 53,        
                 'answerCount': 254,       
                 'questionCount': 65
             }, {
-                'userId': '1',          
+                'userId': '4',          
                 'userName': '喵星人',         
                 'userDesc': '注册会计师,现任职某上市公司',    
-                'userAvatar': '/static/img/common/user4.png',     
+                'userAvatar': '/static/img/common/user4.png', 
+                'userGender': '2',    
                 'likeCount': 21,        
                 'answerCount': 13,       
                 'questionCount': 67
@@ -216,7 +221,9 @@ $(document).ready(function(){
         template: _.template($('#suggestUsers-template').html()),
 
         events: {
-            'click .refresh': 'refreshUsers'
+            'click .refresh': 'refreshUser',
+            'click .follow': 'followUser',
+            'click .unfollow': 'unfollowUser'
         },
 
         initialize: function(){
@@ -225,6 +232,9 @@ $(document).ready(function(){
 
         render: function(data){
             this.$('.list-inline').html(this.template({'users': data}));
+
+            // 初始化名片
+            //$.ZXTooltipster.PersonCard();
         },
 
         // 获取推荐用户
@@ -235,10 +245,32 @@ $(document).ready(function(){
         },
 
         // 换一换
-        refreshUsers: function(){
+        refreshUser: function(){
             this.hide(300);
             this.getSuggestUsers();
             this.show(300);
+        },
+
+        // 关注用户
+        followUser: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.prev().data('user_id');
+
+            target.hide();
+            target.next().show();
+            
+            // 关注
+            // $.ZXOperation.followPeople(userId, function(){
+
+            // });
+        },
+
+        unfollowUser: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.prev().data('user_id');
+
+            target.hide();
+            target.prev().show();
         },
 
         hide: function(time){
@@ -304,12 +336,21 @@ $(document).ready(function(){
 <!-- 推荐用户模板 -->
 <script type="text/template" id="suggestUsers-template">
     <% _.each(users, function(user){ %>
-        <li class="col-md-6 col-xs-12 bottom-border bdc-eee pt-10 pb-10">
+        <li class="col-md-6 col-xs-12 bottom-border bdc-eee pt-15 pb-10">
             <img class="pa avatar-45 avatar-circle" src="<%= user.userAvatar %>">
             <div class="pl-55 pr-10">
                 <div>
-                    <a href="/p/<%= user.userId %>"><%= user.userName %></a>
-                    <button class="btn btn-xs btn-primary pull-right">添加关注</button>
+                    <a href="/p/<%= user.userId %>" class="zx-cardtips" data-user_id='<%= user.userId %>'>
+                        <%= user.userName %>
+                        <% if (user.userGender == 1) { %>
+                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/male.png" title="男" />
+                        <% } %>
+                        <% if (user.userGender == 2) { %>
+                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/female.png" title="女" />
+                        <% } %>
+                    </a>
+                    <button class="btn btn-xs btn-primary pull-right follow">添加关注</button>
+                    <button class="btn btn-xs btn-default pull-right unfollow none">取消关注</button>
                 </div>
                 <div class="pt-5"><span>提问 <%= user.questionCount %></span><span class="pl-15">回答 <%= user.answerCount %></span><span class="pl-15">赞 <%= user.likeCount %></span></div>
                 <div class="f12 co8 pt-5"><%= user.userDesc %></div>
@@ -334,7 +375,7 @@ $(document).ready(function(){
                 </div>
                 <div class="pt-10 f13"><%= feed.questionDesc %></div>
                 <div class="f12 co8 gray-a pt-5">
-                    <span><%= feed.questionAnswerCount %> 个回答 • <%= feed.questionViewCount %> 次浏览 • <%= feed.feedDate %></span>
+                    <span><%= feed.questionAnswerCount %> 个回答 • <%= feed.feedDate %></span>
                 </div>
             </div>
         </li>
