@@ -285,12 +285,14 @@ class QuestionBase(object):
         '''
         @note: 获取提问摘要信息，用于feed展现
         '''
-        question = self.get_question_by_id(question_id, need_state=False)
-        question_summary = {}
-        if question:
-            question_summary = dict(question_id=question.id, question_title=question.title,
-                                    question_summary=question.get_summary(), question_answer_count=question.answer_count)
-        return question_summary
+        def _get_question_summary_by_id(question_id):
+            question = self.get_question_by_id(question_id, need_state=False)
+            question_summary = {}
+            if question:
+                question_summary = dict(question_id=question.id, question_title=question.title,
+                                        question_summary=question.get_summary(), question_answer_count=question.answer_count)
+            return question_summary
+        return cache.get_or_update_data_from_cache('question_summary_%s' % question_id, True, 3600, _get_question_summary_by_id, question_id)
 
 
 class AnswerBase(object):
@@ -481,15 +483,16 @@ class AnswerBase(object):
         '''
         @note: 获取回答摘要信息，用于feed展现
         '''
-        answer = self.get_answer_by_id(answer_id, need_state=False)
-        answer_summary = {}
-        if answer:
-            user = answer.get_from_user()
-            answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
-                                  answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
-                                  answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=user.des or '')
-
-        return answer_summary
+        def _get_answer_summary_by_id_from_cache(answer_id):
+            answer = self.get_answer_by_id(answer_id, need_state=False)
+            answer_summary = {}
+            if answer:
+                user = answer.get_from_user()
+                answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
+                                      answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
+                                      answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=user.des or '')
+            return answer_summary
+        return cache.get_or_update_data_from_cache('answer_summary_%s' % answer_id, True, 3600, _get_answer_summary_by_id_from_cache, answer_id)
 
 
 class QuestionTypeBase(object):
