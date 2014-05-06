@@ -391,7 +391,7 @@ $(document).ready(function(){
                     <a class="black-blue f16 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
                 <div class="pt-10 f12">
-                    <a href="/p/<%= feed.answerUserId %>" class="zx-cardtips pr-5" data-user_id='<%= feed.answerUserId %>'><%= feed.answerUserName %></a><%= feed.answerUserDesc %>
+                    <a href="/p/<%= feed.answerUserId %>" class="zx-cardtips pr-5 black-blue fb" data-user_id='<%= feed.answerUserId %>'><%= feed.answerUserName %></a><% if(feed.answerUserDesc) {%><span class="fb">(<%= feed.answerUserDesc %>)</span><% } %>
                 </div>
                 <div class="pt-5 f13">
                     <%= feed.answerContent %>
