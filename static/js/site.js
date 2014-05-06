@@ -247,6 +247,22 @@ function addZero(data){
         return (992 <= $(window).width()) ? true : false;
     };
 
+    /*
+        字典映射解析
+
+        用例：
+        $.ZXUtils.dictMap({'a': '1', 'b': '2'}, {'a': 'a1', 'b': 'b1'})
+        返回 {'a1': '1', 'b1': '2'}
+    */
+    $.ZXUtils.dictMap = function(originDict, maps){
+        var newDict = {};
+        for(var m in maps){
+            newDict[m] = originDict[maps[m]]
+        }
+
+        return newDict;
+    }
+
 
     /* 
         弹窗插件
