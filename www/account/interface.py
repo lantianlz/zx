@@ -440,7 +440,6 @@ def user_profile_required(func):
     '''
     def _decorator(request, user_id, *args, **kwargs):
         from www.timeline.interface import UserFollowBase
-        from www.question.interface import QuestionBase
         from django.http import HttpResponse
 
         ufb = UserFollowBase()

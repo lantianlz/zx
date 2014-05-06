@@ -290,31 +290,18 @@ def test500(request):
 # ===================================================ajax部分=================================================================#
 def get_user_info_by_id(request):
     '''
-    根据用户id获取名片信息
+    @note: 根据用户id获取名片信息
     '''
-    user_id = request.REQUEST.get('user_id', None)
-
-    infos = {
-        'flag': '-1',
-        'result': '参数错误'
-    }
-
+    user_id = request.REQUEST.get('user_id')
+    infos = {}
     if user_id:
-        infos = {
-            'flag': '0',
-            'id': 'e0f87ed0712b11e3b894000c290d194c',
-            'name': '半夜没事乱溜达',
-            'avatar': '/static/img/common/user3.jpg',
-            'desc': '不想当CEO的程序员不是好产品经理',
-            'question_count': 125,
-            'answer_count': 326,
-            'like_count': 224,
-            'is_follow': True,
-            'topics': [
-                {'topic_id': '1', 'topic_name': '大盘走势'},
-                {'topic_id': '2', 'topic_name': '个股分析'},
-                {'topic_id': '3', 'topic_name': '互联网金融'},
-            ]
-        }
+        user = ub.get_user_by_id(user_id)
+        infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=user.des or '', gender=user.gender)
+        infos.update(is_follow=ufb.check_is_follow(request.user.id, user_id))
+
+        user_count_info = interface.UserCountBase().get_user_count_info(user_id)
+        user_question_count, user_answer_count, user_liked_count = user_count_info['user_question_count'], \
+            user_count_info['user_answer_count'], user_count_info['user_liked_count']
+        infos.update(dict(user_question_count=user_question_count, user_answer_count=user_answer_count, user_liked_count=user_liked_count))
 
     return HttpResponse(json.dumps(infos))

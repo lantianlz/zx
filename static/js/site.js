@@ -709,20 +709,20 @@ function addZero(data){
                         dataType: 'json',
                         url: '/account/get_user_info_by_id?user_id=' + origin.data('user_id'),
                         success: function(data) {
-                            if(data.flag=='0'){
+                            if(data.user_id){
                                 origin.tooltipster('content', String.format(
                                     cardtipsHtml, 
                                     data.avatar,
-                                    data.name, 
-                                    data.question_count,
-                                    data.answer_count,
-                                    data.like_count,
-                                    data.desc,
-                                    data.name,
-                                    data.id,
+                                    data.nick, 
+                                    data.user_question_count,
+                                    data.user_answer_count,
+                                    data.user_liked_count,
+                                    data.des,
+                                    data.nick,
+                                    data.user_id,
                                     data.is_follow?'hide':'', // 关注按钮
                                     data.is_follow?'':'hide', //取消关注按钮
-                                    data.id,
+                                    data.user_id,
                                     // 拼装话题
                                     $(data.topics).map(function(){
                                         return  String.format(
