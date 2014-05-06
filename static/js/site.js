@@ -774,7 +774,7 @@ if (!String.format) {
                 '</div>',
                 '<div class="desc pl-10 pt-5 w300 co6">{4}</div>',
                 '<div class="tools top-border bdc-eee pt-5 mt-5 text-right" data-topic_id="{7}">',
-                    '<button type="button" class="btn btn-primary btn-xs follow mr-5 ml-10 {5}">关注ta</button>',
+                    '<button type="button" class="btn btn-primary btn-xs follow mr-5 ml-10 {5}">添加关注</button>',
                     '<button type="button" class="btn btn-default btn-xs unfollow mr-5 {6}">取消关注</button>',
                 '</div>',
             '</div>'
