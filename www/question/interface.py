@@ -486,8 +486,8 @@ class AnswerBase(object):
         if answer:
             user = answer.get_from_user()
             answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
-                                  answer_summary=answer.get_summary(), answer_like_count=answer.like_count,
-                                  user_avatar=user.get_avatar_65(), user_nick=user.nick, user_des=user.des)
+                                  answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
+                                  answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=user.des or '')
 
         return answer_summary
 
