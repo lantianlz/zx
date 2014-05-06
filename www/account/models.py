@@ -99,7 +99,7 @@ class Profile(models.Model):
         return self.get_avatar(key='25m25')
 
     def get_ta_display(self):
-        return {1: u'他'}.get(self.gender, u'她')
+        return {1: u'他', 2: u'她'}.get(self.gender, u'Ta')
 
     def __unicode__(self):
         return u'%s, %s' % (self.id, self.nick)

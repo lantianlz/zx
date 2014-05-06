@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-import logging
 import json
-from django.db import transaction
 
-from common import utils, debug, cache
+from common import utils, cache
 from www.message.models import UnreadCount, UnreadType, Notice
 
 

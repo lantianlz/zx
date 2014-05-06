@@ -25,8 +25,8 @@ def show_index(request):
         #from www.question.views import question_home
         # return question_home(request)
 
-        from www.timeline.views import user_timeline
-        return user_timeline(request)
+        from www.timeline.views import show_user_timeline
+        return show_user_timeline(request)
     else:
         return login(request)
         # return HttpResponseRedirect('/login')

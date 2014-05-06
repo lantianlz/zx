@@ -34,8 +34,7 @@ class Question(models.Model):
 
     def get_user(self):
         from www.account.interface import UserBase
-        user = UserBase().get_user_by_id(self.user_id)
-        return user
+        return UserBase().get_user_by_id(self.user_id)
 
 
 class Answer(models.Model):
@@ -56,8 +55,7 @@ class Answer(models.Model):
 
     def get_from_user(self):
         from www.account.interface import UserBase
-        user = UserBase().get_user_by_id(self.from_user_id)
-        return user
+        return UserBase().get_user_by_id(self.from_user_id)
 
     def get_summary(self):
         """

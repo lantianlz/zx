@@ -9,6 +9,7 @@ from common import utils, debug, cache
 from www.account.interface import UserBase
 from www.message.interface import UnreadCountBase
 from www.account.interface import UserCountBase
+from www.timeline.interface import FeedBase
 from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad
 
 
@@ -143,6 +144,9 @@ class QuestionBase(object):
             # 更新用户话题数信息
             UserCountBase().update_user_count(user_id=user_id, code='user_question_count')
 
+            # 发送feed
+            FeedBase().create_feed(user_id, feed_type=1, obj_id=question.id)
+
             transaction.commit(using=QUESTION_DB)
             return True, question
         except Exception, e:
@@ -233,9 +237,12 @@ class QuestionBase(object):
         else:
             return []
 
-    def get_question_by_id(self, id):
+    def get_question_by_id(self, id, need_state=True):
         try:
-            return Question.objects.select_related('question_type').get(id=id, state=True)
+            ps = dict(id=id)
+            if need_state:
+                ps.update(dict(state=True))
+            return Question.objects.select_related('question_type').get(**ps)
         except Question.DoesNotExist:
             return None
 
@@ -272,8 +279,18 @@ class QuestionBase(object):
     def cachel_important(self, question, user):
         question.is_important = False
         question.save()
-
         return True, dict_err.get(000)
+
+    def get_question_summary_by_id(self, question_id):
+        '''
+        @note: 获取提问摘要信息，用于feed展现
+        '''
+        question = self.get_question_by_id(question_id, need_state=False)
+        question_summary = {}
+        if question:
+            question_summary = dict(question_id=question.id, question_title=question.title,
+                                    question_summary=question.get_summary(), question_answer_count=question.answer_count)
+        return question_summary
 
 
 class AnswerBase(object):
@@ -334,6 +351,9 @@ class AnswerBase(object):
             question.answer_count += 1
             question.last_answer_time = datetime.datetime.now()
             question.save()
+
+            # 发送feed
+            FeedBase().create_feed(from_user_id, feed_type=3, obj_id=answer.id)
 
             transaction.commit(using=QUESTION_DB)
             return True, answer
@@ -448,6 +468,29 @@ class AnswerBase(object):
             transaction.rollback(using=QUESTION_DB)
             return False, dict_err.get(999)
 
+    def get_answer_by_id(self, id, need_state=True):
+        try:
+            ps = dict(id=id)
+            if need_state:
+                ps.update(dict(state=True))
+            return Answer.objects.select_related('question').get(**ps)
+        except Answer.DoesNotExist:
+            return None
+
+    def get_answer_summary_by_id(self, answer_id):
+        '''
+        @note: 获取回答摘要信息，用于feed展现
+        '''
+        answer = self.get_answer_by_id(answer_id, need_state=False)
+        answer_summary = {}
+        if answer:
+            user = answer.get_from_user()
+            answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
+                                  answer_summary=answer.get_summary(), answer_like_count=answer.like_count,
+                                  user_avatar=user.get_avatar_65(), user_nick=user.nick, user_des=user.des)
+
+        return answer_summary
+
 
 class QuestionTypeBase(object):
 
@@ -508,6 +551,9 @@ class LikeBase(object):
             # 更新未读消息
             from www.message.interface import UnreadCountBase
             UnreadCountBase().update_unread_count(to_user_id, code='received_like')
+
+            # 发送feed
+            FeedBase().create_feed(from_user_id, feed_type=2, obj_id=answer.id)
 
             transaction.commit(QUESTION_DB)
             return True, dict_err.get(000)
