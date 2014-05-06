@@ -19,3 +19,7 @@ def question(request, template_name='admin/question.html'):
 
 def important_question(request, template_name='admin/important_question.html'):
 	return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def suggest_user(request, template_name='admin/suggest_user.html'):
+	return render_to_response(template_name, locals(), context_instance=RequestContext(request))

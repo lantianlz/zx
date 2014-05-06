@@ -851,7 +851,9 @@ if (!String.format) {
         author: 'stranger',
         description: '分页组件'
     }
-    /**/
+    /*
+        分页组件
+    */
     $.ZXPagination.PaginationView = Backbone.View.extend({
         el: '.zx-pagination',
 
@@ -916,18 +918,27 @@ if (!String.format) {
             for (var i = 0; i < pages.length; i++) {
 
                 pageHtml += String.format(
-                    '<li {3}><a href="#/{0}/{1}">{2}</a></li>', 
+                    '<li {0}><a href="#/{1}/{2}">{3}</a></li>', 
+                    pages[i] == pageIndex ? 'class="active"' : '', // 为当前页添加active类
                     url, 
                     pages[i], 
-                    pages[i],
-                    pages[i] == pageIndex ? 'class="active"' : '' // 当前第几页
+                    pages[i]
                 );
             };
 
             // 首页
-            pageHtml = String.format('<li><a href="#/{0}/1">&laquo;</a>', url) + pageHtml;
+            pageHtml = String.format(
+                '<li {0}><a href="{1}">&laquo;</a>', 
+                pageIndex == 1 ? 'class="disabled"' : '',
+                pageIndex == 1 ? 'javascript: void(0);' : ('#/' + url + '/' + 1)
+            ) + pageHtml;
+            
             // 末页
-            pageHtml += String.format('<li><a href="#/{0}/{1}">&raquo;</a>', url, pageCount);
+            pageHtml += String.format(
+                '<li {0}><a href="{1}">&raquo;</a>', 
+                pageIndex == pageCount ? 'class="disabled"' : '',
+                pageIndex == pageCount ? 'javascript: void(0);' : ('#/' + url + '/' + pageCount)
+            );
 
             this.$el.html(pageHtml);
         }
