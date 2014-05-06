@@ -100,72 +100,14 @@ $(document).ready(function(){
         // 查询
         search: function(feedId){
 
-            console.log('11111==>', feedId)
             var me = this;
+
+            g_ajax_processing_obj_id = 'loadingMoreFeed';
             ajaxSend("/timeline/get_user_timeline", {'last_feed_id': feedId}, function(data){
                 if(data.feeds){
                     me.reset(me._parse(data.feeds));
-                }
+                }  
             });
-
-            // this.reset([{
-            //     'feedId': '1',
-            //     'feedDate': '2014-05-01 11:11:11',
-            //     'feedType': 1,          
-            //     'userId': '1',           
-            //     'userAvatar': '/static/img/common/user1.jpg',       
-            //     'userName': '半夜没事瞎溜达',         
-            //     'questionId': 1,        
-            //     'questionTitle': '创业板调整，蓝筹股走强，并购重组黑马奔腾，热点纷呈背后投资逻...',    
-            //     'questionDesc': '从美国到中国，从纳指到创业板指，在近期都出现了明显的调整走势，我们应该用博弈论还是价值投资的思路来看待这次新兴产业股票的调整呢？这样的调整以及蓝筹股的走强，和并购重组的兴旺又给我们未来投资以什么样的启......',     
-            //     'questionViewCount': 15, 
-            //     'questionAnswerCount': 6,
-            //     'answerId': 0,        
-            //     'answerContent': '',    
-            //     'answerUserId': '',     
-            //     'answerUserName': '',   
-            //     'answerUserAvatar': '', 
-            //     'answerUserDesc': '',
-            //     'answerLikeCount': 0   
-            // }, {
-            //     'feedId': '2',
-            //     'feedDate': '2014-05-02 12:12:12',
-            //     'feedType': 2,          
-            //     'userId': '2',           
-            //     'userAvatar': '/static/img/common/user2.jpg',       
-            //     'userName': '女王大人',         
-            //     'questionId': 2,        
-            //     'questionTitle': '作为私募基金经理最重要的是什么？投资逻辑还是基本功？',    
-            //     'questionDesc': '',     
-            //     'questionViewCount': 0, 
-            //     'questionAnswerCount': 0,
-            //     'answerId': 2,        
-            //     'answerContent': '1940年，西方盟国做梦也没想到，坐拥西欧最强陆军的法国居然在几个月内即被德军的闪电战击垮。而其中最出色的第七装甲师，其指挥官居然只是战前一个步兵学院的教官艾尔温隆美尔少将。1941年，为了营救著名的猪队......',    
-            //     'answerUserId': '1',     
-            //     'answerUserName': '胡萝卜分你一半',   
-            //     'answerUserAvatar': '', 
-            //     'answerUserDesc': '(笨熊 ， 吃，不吃，笨！)',  
-            //     'answerLikeCount': 37   
-            // }, {
-            //     'feedId': '3',
-            //     'feedDate': '2014-05-03 13:13:13',
-            //     'feedType': 3,          
-            //     'userId': '3',           
-            //     'userAvatar': '/static/img/common/user3.jpg',       
-            //     'userName': '闪闪发亮的女神经',         
-            //     'questionId': 3,        
-            //     'questionTitle': '沪港通是个什么新鲜玩意儿?',    
-            //     'questionDesc': '',     
-            //     'questionViewCount': 0, 
-            //     'questionAnswerCount': 0,
-            //     'answerId': 3,        
-            //     'answerContent': '4月10日午间，中国证监会与香港证监会于联合发布公告，正式启动沪港通两地市场的互联互通交易。根据公告，沪股通总额度为3000亿人民币，每日额度为130亿人民币，港股通总额度为2500亿人民币，每日额度为105亿人民币，沪港通正式......',    
-            //     'answerUserId': '',     
-            //     'answerUserName': '',   
-            //     'answerUserAvatar': '', 
-            //     'answerUserDesc': '',  
-            //     'answerLikeCount': 29   
-            // }]);
 
             return this;
         }
@@ -229,10 +171,12 @@ $(document).ready(function(){
         },
 
         initialize: function(){
+            // 监听集合的reset事件
             this.listenTo(this.collection, 'reset', this.getFeed);
+
+            // 首次查询
             this.collection.search();
 
-            //this.getFeed();
         },
 
         render: function(data){
@@ -250,7 +194,7 @@ $(document).ready(function(){
         getFeed: function(){
             var data = this.collection.toJSON(),
                 lastFeedId = this.collection.getLastFeedId();
-            console.log(lastFeedId, 'lastFeedId')
+            
             this.render(data);
 
             // 是否显示更多
@@ -262,7 +206,7 @@ $(document).ready(function(){
         // 查看更多
         getMore: function(){
             var feedId = this.$('.get-more').data('feed_id');
-            console.log(feedId, '**********')
+            
             // 删除原先的 查看更多 按钮
             this.$('.get-more').remove();
 
@@ -357,7 +301,7 @@ $(document).ready(function(){
     <!-- 推荐关注 -->
     <div class="suggest-users pl-15 pr-15 pb-15">
         <div class="co8 f14 text-center pt-15 pb-15">
-            你的首页暂时还没有太多内容，多关注些人吧
+            首页内容太少，多关注些朋友吧
             <a href="javascript: void(0)" class="refresh f12 pl-10">
                 <span class="glyphicon glyphicon-refresh"></span>换一换
             </a>
@@ -392,7 +336,7 @@ $(document).ready(function(){
 <script type="text/template" id="suggestUsers-template">
     <% _.each(users, function(user){ %>
         <li class="col-md-6 col-xs-12 bottom-border bdc-eee pt-15 pb-10">
-            <img class="pa avatar-45 avatar-circle" src="<%= user.userAvatar %>">
+            <a href="/p/<%= user.userId %>"><img class="pa avatar-45 avatar-circle" src="<%= user.userAvatar %>"></a>
             <div class="pl-55 pr-10">
                 <div>
                     <a href="/p/<%= user.userId %>" class="zx-cardtips" data-user_id='<%= user.userId %>'>
@@ -490,7 +434,8 @@ $(document).ready(function(){
 <!-- 更多按钮模板 -->
 <script type="text/template" id="getMore-template">
     <li class="list-group-item no-l-r-bd bdc-eee pl-0 no-border">
-        <div class="">
+        <div class="text-center">
+            <span id="loadingMoreFeed"></span>
             <button type="button" class="btn btn-block btn-default get-more" data-feed_id="<%= feedId %>">查看更多...</button>
         </div>
     </li>

@@ -655,7 +655,7 @@ function addZero(data){
             '<div class="cardtips f12">',
                 '<div class="profile row f14">',
                     '<div class="col-md-3">',
-                        '<img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" >',
+                        '<a href="/p/{14}"><img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" ></a>',
                     '</div>',
                     '<div class="col-md-9">',
                         '<div class="pt-10 pb-5"><a href="/p/{10}">{1}</a>{12}</div>',
@@ -668,11 +668,11 @@ function addZero(data){
                 '</div>',
                 '<div class="desc pl-10 pt-5 w300 co6">{5}</div>',
                 '<div class="topics pl-10 pt-10 pb-5 w300 co6 none">擅长话题: {11}</div>',
-                '<div class="tools top-border bdc-eee pt-5 mt-5" data-user_name="{6}" data-user_id="{7}">',
+                '<div class="tools top-border bdc-eee pt-5 mt-5 {13}" data-user_name="{6}" data-user_id="{7}">',
                     '<a class="send-message pr-10 pt-5 pl-5 none" href="javascript: void(0)">',
                         '<span class="glyphicon glyphicon-envelope"></span> 私信ta',
                     '</a>',
-                    '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 pull-right {8}">关注ta</button>',
+                    '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 pull-right {8}">添加关注</button>',
                     '<button type="button" class="btn btn-default btn-xs unfollow mr-5 pull-right {9}">取消关注</button>',
                 '</div>',
             '</div>'
@@ -720,8 +720,8 @@ function addZero(data){
                                     data.des,
                                     data.nick,
                                     data.user_id,
-                                    data.is_follow?'hide':'', // 关注按钮
-                                    data.is_follow?'':'hide', //取消关注按钮
+                                    data.is_follow?'none':'', // 关注按钮
+                                    data.is_follow?'':'none', //取消关注按钮
                                     data.user_id,
                                     // 拼装话题
                                     $(data.topics).map(function(){
@@ -731,7 +731,17 @@ function addZero(data){
                                             this['topic_name']
                                         )
                                     }).get().join(''),
-                                    data.gender == '1' ? ('<img class="w15 mt--2" src="'+MEDIA_URL+'img/common/male.png" title="男" />') : ('<img class="w15 mt--2" src="'+MEDIA_URL+'img/common/female.png" title="女" />')
+                                    // 根据性别设置对应的图片
+                                    (function(gender){
+                                        var genderData = {
+                                            '0': '', 
+                                            '1': '<img class="w15 mt--2 ml-5" src="'+MEDIA_URL+'img/common/male.png" title="男" />', 
+                                            '2': '<img class="w15 mt--2 ml-5" src="'+MEDIA_URL+'img/common/female.png" title="女" />'
+                                        }; 
+                                        return genderData[gender]
+                                    })(data.gender),
+                                    CURRENT_USER_ID == data.user_id ? 'none' : '',
+                                    data.user_id
                                 )).data('ajax', 'cached');
                             } else {
                                 origin.tooltipster('content', '加载名片失败');
@@ -748,13 +758,28 @@ function addZero(data){
         });
         // 关注事件
         $('.cardtips .follow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
+            var me = $(this), 
+                target = me.parents('.tools').eq(0);
+
+            //$.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
+            g_ajax_processing_obj_id = me.setUUID().attr('id');
+            $.ZXOperation.followPeople(target.data('user_id'), function(){
+                me.hide();
+                me.next().show();
+            })
         });
         // 取消关注事件
         $('.cardtips .unfollow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
+            var me = $(this), 
+                target = me.parents('.tools').eq(0);
+            
+            //$.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
+            g_ajax_processing_obj_id = me.setUUID().attr('id');
+            $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
+                me.hide();
+                me.prev().show();
+            });
+
         });
         
     };
