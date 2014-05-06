@@ -188,8 +188,8 @@ class FeedBase(object):
         assert 1 < page_count < 10
 
         feed_ids = self.get_user_timeline_feed_ids(user_id)
-        if feed_ids and last_feed_id:
-            index = feed_ids.index(str(last_feed_id))
+        if feed_ids:
+            index = feed_ids.index(str(last_feed_id)) if last_feed_id else -1
             feed_ids = feed_ids[index + 1:index + 1 + page_count]
 
         return self.format_feeds_by_id(feed_ids)
