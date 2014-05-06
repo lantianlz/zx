@@ -172,7 +172,7 @@ class FeedBase(object):
         @note: 推送feed到粉丝的队列中
         '''
         # 推自己
-        cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=100, time_out=3600 * 24 * 7).push(feed_id)
+        # cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=100, time_out=3600 * 24 * 7).push(feed_id)
 
         # 推粉丝
         followers = UserFollowBase().get_followers_by_user_id(user_id)
@@ -182,8 +182,6 @@ class FeedBase(object):
                 cache_queue.push(feed_id)
 
     def get_user_timeline(self, user_id, last_feed_id='', page_count=5):
-        # page = int(page)
-        # assert page > 0
         page_count = int(page_count)
         assert 1 < page_count < 10
 
@@ -211,10 +209,13 @@ class FeedBase(object):
         '''
         assert user_id
         user_following_user_ids = [f.to_user_id for f in UserFollowBase().get_following_by_user_id(user_id)]
-        user_following_user_ids.append(user_id)  # 包含自己产生的feed
+        # user_following_user_ids.append(user_id)  # 包含自己产生的feed
 
-        feeds = Feed.objects.filter(user_id__in=user_following_user_ids)
-        return [f.id for f in feeds]
+        if user_following_user_ids:
+            feeds = Feed.objects.filter(user_id__in=user_following_user_ids)
+            return [f.id for f in feeds]
+        else:
+            return []
 
     def get_feed_by_id(self, feed_id):
         try:
