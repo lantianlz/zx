@@ -6,6 +6,7 @@ from django.db import transaction
 from django.db.models import F
 
 from common import utils, debug, cache
+from www.misc.decorators import cache_required
 from www.account.interface import UserBase
 from www.message.interface import UnreadCountBase
 from www.account.interface import UserCountBase
@@ -249,18 +250,6 @@ class QuestionBase(object):
     def get_user_question_count(self, user_id):
         return self.get_question_by_user_id(user_id).count()
 
-    def get_user_qa_count_info(self, user_id):
-        '''
-        @note: 获取问、答、被赞统计信息
-        '''
-        user_question_count = cache.get_or_update_data_from_cache('question_count_%s' % user_id, True, 3600 * 24,
-                                                                  self.get_user_question_count, user_id)
-        user_answer_count = cache.get_or_update_data_from_cache('answer_count_%s' % user_id, True, 3600 * 24,
-                                                                AnswerBase().get_user_sended_answers_count, user_id)
-        user_liked_count = cache.get_or_update_data_from_cache('liked_count_%s' % user_id, True, 3600 * 24,
-                                                               LikeBase().get_user_liked_count, user_id)
-        return user_question_count, user_answer_count, user_liked_count
-
     def get_all_important_question(self):
         return Question.objects.filter(is_important=True, state=True).order_by('-id')
 
@@ -276,23 +265,22 @@ class QuestionBase(object):
         return True, dict_err.get(000)
 
     @question_required
-    def cachel_important(self, question, user):
+    def cancel_important(self, question, user):
         question.is_important = False
         question.save()
         return True, dict_err.get(000)
 
-    def get_question_summary_by_id(self, question_id):
+    @cache_required(cache_key='question_summary_%s', expire=3600)
+    def get_question_summary_by_id(self, question_id, must_update_cache=False):
         '''
         @note: 获取提问摘要信息，用于feed展现
         '''
-        def _get_question_summary_by_id(question_id):
-            question = self.get_question_by_id(question_id, need_state=False)
-            question_summary = {}
-            if question:
-                question_summary = dict(question_id=question.id, question_title=question.title,
-                                        question_summary=question.get_summary(), question_answer_count=question.answer_count)
-            return question_summary
-        return cache.get_or_update_data_from_cache('question_summary_%s' % question_id, True, 3600, _get_question_summary_by_id, question_id)
+        question = self.get_question_by_id(question_id, need_state=False)
+        question_summary = {}
+        if question:
+            question_summary = dict(question_id=question.id, question_title=question.title,
+                                    question_summary=question.get_summary(), question_answer_count=question.answer_count)
+        return question_summary
 
 
 class AnswerBase(object):
@@ -479,32 +467,26 @@ class AnswerBase(object):
         except Answer.DoesNotExist:
             return None
 
-    def get_answer_summary_by_id(self, answer_id):
+    @cache_required(cache_key='answer_summary_%s', expire=3600)
+    def get_answer_summary_by_id(self, answer_id, must_update_cache=False):
         '''
         @note: 获取回答摘要信息，用于feed展现
         '''
-        def _get_answer_summary_by_id_from_cache(answer_id):
-            answer = self.get_answer_by_id(answer_id, need_state=False)
-            answer_summary = {}
-            if answer:
-                user = answer.get_from_user()
-                answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
-                                      answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
-                                      answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=user.des or '')
-            return answer_summary
-        return cache.get_or_update_data_from_cache('answer_summary_%s' % answer_id, True, 3600, _get_answer_summary_by_id_from_cache, answer_id)
+        answer = self.get_answer_by_id(answer_id, need_state=False)
+        answer_summary = {}
+        if answer:
+            user = answer.get_from_user()
+            answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
+                                  answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
+                                  answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=user.des or '')
+        return answer_summary
 
 
 class QuestionTypeBase(object):
 
-    def get_all_question_type(self, cached=True):
-        key = 'all_question_type'
-        cache_obj = cache.Cache(config=cache.CACHE_STATIC)
-        qts = cache_obj.get(key)
-        if not qts or not cached:
-            qts = QuestionType.objects.filter(state=True).order_by('-sort_num', 'id')
-            cache_obj.set(key, qts)
-        return qts
+    @cache_required(cache_key='all_question_type', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_all_question_type(self, must_update_cache=False):
+        return QuestionType.objects.filter(state=True).order_by('-sort_num', 'id')
 
     def get_question_type_by_id_or_domain(self, id_or_domain):
         aqts = self.get_all_question_type()
@@ -590,14 +572,9 @@ class LikeBase(object):
 
 class TagBase(object):
 
-    def get_all_tags(self, cached=True):
-        key = 'all_question_tag'
-        cache_obj = cache.Cache(config=cache.CACHE_STATIC)
-        tags = cache_obj.get(key)
-        if not tags or not cached:
-            tags = Tag.objects.filter(state=True)
-            cache_obj.set(key, tags)
-        return tags
+    @cache_required(cache_key='all_question_tag', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_all_tags(self, must_update_cache=False):
+        return Tag.objects.filter(state=True)
 
     def get_tag_by_domain(self, domain):
         tags = self.get_all_tags()

@@ -24,16 +24,9 @@ def main():
     ab = interface.AnswerBase()
 
     # flag, result = lb.like_it(7, from_user_id=user_id, ip='127.0.0.1')
-    flag, result = ab.remove_answer(41, user)
-
-    print result.encode('utf8').__repr__()
-    print result.encode('utf8')
+    # flag, result = ab.remove_answer(41, user)
+    print ab.get_answer_summary_by_id(1)
 
 
 if __name__ == '__main__':
-    # main()
-
-    from common import utils
-    import random
-    # print random.randint(0, 2)
-    print utils.get_random_code()
+    main()

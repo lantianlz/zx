@@ -79,15 +79,6 @@ class Cache(object):
         self.conn.flushdb()
 
 
-def get_or_update_data_from_cache(key, not_must_update, expire, func, *args, **kwargs):
-    cache_obj = Cache(config=CACHE_TMP)
-    data = cache_obj.get(key)
-    if data is None or not not_must_update:
-        data = func(*args, **kwargs)
-        cache_obj.set(key, data, time_out=expire)
-    return data
-
-
 class CacheQueue(Cache):
 
     '''
@@ -131,6 +122,19 @@ class CacheQueue(Cache):
         if not self.conn.exists(self.key):
             return None
         return self.conn.lrange(self.key, start, end)
+
+
+def get_or_update_data_from_cache(_key, _expire, _cache_config, _must_update_cache, _func, *args, **kwargs):
+    '''
+    @note: 自动缓存方法调用对应的结果，形参名前加下_防止出现重名的和args冲突
+    设置data的时候不要设置None值，通过None值来判断是否设置过缓存
+    '''
+    cache_obj = Cache(config=_cache_config)
+    data = cache_obj.get(_key)
+    if data is None or _must_update_cache:
+        data = _func(*args, **kwargs)
+        cache_obj.set(_key, data, time_out=_expire)
+    return data
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import logging
 from django.db import transaction
 
 from common import debug, cache
+from www.misc.decorators import cache_required
 from www.message.interface import UnreadCountBase
 from www.account.interface import UserBase, UserCountBase
 from www.timeline.models import UserFollow, Feed
@@ -144,8 +145,7 @@ class FeedBase(object):
         from www.question.interface import QuestionBase, AnswerBase
         feeds = []
         for feed_id in feed_ids:
-            key = 'feed_%s' % feed_id
-            feed = cache.get_or_update_data_from_cache(key, True, 3600 * 24, self.get_feed_by_id, feed_id)
+            feed = self.get_feed_by_id(feed_id)
             user = UserBase().get_user_by_id(feed.user_id)
             dict_feed = dict(feed_id=feed.id, create_time=feed.create_time.strftime('%Y-%m-%d %H:%M:%S'), feed_type=feed.feed_type,
                              user_id=feed.user_id, user_avatar=user.get_avatar_65(), user_nick=user.nick)
@@ -217,8 +217,9 @@ class FeedBase(object):
         else:
             return []
 
-    def get_feed_by_id(self, feed_id):
+    @cache_required(cache_key='feed_%s', expire=3600 * 24, cache_config=cache.CACHE_TIMELINE)
+    def get_feed_by_id(self, feed_id, must_update_cache=False):
         try:
             return Feed.objects.get(id=feed_id)
         except Feed.DoesNotExist:
-            return None
+            return ''

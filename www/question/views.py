@@ -208,10 +208,10 @@ def set_important(request):
 
 
 @staff_required
-def cachel_important(request):
+def cancel_important(request):
     question_id = request.POST.get('question_id', '')
 
-    flag, result = qb.cachel_important(question_id, request.user)
+    flag, result = qb.cancel_important(question_id, request.user)
     r = dict(flag='0' if flag else '-1', result=result)
     return HttpResponse(json.dumps(r), mimetype='application/json')
 
