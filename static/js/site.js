@@ -660,9 +660,9 @@ function addZero(data){
                     '<div class="col-md-9">',
                         '<div class="pt-10 pb-5"><a href="/p/{10}">{1}</a>{12}</div>',
                         '<div class="pt-5">',
-                            '<span>提问<a href="#" class="pl-3 pr-15">{2}</a></span>',
-                            '<span>回答<a href="#" class="pl-3 pr-15">{3}</a></span>',
-                            '<span>赞<a href="#" class="pl-3 pr-15">{4}</a></span>',
+                            '<span>提问<a href="/p/{15}/questions" class="pl-3 pr-15">{2}</a></span>',
+                            '<span>回答<a href="/p/{16}/answers" class="pl-3 pr-15">{3}</a></span>',
+                            '<span>赞<a href="javascript: void(0)" class="pl-3 pr-15">{4}</a></span>',
                         '</div>',
                     '</div>',
                 '</div>',
@@ -741,46 +741,67 @@ function addZero(data){
                                         return genderData[gender]
                                     })(data.gender),
                                     CURRENT_USER_ID == data.user_id ? 'none' : '',
+                                    data.user_id,
+                                    data.user_id,
                                     data.user_id
-                                )).data('ajax', 'cached');
+                                ));//.data('ajax', 'cached');
+                                
+                                
                             } else {
                                 origin.tooltipster('content', '加载名片失败');
                             }
                         }
                     });
                 }
+            },
+
+            functionReady: function(origin, tooltip){
+                
+                // 诡异！！
+                setTimeout(function(){
+
+                    // 关注事件
+                    tooltip.find('.follow').bind('click', function(){
+                        var me = $(this), 
+                            target = me.parents('.tools').eq(0);
+                        
+                        //$.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
+                        g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        $.ZXOperation.followPeople(target.data('user_id'), function(){
+                            target.children('.unfollow').fadeIn(1, function(){
+                                me.fadeOut(1);
+                            });
+                        });
+                        
+                    });
+
+                    // 取消关注事件
+                    tooltip.find('.unfollow').bind('click', function(){
+                        var me = $(this), 
+                            target = me.parents('.tools').eq(0);
+                        
+                        //$.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
+                        g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
+                            target.children('.follow').fadeIn(1, function(){
+                                me.fadeOut(1);
+                            });
+                        });
+
+                    });
+
+                    // 从名片上点击发私信事件 
+                    tooltip.find('.send-message').bind('click', function(){
+                        var target = $(this).parents('.tools').eq(0);
+                        $.ZXMsg.sendPrivateMsg(target.data('user_id'), target.data('user_name'));
+                    });
+
+                }, 10);
+                
             }
         });
-        // 从名片上点击发私信事件 
-        $('.cardtips .send-message').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.sendPrivateMsg(target.data('user_id'), target.data('user_name'));
-        });
-        // 关注事件
-        $('.cardtips .follow').live('click', function(){
-            var me = $(this), 
-                target = me.parents('.tools').eq(0);
-
-            //$.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
-            g_ajax_processing_obj_id = me.setUUID().attr('id');
-            $.ZXOperation.followPeople(target.data('user_id'), function(){
-                me.hide();
-                me.next().show();
-            })
-        });
-        // 取消关注事件
-        $('.cardtips .unfollow').live('click', function(){
-            var me = $(this), 
-                target = me.parents('.tools').eq(0);
-            
-            //$.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
-            g_ajax_processing_obj_id = me.setUUID().attr('id');
-            $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
-                me.hide();
-                me.prev().show();
-            });
-
-        });
+        
+        
         
     };
 

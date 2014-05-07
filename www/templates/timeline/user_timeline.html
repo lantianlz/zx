@@ -339,7 +339,7 @@ $(document).ready(function(){
             <a href="/p/<%= user.userId %>"><img class="pa avatar-45 avatar-circle" src="<%= user.userAvatar %>"></a>
             <div class="pl-55 pr-10">
                 <div>
-                    <a href="/p/<%= user.userId %>" class="zx-cardtips" data-user_id='<%= user.userId %>'>
+                    <a href="/p/<%= user.userId %>" class="">
                         <%= user.userName %>
                         <% if (user.userGender == 1) { %>
                             <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/male.png" title="男" />
@@ -351,7 +351,11 @@ $(document).ready(function(){
                     <button class="btn btn-xs btn-primary pull-right follow">添加关注</button>
                     <button class="btn btn-xs btn-default pull-right unfollow none">取消关注</button>
                 </div>
-                <div class="pt-5"><span>提问 <%= user.questionCount %></span><span class="pl-15">回答 <%= user.answerCount %></span><span class="pl-15">赞 <%= user.likeCount %></span></div>
+                <div class="pt-5">
+                    <span>提问 <a href="/p/<%= user.userId %>/questions"><%= user.questionCount %></a></span>
+                    <span class="pl-15">回答 <a href="/p/<%= user.userId %>/answers"><%= user.answerCount %></a></span>
+                    <span class="pl-15">赞 <a href="javascript: void(0);"><%= user.likeCount %></a></span>
+                </div>
                 <div class="f12 co8 pt-5"><%= user.userDesc %></div>
             </div>
         </li>
