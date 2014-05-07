@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from common import utils, user_agent_parser
+from common import utils, user_agent_parser, page
 from www.misc import qiniu_client
 from www.account import interface
 from www.misc.decorators import member_required
@@ -143,8 +143,15 @@ def user_questions(request, user_id, template_name='account/user_questions.html'
 
     from www.question.interface import QuestionBase
     qb = QuestionBase()
-    questions = QuestionBase().format_quesitons(qb.get_question_by_user_id(user.id))
+    questions = qb.get_question_by_user_id(user.id)
 
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(questions, count=10, page=page_num).info
+    questions = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    questions = qb.format_quesitons(questions)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -158,8 +165,15 @@ def user_answers(request, user_id, template_name='account/user_answers.html'):
 
     from www.question.interface import AnswerBase
     ab = AnswerBase()
-    answers = ab.format_answers(ab.get_user_sended_answer(user.id))
+    answers = ab.get_user_sended_answer(user.id)
 
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(answers, count=10, page=page_num).info
+    answers = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    answers = ab.format_answers(answers)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -171,7 +185,15 @@ def user_following(request, user_id, template_name='account/user_following.html'
     '''
     user = user_id  # 装饰器转换了对象
 
-    user_followings = ufb.format_following(ufb.get_following_by_user_id(user.id))
+    user_followings = ufb.get_following_by_user_id(user.id)
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(user_followings, count=10, page=page_num).info
+    user_followings = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    user_followings = ufb.format_following(user_followings)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -182,7 +204,15 @@ def user_followers(request, user_id, template_name='account/user_followers.html'
     粉丝 - 个人主页
     '''
     user = user_id  # 装饰器转换了对象
-    user_followers = ufb.format_follower(ufb.get_followers_by_user_id(user.id))
+    user_followers = ufb.get_followers_by_user_id(user.id)
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(user_followers, count=10, page=page_num).info
+    user_followers = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    user_followers = ufb.format_follower(user_followers)
 
     # 异步清除未读消息数
     async_clear_count_info_by_code(request.user.id, code='fans')
