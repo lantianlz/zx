@@ -197,6 +197,8 @@ $(document).ready(function(){
             
             this.render(data);
 
+            // 去掉上次的 查看更多 按钮
+            this.$('.get-more').parents('li').remove();
             // 是否显示更多
             if(lastFeedId){
                 this.renderGetMore(lastFeedId);
@@ -207,8 +209,8 @@ $(document).ready(function(){
         getMore: function(){
             var feedId = this.$('.get-more').data('feed_id');
             
-            // 删除原先的 查看更多 按钮
-            this.$('.get-more').remove();
+            // 隐藏原先的 查看更多 按钮
+            this.$('.get-more').hide();
 
             this.collection.search(feedId);
         }

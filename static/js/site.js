@@ -768,8 +768,8 @@ function addZero(data){
                         //$.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
                         g_ajax_processing_obj_id = me.setUUID().attr('id');
                         $.ZXOperation.followPeople(target.data('user_id'), function(){
-                            target.children('.unfollow').fadeIn(1, function(){
-                                me.fadeOut(1);
+                            target.children('.unfollow').show(1, function(){
+                                me.hide(1);
                             });
                         });
                         
@@ -783,8 +783,8 @@ function addZero(data){
                         //$.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
                         g_ajax_processing_obj_id = me.setUUID().attr('id');
                         $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
-                            target.children('.follow').fadeIn(1, function(){
-                                me.fadeOut(1);
+                            target.children('.follow').show(1, function(){
+                                me.hide(1);
                             });
                         });
 
@@ -796,7 +796,7 @@ function addZero(data){
                         $.ZXMsg.sendPrivateMsg(target.data('user_id'), target.data('user_name'));
                     });
 
-                }, 10);
+                }, 100);
                 
             }
         });
@@ -875,28 +875,45 @@ function addZero(data){
                                     data.follow_count,
                                     data.question_count,
                                     data.desc,
-                                    data.is_follow?'hide':'', // 关注按钮
-                                    data.is_follow?'':'hide', //取消关注按钮
+                                    data.is_follow?'none':'', // 关注按钮
+                                    data.is_follow?'':'none', //取消关注按钮
                                     data.id
-                                )).data('ajax', 'cached');
+                                ));//.data('ajax', 'cached');
                             } else {
                                 origin.tooltipster('content', '加载名片失败');
                             }
                         }
                     });
                 }
+            },
+
+            functionReady: function(origin, tooltip){
+                // 诡异！！
+                setTimeout(function(){
+                    // 关注事件
+                    tooltip.find('.follow').bind('click', function(){
+                        var me = $(this),
+                            target = $(this).parents('.tools').eq(0);
+
+                        target.children('.unfollow').show(1, function(){
+                            me.hide(1);
+                        });
+                    });
+
+                    // 取消关注事件
+                    tooltip.find('.unfollow').bind('click', function(){
+                        var me = $(this),
+                            target = $(this).parents('.tools').eq(0);
+
+                        target.children('.follow').show(1, function(){
+                            me.hide(1);
+                        });
+                    });
+                }, 100);
             }
         });
-        // 关注事件
-        $('.topictips .follow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('关注话题', target.data('topic_id'));
-        });
-        // 取消关注事件
-        $('.topictips .unfollow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('取消关注话题', target.data('topic_id'));
-        });
+        
+        
     };
 
 
