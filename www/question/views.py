@@ -257,4 +257,4 @@ def get_topic_info_by_id(request):
             'is_follow': True
         }
 
-    return HttpResponse(json.dumps(infos))
+    return HttpResponse(json.dumps(infos), mimetype='application/json')

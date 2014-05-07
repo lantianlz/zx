@@ -7,7 +7,8 @@ from django.utils.encoding import smart_unicode
 from django.conf import settings
 
 from common import utils, debug, validators, cache
-from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
+from www.misc.decorators import cache_required
+from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount, RecommendUser
 from www.message.interface import UnreadCountBase
 
 dict_err = {
@@ -491,3 +492,19 @@ class UserCountBase(object):
             count -= 1
         setattr(uc, code, count)
         uc.save()
+
+
+class RecommendUserBase(object):
+
+    def __init__(self):
+        pass
+
+    @cache_required(cache_key='recommend_user_%s', expire=3600 * 24)
+    def get_recommend_users(self, user_id, random=False):
+        from www.timeline.interface import UserFollowBase
+        exclude_user_ids = [f.to_user_id for f in UserFollowBase().get_following_by_user_id(user_id)]
+        exclude_user_ids.append(user_id)
+        if not random:
+            return RecommendUser.objects.exclude(user_id__in=exclude_user_ids)
+        else:
+            return RecommendUser.objects.exclude(user_id__in=exclude_user_ids).order_by('?')

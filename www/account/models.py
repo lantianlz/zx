@@ -181,3 +181,12 @@ class UserCount(models.Model):
     user_liked_count = models.IntegerField(default=0, db_index=True)
     following_count = models.IntegerField(default=0, db_index=True)
     follower_count = models.IntegerField(default=0, db_index=True)
+
+
+class RecommendUser(models.Model):
+    user_id = models.CharField(max_length=32, unique=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-sort_num"]

@@ -288,6 +288,7 @@ def test500(request):
 
 
 # ===================================================ajax部分=================================================================#
+@member_required
 def get_user_info_by_id(request):
     '''
     @note: 根据用户id获取名片信息
@@ -305,4 +306,26 @@ def get_user_info_by_id(request):
                 user_count_info['user_answer_count'], user_count_info['user_liked_count']
             infos.update(dict(user_question_count=user_question_count, user_answer_count=user_answer_count, user_liked_count=user_liked_count))
 
-    return HttpResponse(json.dumps(infos))
+    return HttpResponse(json.dumps(infos), mimetype='application/json')
+
+
+@member_required
+def get_recommend_users(request):
+    '''
+    @note: 获取推荐用户
+    '''
+    rsb = interface.RecommendUserBase()
+    random = True if request.REQUEST.get('random') == '1' else False
+    recommend_users = rsb.get_recommend_users(request.user.id, random)
+    data = []
+    for r_user in recommend_users:
+        user = ub.get_user_by_id(r_user.user_id)
+        infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=user.des or '', gender=user.gender)
+
+        user_count_info = interface.UserCountBase().get_user_count_info(user.id)
+        user_question_count, user_answer_count, user_liked_count = user_count_info['user_question_count'], \
+            user_count_info['user_answer_count'], user_count_info['user_liked_count']
+        infos.update(dict(user_question_count=user_question_count, user_answer_count=user_answer_count, user_liked_count=user_liked_count))
+        data.append(infos)
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
