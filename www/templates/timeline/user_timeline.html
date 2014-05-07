@@ -77,17 +77,6 @@ $(document).ready(function(){
             'answerLikeCount': 'answer_like_count'    
         },
 
-        // 解析
-        _parse: function(data){
-            var temp = [], me = this;
-
-            _.each(data, function(d){
-                temp.push($.ZXUtils.dictMap(d, me._modelMaps));
-            });
-
-            return temp;
-        },
-
         // 获得最后一个feedId
         getLastFeedId: function(){
             if(this.length > 0){
@@ -105,8 +94,8 @@ $(document).ready(function(){
             g_ajax_processing_obj_id = 'loadingMoreFeed';
             ajaxSend("/timeline/get_user_timeline", {'last_feed_id': feedId}, function(data){
                 if(data.feeds){
-                    me.reset(me._parse(data.feeds));
-                }  
+                    me.reset($.ZXUtils.dictMapParse(data.feeds, me._modelMaps));
+                }
             });
 
             return this;
@@ -115,44 +104,27 @@ $(document).ready(function(){
     var Users = Backbone.Collection.extend({
         model: User,
 
-        search: function(){
-            this.reset([{
-                'userId': '1',          
-                'userName': '半夜没事瞎溜达',         
-                'userDesc': '漫漫人生路，谁不错几步',    
-                'userAvatar': '/static/img/common/user1.jpg',     
-                'userGender': 1,
-                'likeCount': 53,        
-                'answerCount': 254,       
-                'questionCount': 24
-            }, {
-                'userId': '2',          
-                'userName': '习大大',         
-                'userDesc': '我多年攒下的这一屋子的切糕给你了',    
-                'userAvatar': '/static/img/common/user3.jpg',     
-                'userGender': '1',
-                'likeCount': 452,        
-                'answerCount': 653,       
-                'questionCount': 234
-            }, {
-                'userId': '3',          
-                'userName': '祁圆圆',         
-                'userDesc': '一只垂耳兔，正被一只大型犬圈养。',    
-                'userAvatar': '/static/img/common/user2.jpg',  
-                'userGender': '2',   
-                'likeCount': 53,        
-                'answerCount': 254,       
-                'questionCount': 65
-            }, {
-                'userId': '4',          
-                'userName': '喵星人',         
-                'userDesc': '注册会计师,现任职某上市公司',    
-                'userAvatar': '/static/img/common/user4.png', 
-                'userGender': '2',    
-                'likeCount': 21,        
-                'answerCount': 13,       
-                'questionCount': 67
-            }]);
+        _modelMaps: {
+            'userId': 'user_id',           
+            'userName': 'nick',         
+            'userAvatar': 'avatar',       
+            'userGender': 'gender',       
+            'userDesc': 'des',
+            'likeCount': 'user_liked_count',
+            'answerCount': 'user_answer_count',
+            'questionCount': 'user_question_count'
+        },
+
+        // 加载推荐用户
+        search: function(random){
+            var me = this;
+
+            g_ajax_processing_obj_id = $('.suggest-users .refresh').setUUID().attr('id');
+            ajaxSend("/account/get_recommend_users", {'random': random?'1':'0'}, function(data){
+                if(data){
+                    me.reset($.ZXUtils.dictMapParse(data, me._modelMaps));
+                }
+            });
 
             return this;
         }
@@ -228,58 +200,61 @@ $(document).ready(function(){
         },
 
         initialize: function(){
-            this.getSuggestUsers();
+            // 监听集合的reset事件
+            this.listenTo(this.collection, 'reset', this.getSuggestUsers);
+
+            // 首次查询
+            this.collection.search(false)
         },
 
         render: function(data){
             this.$('.list-inline').html(this.template({'users': data}));
-
-            // 初始化名片
-            //$.ZXTooltipster.PersonCard();
         },
 
         // 获取推荐用户
         getSuggestUsers: function(){
-            var data = this.collection.search();
+            var data = this.collection.toJSON();
 
-            this.render(data.toJSON());
+            this.render(data);
         },
 
         // 换一换
         refreshUser: function(){
             this.hide(300);
-            this.getSuggestUsers();
+            this.collection.search(true)
             this.show(300);
         },
 
         // 关注用户
         followUser: function(sender){
             var target = $(sender.currentTarget),
-                userId = target.prev().data('user_id');
+                userId = target.data('user_id');
 
-            target.hide();
-            target.next().show();
-            
-            // 关注
-            // $.ZXOperation.followPeople(userId, function(){
-
-            // });
+            $.ZXOperation.followPeople(userId, function(){
+                target.hide();
+                target.next().show();
+            });
         },
 
+        // 取消关注
         unfollowUser: function(sender){
             var target = $(sender.currentTarget),
-                userId = target.prev().data('user_id');
+                userId = target.data('user_id');
 
-            target.hide();
-            target.prev().show();
+            $.ZXOperation.followPeople(userId, function(){
+                target.hide();
+                target.prev().show();
+            });
         },
 
         hide: function(time){
-            this.$el.hide(time);
+            //this.$el.hide(time);
+            this.$('ul').fadeOut(time);
         },
 
         show: function(time){
-            this.$el.show(time);
+            //this.$el.hide(time);
+            this.$('ul').fadeIn(time);
         }
     });
 
@@ -350,8 +325,8 @@ $(document).ready(function(){
                             <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/female.png" title="女" />
                         <% } %>
                     </a>
-                    <button class="btn btn-xs btn-primary pull-right follow">添加关注</button>
-                    <button class="btn btn-xs btn-default pull-right unfollow none">取消关注</button>
+                    <button class="btn btn-xs btn-primary pull-right follow" data-user_id='<%= user.userId %>'>添加关注</button>
+                    <button class="btn btn-xs btn-default pull-right unfollow none" data-user_id='<%= user.userId %>'>取消关注</button>
                 </div>
                 <div class="pt-5">
                     <span>提问 <a href="/p/<%= user.userId %>/questions"><%= user.questionCount %></a></span>

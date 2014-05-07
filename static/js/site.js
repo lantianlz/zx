@@ -248,7 +248,7 @@ function addZero(data){
     };
 
     /*
-        字典映射解析
+        字典映射
 
         用例：
         $.ZXUtils.dictMap({'a': '1', 'b': '2'}, {'a': 'a1', 'b': 'b1'})
@@ -261,7 +261,22 @@ function addZero(data){
         }
 
         return newDict;
-    }
+    };
+
+    /*
+        批量字典映射解析
+
+        $.ZXUtils.dictMapParse([{'a': '1', 'b': '2'}], {'a': 'a1', 'b': 'b1'});
+    */
+    $.ZXUtils.dictMapParse = function(data, maps){
+        var temp = [];
+
+            _.each(data, function(d){
+                temp.push($.ZXUtils.dictMap(d, maps));
+            });
+
+        return temp;
+    };
 
 
     /* 
@@ -683,6 +698,11 @@ function addZero(data){
             return;
         }
 
+        // 未登录不弹出名片
+        if(!CURRENT_USER_ID){
+            return;
+        }
+
         // 设置插件
         $('.zx-cardtips').tooltipster({
             animation: 'swing',
@@ -839,6 +859,11 @@ function addZero(data){
 
         // 手机访问不要设置弹出名片
         if($.ZXUtils.isPhone()){
+            return;
+        }
+
+        // 未登录不弹出名片
+        if(!CURRENT_USER_ID){
             return;
         }
 
