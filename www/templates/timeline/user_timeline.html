@@ -96,6 +96,11 @@ $(document).ready(function(){
                 if(data.feeds){
                     me.reset($.ZXUtils.dictMapParse(data.feeds, me._modelMaps));
                 }
+
+                // 需要推荐用户
+                if(data.need_get_recommended_user){
+                    recommendUsersView.collection.search(false);
+                }
             });
 
             return this;
@@ -119,7 +124,7 @@ $(document).ready(function(){
         search: function(random){
             var me = this;
 
-            g_ajax_processing_obj_id = $('.suggest-users .refresh').setUUID().attr('id');
+            g_ajax_processing_obj_id = $('.recommend-users .refresh').setUUID().attr('id');
             ajaxSend("/account/get_recommend_users", {'random': random?'1':'0'}, function(data){
                 if(data){
                     me.reset($.ZXUtils.dictMapParse(data, me._modelMaps));
@@ -188,10 +193,10 @@ $(document).ready(function(){
         }
 
     });
-    var SuggestUsersView = Backbone.View.extend({
-        el: '.suggest-users',
+    var RecommendUsersView = Backbone.View.extend({
+        el: '.recommend-users',
 
-        template: _.template($('#suggestUsers-template').html()),
+        template: _.template($('#recommendUsers-template').html()),
 
         events: {
             'click .refresh': 'refreshUser',
@@ -201,18 +206,19 @@ $(document).ready(function(){
 
         initialize: function(){
             // 监听集合的reset事件
-            this.listenTo(this.collection, 'reset', this.getSuggestUsers);
+            this.listenTo(this.collection, 'reset', this.getRecommendUsers);
 
             // 首次查询
-            this.collection.search(false)
+            //this.collection.search(false)
         },
 
         render: function(data){
+            this.$el.show();
             this.$('.list-inline').html(this.template({'users': data}));
         },
 
         // 获取推荐用户
-        getSuggestUsers: function(){
+        getRecommendUsers: function(){
             var data = this.collection.toJSON();
 
             this.render(data);
@@ -220,9 +226,9 @@ $(document).ready(function(){
 
         // 换一换
         refreshUser: function(){
-            this.hide(300);
+            this.$('ul').fadeOut(300);
             this.collection.search(true)
-            this.show(300);
+            this.$('ul').fadeIn(300);
         },
 
         // 关注用户
@@ -245,16 +251,6 @@ $(document).ready(function(){
                 target.hide();
                 target.prev().show();
             });
-        },
-
-        hide: function(time){
-            //this.$el.hide(time);
-            this.$('ul').fadeOut(time);
-        },
-
-        show: function(time){
-            //this.$el.hide(time);
-            this.$('ul').fadeIn(time);
         }
     });
 
@@ -262,7 +258,7 @@ $(document).ready(function(){
     var feeds = new Feeds(),
         users = new Users(),
         feedView = new FeedView({'collection': feeds}),
-        suggestUsersView = new SuggestUsersView({'collection': users});
+        recommendUsersView = new RecommendUsersView({'collection': users});
 });
 </script>
 {% endblock %}
@@ -276,7 +272,7 @@ $(document).ready(function(){
 	</div>
 
     <!-- 推荐关注 -->
-    <div class="suggest-users pl-15 pr-15 pb-15">
+    <div class="recommend-users pl-15 pr-15 pb-15 none">
         <div class="co8 f14 text-center pt-15 pb-15">
             首页内容太少，多关注些朋友吧
             <a href="javascript: void(0)" class="refresh f12 pl-10">
@@ -310,7 +306,7 @@ $(document).ready(function(){
 
 
 <!-- 推荐用户模板 -->
-<script type="text/template" id="suggestUsers-template">
+<script type="text/template" id="recommendUsers-template">
     <% _.each(users, function(user){ %>
         <li class="col-md-6 col-xs-12 bottom-border bdc-eee pt-15 pb-10">
             <a href="/p/<%= user.userId %>"><img class="pa avatar-45 avatar-circle" src="<%= user.userAvatar %>"></a>
