@@ -161,13 +161,14 @@ def topics(request, template_name="question/topics.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-# @member_required
 def topic_question(request, tag_domain, template_name='question/topic_question.html'):
     """
     @note: 子话题页面
     """
 
     tag = tb.get_tag_by_domain(tag_domain)
+    if not tag:
+        raise Http404
     questions = qb.get_questions_by_tag(tag)
 
     # 分页
