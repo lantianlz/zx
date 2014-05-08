@@ -110,7 +110,8 @@ class CacheQueue(Cache):
         @note: 初始化一个列表
         '''
         self.delete()
-        self.conn.rpush(self.key, *items)
+        if items:
+            self.conn.rpush(self.key, *items)
 
     def delete(self):
         self.conn.delete(self.key)

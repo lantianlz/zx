@@ -74,6 +74,9 @@ class UserFollowBase(object):
                 transaction.rollback(using=TIMELINE_DB)
                 return 0, dict_err.get(0)
 
+            # 更新用户timeline，后续修改成异步的
+            FeedBase().get_user_timeline_feed_ids(from_user_id, must_update_cache=True)
+
             # 更新关注和粉丝总数信息
             UserCountBase().update_user_count(user_id=from_user_id, code='following_count')
             UserCountBase().update_user_count(user_id=to_user_id, code='follower_count')
@@ -108,6 +111,9 @@ class UserFollowBase(object):
                 uf.save()
             except UserFollow.DoesNotExist:
                 pass
+
+            # 更新用户timeline，后续修改成异步的
+            FeedBase().get_user_timeline_feed_ids(from_user_id, must_update_cache=True)
 
             # 更新关注和粉丝总数信息
             UserCountBase().update_user_count(user_id=from_user_id, code='following_count', operate='minus')
@@ -192,12 +198,12 @@ class FeedBase(object):
 
         return self.format_feeds_by_id(feed_ids)
 
-    def get_user_timeline_feed_ids(self, user_id):
+    def get_user_timeline_feed_ids(self, user_id, must_update_cache=False):
         cache_queue = cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=100, time_out=3600 * 24 * 7)
         feed_ids = []
-        if not cache_queue.exists():
+        if not cache_queue.exists() or must_update_cache:
             feed_ids = self.get_user_timeline_feed_ids_from_db(user_id)
-            if feed_ids:
+            if feed_ids is not None or must_update_cache:
                 cache_queue.init(feed_ids)
         else:
             feed_ids = cache_queue[0:-1]
