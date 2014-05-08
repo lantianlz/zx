@@ -247,7 +247,7 @@ $(document).ready(function(){
             var target = $(sender.currentTarget),
                 userId = target.data('user_id');
 
-            $.ZXOperation.followPeople(userId, function(){
+            $.ZXOperation.unfollowPeople(userId, function(){
                 target.hide();
                 target.prev().show();
             });

@@ -764,9 +764,12 @@ function addZero(data){
                                     data.user_id,
                                     data.user_id,
                                     data.user_id
-                                ));//.data('ajax', 'cached');
+                                )).data('ajax', 'cached');
                                 
-                                
+                                // 监听清除缓存事件
+                                $.ZXEvent.on('removePersonCardCache', function(){
+                                    origin.data('ajax', '');
+                                });
                             } else {
                                 origin.tooltipster('content', '加载名片失败');
                             }
@@ -779,7 +782,7 @@ function addZero(data){
                 
                 // 诡异！！
                 setTimeout(function(){
-
+                    
                     // 关注事件
                     tooltip.find('.follow').bind('click', function(){
                         var me = $(this), 
@@ -790,6 +793,9 @@ function addZero(data){
                         $.ZXOperation.followPeople(target.data('user_id'), function(){
                             target.children('.unfollow').show(1, function(){
                                 me.hide(1);
+                                
+                                // 关注之后需要清除名片的缓存
+                                $.ZXEvent.trigger("removePersonCardCache");
                             });
                         });
                         
@@ -805,6 +811,9 @@ function addZero(data){
                         $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
                             target.children('.follow').show(1, function(){
                                 me.hide(1);
+                                
+                                // 取消关注之后需要清除名片的缓存
+                                $.ZXEvent.trigger("removePersonCardCache");
                             });
                         });
 
@@ -844,13 +853,13 @@ function addZero(data){
                     '<div class="col-md-9">',
                         '<div class="pt-10 pb-5"><a href="/question/topic/1">{1}</a></div>',
                         '<div class="question-info pt-5">',
-                            '<span>关注者<span class="pl-3 pr-15 fb">{2}</span></span>',
+                            '<span class="none">关注者<span class="pl-3 pr-15 fb">{2}</span></span>',
                             '<span>提问<span class="pl-3 pr-15 fb">{3}</span></span>',
                         '</div>',
                     '</div>',
                 '</div>',
                 '<div class="desc pl-10 pt-5 w300 co6">{4}</div>',
-                '<div class="tools top-border bdc-eee pt-5 mt-5 text-right" data-topic_id="{7}">',
+                '<div class="none tools top-border bdc-eee pt-5 mt-5 text-right" data-topic_id="{7}">',
                     '<button type="button" class="btn btn-primary btn-xs follow mr-5 ml-10 {5}">添加关注</button>',
                     '<button type="button" class="btn btn-default btn-xs unfollow mr-5 {6}">取消关注</button>',
                 '</div>',
@@ -903,7 +912,12 @@ function addZero(data){
                                     data.is_follow?'none':'', // 关注按钮
                                     data.is_follow?'':'none', //取消关注按钮
                                     data.id
-                                ));//.data('ajax', 'cached');
+                                )).data('ajax', 'cached');
+
+                                // 监听清除缓存事件
+                                $.ZXEvent.on('removeTopicCardCache', function(){
+                                    origin.data('ajax', '');
+                                });
                             } else {
                                 origin.tooltipster('content', '加载名片失败');
                             }
@@ -915,6 +929,7 @@ function addZero(data){
             functionReady: function(origin, tooltip){
                 // 诡异！！
                 setTimeout(function(){
+                    
                     // 关注事件
                     tooltip.find('.follow').bind('click', function(){
                         var me = $(this),
@@ -922,6 +937,9 @@ function addZero(data){
 
                         target.children('.unfollow').show(1, function(){
                             me.hide(1);
+
+                            // 关注之后需要清除名片的缓存
+                            $.ZXEvent.trigger("removeTopicCardCache");
                         });
                     });
 
@@ -932,6 +950,9 @@ function addZero(data){
 
                         target.children('.follow').show(1, function(){
                             me.hide(1);
+
+                            // 取消关注之后需要清除名片的缓存
+                            $.ZXEvent.trigger("removeTopicCardCache");
                         });
                     });
                 }, 100);
@@ -940,6 +961,11 @@ function addZero(data){
         
         
     };
+
+    /*
+    */
+    $.ZXEvent = {};
+    _.extend($.ZXEvent, Backbone.Events);
 
 
 })(jQuery);
