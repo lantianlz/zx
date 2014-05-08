@@ -33,7 +33,7 @@
                 <div class='col-md-8'>
                     <div class='f12 co8'>
                         时间：{{question.create_time|time_format}} &nbsp;&nbsp;&nbsp;
-                        作者：<a href="{{question.user.get_url}}">{{question.user.nick}}</a>
+                        作者：<a class="zx-cardtips" data-user_id="{{question.user.id}}" href="{{question.user.get_url}}">{{question.user.nick}}</a>
                     </div>
                     <div class='pt-10 line-height-25'>{{question.get_summary|safe}}</div>
                 </div>
