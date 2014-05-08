@@ -13,7 +13,7 @@
     <div class="pl-80 pb-10 pt-5">
         <h4>{{tag.name}}</h4>
         <div class="co8 f12">
-            <span>{{tag.get_tag_question_count}}个问题</span>
+            <span>共 {{tag.get_tag_question_count}} 个问题</span>
         </div>
     </div>
 </div>
@@ -25,126 +25,6 @@
         {% for question in questions %}
             {% include "question/_question_li_display.html" %}
         {% endfor %}
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>想了解大宗交易，有谁能提供一下限售股解禁后通过大宗交易减持的...</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">帮朋友问一下，他有一部分限售股即将解禁了。</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user2.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">半夜没事瞎溜达</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        8 个回答 • 58 次浏览 • 04-01 12:56:22
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>关于股票操作模式的深入讨论，中长线赚钱的原理？</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">俗话说短线是金长线是银，但中长线投资看上去没什么技术含量，为什么能赚钱？</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user1.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">随便弄弄</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        7 个回答 • 69 次浏览 • 04-01 11:23:34
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>创业板是已经见顶了吗？</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">本来还认为创业板只是一个回调，但日K线近期时常跌幅2%以上，忧虑啊。</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user4.png" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">无所谓</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        13 个回答 • 235 次浏览 • 03-31 16:25:48
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>上周京津冀概念股大涨，今天上海自贸区概念股也大涨，现在有炒地...</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">TMT行业持续走弱，高风险资金的喜好可能正在改变，而每年都会炒地图，今年的炒地图就此开始了吗？现在介入算不算太晚。</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user3.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">不想睡</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        4 个回答 • 35 次浏览 • 03-29 19:20:31
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>特斯拉概念股能不能兑现业绩或者持续走强，还是一波流？</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">特斯拉概念股反复炒作，是基于美股特斯拉去年涨幅大，还是基于锂电池电动车产业的集体爆发，有了解的朋友来解析一下吗？</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/default.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">嘎嘎</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        8 个回答 • 137 次浏览 • 03-17 11:40:54
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
     </ul>
     <!--列表结束-->
     
