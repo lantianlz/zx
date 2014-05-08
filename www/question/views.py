@@ -256,7 +256,7 @@ def get_topic_info_by_id(request):
     if topic_id:
         tag = tb.get_tag_by_id(topic_id)
         if tag:
-            infos = dict(domain=tag.domain, name=tag.name, img=tag.get_img(), des=tag.des or u'暂无简介',
+            infos = dict(domain=tag.domain, name=tag.name, img=tag.get_img(), des=tag.des or u'暂无话题介绍',
                          tag_question_count=tag.get_tag_question_count())
 
     return HttpResponse(json.dumps(infos), mimetype='application/json')

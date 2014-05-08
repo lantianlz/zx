@@ -574,7 +574,7 @@ class TagBase(object):
 
     @cache_required(cache_key='all_question_tag', expire=0, cache_config=cache.CACHE_STATIC)
     def get_all_tags(self, must_update_cache=False):
-        return Tag.objects.filter(state=True)
+        return Tag.objects.select_related('question_type').filter(state=True)
 
     def get_tag_by_domain(self, domain):
         tags = self.get_all_tags()
