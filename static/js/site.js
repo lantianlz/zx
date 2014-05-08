@@ -848,7 +848,7 @@ function addZero(data){
             '<div class="topictips f12">',
                 '<div class="profile row f14">',
                     '<div class="col-md-3">',
-                        '<img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" >',
+                        '<a href="/question/topic/1"><img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}"></a>',
                     '</div>',
                     '<div class="col-md-9">',
                         '<div class="pt-10 pb-5"><a href="/question/topic/1">{1}</a></div>',
@@ -963,6 +963,7 @@ function addZero(data){
     };
 
     /*
+        事件对象
     */
     $.ZXEvent = {};
     _.extend($.ZXEvent, Backbone.Events);

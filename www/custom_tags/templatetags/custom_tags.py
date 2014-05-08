@@ -104,14 +104,14 @@ def user_qa_count_info_right_nav_dispaly(context):
     return render_to_response('question/_user_qa_count_info_right_nav_dispaly.html', locals(), context_instance=context).content
 
 
-@register.simple_tag(takes_context=True)
-def global_hotest_tags(context):
-    """
-    @note: 热门话题提取
-    """
-    from www.question.interface import TagBase
-    global_hotest_tags = TagBase().get_all_tags()
-    return render_to_response('question/_global_hotest_tags.html', locals(), context_instance=context).content
+# @register.simple_tag(takes_context=True)
+# def global_hotest_tags(context):
+#     """
+#     @note: 热门话题提取
+#     """
+#     from www.question.interface import TagBase
+#     global_hotest_tags = TagBase().get_all_tags()
+#     return render_to_response('question/_global_hotest_tags.html', locals(), context_instance=context).content
 
 
 @register.simple_tag(takes_context=True)
@@ -119,8 +119,8 @@ def global_hot_topics(context):
     """
     @note: 热门话题
     """
-    #from www.question.interface import TagBase
-    #global_hotest_tags = TagBase().get_all_tags()
+    from www.question.interface import TagBase
+    global_hotest_tags = TagBase().get_all_tags()[:5]
     return render_to_response('question/_global_hot_topics.html', locals(), context_instance=context).content
 
 

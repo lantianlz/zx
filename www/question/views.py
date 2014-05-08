@@ -236,7 +236,7 @@ def cancel_answer_bad(request):
 
 def get_topic_info_by_id(request):
     '''
-    根据话题id获取名片信息
+    @note:根据话题id获取名片信息
     '''
     topic_id = request.REQUEST.get('topic_id', None)
 
