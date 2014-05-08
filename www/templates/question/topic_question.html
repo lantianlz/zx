@@ -19,7 +19,7 @@
 </div>
 <!--问题列表开始-->
 <div class="question-list">
-    
+    {% if questions %}
     <!--列表开始-->
     <ul class="list-group" id="ul_question_list">
         {% for question in questions %}
@@ -27,8 +27,10 @@
         {% endfor %}
     </ul>
     <!--列表结束-->
-    
-
+    {{page_params|paging:request}}
+    {% else %}
+    <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+    {% endif %}
 </div>
 {% endblock topic_main %}
 

@@ -153,11 +153,17 @@ def important_question(request, template_name='question/important_question.html'
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-# @member_required
 def topics(request, template_name="question/topics.html"):
     '''
     话题广场
     '''
+    aqts = interface.QuestionTypeBase().get_all_question_type()
+    question_type = request.REQUEST.get('question_type')
+    if question_type:
+        question_type = int(question_type)
+        tags = tb.get_tags_by_question_type(question_type)
+    else:
+        tags = tb.get_all_tags()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
