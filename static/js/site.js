@@ -901,17 +901,17 @@ function addZero(data){
                         dataType: 'json',
                         url: '/question/get_topic_info_by_id?topic_id=' + origin.data('topic_id'),
                         success: function(data) {
-                            if(data.flag=='0'){
+                            if(data.domain){
                                 origin.tooltipster('content', String.format(
                                     topictipsHtml, 
-                                    data.avatar,
+                                    data.img,
                                     data.name, 
                                     data.follow_count,
-                                    data.question_count,
-                                    data.desc,
+                                    data.tag_question_count,
+                                    data.des,
                                     data.is_follow?'none':'', // 关注按钮
                                     data.is_follow?'':'none', //取消关注按钮
-                                    data.id
+                                    data.domain
                                 )).data('ajax', 'cached');
 
                                 // 监听清除缓存事件

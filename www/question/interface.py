@@ -582,6 +582,12 @@ class TagBase(object):
             if tag.domain == domain:
                 return tag
 
+    def get_tag_by_id(self, tag_id):
+        tags = self.get_all_tags()
+        for tag in tags:
+            if str(tag.id) == str(tag_id):
+                return tag
+
     def get_tags_by_question_type(self, question_type):
         return self.get_all_tags().filter(question_type=question_type)
 

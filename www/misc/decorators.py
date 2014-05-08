@@ -65,10 +65,14 @@ def protected_view(func):
     return _decorator
 
 
-def cache_required(cache_key, expire=3600 * 24, cache_config=cache.CACHE_TMP):
+def cache_required(cache_key, cache_key_type=0, expire=3600 * 24, cache_config=cache.CACHE_TMP):
     '''
     @note: 缓存装饰器
     cache_key格式为1：'answer_summary_%s' 取方法的第一个值做键 2：'global_var'固定值
+    如果需要格式化cache_key的话，cache_key_type为
+    0：传参为：func(self, cache_key_param)
+    1：传参为：func(cache_key_param)
+    2：传参为：func(self) cache_key为self.id
     '''
 
     def _wrap_decorator(func):
@@ -79,12 +83,14 @@ def cache_required(cache_key, expire=3600 * 24, cache_config=cache.CACHE_TMP):
             must_update_cache = kwargs.get('must_update_cache')
             if '%' in cache_key:
                 assert len(args) > 0
-                if isinstance(args[0], (unicode, str, int, long, float)):
-                    cache_key = cache_key % args[0]
-                else:
+                if cache_key_type == 0:
                     key = args[1].id if hasattr(args[1], 'id') else args[1]
                     assert isinstance(key, (unicode, str, int, long, float))
                     cache_key = cache_key % key
+                if cache_key_type == 1:
+                    cache_key = cache_key % args[0]
+                if cache_key_type == 2:
+                    cache_key = cache_key % args[0].id
             return cache.get_or_update_data_from_cache(cache_key, expire, cache_config, must_update_cache, func, *args, **kwargs)
         return _decorator
     return _wrap_decorator

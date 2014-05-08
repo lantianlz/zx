@@ -9,7 +9,7 @@
             <a href="{{tag.get_url}}"><img class="pa avatar-45 avatar-circle" src="{{tag.get_img}}" alt="话题图片"></a>
             <div class="pl-55 pt-5">
                 <div><a href="{{tag.get_url}}" class="zx-topictips" data-topic_id='{{tag.id}}'>{{tag.name}}</a></div>
-                <div class="f12 co8 pt-3">{{tag.get_quesiton_coung}}个问题</div>
+                <div class="f12 co8 pt-3">{{tag.get_tag_question_count}}个问题</div>
             </div>
         </li>
         {% endfor %}
