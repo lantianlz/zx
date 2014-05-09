@@ -11,7 +11,7 @@
 		<label class="col-md-2 control-label">头像</label>
 		<div class="col-md-6">
 			<p class="form-control-static avatar mb-10">
-				<img class="avatar-circle" src="{{request.user.get_avatar_300}}">
+				<img class="avatar-circle" alt="{{request.user.nick}}" src="{{request.user.get_avatar_300}}">
 			</p>
 			<input name="token" type="hidden" value="{{uptoken}}">
 			<input name="key" type="hidden" value="{{img_key}}">
@@ -34,11 +34,11 @@
             </div>
             <div class="modal-body row">
             	<div class="col-md-9">
-            		<img class="jcrop-target" src="{{request.user.get_avatar_450}}">
+            		<img class="jcrop-target" alt="{{request.user.nick}}" src="{{request.user.get_avatar_450}}">
             	</div>
                 <div class="col-md-3">
 	                <div class="preview-container avatar-circle mt-10 ml-20 avatar-100">
-			      		<img src="{{request.user.get_avatar_450}}">
+			      		<img alt="{{request.user.nick}}" src="{{request.user.get_avatar_450}}">
 			      	</div>
 		    	</div>
             </div>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.conf import settings
+from www.misc.decorators import cache_required
 
 
 class Question(models.Model):
@@ -34,8 +36,7 @@ class Question(models.Model):
 
     def get_user(self):
         from www.account.interface import UserBase
-        user = UserBase().get_user_by_id(self.user_id)
-        return user
+        return UserBase().get_user_by_id(self.user_id)
 
 
 class Answer(models.Model):
@@ -56,8 +57,7 @@ class Answer(models.Model):
 
     def get_from_user(self):
         from www.account.interface import UserBase
-        user = UserBase().get_user_by_id(self.from_user_id)
-        return user
+        return UserBase().get_user_by_id(self.from_user_id)
 
     def get_summary(self):
         """
@@ -140,6 +140,13 @@ class Tag(models.Model):
     def get_url(self):
         # 标签
         return u'/question/topic/%s' % self.domain
+
+    def get_img(self):
+        return self.img or '%s/img/common/default-topic.png' % settings.MEDIA_URL
+
+    @cache_required(cache_key='tag_question_count_%s', cache_key_type=2, expire=600)
+    def get_tag_question_count(self):
+        return TagQuestion.objects.filter(tag=self).count()
 
 
 class TagQuestion(models.Model):

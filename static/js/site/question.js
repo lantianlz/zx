@@ -238,7 +238,7 @@ $(document).ready(function(){
                     // 设置ajax元素id,防止多次点击
                     g_ajax_processing_obj_id = this.$('.cancel-important').setUUID().attr('id');
 
-                    ajaxSend("/question/cachel_important", {'question_id': questionId}, common_callback);
+                    ajaxSend("/question/cancel_important", {'question_id': questionId}, common_callback);
                 }
             });
         },

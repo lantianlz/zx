@@ -23,7 +23,7 @@ urlpatterns = patterns('www.question.views',
 
                        url(r'^important$', 'important_question'),
                        url(r'^set_important$', 'set_important'),
-                       url(r'^cachel_important$', 'cachel_important'),
+                       url(r'^cancel_important$', 'cancel_important'),
                        url(r'^set_answer_bad$', 'set_answer_bad'),
                        url(r'^cancel_answer_bad$', 'cancel_answer_bad'),
                        )

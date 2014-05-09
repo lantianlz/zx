@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-import logging
 import json
-from django.db import transaction
 
-from common import utils, debug, cache
+from common import utils, cache
+from www.misc.decorators import cache_required
 from www.message.models import UnreadCount, UnreadType, Notice
 
 
@@ -30,19 +28,12 @@ class UnreadCountBase(object):
     def __del__(self):
         del self.cache_obj
 
-    def get_unread_type(self):
+    @cache_required(cache_key='unread_type_all', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_unread_type(self, must_update_cache=False):
         """
         @note: 获取提醒类型数据
         """
-        cache_key = u'unread_type_all'
-        cache_obj = cache.Cache(config=cache.CACHE_STATIC)
-
-        if cache_obj.exists(cache_key):
-            nts = cache_obj.get(cache_key)
-        else:
-            nts = UnreadType.objects.all().order_by('type', 'id')
-            cache_obj.set(cache_key, nts)
-        return nts
+        return UnreadType.objects.all().order_by('type', 'id')
 
     def get_or_create_count_info(self, user):
         """
@@ -98,29 +89,21 @@ class UnreadCountBase(object):
 
         return True
 
+    @cache_required(cache_key='unread_count_%s', expire=3600 * 24)
     def get_unread_count_info(self, user):
         """
         @note: 获取未读数
         """
-
         user_id = utils.get_uid(user)
-        cache_key = u'%s_%s' % ('unread_count', user_id)
-        # 从缓存中取
-        if self.cache_obj.exists(cache_key):
-            count_info = self.cache_obj.get(cache_key)
-        # 从数据库中取
-        else:
-            try:
-                count_info = json.loads(UnreadCount.objects.get(user_id=user_id).count_info)
-            except UnreadCount.DoesNotExist:
-                count_info = self.init_count_info()  # 没有就不用自动创建，更新的时候进行创建
-            self.cache_obj.set(cache_key, count_info, 3600 * 24)
+        try:
+            count_info = json.loads(UnreadCount.objects.get(user_id=user_id).count_info)
+        except UnreadCount.DoesNotExist:
+            count_info = self.init_count_info()  # 没有就不用自动创建，更新的时候进行创建
         return count_info
 
     def get_unread_count_total(self, user):
         count_info = self.get_unread_count_info(user)
         return count_info
-        # return sum(count_info.values())
 
     def clear_count_info_by_code(self, user_id, code):
         """

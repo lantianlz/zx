@@ -3,10 +3,11 @@
 import logging
 from django.db import transaction
 
-from common import debug
-from www.timeline.models import UserFollow
+from common import debug, cache
+from www.misc.decorators import cache_required
 from www.message.interface import UnreadCountBase
 from www.account.interface import UserBase, UserCountBase
+from www.timeline.models import UserFollow, Feed
 
 
 dict_err = {
@@ -73,6 +74,9 @@ class UserFollowBase(object):
                 transaction.rollback(using=TIMELINE_DB)
                 return 0, dict_err.get(0)
 
+            # 更新用户timeline，后续修改成异步的
+            FeedBase().get_user_timeline_feed_ids(from_user_id, must_update_cache=True)
+
             # 更新关注和粉丝总数信息
             UserCountBase().update_user_count(user_id=from_user_id, code='following_count')
             UserCountBase().update_user_count(user_id=to_user_id, code='follower_count')
@@ -108,6 +112,9 @@ class UserFollowBase(object):
             except UserFollow.DoesNotExist:
                 pass
 
+            # 更新用户timeline，后续修改成异步的
+            FeedBase().get_user_timeline_feed_ids(from_user_id, must_update_cache=True)
+
             # 更新关注和粉丝总数信息
             UserCountBase().update_user_count(user_id=from_user_id, code='following_count', operate='minus')
             UserCountBase().update_user_count(user_id=to_user_id, code='follower_count', operate='minus')
@@ -133,3 +140,92 @@ class UserFollowBase(object):
 
     def get_follower_count(self, user_id):
         return UserFollow.objects.filter(to_user_id=user_id).count()
+
+
+class FeedBase(object):
+
+    def __init__(self):
+        pass
+
+    def format_feeds_by_id(self, feed_ids):
+        from www.question.interface import QuestionBase, AnswerBase
+        feeds = []
+        for feed_id in feed_ids:
+            feed = self.get_feed_by_id(feed_id)
+            user = UserBase().get_user_by_id(feed.user_id)
+            dict_feed = dict(feed_id=feed.id, create_time=feed.create_time.strftime('%Y-%m-%d %H:%M:%S'), feed_type=feed.feed_type,
+                             user_id=feed.user_id, user_avatar=user.get_avatar_65(), user_nick=user.nick)
+            obj_info = {}
+            if feed.feed_type in (1,):
+                obj_info = QuestionBase().get_question_summary_by_id(feed.obj_id)
+            elif feed.feed_type in (2, 3):
+                obj_info = AnswerBase().get_answer_summary_by_id(feed.obj_id)
+            dict_feed.update(obj_info)
+            feeds.append(dict_feed)
+
+        return feeds
+
+    def create_feed(self, user_id, obj_id, feed_type, content=None):
+        assert user_id and obj_id
+
+        feed = Feed.objects.create(user_id=user_id, feed_type=feed_type, obj_id=obj_id)
+        # 更新订阅者timeline
+        self.push_feed_to_follower(user_id, feed.id)
+        return 0, feed
+
+    def push_feed_to_follower(self, user_id, feed_id):
+        '''
+        @note: 推送feed到粉丝的队列中
+        '''
+        # 推自己
+        # cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=100, time_out=3600 * 24 * 7).push(feed_id)
+
+        # 推粉丝
+        followers = UserFollowBase().get_followers_by_user_id(user_id)
+        for follower in followers:
+            cache_queue = cache.CacheQueue(key='user_timeline_%s' % follower.from_user_id, max_len=100, time_out=3600 * 24 * 7)
+            if cache_queue.exists():
+                cache_queue.push(feed_id)
+
+    def get_user_timeline(self, user_id, last_feed_id='', page_count=5):
+        page_count = int(page_count)
+        assert 1 < page_count < 10
+
+        feed_ids = self.get_user_timeline_feed_ids(user_id)
+        if feed_ids:
+            index = feed_ids.index(str(last_feed_id)) if last_feed_id else -1
+            feed_ids = feed_ids[index + 1:index + 1 + page_count]
+
+        return self.format_feeds_by_id(feed_ids)
+
+    def get_user_timeline_feed_ids(self, user_id, must_update_cache=False):
+        cache_queue = cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=100, time_out=3600 * 24 * 7)
+        feed_ids = []
+        if not cache_queue.exists() or must_update_cache:
+            feed_ids = self.get_user_timeline_feed_ids_from_db(user_id)
+            if feed_ids is not None or must_update_cache:
+                cache_queue.init(feed_ids)
+        else:
+            feed_ids = cache_queue[0:-1]
+        return feed_ids
+
+    def get_user_timeline_feed_ids_from_db(self, user_id):
+        '''
+        @note: 从数据库中直接获取用户timeline
+        '''
+        assert user_id
+        user_following_user_ids = [f.to_user_id for f in UserFollowBase().get_following_by_user_id(user_id)]
+        # user_following_user_ids.append(user_id)  # 包含自己产生的feed
+
+        if user_following_user_ids:
+            feeds = Feed.objects.filter(user_id__in=user_following_user_ids)
+            return [f.id for f in feeds]
+        else:
+            return []
+
+    @cache_required(cache_key='feed_%s', expire=3600 * 24, cache_config=cache.CACHE_TIMELINE)
+    def get_feed_by_id(self, feed_id, must_update_cache=False):
+        try:
+            return Feed.objects.get(id=feed_id)
+        except Feed.DoesNotExist:
+            return ''

@@ -99,7 +99,7 @@ class Profile(models.Model):
         return self.get_avatar(key='25m25')
 
     def get_ta_display(self):
-        return {1: u'他'}.get(self.gender, u'她')
+        return {1: u'他', 2: u'她'}.get(self.gender, u'Ta')
 
     def __unicode__(self):
         return u'%s, %s' % (self.id, self.nick)
@@ -181,3 +181,12 @@ class UserCount(models.Model):
     user_liked_count = models.IntegerField(default=0, db_index=True)
     following_count = models.IntegerField(default=0, db_index=True)
     follower_count = models.IntegerField(default=0, db_index=True)
+
+
+class RecommendUser(models.Model):
+    user_id = models.CharField(max_length=32, unique=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-sort_num"]

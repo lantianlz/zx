@@ -11,13 +11,13 @@
         {% for uf in user_followings %}
         <li class="list-group-item row no-l-r-bd bdc-eee pl-0">
             <a href="{{uf.user.get_url}}">
-                <img class="pa avatar-45 avatar-circle" src="{{uf.user.get_avatar_25}}">
+                <img class="pa avatar-45 avatar-circle" alt="{{uf.user.nick}}" src="{{uf.user.get_avatar_25}}">
             </a>
             <div class="pl-55 row">
-                <div class="col-md-9">
+                <div class="col-md-12 pr-0">
                     <div>
                         <a href="{{uf.user.get_url}}">{{uf.user.nick}}</a>
-                        <span class="f12 co8 pl-5">({{uf.create_time|date:'Y-m-d'}})</span>
+                        <span class="f12 co8 pl-5 pull-right">关注时间：{{uf.create_time|date:'Y-m-d'}}</span>
                     </div>
                     <div class="f12 pt-5">
                         <a class="black-blue pr-5" href="/p/{{uf.user.id}}/questions">提问 {{uf.user.user_question_count}}</a> |
@@ -44,6 +44,7 @@
         </li>
         {% endfor %}
     </ul>
+    {{page_params|paging:request}}
 </div>
 {% else %}
 <div class="blank5"></div>

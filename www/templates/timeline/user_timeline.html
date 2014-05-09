@@ -48,116 +48,88 @@ $(document).ready(function(){
             'answerCount': 0,       // 回答个数
             'questionCount': 0      // 提问个数
         }
+
+
     });
 
 
     var Feeds = Backbone.Collection.extend({
         model: Feed,
 
-        search: function(feedId){
-            this.reset([{
-                'feedId': '1',
-                'feedDate': '2014-05-01 11:11:11',
-                'feedType': 1,          
-                'userId': '1',           
-                'userAvatar': '/static/img/common/user1.jpg',       
-                'userName': '半夜没事瞎溜达',         
-                'questionId': 1,        
-                'questionTitle': '创业板调整，蓝筹股走强，并购重组黑马奔腾，热点纷呈背后投资逻...',    
-                'questionDesc': '从美国到中国，从纳指到创业板指，在近期都出现了明显的调整走势，我们应该用博弈论还是价值投资的思路来看待这次新兴产业股票的调整呢？这样的调整以及蓝筹股的走强，和并购重组的兴旺又给我们未来投资以什么样的启......',     
-                'questionViewCount': 15, 
-                'questionAnswerCount': 6,
-                'answerId': 0,        
-                'answerContent': '',    
-                'answerUserId': '',     
-                'answerUserName': '',   
-                'answerUserAvatar': '', 
-                'answerUserDesc': '',
-                'answerLikeCount': 0   
-            }, {
-                'feedId': '2',
-                'feedDate': '2014-05-02 12:12:12',
-                'feedType': 2,          
-                'userId': '2',           
-                'userAvatar': '/static/img/common/user2.jpg',       
-                'userName': '女王大人',         
-                'questionId': 2,        
-                'questionTitle': '作为私募基金经理最重要的是什么？投资逻辑还是基本功？',    
-                'questionDesc': '',     
-                'questionViewCount': 0, 
-                'questionAnswerCount': 0,
-                'answerId': 2,        
-                'answerContent': '1940年，西方盟国做梦也没想到，坐拥西欧最强陆军的法国居然在几个月内即被德军的闪电战击垮。而其中最出色的第七装甲师，其指挥官居然只是战前一个步兵学院的教官艾尔温隆美尔少将。1941年，为了营救著名的猪队......',    
-                'answerUserId': '1',     
-                'answerUserName': '胡萝卜分你一半',   
-                'answerUserAvatar': '', 
-                'answerUserDesc': '(笨熊 ， 吃，不吃，笨！)',  
-                'answerLikeCount': 37   
-            }, {
-                'feedId': '3',
-                'feedDate': '2014-05-03 13:13:13',
-                'feedType': 3,          
-                'userId': '3',           
-                'userAvatar': '/static/img/common/user3.jpg',       
-                'userName': '闪闪发亮的女神经',         
-                'questionId': 3,        
-                'questionTitle': '沪港通是个什么新鲜玩意儿?',    
-                'questionDesc': '',     
-                'questionViewCount': 0, 
-                'questionAnswerCount': 0,
-                'answerId': 3,        
-                'answerContent': '4月10日午间，中国证监会与香港证监会于联合发布公告，正式启动沪港通两地市场的互联互通交易。根据公告，沪股通总额度为3000亿人民币，每日额度为130亿人民币，港股通总额度为2500亿人民币，每日额度为105亿人民币，沪港通正式......',    
-                'answerUserId': '',     
-                'answerUserName': '',   
-                'answerUserAvatar': '', 
-                'answerUserDesc': '',  
-                'answerLikeCount': 29   
-            }]);
+        _modelMaps: {
+            'feedId': 'feed_id',           
+            'feedDate': 'create_time',         
+            'feedType': 'feed_type',         
+            'userId': 'user_id',           
+            'userAvatar': 'user_avatar',       
+            'userName': 'user_nick',         
+            'questionId': 'question_id',       
+            'questionTitle': 'question_title',   
+            'questionDesc': 'question_summary',     
+            'questionViewCount': 0, 
+            'questionAnswerCount': 'question_answer_count',
+            'answerId': 'answer_id',          
+            'answerContent': 'answer_summary',    
+            'answerUserId': 'answer_user_id',     
+            'answerUserName': 'answer_user_nick',   
+            'answerUserAvatar': 'answer_user_avatar', 
+            'answerUserDesc': 'answer_user_des',   
+            'answerLikeCount': 'answer_like_count'    
+        },
 
-            return [this, 11];
+        // 获得最后一个feedId
+        getLastFeedId: function(){
+            if(this.length > 0){
+                return this.models[this.length - 1].get('feedId');
+            }
+
+            return null;
+        },
+
+        // 查询
+        search: function(feedId){
+
+            var me = this;
+
+            g_ajax_processing_obj_id = 'loadingMoreFeed';
+            ajaxSend("/timeline/get_user_timeline", {'last_feed_id': feedId}, function(data){
+                if(data.feeds){
+                    me.reset($.ZXUtils.dictMapParse(data.feeds, me._modelMaps));
+                }
+
+                // 需要推荐用户
+                if(data.need_get_recommended_user){
+                    recommendUsersView.collection.search(false);
+                }
+            });
+
+            return this;
         }
     });
     var Users = Backbone.Collection.extend({
         model: User,
 
-        search: function(){
-            this.reset([{
-                'userId': '1',          
-                'userName': '半夜没事瞎溜达',         
-                'userDesc': '漫漫人生路，谁不错几步',    
-                'userAvatar': '/static/img/common/user1.jpg',     
-                'userGender': 1,
-                'likeCount': 53,        
-                'answerCount': 254,       
-                'questionCount': 24
-            }, {
-                'userId': '2',          
-                'userName': '习大大',         
-                'userDesc': '我多年攒下的这一屋子的切糕给你了',    
-                'userAvatar': '/static/img/common/user3.jpg',     
-                'userGender': '1',
-                'likeCount': 452,        
-                'answerCount': 653,       
-                'questionCount': 234
-            }, {
-                'userId': '3',          
-                'userName': '祁圆圆',         
-                'userDesc': '一只垂耳兔，正被一只大型犬圈养。',    
-                'userAvatar': '/static/img/common/user2.jpg',  
-                'userGender': '2',   
-                'likeCount': 53,        
-                'answerCount': 254,       
-                'questionCount': 65
-            }, {
-                'userId': '4',          
-                'userName': '喵星人',         
-                'userDesc': '注册会计师,现任职某上市公司',    
-                'userAvatar': '/static/img/common/user4.png', 
-                'userGender': '2',    
-                'likeCount': 21,        
-                'answerCount': 13,       
-                'questionCount': 67
-            }]);
+        _modelMaps: {
+            'userId': 'user_id',           
+            'userName': 'nick',         
+            'userAvatar': 'avatar',       
+            'userGender': 'gender',       
+            'userDesc': 'des',
+            'likeCount': 'user_liked_count',
+            'answerCount': 'user_answer_count',
+            'questionCount': 'user_question_count'
+        },
+
+        // 加载推荐用户
+        search: function(random){
+            var me = this;
+
+            g_ajax_processing_obj_id = $('.recommend-users .refresh').setUUID().attr('id');
+            ajaxSend("/account/get_recommend_users", {'random': random?'1':'0'}, function(data){
+                if(data){
+                    me.reset($.ZXUtils.dictMapParse(data, me._modelMaps));
+                }
+            });
 
             return this;
         }
@@ -176,7 +148,12 @@ $(document).ready(function(){
         },
 
         initialize: function(){
-            this.getFeed()
+            // 监听集合的reset事件
+            this.listenTo(this.collection, 'reset', this.getFeed);
+
+            // 首次查询
+            this.collection.search();
+
         },
 
         render: function(data){
@@ -191,34 +168,35 @@ $(document).ready(function(){
         },
 
         // 根据最后一个feedId 获取之后的feed
-        getFeed: function(feedId){
-            var temp = this.collection.search(feedId),
-                data = temp[0],
-                lastFeedId = temp[1];
+        getFeed: function(){
+            var data = this.collection.toJSON(),
+                lastFeedId = this.collection.getLastFeedId();
             
-            this.render(data.toJSON());
+            this.render(data);
 
+            // 去掉上次的 查看更多 按钮
+            this.$('.get-more').parents('li').remove();
             // 是否显示更多
             if(lastFeedId){
                 this.renderGetMore(lastFeedId);
-            } 
+            }
         },
 
         // 查看更多
         getMore: function(){
             var feedId = this.$('.get-more').data('feed_id');
+            
+            // 隐藏原先的 查看更多 按钮
+            this.$('.get-more').hide();
 
-            // 删除原先的 查看更多 按钮
-            this.$('.get-more').remove();
-
-            this.getFeed(feedId);
+            this.collection.search(feedId);
         }
 
     });
-    var SuggestUsersView = Backbone.View.extend({
-        el: '.suggest-users',
+    var RecommendUsersView = Backbone.View.extend({
+        el: '.recommend-users',
 
-        template: _.template($('#suggestUsers-template').html()),
+        template: _.template($('#recommendUsers-template').html()),
 
         events: {
             'click .refresh': 'refreshUser',
@@ -227,58 +205,52 @@ $(document).ready(function(){
         },
 
         initialize: function(){
-            this.getSuggestUsers();
+            // 监听集合的reset事件
+            this.listenTo(this.collection, 'reset', this.getRecommendUsers);
+
+            // 首次查询
+            //this.collection.search(false)
         },
 
         render: function(data){
+            this.$el.show();
             this.$('.list-inline').html(this.template({'users': data}));
-
-            // 初始化名片
-            //$.ZXTooltipster.PersonCard();
         },
 
         // 获取推荐用户
-        getSuggestUsers: function(){
-            var data = this.collection.search();
+        getRecommendUsers: function(){
+            var data = this.collection.toJSON();
 
-            this.render(data.toJSON());
+            this.render(data);
         },
 
         // 换一换
         refreshUser: function(){
-            this.hide(300);
-            this.getSuggestUsers();
-            this.show(300);
+            this.$('ul').fadeOut(300);
+            this.collection.search(true)
+            this.$('ul').fadeIn(300);
         },
 
         // 关注用户
         followUser: function(sender){
             var target = $(sender.currentTarget),
-                userId = target.prev().data('user_id');
+                userId = target.data('user_id');
 
-            target.hide();
-            target.next().show();
-            
-            // 关注
-            // $.ZXOperation.followPeople(userId, function(){
-
-            // });
+            $.ZXOperation.followPeople(userId, function(){
+                target.hide();
+                target.next().show();
+            });
         },
 
+        // 取消关注
         unfollowUser: function(sender){
             var target = $(sender.currentTarget),
-                userId = target.prev().data('user_id');
+                userId = target.data('user_id');
 
-            target.hide();
-            target.prev().show();
-        },
-
-        hide: function(time){
-            this.$el.hide(time);
-        },
-
-        show: function(time){
-            this.$el.show(time);
+            $.ZXOperation.unfollowPeople(userId, function(){
+                target.hide();
+                target.prev().show();
+            });
         }
     });
 
@@ -286,7 +258,7 @@ $(document).ready(function(){
     var feeds = new Feeds(),
         users = new Users(),
         feedView = new FeedView({'collection': feeds}),
-        suggestUsersView = new SuggestUsersView({'collection': users});
+        recommendUsersView = new RecommendUsersView({'collection': users});
 });
 </script>
 {% endblock %}
@@ -300,15 +272,15 @@ $(document).ready(function(){
 	</div>
 
     <!-- 推荐关注 -->
-    <div class="suggest-users pl-15 pr-15 pb-15">
+    <div class="recommend-users pl-15 pr-15 pb-15 none">
         <div class="co8 f14 text-center pt-15 pb-15">
-            你的首页暂时还没有太多内容，多关注些人吧
+            首页内容太少，多关注些朋友吧
             <a href="javascript: void(0)" class="refresh f12 pl-10">
                 <span class="glyphicon glyphicon-refresh"></span>换一换
             </a>
         </div>
 
-        <ul class="list-inline row pl-15 pr-15 border-1 bdc-ddd border-radius-4 pb-10">
+        <ul class="list-inline row pl-15 pr-15 border-1 bdc-ddd border-radius-4 ">
         </ul>
     </div>
 
@@ -334,25 +306,29 @@ $(document).ready(function(){
 
 
 <!-- 推荐用户模板 -->
-<script type="text/template" id="suggestUsers-template">
+<script type="text/template" id="recommendUsers-template">
     <% _.each(users, function(user){ %>
         <li class="col-md-6 col-xs-12 bottom-border bdc-eee pt-15 pb-10">
-            <img class="pa avatar-45 avatar-circle" src="<%= user.userAvatar %>">
+            <a href="/p/<%= user.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= user.userName %>" src="<%= user.userAvatar %>"></a>
             <div class="pl-55 pr-10">
                 <div>
-                    <a href="/p/<%= user.userId %>" class="zx-cardtips" data-user_id='<%= user.userId %>'>
+                    <a href="/p/<%= user.userId %>" class="">
                         <%= user.userName %>
                         <% if (user.userGender == 1) { %>
-                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/male.png" title="男" />
+                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/male.png" alt="男" title="男" />
                         <% } %>
                         <% if (user.userGender == 2) { %>
-                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/female.png" title="女" />
+                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/female.png" alt="女" title="女" />
                         <% } %>
                     </a>
-                    <button class="btn btn-xs btn-primary pull-right follow">添加关注</button>
-                    <button class="btn btn-xs btn-default pull-right unfollow none">取消关注</button>
+                    <button class="btn btn-xs btn-primary pull-right follow" data-user_id='<%= user.userId %>'>添加关注</button>
+                    <button class="btn btn-xs btn-default pull-right unfollow none" data-user_id='<%= user.userId %>'>取消关注</button>
                 </div>
-                <div class="pt-5"><span>提问 <%= user.questionCount %></span><span class="pl-15">回答 <%= user.answerCount %></span><span class="pl-15">赞 <%= user.likeCount %></span></div>
+                <div class="pt-5">
+                    <span>提问 <a href="/p/<%= user.userId %>/questions"><%= user.questionCount %></a></span>
+                    <span class="pl-15">回答 <a href="/p/<%= user.userId %>/answers"><%= user.answerCount %></a></span>
+                    <span class="pl-15">赞 <a href="javascript: void(0);"><%= user.likeCount %></a></span>
+                </div>
                 <div class="f12 co8 pt-5"><%= user.userDesc %></div>
             </div>
         </li>
@@ -365,10 +341,10 @@ $(document).ready(function(){
 
         <% if(feed.feedType == 1){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <img class="pa avatar-45 avatar-circle" src="<%= feed.userAvatar %>">
+            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55">
                 <div class="co8 f12">
-                    <a href="#" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 提出了该问题
+                    <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 提出了该问题
                 </div>
                 <div class="pt-5">
                     <a class="black-blue f16 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
@@ -383,20 +359,20 @@ $(document).ready(function(){
 
         <% if(feed.feedType == 2){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <img class="pa avatar-45 avatar-circle" src="<%= feed.userAvatar %>">
+            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55">
                 <div class="co8 f12">
-                    <a href="#" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 赞了该回答
+                    <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 赞了该回答
                 </div>
                 <div class="pt-5">
                     <a class="black-blue f16 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
                 <div class="pt-10 f12">
-                    <a href="#" class="zx-cardtips pr-5" data-user_id='<%= feed.answerUserId %>'><%= feed.answerUserName %></a><%= feed.answerUserDesc %>
+                    <a href="/p/<%= feed.answerUserId %>" class="zx-cardtips pr-5 black-blue fb" data-user_id='<%= feed.answerUserId %>'><%= feed.answerUserName %></a><% if(feed.answerUserDesc) {%><span class="fb">(<%= feed.answerUserDesc %>)</span><% } %>
                 </div>
                 <div class="pt-5 f13">
                     <%= feed.answerContent %>
-                    <a href="question/<%= feed.questionId %>/#to_answer_<%= feed.answerId %>" class="pl-5 f12">
+                    <a href="question/<%= feed.questionId %>#to_answer_<%= feed.answerId %>" class="pl-5 f12">
                         <span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
                     </a>
                 </div>
@@ -409,17 +385,17 @@ $(document).ready(function(){
 
         <% if(feed.feedType == 3){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <img class="pa avatar-45 avatar-circle" src="<%= feed.userAvatar %>">
+            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55">
                 <div class="co8 f12">
-                    <a href="#" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 回答了该提问
+                    <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 回答了该提问
                 </div>
                 <div class="pt-5">
                     <a class="black-blue f16 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
                 <div class="pt-10 f13">
                     <%= feed.answerContent %>
-                    <a href="question/<%= feed.questionId %>/#to_answer_<%= feed.answerId %>" class="pl-5 f12">
+                    <a href="question/<%= feed.questionId %>#to_answer_<%= feed.answerId %>" class="pl-5 f12">
                         <span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
                     </a>
                 </div>
@@ -434,9 +410,10 @@ $(document).ready(function(){
 
 <!-- 更多按钮模板 -->
 <script type="text/template" id="getMore-template">
-    <li class="list-group-item no-l-r-bd bdc-eee pl-0 no-border get-more">
-        <div class="">
-            <button type="button" class="btn btn-block btn-default" data-feed_id="">查看更多...</button>
+    <li class="list-group-item no-l-r-bd bdc-eee pl-0 no-border">
+        <div class="text-center">
+            <span id="loadingMoreFeed"></span>
+            <button type="button" class="btn btn-block btn-default get-more" data-feed_id="<%= feedId %>">查看更多...</button>
         </div>
     </li>
 </script>

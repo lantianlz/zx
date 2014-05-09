@@ -1,7 +1,7 @@
 {% extends "question/base_topic.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}大盘走势 - 话题{% endblock %}
+{% block title %}{{tag.name}} - 话题{% endblock %}
 
 {% block css %}{% endblock %}
 
@@ -9,147 +9,28 @@
 
 {% block topic_main %}
 <div class="bottom-border bdc-bbb pl-10 mb-10">
-    <img class="pa avatar-65 avatar-circle" src="{{MEDIA_URL}}img/common/topic0.jpg">
+    <img class="pa avatar-65 avatar-circle" alt="{{tag.name}}" src="{{tag.get_img}}">
     <div class="pl-80 pb-10 pt-5">
-        <h4>大盘走势</h4>
+        <h4>{{tag.name}}</h4>
         <div class="co8 f12">
-            <span>253人关注 • 1658个问题</span>
-            <span class="pull-right pr-10"><button class="btn btn-primary btn-xs">关注此话题</button></span>
+            <span>共 {{tag.get_tag_question_count}} 个问题</span>
         </div>
     </div>
 </div>
 <!--问题列表开始-->
 <div class="question-list">
-    
+    {% if questions %}
     <!--列表开始-->
     <ul class="list-group" id="ul_question_list">
         {% for question in questions %}
             {% include "question/_question_li_display.html" %}
         {% endfor %}
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>想了解大宗交易，有谁能提供一下限售股解禁后通过大宗交易减持的...</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">帮朋友问一下，他有一部分限售股即将解禁了。</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user2.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">半夜没事瞎溜达</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        8 个回答 • 58 次浏览 • 04-01 12:56:22
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>关于股票操作模式的深入讨论，中长线赚钱的原理？</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">俗话说短线是金长线是银，但中长线投资看上去没什么技术含量，为什么能赚钱？</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user1.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">随便弄弄</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        7 个回答 • 69 次浏览 • 04-01 11:23:34
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>创业板是已经见顶了吗？</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">本来还认为创业板只是一个回调，但日K线近期时常跌幅2%以上，忧虑啊。</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user4.png" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">无所谓</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        13 个回答 • 235 次浏览 • 03-31 16:25:48
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>上周京津冀概念股大涨，今天上海自贸区概念股也大涨，现在有炒地...</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">TMT行业持续走弱，高风险资金的喜好可能正在改变，而每年都会炒地图，今年的炒地图就此开始了吗？现在介入算不算太晚。</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/user3.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">不想睡</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        4 个回答 • 35 次浏览 • 03-29 19:20:31
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-            <div class="item-container pt-10 pb-10">
-                <div class="item-question-title">
-                    <a class="black-blue f16" href="{{question.get_url}}">
-                        <strong>特斯拉概念股能不能兑现业绩或者持续走强，还是一波流？</strong>
-                    </a>
-                </div>
-                <div class="item-question-content f13 w mt-10">特斯拉概念股反复炒作，是基于美股特斯拉去年涨幅大，还是基于锂电池电动车产业的集体爆发，有了解的朋友来解析一下吗？</div>
-                <div class="item-question-tags"></div>
-                <div class="pt-15">
-                    
-                    <a class="no-hover-unl" href="#">
-                        <img class="avatar-25 avatar-circle" src="{{MEDIA_URL}}img/common/default.jpg" title="" />
-                    </a>
-                    <a href="#" class="zx-cardtips" data-user_id="1">
-                        <span class="f12">嘎嘎</span>
-                    </a>
-                    <span class="f12 pl-15 co8">
-                        8 个回答 • 137 次浏览 • 03-17 11:40:54
-                    </span>
-                    
-                </div>
-            </div>
-        </li>
     </ul>
     <!--列表结束-->
-    
-
+    {{page_params|paging:request}}
+    {% else %}
+    <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+    {% endif %}
 </div>
 {% endblock topic_main %}
 
@@ -157,27 +38,16 @@
 
 {% block topic_right %}
 <div class="bottom-border bdc-eee mb-25">
-    <div class="f16 pb-10 fb">话题描述</div>
-    <div class="">
-        <p>大盘：是指沪市的“上证综合指数”和深市的“深证成份股指数”的股票。</p>
-        <p>大盘指数是运用统计学中的指数方法编制而成的，反映股市总体价格或某类股价变动和走势的指标。</p>
-        <p>上证综合指数：以上海证券交易所 挂牌上市的全部股票（包括A股和B股）为样本，以发行量 为权数（包括流通股本和非流通股本），以加权平均法 计算，以1990年12月19日为基日，基日指数 定为100点的股价指数。</p>
-        <p>深圳成份股指数：从深圳证券 交易所挂牌上市的 所有股票中抽取具有市场代表性的40家上市公司的股票为样本，以流通股本为权数，以加权平 均法计算，以1994 年7月20日为基日，基日指数定为1000点的股价指数。</p>
-    </div>
+    <div class="f16 pb-10 fb">话题介绍</div>
+    <div class="">{{tag.des|default:'暂无话题介绍'}}</div>
+    <div class="blank10"></div>
 </div>
 
 <div class="bottom-border bdc-eee mb-25">
     <div class="f16 fb pb-10">父话题</div>
     <ul class="list-inline pb-10">
-        <li><a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="#">股票</a></li>
+        <li><a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="{{tag.question_type.get_url}}">{{tag.question_type.name}}</a></li>
     </ul>
 </div>
 
-<div class="bottom-border bdc-eee mb-25">
-    <div class="f16 fb pb-10">子话题</div>
-    <ul class="list-inline pb-10">
-        <li><a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="#">上证综合指数</a></li>
-        <li><a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="#">深圳成份股指数</a></li>
-    </ul>
-</div>
 {% endblock topic_right %}

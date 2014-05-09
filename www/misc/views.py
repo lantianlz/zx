@@ -102,4 +102,4 @@ def crop_img(request):
             else:
                 result = dict(flag='-1', result=u'剪裁失败, 请稍后重试')
 
-    return HttpResponse(json.dumps(result))
+    return HttpResponse(json.dumps(result), mimetype='application/json')
