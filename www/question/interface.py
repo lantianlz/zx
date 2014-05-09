@@ -95,8 +95,8 @@ class QuestionBase(object):
             return False, dict_err.get(101)
         return True, dict_err.get(000)
 
-    def validate_content(self, content):
-        if len(content) < 10:
+    def validate_content(self, content, min_len=10):
+        if len(content) < min_len:
             return False, dict_err.get(102)
         if len(content) > 65535:
             return False, dict_err.get(103)
@@ -107,7 +107,7 @@ class QuestionBase(object):
         if not flag:
             return False, result
 
-        flag, result = self.validate_content(question_content)
+        flag, result = self.validate_content(question_content, min_len=2)
         if not flag:
             return False, result
 

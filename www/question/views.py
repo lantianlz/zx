@@ -62,8 +62,8 @@ def question_detail(request, question_id, template_name='question/question_detai
 def ask_question(request, template_name='question/ask_question.html'):
     if request.POST:
         question_type = int(request.POST.get('question_type', '0'))
-        question_title = request.POST.get('question_title', '')
-        question_content = request.POST.get('question_content', '')
+        question_title = request.POST.get('question_title', '').strip()
+        question_content = request.POST.get('question_content', '').strip()
         is_hide_user = request.POST.get('is_hide_user')
         tags = request.POST.getlist('tag')
 
@@ -83,8 +83,8 @@ def ask_question(request, template_name='question/ask_question.html'):
 def modify_question(request, question_id):
     if request.POST:
         question_type = int(request.POST.get('question_type', '0'))
-        question_title = request.POST.get('question_title', '')
-        question_content = request.POST.get('question_content', '')
+        question_title = request.POST.get('question_title', '').strip()
+        question_content = request.POST.get('question_content', '').strip()
         is_hide_user = request.POST.get('is_hide_user')
         tags = request.POST.getlist('tag')
 
@@ -104,7 +104,7 @@ def modify_answer(request):
     if request.POST:
         question_id = request.POST.get('question_id')
         answer_id = request.POST.get('answer_id')
-        edit_answer_content = request.POST.get('edit_answer_content', '')
+        edit_answer_content = request.POST.get('edit_answer_content', '').strip()
 
         flag, result = ab.modify_answer(answer_id, request.user, edit_answer_content)
         if flag:
@@ -115,7 +115,7 @@ def modify_answer(request):
 
 @member_required
 def create_answer(request, question_id):
-    answer_content = request.POST.get('answer_content', '')
+    answer_content = request.POST.get('answer_content', '').strip()
 
     flag, result = ab.create_answer(question_id, request.user.id, answer_content, ip=utils.get_clientip(request))
     if flag:
