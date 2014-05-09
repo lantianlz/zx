@@ -64,7 +64,7 @@
 	<ul class="invited-persons list-inline">
 		{% for invitation_user in invitation_users %}
 		<li>
-			<img class="avatar avatar-circle" src="{{invitation_user.user.get_avatar}}">
+			<a href="{{invitation_user.user.get_url}}"><img class="avatar avatar-circle" alt="{{invitation_user.user.nick}}"  src="{{invitation_user.user.get_avatar}}"></a>
 			<a href="{{invitation_user.user.get_url}}" class="zx-cardtips" data-user_id="{{invitation_user.user.id}}"
 				title="{{invitation_user.user.nick}} 注册时间：{{invitation_user.user.create_time}}">
 				

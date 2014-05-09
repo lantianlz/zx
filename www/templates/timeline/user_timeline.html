@@ -309,16 +309,16 @@ $(document).ready(function(){
 <script type="text/template" id="recommendUsers-template">
     <% _.each(users, function(user){ %>
         <li class="col-md-6 col-xs-12 bottom-border bdc-eee pt-15 pb-10">
-            <a href="/p/<%= user.userId %>"><img class="pa avatar-45 avatar-circle" src="<%= user.userAvatar %>"></a>
+            <a href="/p/<%= user.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= user.userName %>" src="<%= user.userAvatar %>"></a>
             <div class="pl-55 pr-10">
                 <div>
                     <a href="/p/<%= user.userId %>" class="">
                         <%= user.userName %>
                         <% if (user.userGender == 1) { %>
-                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/male.png" title="男" />
+                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/male.png" alt="男" title="男" />
                         <% } %>
                         <% if (user.userGender == 2) { %>
-                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/female.png" title="女" />
+                            <img class="w15 mt--2" src="{{MEDIA_URL}}img/common/female.png" alt="女" title="女" />
                         <% } %>
                     </a>
                     <button class="btn btn-xs btn-primary pull-right follow" data-user_id='<%= user.userId %>'>添加关注</button>
@@ -341,7 +341,7 @@ $(document).ready(function(){
 
         <% if(feed.feedType == 1){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" src="<%= feed.userAvatar %>"></a>
+            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55">
                 <div class="co8 f12">
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 提出了该问题
@@ -359,7 +359,7 @@ $(document).ready(function(){
 
         <% if(feed.feedType == 2){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" src="<%= feed.userAvatar %>"></a>
+            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55">
                 <div class="co8 f12">
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 赞了该回答
@@ -385,7 +385,7 @@ $(document).ready(function(){
 
         <% if(feed.feedType == 3){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" src="<%= feed.userAvatar %>"></a>
+            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55">
                 <div class="co8 f12">
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 回答了该提问

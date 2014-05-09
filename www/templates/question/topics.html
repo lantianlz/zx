@@ -41,7 +41,7 @@
     <ul class="list-inline pl-10">
         {% for tag in tags %}
         <li class="topic-item pt-15 col-md-6 col-xs-12">
-            <a href="{{tag.get_url}}"><img class="pa avatar-65 avatar-circle" alt="{{tag.name}}" title="{{tag.name}}" src="{{tag.get_img}}"></a>
+            <a href="{{tag.get_url}}"><img class="pa avatar-65 avatar-circle" alt="{{tag.name}}" src="{{tag.get_img}}"></a>
             <div class="pl-75 row pr-10">
                 <div class="col-md-6 col-xs-6">
                     <a href="{{tag.get_url}}" class="zx-topictips" data-topic_id='{{tag.id}}'>{{tag.name}}</a>
