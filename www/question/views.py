@@ -18,7 +18,11 @@ tb = interface.TagBase()
 
 
 # @member_required
-def question_home(request, question_type=0, template_name='question/question_home.html'):
+def question_home(request, question_type=None, template_name='question/question_home.html'):
+    if question_type:
+        question_type = interface.QuestionTypeBase().get_question_type_by_id_or_domain(question_type)
+        if not question_type:
+            raise Http404
     questions = qb.get_questions_by_type(question_type_domain=question_type)
 
     # 分页
@@ -29,25 +33,6 @@ def question_home(request, question_type=0, template_name='question/question_hom
 
     questions = qb.format_quesitons(questions)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-
-
-# @member_required
-# def tag_question(request, tag_domain, template_name='question/question_home.html'):
-#     """
-#     @note: 通过标签展现话题
-#     """
-
-#     tag = tb.get_tag_by_domain(tag_domain)
-#     questions = qb.get_questions_by_tag(tag)
-
-# 分页
-#     page_num = int(request.REQUEST.get('page', 1))
-#     page_objs = page.Cpt(questions, count=10, page=page_num).info
-#     questions = page_objs[0]
-#     page_params = (page_objs[1], page_objs[4])
-
-#     questions = qb.format_quesitons(questions)
-#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 # @member_required

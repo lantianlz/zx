@@ -225,7 +225,10 @@ class QuestionBase(object):
     def get_questions_by_type(self, question_type_domain=None):
         ps = dict(state=True)
         if question_type_domain:
-            ps.update(question_type=QuestionTypeBase().get_question_type_by_id_or_domain(question_type_domain))
+            question_type = question_type_domain
+            if not isinstance(question_type_domain, QuestionType):
+                question_type = QuestionTypeBase().get_question_type_by_id_or_domain(question_type_domain)
+            ps.update(question_type=question_type)
         questions = Question.objects.filter(**ps)
         return questions
 
