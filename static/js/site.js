@@ -621,7 +621,11 @@ function addZero(data){
         $.ZXOperation.unfollowPeople('1', function(){alert('1')})
     */
     $.ZXOperation.unfollowPeople = function(userId, callback){
-        ajaxSend("/timeline/unfollow/" + userId, {}, callback, 'GET');
+        $.ZXMsg.confirm('提示', '确认要取消关注吗?', function(result){
+            if(result){
+                ajaxSend("/timeline/unfollow/" + userId, {}, callback, 'GET');
+            }
+        });
     };
 
     /*
@@ -1044,17 +1048,19 @@ $(document).ready(function(){
     // 回到顶部动画效果
     var userClickTop = false;
 
-    $(window).scroll(function(){
-        var me = $(this);
+    $(window).scroll(
+        _.throttle(function(){
+            var me = $(this);
 
-        if(!userClickTop){
-            if(me.scrollTop() < 400){
-                $('.scroll-top').hide('fast');
-            }else{
-                $('.scroll-top').show('fast');
+            if(!userClickTop){
+                if(me.scrollTop() < 400){
+                    $('.scroll-top').hide('fast');
+                }else{
+                    $('.scroll-top').show('fast');
+                }
             }
-        }
-    });
+        }, 300)
+    );
 
     $('.scroll-top').bind('mouseover', function(){
         var me = $(this);
