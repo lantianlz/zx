@@ -47,7 +47,15 @@ DATABASES = {
     },
     'account': {
         'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'account',                      # Or path to database file if using sqlite3.
+        'NAME': ACCOUNT_DB,                      # Or path to database file if using sqlite3.
+        'USER': DB_USER,                      # Not used with sqlite3.
+        'PASSWORD': DB_PWD,                  # Not used with sqlite3.
+        'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    },
+    'question': {
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'question',                      # Or path to database file if using sqlite3.
         'USER': DB_USER,                      # Not used with sqlite3.
         'PASSWORD': DB_PWD,                  # Not used with sqlite3.
         'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
