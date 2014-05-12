@@ -60,6 +60,7 @@
 .h30{height: 30px;}
 .h35{height: 35px;}
 .h40{height: 40px;}
+.min-h50{min-height: 50px;}
 
 .w{width:100%}
 .w15{width: 15px;}
