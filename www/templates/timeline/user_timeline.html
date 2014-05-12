@@ -43,7 +43,7 @@ $(document).ready(function(){
             'userName': '',         // 用户名称
             'userAvatar': '',       // 用户头像
             'userGender': '',       // 用户性别
-            'userDesc': '',         // 用户简介
+            'userDesc': '暂无简介',  // 用户简介
             'likeCount': 0,         // 获赞个数
             'answerCount': 0,       // 回答个数
             'questionCount': 0      // 提问个数
@@ -329,7 +329,7 @@ $(document).ready(function(){
                     <span class="pl-15">回答 <a href="/p/<%= user.userId %>/answers"><%= user.answerCount %></a></span>
                     <span class="pl-15">赞 <a href="javascript: void(0);"><%= user.likeCount %></a></span>
                 </div>
-                <div class="f12 co8 pt-5"><%= user.userDesc %></div>
+                <div class="f12 co8 pt-5"><%= user.userDesc?user.userDesc:'暂无简介' %></div>
             </div>
         </li>
     <% }) %>
