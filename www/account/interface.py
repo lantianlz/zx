@@ -159,6 +159,10 @@ class UserBase(object):
                     content = u'成功邀请一个注册用户 <a href="%s">%s</a>' % (profile.get_url(), profile.nick)
                     UnreadCountBase().add_system_message(user_id=invitation.user_id, content=content)
 
+                    # 自动关注邀请者
+                    from www.timeline.interface import UserFollowBase
+                    UserFollowBase().follow_people(profile.id, invitation.user_id)
+
             transaction.commit(using=ACCOUNT_DB)
 
             # todo发送验证邮件
