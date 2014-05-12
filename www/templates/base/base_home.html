@@ -32,8 +32,8 @@
                 <li {% if '/question/' == request.path %} class="active" {% endif %}>
                     <a href="/question/">问答</a>
                 </li>
-                <li {% if '/question/important' in request.path %} class="active" {% endif %}>
-                    <a href="/question/important">每日精选</a>
+                <li {% if '/important' in request.path %} class="active" {% endif %}>
+                    <a href="/important">每日精选</a>
                 </li>
                 <li {% if '/account/invitation' in request.path %} class="active" {% endif %}>
                     <a href="/account/invitation">邀请注册</a>
