@@ -189,4 +189,4 @@ class RecommendUser(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-sort_num"]
+        ordering = ["-sort_num", "id"]
