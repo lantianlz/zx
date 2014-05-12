@@ -139,7 +139,7 @@ class Tag(models.Model):
 
     def get_url(self):
         # 标签
-        return u'/question/topic/%s' % self.domain
+        return u'/topic/%s' % self.domain
 
     def get_img(self):
         return self.img or '%s/img/common/default-topic.png' % settings.MEDIA_URL

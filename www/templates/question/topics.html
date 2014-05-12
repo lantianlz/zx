@@ -29,7 +29,7 @@
 
 <div class="pt-15 row bottom-border bdc-eee">
     <ul class="list-flow">
-        <li><a class="{% if not question_type %}active {% endif %}border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/question/topics">全部</a></li>
+        <li><a class="{% if not question_type %}active {% endif %}border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">全部</a></li>
         {% for aqt in aqts %}
         <li><a class="{% if question_type == aqt.id %}active {% endif %}border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="?question_type={{aqt.id}}">{{aqt.name}}</a></li>
         {% endfor %}
