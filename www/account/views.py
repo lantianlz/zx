@@ -51,7 +51,7 @@ def login(request, template_name='account/login_bg.html'):
         if next_url:
             request.session['next_url'] = urllib.unquote_plus(next_url)
 
-    user_agent_dict = user_agent_parser.Parse(request.META.get('HTTP_USER_AGENT'))
+    user_agent_dict = user_agent_parser.Parse(request.META.get('HTTP_USER_AGENT', ''))
     # 手机客户端换模板
     if user_agent_dict['device']['family'] != 'Other':
         template_name = 'account/login.html'
