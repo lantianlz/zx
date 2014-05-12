@@ -385,7 +385,10 @@ $(document).ready(function(){
             } else {
                 // 滚动到输入框的位置框
                 $('html,body').animate({
-                    scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0) - parseInt($('.container_content').css('margin-top')) - 5
+                    scrollTop: $('.answer-main').offset().top 
+                        + ($.browser.msie ? document.documentElement.scrollTop : 0) 
+                        - parseInt($('.container_content').css('margin-top')) 
+                        - 5
                 });
                 answerEditor.focus();
                 answerEditor.html('');
@@ -400,7 +403,11 @@ $(document).ready(function(){
             // 设置ajax元素id,防止多次点击
             g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-            ajaxSend("/question/set_answer_bad", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+            ajaxSend(
+                "/question/set_answer_bad", 
+                {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
+                common_callback
+            );
         },
 
         // 取消回答没有帮助
@@ -410,7 +417,11 @@ $(document).ready(function(){
             // 设置ajax元素id,防止多次点击
             g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-            ajaxSend("/question/cancel_answer_bad", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+            ajaxSend(
+                "/question/cancel_answer_bad", 
+                {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
+                common_callback
+            );
         },
 
         // 编辑回答
@@ -442,7 +453,11 @@ $(document).ready(function(){
                     // 设置ajax元素id,防止多次点击
                     g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-                    ajaxSend("/question/remove_answer", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+                    ajaxSend(
+                        "/question/remove_answer", 
+                        {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
+                        common_callback
+                    );
                 }
             });
         },

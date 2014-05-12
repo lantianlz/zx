@@ -1,0 +1,71 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}话题管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.search-important{
+    right: 0;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#important_list" class="black-blue" data-toggle="pill">推荐用户列表</a>
+    </li>
+    <li>
+        <a href="#modify_important" class="black-blue" data-toggle="pill">修改每日精选</a>
+    </li>
+    <div class="pa search-important col-md-3">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control border-radius-0" placeholder="输入用户名称...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">查询</button>
+            </span>
+        </div>
+    </div>
+</ul>
+
+<div class="tab-content">
+    <!-- 提问列表 -->
+    <div class="tab-pane fade pt-15 in active" id="important_list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>标题</th>
+                    <th>提问者</th>
+                    <th>提问时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改提问 -->
+    <div class="tab-pane fade" id="modify_important">
+        
+    </div>
+</div>
+
+{% endblock admin-right %}

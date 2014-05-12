@@ -1045,11 +1045,11 @@ if (!String.format) {
             var url = searchUrl || this.searchUrl,
                 pageHtml = '',
                 pages = this._generateRange(pageIndex, pageCount);
-
+            console.log(pageIndex, pageCount, searchUrl, pages)
             for (var i = 0; i < pages.length; i++) {
 
                 pageHtml += String.format(
-                    '<li {0}><a href="#/{1}/{2}">{3}</a></li>', 
+                    '<li {0}><a href="#{1}/{2}">{3}</a></li>', 
                     pages[i] == pageIndex ? 'class="active"' : '', // 为当前页添加active类
                     url, 
                     pages[i], 
@@ -1061,14 +1061,14 @@ if (!String.format) {
             pageHtml = String.format(
                 '<li {0}><a href="{1}">&laquo;</a>', 
                 pageIndex == 1 ? 'class="disabled"' : '',
-                pageIndex == 1 ? 'javascript: void(0);' : ('#/' + url + '/' + 1)
+                pageIndex == 1 ? 'javascript: void(0);' : ('#' + url + '/' + 1)
             ) + pageHtml;
             
             // 末页
             pageHtml += String.format(
                 '<li {0}><a href="{1}">&raquo;</a>', 
                 pageIndex == pageCount ? 'class="disabled"' : '',
-                pageIndex == pageCount ? 'javascript: void(0);' : ('#/' + url + '/' + pageCount)
+                pageIndex == pageCount ? 'javascript: void(0);' : ('#' + url + '/' + pageCount)
             );
 
             this.$el.html(pageHtml);
