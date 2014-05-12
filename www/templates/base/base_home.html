@@ -50,7 +50,7 @@
                 {% if request.user.is_authenticated %}
                 <!-- 菜单 -->
                 <li class="user-menu dropdown">
-                    <a href="#" class="dropdown-toggle user min-w140" data-toggle="dropdown" title="{{request.user.nick}}">
+                    <a href="#" class="dropdown-toggle user w140" data-toggle="dropdown" title="{{request.user.nick}}">
                         <img alt="{{request.user.nick}}" class='avatar-25 avatar-circle user mt--2' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
                         <!-- <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span> -->
