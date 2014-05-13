@@ -18,7 +18,7 @@
 			</div>
 			<div class="col-md-9 col-xs-9">
 				<div class="from">
-					<a href="/n/{{answer.from_user.nick}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
+					<a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
 				</div>
 				<div class="f14 pb-10">{{answer.get_summary|safe}}</div>
                 <div class="content f12"> 

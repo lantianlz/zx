@@ -18,7 +18,7 @@
 			</div>
 			<div class="col-md-9 col-xs-9">
 				<div class="from">
-					<a href="/n/{{like.from_user.nick}}" class="zx-cardtips" data-user_id="{{like.from_user.id}}">{{like.from_user.nick}}</a>
+					<a href="{{like.from_user.get_url}}">{{like.from_user.nick}}</a>
 				</div>
                 <div class="content f12"> 
                     赞了我的回答 <a href="{{like.question.get_url}}">{{like.question.title|safe}}</a>

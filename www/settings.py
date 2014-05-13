@@ -20,7 +20,7 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 
 SERVER_NAME = 'ZHIXUAN_WEB0' if not LOCAL_FLAG else 'DEVELOPER'
 SERVER_DOMAIN = 'a.com'
-MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
+MAIN_DOMAIN = 'http://www.%s:8000' % SERVER_DOMAIN
 IMG0_DOMAIN = 'http://img0.zhixuan.com'    # 'http://zimg0.qiniudn.com'
 
 EMAIL_FROM = u'"智选" <service@zhixuan.com>'

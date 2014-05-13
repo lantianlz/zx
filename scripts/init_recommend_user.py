@@ -13,10 +13,22 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 
 def init_recommend_user():
-    from www.account.models import RecommendUser, User
-    user_ids = [u.id for u in User.objects.all()[:50]]
-    for user_id in user_ids:
-        RecommendUser.objects.create(user_id=user_id)
+    from www.account.models import RecommendUser, User, Profile
+    nicks = [
+        u'李小侃', u'深耕A股', u'贪睡的An', u'关灯吃面', u'嘎嘎',
+        u'小路', u'星辰大海', u'胡萝卜分你一半', u'快乐的光头阳线', u'起起伏伏的诱惑',
+        u'闪闪发亮的女神经', u'citicbanker'
+    ]
+
+    for nick in nicks:
+        try:
+            user = Profile.objects.get(nick=nick)
+            RecommendUser.objects.create(user_id=user.id)
+        except Profile.DoesNotExist:
+            print (u'%s does not exist' % nick).encode('utf8')
+    # user_ids = [u.id for u in User.objects.all()[:50]]
+    # for user_id in user_ids:
+    #     RecommendUser.objects.create(user_id=user_id)
 
     print 'ok'
 
