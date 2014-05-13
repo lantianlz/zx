@@ -11,7 +11,7 @@
         <div class="item-question-tags"></div>
         <div class="pt-15">
             {% if not question.is_hide_user %}
-            <a class="no-hover-unl" href="#">
+            <a class="no-hover-unl" href="{{question.user.get_url}}">
                 <img class="avatar-25 avatar-circle" alt="{{question.user.nick}}" src="{{question.user.get_avatar_25}}" />
             </a>
             <a href="{{question.user.get_url}}" class="zx-cardtips" data-user_id="{{question.user.id}}">
