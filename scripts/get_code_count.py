@@ -21,9 +21,10 @@ def get_code_count():
 
     init_path = os.getcwd()
     init_path = os.path.abspath(os.path.join(init_path, '../'))
+    # init_path = '/Users/simplejoy/workspace/new_codoon'
     for root, dirs, files in os.walk(init_path):
         # 隐藏目录剔除
-        if '.git' in root:
+        if '.git' in root or '.svn' in root:
             # print '%s pass' % root
             continue
 
