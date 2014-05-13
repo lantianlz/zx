@@ -1,0 +1,118 @@
+.arrow{
+  width: 0px;
+  height: 0px;
+  border: 10px solid transparent;
+  border-left: 0px;
+  position: absolute;
+  top: 10px;
+  left: -10px;
+  z-index: 101;
+  border-right-color: #428bca;
+}
+
+.wave{
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 0 5px #428bca;
+    border: 1px solid #428bca;
+    border-radius: 50%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    -webkit-transform: scale(0);
+	   -moz-transform: scale(0);
+        -ms-transform: scale(0);
+    	    transform: scale(0);
+    -webkit-animation: wave 3s ease-out infinite;
+       -moz-animation: wave 3s ease-out infinite;
+        -ms-animation: wave 3s ease-out infinite;
+    		animation: wave 3s ease-out infinite;
+}
+
+@-webkit-keyframes wave{
+    0% {
+    	-webkit-transform: scale(0);
+    	transform: scale(0);
+    	opacity: 0;
+    }
+    10% {
+    	-webkit-transform: scale(1.0);
+    	transform: scale(1.0);
+    	opacity: 0.6;
+    }
+    80% {
+    	-webkit-transform: scale(1.35);
+    	transform: scale(1.35);
+    	opacity: 0.0;
+    }
+    100% {
+    	-webkit-transform: scale(0);
+    	transform: scale(0);
+    	opacity: 0;
+    }
+}
+
+@-moz-keyframes wave{
+    0% {
+    	-moz-transform: scale(0);
+    	transform: scale(0);
+    	opacity: 0;
+    }
+    10% {
+    	-moz-transform: scale(1.0);
+    	transform: scale(1.0);
+    	opacity: 0.6;
+    }
+    80% {
+    	-moz-transform: scale(1.35);
+    	transform: scale(1.35);
+    	opacity: 0.0;
+    }
+    100% {
+    	-moz-transform: scale(0);
+    	transform: scale(0);
+    	opacity: 0;
+    }
+}
+
+@-ms-keyframes wave{
+    0% {
+    	-ms-transform: scale(0);
+    	transform: scale(0);
+    	opacity: 0;
+    }
+    10% {
+    	-ms-transform: scale(1.0);
+    	transform: scale(1.0);
+    	opacity: 0.6;
+    }
+    80% {
+    	-ms-transform: scale(1.35);
+    	transform: scale(1.35);
+    	opacity: 0.0;
+    }
+    100% {
+    	-ms-transform: scale(0);
+    	transform: scale(0);
+    	opacity: 0;
+    }
+}
+
+@keyframes wave{
+    0% {
+    	transform: scale(0);
+    	opacity: 0;
+    }
+    10% {
+    	transform: scale(1.0);
+    	opacity: 0.6;
+    }
+    80% {
+    	transform: scale(1.35);
+    	opacity: 0.0;
+    }
+    100% {
+    	transform: scale(0);
+    	opacity: 0;
+    }
+}
