@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load custom_filters %}
 {% block base_css %}
-<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/_home.css" />
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/_home.css?v={{MEDIA_VERSION}}" />
 {% block home_css %}{% endblock %}
 {% endblock %}
 
