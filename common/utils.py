@@ -207,6 +207,8 @@ def get_summary_from_html_by_sub(content, max_num=100):
     """
     @note: 通过内容获取摘要，采用替换标签的方式实现
     """
+    if content is None:
+        return content
     tag_s = re.compile('<.+?>')
     tag_e = re.compile('</\w+?>')
     content = tag_s.sub('', content)
@@ -244,7 +246,7 @@ def exec_command(command, timeout=25):
     import time
     import signal
     import shlex
-    
+
     start = datetime.datetime.now()
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while process.poll() is None:
@@ -261,4 +263,3 @@ def exec_command(command, timeout=25):
     import commands
     content = commands.getoutput(command)
     return True, content
-

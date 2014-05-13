@@ -39,7 +39,7 @@
 {% block topic_right %}
 <div class="bottom-border bdc-eee mb-25">
     <div class="f16 pb-10 fb">话题介绍</div>
-    <div class="">{{tag.des|default:'暂无话题介绍'}}</div>
+    <div class="">{{tag.des|default:'暂无话题介绍'|safe}}</div>
     <div class="blank10"></div>
 </div>
 

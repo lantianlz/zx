@@ -148,6 +148,13 @@ class Tag(models.Model):
     def get_tag_question_count(self):
         return TagQuestion.objects.filter(tag=self).count()
 
+    def get_summary(self):
+        """
+        @attention: 通过内容获取摘要
+        """
+        from common import utils
+        return utils.get_summary_from_html_by_sub(self.des, max_num=35)
+
 
 class TagQuestion(models.Model):
 
