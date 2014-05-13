@@ -50,7 +50,7 @@ $(document).ready(function(){
     $('#div_types .zx-radio').zxRadio();
 
     // 鼠标移动到图片淡入淡出效果
-    $('.img-fade-hover').imgFadeHover();
+    setTimeout(function(){$('.img-fade-hover').imgFadeHover();}, 1000);
 
     // 初始化分享答案事件
     $('.answer-share').toolbar({

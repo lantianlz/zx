@@ -26,16 +26,21 @@ urlpatterns = patterns('',
                        url(r'^p/(?P<user_id>\w+)/answers/?$', 'www.account.views.user_answers'),
                        url(r'^p/(?P<user_id>\w+)/following/?$', 'www.account.views.user_following'),
                        url(r'^p/(?P<user_id>\w+)/followers/?$', 'www.account.views.user_followers'),
+
+                       url(r'^account/', include('www.account.urls')),
+                       url(r'^question/', include('www.question.urls')),
+                       url(r'^message/', include('www.message.urls')),
+                       url(r'^timeline/', include('www.timeline.urls')),
+                       url(r'^admin/', include('www.admin.urls')),
+
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
-
-                       url(r'^account/', include('account.urls')),
-                       url(r'^question/', include('question.urls')),
-                       url(r'^message/', include('message.urls')),
-                       url(r'^timeline/', include('timeline.urls')),
-                       # url(r'^recommend/', include('recommend.urls')),
-
-                       url(r'^admin/', include('admin.urls')),
                        url(r'^500$', 'www.account.views.test500'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
                            {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
                        )
+
+urlpatterns += patterns('',
+                        url(r'^topic/(?P<tag_domain>\w+)$', 'www.question.views.topic_question'),
+                        url(r'^topics', 'www.question.views.topics'),
+                        url(r'^important/?$', 'www.question.views.important_question'),
+                        )

@@ -755,7 +755,7 @@ if (!String.format) {
                                     // 拼装话题
                                     $(data.topics).map(function(){
                                         return  String.format(
-                                            '<a class="border-block-blue ml-5 pl-5 pr-5" href="question/topic/{0}">{1}</a>', 
+                                            '<a class="border-block-blue ml-5 pl-5 pr-5" href="/topic/{0}">{1}</a>', 
                                             this['topic_id'], 
                                             this['topic_name']
                                         )
@@ -857,10 +857,10 @@ if (!String.format) {
             '<div class="topictips f12">',
                 '<div class="profile row f14">',
                     '<div class="col-md-3">',
-                        '<a href="/question/topic/{7}"><img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}"></a>',
+                        '<a href="/topic/{7}"><img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}"></a>',
                     '</div>',
                     '<div class="col-md-9">',
-                        '<div class="pt-10 pb-5"><a href="/question/topic/{7}">{1}</a></div>',
+                        '<div class="pt-10 pb-5"><a href="/topic/{7}">{1}</a></div>',
                         '<div class="question-info pt-5">',
                             '<span class="none">关注者<span class="pl-3 pr-15 fb">{2}</span></span>',
                             '<span>提问<span class="pl-3 pr-15 fb">{3}</span></span>',
