@@ -98,6 +98,8 @@ $(document).ready(function(){
     var ModifyView = Backbone.View.extend({
         el: '#modify_topic',
 
+        topicParentTextbox: null,
+
         initialize: function(){
 
         },
@@ -109,37 +111,21 @@ $(document).ready(function(){
 
         template: _.template($('#modify-topic-template').html()),
 
-        initTextboxList: function(){
-            var text_topics = new $.TextboxList('#topic_parent', {
-                bitsOptions: {
-                    box: {deleteButton: true}
-                },
-                unique: true, 
-                max: 1,
-                plugins: {
-                    autocomplete: {
-                        minLength: 1, // 最小字符
-                        queryRemote: true, // 远程查询
-                        placeholder: '设置父话题',
-                        highlight: false,
-                        onlyFromValues: true, // 是否默认选中第一个结果
-                        remote: {
-                            url: '/question/get_topic_info_by_name', 
-                            param: 'topic_name',
-                            loadPlaceholder: '正在加载...',
-                        }
-                    }
-                }
-
-            });
-
-            return text_topics;
-        },
-
         // 渲染方法
         render: function(data){
             this.$el.html(this.template(data));
-            this.initTextboxList();
+
+            this.topicParentTextbox = $.ZXTextboxList.create('#topic_parent', {
+                max: 1,
+                placeholder: '设置父话题',
+                url: '/',
+                param: 'topic_name',
+                postName: 'topic_id',
+                loadPlaceholder: '正在加载...'
+            });
+            
+            this.topicParentTextbox.add(data.topicName, data.topicId);
+            
         },
 
         // 显示面板
@@ -155,7 +141,7 @@ $(document).ready(function(){
         },
 
         saveTopic: function(){
-
+            
             console.log('保存修改');
         },
 
@@ -267,25 +253,27 @@ $(document).ready(function(){
             <label class="col-sm-2 control-label">话题ID</label>
             <div class="col-sm-6">
                 <p class="form-control-static"><%= topicId %></p>
+                <input type="hidden" name="topicId" value="<%= topicId %>" />
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">所属父话题</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" id="topic_parent" value='<%= parentName %>'>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="topic_parent">
+
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">话题图片</label>
             <div class="col-sm-6">
                 <img class="avatar-65 avatar-circle mb-10" src="<%= topicImg %>" />
-                <input type="file" />
+                <input name="img" type="file" />
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">话题名称</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" value='<%= topicName %>'>
+                <input type="text" name="name" class="form-control" value='<%= topicName %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -297,7 +285,7 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">话题排序</label>
             <div class="col-sm-2">
-                <input type="text" class="form-control" value='<%= topicSort %>'>
+                <input type="text" name="sort" class="form-control" value='<%= topicSort %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

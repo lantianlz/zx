@@ -1078,6 +1078,53 @@ if (!String.format) {
             this.$el.html(pageHtml);
         }
     });
+
+
+    /*
+        文本框组件
+    */
+    $.ZXTextboxList = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '文本框组件'
+    }
+    /**/
+    $.ZXTextboxList.create = function(selector, options){
+        var temp = new $.TextboxList(selector, {
+            bitsOptions: {
+                box: {deleteButton: true}
+            },
+            unique: true, 
+            max: options.max,
+            plugins: {
+                autocomplete: {
+                    minLength: 1, // 最小字符
+                    queryRemote: true, // 远程查询
+                    placeholder: options.placeholder,
+                    highlight: false,
+                    onlyFromValues: true, // 是否默认选中第一个结果
+                    remote: {
+                        url: options.url, 
+                        param: options.param,
+                        loadPlaceholder: options.loadPlaceholder,
+                    }
+                }
+            }
+
+        });
+
+        return {
+            target: temp,
+            add: function(name, value){
+                temp.add(name, value)
+            },
+            getValues: function(){
+                return _.map(temp.getValues(), function(v){return v[0]});
+            }
+        };
+    }
+
+
 })(jQuery);
 
 
