@@ -1049,7 +1049,7 @@ if (!String.format) {
             var url = searchUrl || this.searchUrl,
                 pageHtml = '',
                 pages = this._generateRange(pageIndex, pageCount);
-            console.log(pageIndex, pageCount, searchUrl, pages)
+            
             for (var i = 0; i < pages.length; i++) {
 
                 pageHtml += String.format(

@@ -22,7 +22,8 @@ $(document).ready(function(){
             'answerCount': 0,
             'likeCount': 0,
             'followers': 0,
-            'following': 0
+            'following': 0,
+            'sort': 0
         }
     });
 
@@ -47,7 +48,8 @@ $(document).ready(function(){
                 'answerCount': 12,
                 'likeCount': 22,
                 'followers': 25,
-                'following': 28
+                'following': 28,
+                'sort': 2
             }, {
                 'userId': '2',
                 'userAvatar': '/static/img/common/user4.png',
@@ -57,7 +59,8 @@ $(document).ready(function(){
                 'answerCount': 122,
                 'likeCount': 222,
                 'followers': 252,
-                'following': 228
+                'following': 228,
+                'sort': 3
             }]);
 
             return this;
@@ -77,7 +80,8 @@ $(document).ready(function(){
                 'answerCount': 12,
                 'likeCount': 22,
                 'followers': 25,
-                'following': 28
+                'following': 28,
+                'sort': 5
             }, {
                 'userId': '2',
                 'userAvatar': '/static/img/common/user2.jpg',
@@ -87,10 +91,17 @@ $(document).ready(function(){
                 'answerCount': 122,
                 'likeCount': 222,
                 'followers': 252,
-                'following': 228
+                'following': 228,
+                'sort': 8
             }]);
 
             return this;
+        },
+
+        // 保存排序
+        saveSort: function(userId, sort){
+            console.log('修改',userId,'的顺序为',sort);
+            this.search();
         }
     });
 
@@ -127,11 +138,6 @@ $(document).ready(function(){
             $('.zx-nav-pills a[href="#user_list"]').tab('show');
         },
 
-        // 获取过滤的查询条件
-        getKeyWord: function(){
-            return this.$('#hid_key_word').val();
-        },
-
         // 推荐
         suggest: function(sender){
             var target = $(sender.currentTarget),
@@ -162,7 +168,9 @@ $(document).ready(function(){
         template: _.template($('#suggest-user-template').html()),
 
         events: {
-            'click .unSuggest': 'unSuggest'
+            'click .unSuggest': 'unSuggest',
+            'dblclick .editSort': 'editSort',
+            'blur .editSort': 'saveSort'
         },
 
         initialize: function(){
@@ -188,6 +196,31 @@ $(document).ready(function(){
                     target.parents('tr').remove();
                 }
             });
+        },
+
+        // 编辑顺序
+        editSort: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id');
+
+            target.find('span').hide();
+            target.find('input').show().focus();
+        },
+
+        // 保存顺序
+        saveSort: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id'),
+                sort = target.find('input').val(),
+                originSort = target.find('span').html();
+
+            // 如果有修改
+            if(originSort != sort){
+                this.collection.saveSort(userId, sort);
+            }
+            
+            target.find('span').show();
+            target.find('input').hide();
         }
     });
 
@@ -242,6 +275,7 @@ $(document).ready(function(){
                     <th>用户名称</th>
                     <th>用户简介</th>
                     <th>用户统计信息</th>
+                    <th>排序</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -298,6 +332,10 @@ $(document).ready(function(){
             <span class="fb fi pr-3"><%= suggestUser.likeCount %></span>获赞 |
             <span class="fb fi pr-3"><%= suggestUser.followers %></span>粉丝 |
             <span class="fb fi pr-3"><%= suggestUser.following %></span>关注
+        </td>
+        <td class="editSort" data-user_id="<%= suggestUser.userId %>">
+            <span><%= suggestUser.sort %></span>
+            <input class="w40 none" type="text" value="<%= suggestUser.sort %>" />
         </td>
         <td>
             <button class="btn btn-xs btn-default unSuggest" data-user_id="<%= suggestUser.userId %>">取消推荐用户</button>
