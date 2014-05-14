@@ -8,28 +8,27 @@ from django.conf import settings
 
 from common import utils, debug, validators, cache
 from www.misc.decorators import cache_required
+from www.misc import consts
 from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount, RecommendUser
 from www.message.interface import UnreadCountBase
 
 dict_err = {
-    100: u'邮箱重复',
-    101: u'昵称重复',
-    102: u'手机号重复',
-    103: u'被逮到了，无效的性别值',
-    104: u'这么奇葩的生日怎么可能',
-    105: u'两次输入密码不相同',
-    106: u'当前密码错误',
-    107: u'新密码和老密码不能相同',
-    108: u'登陆密码验证失败',
-    109: u'新邮箱和老邮箱不能相同',
-    110: u'邮箱验证码错误或者已过期，请重新验证',
-    111: u'该邮箱尚未注册',
-    112: u'code已失效，请重新执行重置密码操作',
-
-    998: u'参数缺失',
-    999: u'系统错误',
-    000: u'成功'
+    10100: u'邮箱重复',
+    10101: u'昵称重复',
+    10102: u'手机号重复',
+    10103: u'被逮到了，无效的性别值',
+    10104: u'这么奇葩的生日怎么可能',
+    10105: u'两次输入密码不相同',
+    10106: u'当前密码错误',
+    10107: u'新密码和老密码不能相同',
+    10108: u'登陆密码验证失败',
+    10109: u'新邮箱和老邮箱不能相同',
+    10110: u'邮箱验证码错误或者已过期，请重新验证',
+    10111: u'该邮箱尚未注册',
+    10112: u'code已失效，请重新执行重置密码操作',
 }
+dict_err.update(consts.G_DICT_ERROR)
+
 ACCOUNT_DB = settings.ACCOUNT_DB
 
 
@@ -106,17 +105,17 @@ class UserBase(object):
             return False, smart_unicode(e)
 
         if self.get_user_by_email(email):
-            return False, dict_err.get(100)
+            return False, dict_err.get(10100)
         if self.get_user_by_nick(nick):
-            return False, dict_err.get(101)
+            return False, dict_err.get(10101)
         if self.get_user_by_mobilenumber(mobilenumber):
-            return False, dict_err.get(102)
-        return True, dict_err.get(000)
+            return False, dict_err.get(10102)
+        return True, dict_err.get(0)
 
     def check_gender(self, gender):
         if not str(gender) in ('0', '1', '2'):
-            return False, dict_err.get(103)
-        return True, dict_err.get(000)
+            return False, dict_err.get(10103)
+        return True, dict_err.get(0)
 
     def check_birthday(self, birthday):
         try:
@@ -124,8 +123,8 @@ class UserBase(object):
             now = datetime.datetime.now()
             assert (now + datetime.timedelta(days=100 * 365)) > birthday > (now - datetime.timedelta(days=100 * 365))
         except:
-            return False, dict_err.get(104)
-        return True, dict_err.get(000)
+            return False, dict_err.get(10104)
+        return True, dict_err.get(0)
 
     @transaction.commit_manually(using=ACCOUNT_DB)
     def regist_user(self, email, nick, password, ip, mobilenumber=None, username=None,
@@ -136,7 +135,7 @@ class UserBase(object):
         try:
             if not (email and nick and password):
                 transaction.rollback(using=ACCOUNT_DB)
-                return False, dict_err.get(998)
+                return False, dict_err.get(99800)
 
             flag, result = self.check_user_info(email, nick, password, mobilenumber)
             if not flag:
@@ -170,7 +169,7 @@ class UserBase(object):
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=ACCOUNT_DB)
-            return False, dict_err.get(999)
+            return False, dict_err.get(99900)
 
     def get_user_by_external_info(self, source, access_token, external_user_id,
                                   refresh_token, nick, ip, expire_time,
@@ -234,7 +233,7 @@ class UserBase(object):
         '''
         user_id = user.id
         if not (user_id and nick and gender and birthday):
-            return False, dict_err.get(998)
+            return False, dict_err.get(99800)
 
         try:
             validators.vnick(nick)
@@ -242,7 +241,7 @@ class UserBase(object):
             return False, smart_unicode(e)
 
         if user.nick != nick and self.get_user_by_nick(nick):
-            return False, dict_err.get(101)
+            return False, dict_err.get(10101)
 
         flag, result = self.check_gender(gender)
         if not flag:
@@ -268,14 +267,14 @@ class UserBase(object):
         @note: 密码修改
         '''
         if not all((old_password, new_password_1, new_password_2)):
-            return False, dict_err.get(998)
+            return False, dict_err.get(99800)
 
         if new_password_1 != new_password_2:
-            return False, dict_err.get(105)
+            return False, dict_err.get(10105)
         if not self.check_password(old_password, user.password):
-            return False, dict_err.get(106)
+            return False, dict_err.get(10106)
         if old_password == new_password_1:
-            return False, dict_err.get(107)
+            return False, dict_err.get(10107)
         try:
             validators.vpassword(new_password_1)
         except Exception, e:
@@ -284,20 +283,20 @@ class UserBase(object):
         user_login = self.get_user_login_by_id(user.id)
         user_login.password = self.set_password(new_password_1)
         user_login.save()
-        return True, dict_err.get(000)
+        return True, dict_err.get(0)
 
     def change_email(self, user, email, password):
         '''
         @note: 邮箱修改
         '''
         if not all((email, password)):
-            return False, dict_err.get(998)
+            return False, dict_err.get(99800)
 
         if not self.check_password(password, user.password):
-            return False, dict_err.get(108)
+            return False, dict_err.get(10108)
 
         if user.email == email:
-            return False, dict_err.get(109)
+            return False, dict_err.get(10109)
 
         try:
             validators.vemail(email)
@@ -305,14 +304,14 @@ class UserBase(object):
             return False, smart_unicode(e)
 
         if user.email != email and self.get_user_by_email(email):
-            return False, dict_err.get(100)
+            return False, dict_err.get(10100)
 
         user_login = self.get_user_login_by_id(user.id)
         user_login.email = email
         user_login.save()
 
         # todo发送验证邮件
-        return True, dict_err.get(000)
+        return True, dict_err.get(0)
 
     def send_confirm_email(self, user):
         '''
@@ -338,14 +337,14 @@ class UserBase(object):
         @note: 确认邮箱
         '''
         if not code:
-            return False, dict_err.get(998)
+            return False, dict_err.get(99800)
 
         cache_obj = cache.Cache()
         key = u'confirm_email_code_%s' % user.id
         cache_code = cache_obj.get(key)
 
         if cache_code != code:
-            return False, dict_err.get(110)
+            return False, dict_err.get(10110)
 
         user.email_verified = True
         user.save()
@@ -356,11 +355,11 @@ class UserBase(object):
         @note: 发送密码找回邮件
         '''
         if not email:
-            return False, dict_err.get(998)
+            return False, dict_err.get(99800)
 
         user = self.get_user_by_email(email)
         if not user:
-            return False, dict_err.get(111)
+            return False, dict_err.get(10111)
         cache_obj = cache.Cache()
         key = u'forget_password_email_code_%s' % email
         code = cache_obj.get(key)
@@ -378,7 +377,7 @@ class UserBase(object):
 
             async_send_email(email, u'智选找回密码',
                              utils.render_email_template('email/reset_password.html', context), 'html')
-        return True, dict_err.get(000)
+        return True, dict_err.get(0)
 
     def get_user_by_code(self, code):
         cache_obj = cache.Cache()
@@ -387,10 +386,10 @@ class UserBase(object):
     def reset_password_by_code(self, code, new_password_1, new_password_2):
         user = self.get_user_by_code(code)
         if not user:
-            return False, dict_err.get(112)
+            return False, dict_err.get(10112)
 
         if new_password_1 != new_password_2:
-            return False, dict_err.get(105)
+            return False, dict_err.get(10105)
         try:
             validators.vpassword(new_password_1)
         except Exception, e:

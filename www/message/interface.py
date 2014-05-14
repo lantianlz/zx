@@ -4,16 +4,14 @@ import json
 
 from common import utils, cache
 from www.misc.decorators import cache_required
+from www.misc import consts
 from www.message.models import UnreadCount, UnreadType, Notice
 
 
 dict_err = {
-    100: u'',
-
-    998: u'参数缺失',
-    999: u'系统错误',
-    000: u'成功'
+    40100: u'',
 }
+dict_err.update(consts.G_DICT_ERROR)
 
 
 class UnreadCountBase(object):
