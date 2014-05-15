@@ -31,12 +31,10 @@ def get_user_timeline(request):
 @member_required
 @common_ajax_response
 def follow_people(request, to_user_id):
-    errcode, errmsg = ufb.follow_people(request.user.id, to_user_id)
-    return errcode, errmsg
+    return ufb.follow_people(request.user.id, to_user_id)
 
 
 @member_required
 @common_ajax_response
 def unfollow_people(request, to_user_id):
-    errcode, errmsg = ufb.unfollow_people(request.user.id, to_user_id)
-    return errcode, errmsg
+    return ufb.unfollow_people(request.user.id, to_user_id)

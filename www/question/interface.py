@@ -40,7 +40,7 @@ def question_required(func):
             try:
                 question = Question.objects.get(id=question_id_or_object, state=True)
             except Question.DoesNotExist:
-                return False, dict_err.get(20800)
+                return 20800, dict_err.get(20800)
         return func(self, question, *args, **kwargs)
     return _decorator
 
@@ -49,7 +49,7 @@ def question_admin_required(func):
     def _decorator(self, question, user, *args, **kwargs):
         flag, question = QuestionBase().get_question_admin_permission(question, user)
         if not flag:
-            return False, dict_err.get(20802)
+            return 20802, dict_err.get(20802)
         return func(self, question, user, *args, **kwargs)
     return _decorator
 
@@ -61,7 +61,7 @@ def answer_required(func):
             try:
                 answer = Answer.objects.select_related('question').get(id=answer_id_or_object, state=True)
             except Answer.DoesNotExist:
-                return False, dict_err.get(20801)
+                return 20801, dict_err.get(20801)
         return func(self, answer, *args, **kwargs)
     return _decorator
 
@@ -70,7 +70,7 @@ def answer_admin_required(func):
     def _decorator(self, answer, user, *args, **kwargs):
         flag, answer = AnswerBase().get_answer_admin_permission(answer, user)
         if not flag:
-            return False, dict_err.get(20802)
+            return 20802, dict_err.get(20802)
         return func(self, answer, user, *args, **kwargs)
     return _decorator
 
@@ -88,31 +88,31 @@ class QuestionBase(object):
 
     def validate_title(self, title):
         if len(title) < 10:
-            return False, dict_err.get(20100)
+            return 20100, dict_err.get(20100)
         if len(title) > 128:
-            return False, dict_err.get(20101)
-        return True, dict_err.get(0)
+            return 20101, dict_err.get(20101)
+        return 0, dict_err.get(0)
 
     def validate_content(self, content, min_len=10):
         if len(content) < min_len:
-            return False, dict_err.get(20102)
+            return 20102, dict_err.get(20102)
         if len(content) > 65535:
-            return False, dict_err.get(20103)
-        return True, dict_err.get(0)
+            return 20103, dict_err.get(20103)
+        return 0, dict_err.get(0)
 
     def validata_question_element(self, question_type, question_title, question_content):
-        flag, result = self.validate_title(question_title)
-        if not flag:
-            return False, result
+        errcode, errmsg = self.validate_title(question_title)
+        if not errcode == 0:
+            return errcode, errmsg
 
-        flag, result = self.validate_content(question_content, min_len=2)
-        if not flag:
-            return False, result
+        errcode, errmsg = self.validate_content(question_content, min_len=2)
+        if not errcode == 0:
+            return errcode, errmsg
 
         if not all((int(question_type), question_title, question_content)):
-            return False, dict_err.get(99800)
+            return 99800, dict_err.get(99800)
 
-        return True, dict_err.get(0)
+        return 0, dict_err.get(0)
 
     @transaction.commit_manually(using=QUESTION_DB)
     def create_question(self, user_id, question_type, question_title, question_content,
@@ -122,11 +122,10 @@ class QuestionBase(object):
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            flag, result = self.validata_question_element(question_type, question_title, question_content)
-            transaction.rollback(using=QUESTION_DB)
-            if not flag:
+            errcode, errmsg = self.validata_question_element(question_type, question_title, question_content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             question = Question.objects.create(user_id=user_id, question_type_id=question_type,
                                                title=question_title, content=question_content,
@@ -147,11 +146,11 @@ class QuestionBase(object):
             FeedBase().create_feed(user_id, feed_type=1, obj_id=question.id)
 
             transaction.commit(using=QUESTION_DB)
-            return True, question
+            return 0, question
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     @question_admin_required
     @transaction.commit_manually(using=QUESTION_DB)
@@ -162,10 +161,10 @@ class QuestionBase(object):
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            flag, result = self.validata_question_element(question_type, question_title, question_content)
-            if not flag:
+            errcode, errmsg = self.validata_question_element(question_type, question_title, question_content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             question.question_type_id = question_type
             question.title = question_title
@@ -188,11 +187,11 @@ class QuestionBase(object):
                         pass
 
             transaction.commit(using=QUESTION_DB)
-            return True, question
+            return 0, question
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     def add_question_view_count(self, question_id):
         '''
@@ -211,11 +210,11 @@ class QuestionBase(object):
             UserCountBase().update_user_count(user_id=question.user_id, code='user_question_count', operate='minus')
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(0)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     def get_question_by_user_id(self, user_id):
         return Question.objects.filter(user_id=user_id, state=True)
@@ -263,13 +262,13 @@ class QuestionBase(object):
     def set_important(self, question, user):
         question.is_important = True
         question.save()
-        return True, dict_err.get(0)
+        return 0, dict_err.get(0)
 
     @question_required
     def cancel_important(self, question, user):
         question.is_important = False
         question.save()
-        return True, dict_err.get(0)
+        return 0, dict_err.get(0)
 
     @cache_required(cache_key='question_summary_%s', expire=3600)
     def get_question_summary_by_id(self, question_id, must_update_cache=False):
@@ -309,12 +308,12 @@ class AnswerBase(object):
             content = utils.filter_script(content)
             if not all((question, from_user_id, content)):
                 transaction.rollback(using=QUESTION_DB)
-                return False, dict_err.get(99800)
+                return 99800, dict_err.get(99800)
 
-            flag, result = QuestionBase().validate_content(content)
-            if not flag:
+            errcode, errmsg = QuestionBase().validate_content(content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             to_user_id = question.user_id
             answer = Answer.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, content=content,
@@ -347,11 +346,11 @@ class AnswerBase(object):
             FeedBase().create_feed(from_user_id, feed_type=3, obj_id=answer.id)
 
             transaction.commit(using=QUESTION_DB)
-            return True, answer
+            return 0, answer
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     @answer_admin_required
     def modify_answer(self, answer, user, content):
@@ -359,20 +358,20 @@ class AnswerBase(object):
             content = utils.filter_script(content)
             if not content:
                 transaction.rollback(using=QUESTION_DB)
-                return False, dict_err.get(99800)
+                return 99800, dict_err.get(99800)
 
-            flag, result = QuestionBase().validate_content(content)
-            if not flag:
+            errcode, errmsg = QuestionBase().validate_content(content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             answer.content = content
             answer.save()
 
-            return True, answer
+            return 0, answer
         except Exception, e:
             debug.get_debug_detail(e)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     def get_answers_by_question_id(self, question_id):
         return Answer.objects.select_related('question').filter(question=question_id, state=True)
@@ -417,11 +416,11 @@ class AnswerBase(object):
             UserCountBase().update_user_count(user_id=answer.from_user_id, code='user_answer_count', operate='minus')
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(0)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     @answer_required
     @transaction.commit_manually(using=QUESTION_DB)
@@ -429,7 +428,7 @@ class AnswerBase(object):
         try:
             if AnswerBad.objects.filter(answer=answer, user_id=user.id):
                 transaction.rollback(using=QUESTION_DB)
-                return False, dict_err.get(20106)
+                return 20106, dict_err.get(20106)
 
             AnswerBad.objects.create(answer=answer, user_id=user.id)
             if user.is_staff() or AnswerBad.objects.filter(answer=answer).count() >= 9:
@@ -437,11 +436,11 @@ class AnswerBase(object):
                 answer.save()
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(0)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     @answer_required
     @transaction.commit_manually(using=QUESTION_DB)
@@ -453,11 +452,11 @@ class AnswerBase(object):
                 answer.save()
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(0)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(99900)
+            return 99900, dict_err.get(99900)
 
     def get_answer_by_id(self, id, need_state=True):
         try:
@@ -513,19 +512,19 @@ class LikeBase(object):
             if from_user_id:
                 if Like.objects.filter(from_user_id=from_user_id, answer=answer):
                     transaction.rollback(QUESTION_DB)
-                    return False, dict_err.get(20104)
+                    return 20104, dict_err.get(20104)
             else:
                 from_user_id = ''
                 is_anonymous = False
                 if Like.objects.filter(ip=ip, answer=answer):
                     transaction.rollback(QUESTION_DB)
-                    return False, dict_err.get(20104)
+                    return 20104, dict_err.get(20104)
 
             # 不支持自赞
             to_user_id = answer.from_user_id
             if from_user_id == to_user_id:
                 transaction.rollback(QUESTION_DB)
-                return False, dict_err.get(20105)
+                return 20105, dict_err.get(20105)
 
             Like.objects.create(answer=answer, question=answer.question, is_anonymous=is_anonymous,
                                 from_user_id=from_user_id, to_user_id=to_user_id, ip=ip)
@@ -542,11 +541,11 @@ class LikeBase(object):
             FeedBase().create_feed(from_user_id, feed_type=2, obj_id=answer.id)
 
             transaction.commit(QUESTION_DB)
-            return True, dict_err.get(0)
+            return 0, dict_err.get(0)
         except Exception, e:
-            logging.error(debug.get_debug_detail(e))
+            debug.get_debug_detail(e)
             transaction.rollback(QUESTION_DB)
-            return False, str(e)
+            return 99900, dict_err.get(99900)
 
     def get_likes_by_question(self, question, user_id=None, ip=None):
         '''

@@ -23,8 +23,8 @@ def main():
     lb = interface.LikeBase()
     ab = interface.AnswerBase()
 
-    # flag, result = lb.like_it(7, from_user_id=user_id, ip='127.0.0.1')
-    # flag, result = ab.remove_answer(41, user)
+    # lb.like_it(7, from_user_id=user_id, ip='127.0.0.1')
+    # ab.remove_answer(41, user)
     print ab.get_answer_summary_by_id(1)
 
 

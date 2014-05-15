@@ -15,6 +15,6 @@ def config(request):
     """
     return {
         'DEBUG': settings.DEBUG,
-        'MEDIA_VERSION': '002',
+        'MEDIA_VERSION': '003',
         # 'MEDIA_URL':settings.MEDIA_URL,
     }

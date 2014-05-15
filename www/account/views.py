@@ -72,9 +72,9 @@ def regist(request, invitation_code=None, template_name='account/regist.html'):
     if not invitation:
         return HttpResponse(u'网站内测中，只能通过邀请注册，邀请码获取可以联系QQ: 2659790310')
     if request.POST:
-        flag, result = ub.regist_user(email, nick, password, ip=utils.get_clientip(request),
-                                      invitation_code=request.session.get('invitation_code'))
-        if flag:
+        errcode, result = ub.regist_user(email, nick, password, ip=utils.get_clientip(request),
+                                         invitation_code=request.session.get('invitation_code'))
+        if errcode == 0:
             user = auth.authenticate(username=email, password=password)
             auth.login(request, user=user)
             next_url = request.session.get('next_url') or '/home'
@@ -88,8 +88,8 @@ def regist(request, invitation_code=None, template_name='account/regist.html'):
 def forget_password(request, template_name='account/forget_password.html'):
     if request.POST:
         email = request.POST.get('email')
-        flag, result = ub.send_forget_password_email(email)
-        if not flag:
+        errcode, result = ub.send_forget_password_email(email)
+        if errcode != 0:
             error_msg = result
         else:
             success_msg = u'找回密码邮件已经发送，请登录邮箱后操作'
@@ -110,8 +110,8 @@ def reset_password(request, template_name='account/reset_password.html'):
         new_password_1 = request.POST.get('new_password_1')
         new_password_2 = request.POST.get('new_password_2')
         code = request.session['reset_password_code']
-        flag, result = ub.reset_password_by_code(code, new_password_1, new_password_2)
-        if not flag:
+        errcode, result = ub.reset_password_by_code(code, new_password_1, new_password_2)
+        if errcode != 0:
             error_msg = result
         else:
             success_msg = u'密码修改成功，请重新登录'
@@ -229,8 +229,8 @@ def user_settings(request, template_name='account/change_profile.html'):
         birthday = request.POST.get('birthday')
         des = request.POST.get('des')
 
-        flag, result = ub.change_profile(request.user, nick, gender, birthday, des)
-        if not flag:
+        errcode, result = ub.change_profile(request.user, nick, gender, birthday, des)
+        if errcode != 0:
             error_msg = result
         else:
             success_msg = u'修改资料成功'
@@ -245,8 +245,8 @@ def change_pwd(request, template_name='account/change_pwd.html'):
         new_password_1 = request.POST.get('new_password_1')
         new_password_2 = request.POST.get('new_password_2')
 
-        flag, result = ub.change_pwd(request.user, old_password, new_password_1, new_password_2)
-        if not flag:
+        errcode, result = ub.change_pwd(request.user, old_password, new_password_1, new_password_2)
+        if errcode != 0:
             error_msg = result
         else:
             success_msg = u'密码修改成功'
@@ -259,8 +259,8 @@ def change_email(request, template_name='account/change_email.html'):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        flag, result = ub.change_email(request.user, email, password)
-        if not flag:
+        errcode, result = ub.change_email(request.user, email, password)
+        if errcode != 0:
             error_msg = result
         else:
             success_msg = u'邮箱修改成功'
@@ -275,8 +275,8 @@ def verify_email(request, template_name='account/change_email.html'):
         ub.send_confirm_email(request.user)
         success_msg = u'验证邮件发送成功，请登陆邮箱操作'
     else:
-        flag, result = ub.check_email_confim_code(request.user, code)
-        if flag:
+        errcode, result = ub.check_email_confim_code(request.user, code)
+        if errcode == 0:
             request.user = result
             success_msg = u'邮箱验证成功'
         else:

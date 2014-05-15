@@ -256,14 +256,14 @@ $(document).ready(function(){
                         "/question/remove_question", 
                         {'question_id': questionId},
                         function(data){
-                            if (data['flag'] == '0') {
+                            if (data['errcode'] == '0') {
                                 $.ZXMsg.alert('提示', '操作成功!页面即将刷新', 2000);
                                 window.setTimeout(function(){
                                     window.location = '/question';
                                 }, 3000)
                                 
                             } else {
-                                $.ZXMsg.alert('提示', data['result']);
+                                $.ZXMsg.alert('提示', data['errmsg']);
                             }
                         } 
                     );
@@ -352,8 +352,8 @@ $(document).ready(function(){
                 "/question/like_answer", 
                 {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
                 function(data){
-                    if(data['flag'] != '0'){
-                        $.ZXMsg.alert('提示', data['result']);
+                    if(data['errcode'] != '0'){
+                        $.ZXMsg.alert('提示', data['errmsg']);
                         return;
                     }
 
