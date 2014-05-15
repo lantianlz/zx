@@ -4,19 +4,13 @@ import datetime
 from django.db import models
 from django.conf import settings
 
-from www.account import const
-
 
 class User(models.Model):
 
     '''
     用户类
     '''
-    state_choices = (
-        (const.INVALID_USER, u'无效用户'),
-        (const.VALID_USER, u'有效用户'),
-        (const.INTERNAL_MEMBER, u'内部成员'),
-    )
+    state_choices = ((0, u'无效用户'), (1, u'有效用户'), (2, u'内部成员'), )
 
     auto_id = models.AutoField(primary_key=True)
     id = models.CharField(max_length=32, unique=True)
@@ -29,7 +23,7 @@ class User(models.Model):
     create_time = models.DateTimeField(verbose_name=u'创建时间', db_index=True, default=datetime.datetime.now)
 
     def is_staff(self):
-        return self.state in (const.INTERNAL_MEMBER, )
+        return self.state in (2, )
 
     def __unicode__(self):
         return '%s, %s' % (self.id, self.email)
@@ -40,11 +34,7 @@ class Profile(models.Model):
     '''
     用户扩展信息
     '''
-    gender_choices = (
-        (const.UNKNOWN, u'未设置'),
-        (const.MALE, u'男'),
-        (const.FEMALE, u'女'),
-    )
+    gender_choices = ((0, u'未设置'), (1, u'男'), (2, u'女'), )
     source_choices = ((0, u'web'), (1, u'weibo'))
 
     auto_id = models.AutoField(primary_key=True)
@@ -63,7 +53,7 @@ class Profile(models.Model):
 
     def is_staff(self):
         # 从user移植过来避免cPickle的dumps报错
-        return self.state in (const.INTERNAL_MEMBER, )
+        return self.state in (2, )
 
     def is_authenticated(self):
         return True
@@ -106,11 +96,7 @@ class Profile(models.Model):
 
 
 class UserChangeLog(models.Model):
-    change_type_choices = (
-        (const.PASSWORD, u'密码'),
-        (const.EMAIL, u'邮箱'),
-        (const.MOBILE, u'手机'),
-    )
+    change_type_choices = ((0, u'密码'), (1, u'邮箱'), (2, u'手机'), )
 
     change_type = models.IntegerField(verbose_name=u'变更类型', choices=change_type_choices)
     befor = models.CharField(verbose_name=u'变更前', max_length=64, db_index=True)
