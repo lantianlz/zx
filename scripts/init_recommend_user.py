@@ -28,7 +28,10 @@ def init_recommend_user():
             print (u'%s does not exist' % nick).encode('utf8')
     # user_ids = [u.id for u in User.objects.all()[:50]]
     # for user_id in user_ids:
-    #     RecommendUser.objects.create(user_id=user_id)
+    #     try:
+    #         RecommendUser.objects.create(user_id=user_id)
+    #     except:
+    #         pass
 
     print 'ok'
 
