@@ -5,8 +5,12 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('www.admin.views',
                        url(r'^$', 'home'),
-                       url(r'^question$', 'question'),
-                       url(r'^important_question$', 'important_question'),
-                       url(r'^suggest_user$', 'suggest_user'),
-                       url(r'^topic$', 'topic'),
                        )
+
+
+urlpatterns += patterns('www.admin.views_recommend_user',
+
+                        url(r'^recommend_user/set_recommend_user_sort$', 'set_recommend_user_sort'),
+                        url(r'^recommend_user/get_all_recommend_users$', 'get_all_recommend_users'),
+                        url(r'^recommend_user$', 'recommend_user'),
+                        )

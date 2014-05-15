@@ -67,41 +67,42 @@ $(document).ready(function(){
         }
     });
 
-    var SuggestUsers = Backbone.Collection.extend({
+    var RecommendUsers = Backbone.Collection.extend({
         model: User,
 
-        search: function(){
-            this.reset([{
-                'userId': '1',
-                'userAvatar': '/static/img/common/user1.jpg',
-                'userNick': '半夜没事瞎溜达',
-                'userDesc': '这是简介111',
-                'questionCount': 123,
-                'answerCount': 12,
-                'likeCount': 22,
-                'followers': 25,
-                'following': 28,
-                'sort': 5
-            }, {
-                'userId': '2',
-                'userAvatar': '/static/img/common/user2.jpg',
-                'userNick': '随便弄弄',
-                'userDesc': '这是简介222',
-                'questionCount': 1223,
-                'answerCount': 122,
-                'likeCount': 222,
-                'followers': 252,
-                'following': 228,
-                'sort': 8
-            }]);
+        _modelMaps: {
+            'userId': 'user_id',
+            'userAvatar': 'user_avatar',
+            'userNick': 'user_nick',
+            'userDesc': 'user_des',
+            'questionCount': 'question_count',
+            'answerCount': 'answer_count',
+            'likeCount': 'liked_count',
+            'followers': 'follower_count',
+            'following': 'following_count',
+            'sort': 'sort_num'
+        },
 
-            return this;
+        search: function(){
+            var me = this;
+
+            ajaxSend("/admin/recommend_user/get_all_recommend_users", {}, function(data){
+                me.reset($.ZXUtils.dictMapParse(data, me._modelMaps));
+            });
+
         },
 
         // 保存排序
-        saveSort: function(userId, sort){
-            console.log('修改',userId,'的顺序为',sort);
-            this.search();
+        saveSort: function(userId, sort, callback){
+            ajaxSend(
+                "/admin/recommend_user/set_recommend_user_sort", {
+                    'user_id': userId,
+                    'sort_num': sort
+                }, function(data){
+                    callback(data);
+                }
+            );
+            
         }
     });
 
@@ -113,7 +114,7 @@ $(document).ready(function(){
         template: _.template($('#user-template').html()),
 
         events: {
-            'click .suggest': 'suggest',
+            'click .recommend': 'recommend',
             'click .search-user': 'searchUser'
         },
 
@@ -139,7 +140,7 @@ $(document).ready(function(){
         },
 
         // 推荐
-        suggest: function(sender){
+        recommend: function(sender){
             var target = $(sender.currentTarget),
                 userId = target.data('user_id');
 
@@ -161,14 +162,14 @@ $(document).ready(function(){
         }
 
     });
-    var SuggestUsersView = Backbone.View.extend({
+    var RecommendUsersView = Backbone.View.extend({
 
-        el: '#suggest_user_list',
+        el: '#recommend_user_list',
 
-        template: _.template($('#suggest-user-template').html()),
+        template: _.template($('#recommend-user-template').html()),
 
         events: {
-            'click .unSuggest': 'unSuggest',
+            'click .unRecommend': 'unRecommend',
             'dblclick .editSort': 'editSort',
             'blur .editSort': 'saveSort'
         },
@@ -180,11 +181,11 @@ $(document).ready(function(){
         render: function(){
             var data = this.collection.toJSON();
             
-            this.$el.find('tbody').html(this.template({'suggestUsers': data}));
+            this.$el.find('tbody').html(this.template({'recommendUsers': data}));
         },
 
         // 取消推荐
-        unSuggest: function(sender){
+        unRecommend: function(sender){
             var target = $(sender.currentTarget),
                 userId = target.data('user_id');
                 
@@ -226,13 +227,13 @@ $(document).ready(function(){
 
     var UserRouter = Backbone.Router.extend({
         routes: {
-            "":                                     "searchSuggestUser",
+            "":                                     "searchRecommendUser",
             "searchUser/(:userNick)/:pageIndex":    "searchUser"
         },
 
         // 获取推荐用户
-        searchSuggestUser: function(){
-            suggestUsers.search();
+        searchRecommendUser: function(){
+            recommendUsers.search();
         },
 
         // 查询用户
@@ -243,9 +244,9 @@ $(document).ready(function(){
     });
 
     var users = new Users(),
-        suggestUsers = new SuggestUsers(),
+        recommendUsers = new RecommendUsers(),
         usersView = new UsersView({'collection': users}),
-        suggestUsersView  = new SuggestUsersView({'collection': suggestUsers}),
+        recommendUsersView  = new RecommendUsersView({'collection': recommendUsers}),
         userRouter = new UserRouter();
 
     Backbone.history.start();
@@ -257,7 +258,7 @@ $(document).ready(function(){
 {% block admin-right %}
 <ul class="nav nav-pills pt-15 zx-nav-pills">
     <li class="active">
-        <a href="#suggest_user_list" class="black-blue" data-toggle="pill">推荐用户列表</a>
+        <a href="#recommend_user_list" class="black-blue" data-toggle="pill">推荐用户列表</a>
     </li>
     <li>
         <a href="#user_list" class="black-blue" data-toggle="pill">用户列表</a>
@@ -266,7 +267,7 @@ $(document).ready(function(){
 
 <div class="tab-content">
     <!-- 推荐用户列表 -->
-    <div class="tab-pane fade pt-15 in active" id="suggest_user_list">
+    <div class="tab-pane fade pt-15 in active" id="recommend_user_list">
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -319,26 +320,26 @@ $(document).ready(function(){
     </div>
 </div>
 
-<script type="text/template" id="suggest-user-template">
-<% _.each(suggestUsers, function(suggestUser){ %>
+<script type="text/template" id="recommend-user-template">
+<% _.each(recommendUsers, function(recommendUser){ %>
     <tr>
         <td>1</td>
-        <td><img src="<%= suggestUser.userAvatar %>" class="avatar-35 avatar-circle" ></td>
-        <td><%= suggestUser.userNick %></td>
-        <td><span><%= suggestUser.userDesc %></span></td>
+        <td><img src="<%= recommendUser.userAvatar %>" class="avatar-35 avatar-circle" ></td>
+        <td><%= recommendUser.userNick %></td>
+        <td><span><%= recommendUser.userDesc %></span></td>
         <td>
-            <span class="fb fi pr-3"><%= suggestUser.questionCount %></span>提问 | 
-            <span class="fb fi pr-3"><%= suggestUser.answerCount %></span>回答 |
-            <span class="fb fi pr-3"><%= suggestUser.likeCount %></span>获赞 |
-            <span class="fb fi pr-3"><%= suggestUser.followers %></span>粉丝 |
-            <span class="fb fi pr-3"><%= suggestUser.following %></span>关注
+            <span class="fb fi pr-3"><%= recommendUser.questionCount %></span>提问 | 
+            <span class="fb fi pr-3"><%= recommendUser.answerCount %></span>回答 |
+            <span class="fb fi pr-3"><%= recommendUser.likeCount %></span>获赞 |
+            <span class="fb fi pr-3"><%= recommendUser.followers %></span>粉丝 |
+            <span class="fb fi pr-3"><%= recommendUser.following %></span>关注
         </td>
-        <td class="editSort" data-user_id="<%= suggestUser.userId %>">
-            <span><%= suggestUser.sort %></span>
-            <input class="w40 none" type="text" value="<%= suggestUser.sort %>" />
+        <td class="editSort" data-user_id="<%= recommendUser.userId %>">
+            <span><%= recommendUser.sort %></span>
+            <input class="w40 none" type="text" value="<%= recommendUser.sort %>" />
         </td>
         <td>
-            <button class="btn btn-xs btn-default unSuggest" data-user_id="<%= suggestUser.userId %>">取消推荐用户</button>
+            <button class="btn btn-xs btn-default unRecommend" data-user_id="<%= recommendUser.userId %>">取消推荐用户</button>
         </td>
     </tr>
 <% }) %>
@@ -359,7 +360,7 @@ $(document).ready(function(){
             <span class="fb fi pr-3"><%= user.following %></span>关注
         </td>
         <td>
-            <button class="btn btn-xs btn-primary suggest" data-user_id="<%= user.userId %>">设置推荐用户</button>
+            <button class="btn btn-xs btn-primary recommend" data-user_id="<%= user.userId %>">设置推荐用户</button>
         </td>
     </tr>
 <% }) %>

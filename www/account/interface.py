@@ -503,6 +503,16 @@ class RecommendUserBase(object):
     def __init__(self):
         pass
 
+    def format_recommend_user(self, recommend_users):
+        '''
+        格式化
+        '''
+        for recommend_user in recommend_users:
+            recommend_user.user = UserBase().get_user_by_id(recommend_user.user_id)
+            recommend_user.user_count = UserCountBase().get_user_count_info(recommend_user.user_id)
+
+        return recommend_users
+
     # @cache_required(cache_key='recommend_user_%s', expire=3600)
     def get_recommend_users(self, user_id, random=False):
         from www.timeline.interface import UserFollowBase
@@ -513,3 +523,29 @@ class RecommendUserBase(object):
         else:
             rusers = RecommendUser.objects.exclude(user_id__in=exclude_user_ids).order_by('?')
         return rusers[:4]
+
+    def get_all_recommend_users(self):
+        '''
+        获取所有的推荐用户信息(admin)
+        '''
+
+        return self.format_recommend_user(RecommendUser.objects.all())
+
+    def set_recommend_user_sort(self, user_id, sort_num):
+        '''
+        设置推荐用户排序
+
+        user_id: 用户id
+        sort_num: 排序数值
+        '''
+
+        recommend_user = RecommendUser.objects.filter(user_id=user_id)
+        if recommend_user:
+            try:
+                recommend_user = recommend_user[0]
+                recommend_user.sort_num = sort_num
+                recommend_user.save()
+            except Exception, e:
+                return 1, dict_err.get(0)
+
+        return 0, dict_err.get(0)

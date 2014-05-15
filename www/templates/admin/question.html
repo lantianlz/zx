@@ -48,11 +48,15 @@ $(document).ready(function(){
         model: Question,
 
         // 查询方法
-        search: function(){
+        search: function(questionName, pageIndex){
+            this.pageIndex = pageIndex;
+            this.pageCount = 2;
+            this.questionName = questionName||'';
+
             this.reset([
                 {'userId': '1', 'userName': '胡萝卜分你一半', 'title': '炒股的逻辑到底是什么？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 9, 'isImportant': true, 'createdTime': '2014-03-16 23:23:26'},
                 {'userId': '2', 'userName': '李小侃', 'title': '单独二胎还能创造人口红利吗？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 2, 'isImportant': false, 'createdTime': '2014-04-28 09:02:24'},
-                {'userId': '3', 'userName': '嘎嘎', 'title': '成都，杭州的楼市都有降价的个案了，今年是楼市拐点？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 13, 'isImportant': true, 'createdTime': '2014-03-16 23:23:26'},
+                {'userId': '3', 'userName': '嘎嘎', 'title': '成都，杭州的楼市都有降价的个案了，今年是楼市拐点？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 13, 'isImportant': true, 'createdTime': '2014-03-16 23:23:26'}
             ]);
 
             return this;
@@ -68,18 +72,29 @@ $(document).ready(function(){
     });
     
     
-
     // 提问 view
     var QuestionListView = Backbone.View.extend({
         el: '#question_list',
 
         template: _.template($('#item_question_template').html()),
 
-        // 渲染函数
-        render: function(data){
-            this.$('tbody').html(this.template({'questions': data}));
+        pagination: new $.ZXPagination.PaginationView(),
 
-            this.pageView.render()
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+            this.$el.find('tbody').html(this.template({'questions': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.questionName
+            );
         },
 
         // 显示面板
@@ -183,7 +198,7 @@ $(document).ready(function(){
         routes: {
             "":                     "search",
             "modify/:questionId":   "modify",
-            "search/:pageIndex": "search"
+            "search/(:title)/:pageIndex":   "search"
         },
 
         // 分页显示
@@ -208,11 +223,8 @@ $(document).ready(function(){
     // 初始化
     var questions = new Questions(),
         listView = new QuestionListView({'collection': questions}),
-        modifyView = new QuestionModifyView({
-            'collection': questions, 
-            'pagination': new PaginationView({'searchUrl': 'search'})
-        }),
-        router = new questionRouter({'collection': questions});
+        modifyView = new QuestionModifyView({'collection': questions}),
+        router = new questionRouter();
 
     Backbone.history.start();
 
