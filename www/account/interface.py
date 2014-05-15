@@ -26,6 +26,7 @@ dict_err = {
     10110: u'邮箱验证码错误或者已过期，请重新验证',
     10111: u'该邮箱尚未注册',
     10112: u'code已失效，请重新执行重置密码操作',
+    10113: u'没有找到对象',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -537,6 +538,8 @@ class RecommendUserBase(object):
         user_id: 用户id
         sort_num: 排序数值
         '''
+        if not user_id or not sort_num:
+            return 99800, dict_err.get(99800)
 
         recommend_user = RecommendUser.objects.filter(user_id=user_id)
         if recommend_user:
@@ -544,7 +547,71 @@ class RecommendUserBase(object):
                 recommend_user = recommend_user[0]
                 recommend_user.sort_num = sort_num
                 recommend_user.save()
+                return 0, dict_err.get(0)
             except Exception, e:
-                return 1, dict_err.get(0)
+                debug.get_debug_detail(e)
+                return 99900, smart_unicode(e)
 
-        return 0, dict_err.get(0)
+        return 10113, dict_err.get(10113)
+
+    def un_recommend_user(self, user_id):
+        '''
+        取消推荐用户设置
+
+        user_id: 用户id
+        '''
+        if not user_id:
+            return 99800, dict_err.get(99800)
+
+        recommend_user = RecommendUser.objects.filter(user_id=user_id)
+        if recommend_user:
+            try:
+                recommend_user = recommend_user[0]
+                recommend_user.delete()
+                return 0, dict_err.get(0)
+            except Exception, e:
+                debug.get_debug_detail(e)
+                return 99900, smart_unicode(e)
+
+        return 10113, dict_err.get(10113)
+
+    def set_recommend_user(self, user_id):
+        '''
+        设置推荐用户
+
+        user_id: 用户id
+        '''
+        if not user_id:
+            return 99800, dict_err.get(99800)
+
+        recommend_user = RecommendUser.objects.filter(user_id=user_id)
+        if not recommend_user:
+            try:
+                RecommendUser.objects.create(user_id=user_id)
+                return 0, dict_err.get(0)
+            except Exception, e:
+                debug.get_debug_detail(e)
+                return 99900, smart_unicode(e)
+
+        return 10113, dict_err.get(10113)
+
+    def get_user_by_nick(self, user_nick):
+        '''
+        '''
+        if not user_nick:
+            return None
+
+        user = UserBase().get_user_by_nick(user_nick)
+
+        if user:
+            # 判断是否已经是推荐用户了
+            if RecommendUser.objects.filter(user_id=user.id).count() > 0:
+                user.is_recommend = True
+            else:
+                user.is_recommend = False
+
+            # 补充统计信息
+            user.user_count = UserCountBase().get_user_count_info(user.id)
+            return user
+
+        return None

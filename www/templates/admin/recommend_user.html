@@ -23,7 +23,9 @@ $(document).ready(function(){
             'likeCount': 0,
             'followers': 0,
             'following': 0,
-            'sort': 0
+            'sort': 0,
+            'num': 1,
+            'isRecommend': false
         }
     });
 
@@ -34,36 +36,47 @@ $(document).ready(function(){
         pageCount: 0,
         userNick: '',
 
+        _modelMaps: {
+            'userId': 'user_id',
+            'userAvatar': 'user_avatar',
+            'userNick': 'user_nick',
+            'userDesc': 'user_des',
+            'questionCount': 'question_count',
+            'answerCount': 'answer_count',
+            'likeCount': 'liked_count',
+            'followers': 'follower_count',
+            'following': 'following_count',
+            'sort': 'sort_num',
+            'num': 'num',
+            'isRecommend': 'is_recommend'
+        },
+
         search: function(userNick, pageIndex){
-            this.pageIndex = pageIndex;
-            this.pageCount = 1;
-            this.userNick = userNick;
+            var me = this;
 
-            this.reset([{
-                'userId': '1',
-                'userAvatar': '/static/img/common/user3.jpg',
-                'userNick': '半夜没事瞎溜达1',
-                'userDesc': '这是简介111',
-                'questionCount': 123,
-                'answerCount': 12,
-                'likeCount': 22,
-                'followers': 25,
-                'following': 28,
-                'sort': 2
-            }, {
-                'userId': '2',
-                'userAvatar': '/static/img/common/user4.png',
-                'userNick': '随便弄弄2',
-                'userDesc': '这是简介222',
-                'questionCount': 1223,
-                'answerCount': 122,
-                'likeCount': 222,
-                'followers': 252,
-                'following': 228,
-                'sort': 3
-            }]);
+            ajaxSend(
+                "/admin/recommend_user/get_user_by_nick", 
+                {'nick_name': userNick}, 
+                function(data){
+                    me.pageIndex = pageIndex;
+                    me.pageCount = 1;
+                    me.userNick = userNick;
 
-            return this;
+                    me.reset($.ZXUtils.dictMapParse(data, me._modelMaps))
+                }
+            );
+        },
+
+        recommend: function(userId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/recommend_user/set_recommend_user", 
+                {'user_id': userId}, 
+                function(data){
+                    callback(data);
+                }
+            );
         }
     });
 
@@ -80,7 +93,9 @@ $(document).ready(function(){
             'likeCount': 'liked_count',
             'followers': 'follower_count',
             'following': 'following_count',
-            'sort': 'sort_num'
+            'sort': 'sort_num',
+            'num': 'num',
+            'isRecommend': 'is_recommend'
         },
 
         search: function(){
@@ -95,14 +110,23 @@ $(document).ready(function(){
         // 保存排序
         saveSort: function(userId, sort, callback){
             ajaxSend(
-                "/admin/recommend_user/set_recommend_user_sort", {
-                    'user_id': userId,
-                    'sort_num': sort
-                }, function(data){
+                "/admin/recommend_user/set_recommend_user_sort", 
+                {'user_id': userId, 'sort_num': sort}, 
+                function(data){
+                    callback(data); 
+                }
+            );
+        },
+
+        // 取消推荐
+        unRecommend: function(userId, callback){
+            ajaxSend(
+                "/admin/recommend_user/un_recommend_user", 
+                {'user_id': userId}, 
+                function(data){
                     callback(data);
                 }
             );
-            
         }
     });
 
@@ -142,14 +166,27 @@ $(document).ready(function(){
         // 推荐
         recommend: function(sender){
             var target = $(sender.currentTarget),
-                userId = target.data('user_id');
+                userId = target.data('user_id'),
+                me = this;
 
             $.ZXMsg.confirm('提示', '确认要设置此用户为推荐用户?', function(result){
                 if(result){
                     // 设置ajax元素id,防止多次点击
                     g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-                    target.parents('tr').remove();
+                    me.collection.recommend(userId, function(data){
+                        if(data.errcode === 0){
+                            var nickName = me.$('.key-word').val();
+                            me.collection.search(nickName, 1);
+
+                            // 更新一下推荐用户列表
+                            userRouter.navigate('', {trigger: true});
+
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                    
                 }
             });
         },
@@ -187,14 +224,21 @@ $(document).ready(function(){
         // 取消推荐
         unRecommend: function(sender){
             var target = $(sender.currentTarget),
-                userId = target.data('user_id');
+                userId = target.data('user_id'),
+                me = this;
                 
             $.ZXMsg.confirm('提示', '确认要取消推荐?', function(result){
                 if(result){
                     // 设置ajax元素id,防止多次点击
                     g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-                    target.parents('tr').remove();
+                    me.collection.unRecommend(userId, function(data){
+                        if(data.errcode === 0){
+                            me.collection.search();
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
                 }
             });
         },
@@ -213,11 +257,18 @@ $(document).ready(function(){
             var target = $(sender.currentTarget),
                 userId = target.data('user_id'),
                 sort = target.find('input').val(),
-                originSort = target.find('span').html();
+                originSort = target.find('span').html(),
+                me = this;
 
             // 如果有修改
             if(originSort != sort){
-                this.collection.saveSort(userId, sort);
+                this.collection.saveSort(userId, sort, function(data){
+                    if(data.errcode === 0){
+                        me.collection.search();
+                    } else {
+                        $.ZXMsg.alert('提示', data.errmsg);
+                    }
+                });
             }
             
             target.find('span').show();
@@ -323,7 +374,7 @@ $(document).ready(function(){
 <script type="text/template" id="recommend-user-template">
 <% _.each(recommendUsers, function(recommendUser){ %>
     <tr>
-        <td>1</td>
+        <td><%= recommendUser.num %></td>
         <td><img src="<%= recommendUser.userAvatar %>" class="avatar-35 avatar-circle" ></td>
         <td><%= recommendUser.userNick %></td>
         <td><span><%= recommendUser.userDesc %></span></td>
@@ -360,7 +411,11 @@ $(document).ready(function(){
             <span class="fb fi pr-3"><%= user.following %></span>关注
         </td>
         <td>
+            <% if(user.isRecommend){ %>
+            已经是推荐用户
+            <% } else {%>
             <button class="btn btn-xs btn-primary recommend" data-user_id="<%= user.userId %>">设置推荐用户</button>
+            <% } %>
         </td>
     </tr>
 <% }) %>

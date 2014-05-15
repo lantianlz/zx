@@ -215,9 +215,9 @@ $(document).ready(function(){
         {% if bad_answers %}
         <li class="list-group-item no-l-r-bd bdc-eee">
             <div class="gray-a">
-                <a class="answer-collapse zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" data-trigger="hover" title="" href="javascript: void(0)">
+                <a class="answer-collapse" href="javascript: void(0)">
                     共有 {{bad_answers_count}} 个回答被折叠
-                    <span class="glyphicon glyphicon-question-sign" ></span>
+                    <span class="glyphicon glyphicon-question-sign zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" data-trigger="hover" title=""></span>
                 </a>
             </div>
         </li>
