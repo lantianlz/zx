@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+
+import json
+from django.http import HttpResponse
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+
+from misc.decorators import staff_required, common_ajax_response
+
+from www.account.interface import RecommendUserBase
+
+
+@staff_required
+def question(request, template_name='admin/question.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@staff_required
+def search(request):
+	title = request.POST.get('title')
+	page_index = request.POST.get('page_index', 1)
+
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))

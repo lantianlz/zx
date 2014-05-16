@@ -282,6 +282,9 @@ class QuestionBase(object):
                                     question_summary=question.get_summary(), question_answer_count=question.answer_count)
         return question_summary
 
+    def get_questions(self):
+        pass
+
 
 class AnswerBase(object):
 
