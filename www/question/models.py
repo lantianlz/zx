@@ -171,3 +171,15 @@ class TagQuestion(models.Model):
 
     def __unicode__(self):
         return '%s, %s' % (self.tag_id, self.question_id)
+
+
+class ImportantQuestion(models.Model):
+    question = models.ForeignKey(Question, unique=True)
+    img = models.CharField(max_length=128, default='')
+    img_alt = models.CharField(max_length=256, null=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    operate_user_id = models.CharField(verbose_name=u'设置精选的人', max_length=32, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-sort_num', '-id']

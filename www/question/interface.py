@@ -12,7 +12,7 @@ from www.account.interface import UserBase
 from www.message.interface import UnreadCountBase
 from www.account.interface import UserCountBase
 from www.timeline.interface import FeedBase
-from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad
+from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad, ImportantQuestion
 
 
 dict_err = {
@@ -254,7 +254,15 @@ class QuestionBase(object):
         return self.get_question_by_user_id(user_id).count()
 
     def get_all_important_question(self):
-        return Question.objects.filter(is_important=True, state=True).order_by('-id')
+        # return Question.objects.filter(is_important=True, state=True).order_by('-id')
+        questions = []
+        important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True)
+        for iq in important_questions:
+            for attr in ['img', 'img_alt', 'sort_num', 'operate_user_id', ]:
+                question = iq.question
+                setattr(question, attr, getattr(iq, attr))
+            questions.append(question)
+        return questions
 
     @question_required
     def get_question_admin_permission(self, question, user):
@@ -262,16 +270,36 @@ class QuestionBase(object):
         return question.user_id == user.id or user.is_staff(), question
 
     @question_required
-    def set_important(self, question, user):
-        question.is_important = True
-        question.save()
-        return 0, dict_err.get(0)
+    @transaction.commit_manually(using=QUESTION_DB)
+    def set_important(self, question, user, img='', img_alt=None, sort_num=0):
+        try:
+            question.is_important = True
+            question.save()
+
+            if img:
+                if not ImportantQuestion.objects.filter(question=question):
+                    ImportantQuestion.objects.create(question=question, operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num)
+            transaction.commit(using=QUESTION_DB)
+            return 0, dict_err.get(0)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return 99900, dict_err.get(99900)
 
     @question_required
+    @transaction.commit_manually(using=QUESTION_DB)
     def cancel_important(self, question, user):
-        question.is_important = False
-        question.save()
-        return 0, dict_err.get(0)
+        try:
+            question.is_important = False
+            question.save()
+
+            ImportantQuestion.objects.filter(question=question).delete()
+            transaction.commit(using=QUESTION_DB)
+            return 0, dict_err.get(0)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return 99900, dict_err.get(99900)
 
     @cache_required(cache_key='question_summary_%s', expire=3600)
     def get_question_summary_by_id(self, question_id, must_update_cache=False):
