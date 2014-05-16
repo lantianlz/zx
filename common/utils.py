@@ -283,8 +283,6 @@ def format_object_to_dict(obj):
 
     dict_obj = obj.__dict__
     keys = dict_obj.keys()
-    keys = ['auto_id', 'mobilenumber', 'domain', 'source', 'gender', 'des', '_state', 'state', 'email', 'username', 'nick', 'ip',
-            'birthday', 'create_time', 'avatar', 'email_verified', 'last_login', 'user_login', 'password', 'id', 'mobile_verified']
     for key in keys:
         if isinstance(dict_obj[key], (int, bool, long, float, unicode, str,
                                       list, tuple, set, dict, type(None))):
