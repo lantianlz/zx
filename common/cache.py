@@ -105,6 +105,9 @@ class CacheQueue(Cache):
             self.conn.expire(self.key, self.time_out)
         # print self.conn.lrange(self.key, 0, -1)
 
+    def pop(self, value, num=0):
+        self.conn.lrem(self.key, value, num)
+
     def init(self, items):
         '''
         @note: 初始化一个列表

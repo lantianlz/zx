@@ -209,6 +209,9 @@ class QuestionBase(object):
             # 更新用户话题数信息
             UserCountBase().update_user_count(user_id=question.user_id, code='user_question_count', operate='minus')
 
+            # 更新timeline
+            FeedBase().remove_feed(question.user_id, question.id, feed_type=1)
+
             transaction.commit(using=QUESTION_DB)
             return 0, dict_err.get(0)
         except Exception, e:
