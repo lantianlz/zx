@@ -10,7 +10,6 @@ todo list:
 
 5增加用户注册地信息
 
-6.ajax返回值全局修改，flag--errcode
 
 
 

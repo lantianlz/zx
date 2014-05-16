@@ -28,7 +28,7 @@ def main():
     # ab.remove_answer(41, user)
     # print ab.get_answer_summary_by_id(1)
 
-    print qb.set_important(8, user, img='http://img0.zhixuan.com/important_28.jpg', img_alt='精选描述', sort_num=2)
+    print qb.set_important(8, user, img='http://img0.zhixuan.com/important_28.jpg', img_alt='精选描述', sort_num=4)
     # print qb.cancel_important(8, user)
 
 
