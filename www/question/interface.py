@@ -279,6 +279,8 @@ class QuestionBase(object):
             if img:
                 if not ImportantQuestion.objects.filter(question=question):
                     ImportantQuestion.objects.create(question=question, operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num)
+                else:
+                    ImportantQuestion.objects.filter(question=question).update(operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num)
             transaction.commit(using=QUESTION_DB)
             return 0, dict_err.get(0)
         except Exception, e:
