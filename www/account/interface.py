@@ -9,7 +9,8 @@ from django.conf import settings
 from common import utils, debug, validators, cache
 # from www.misc.decorators import cache_required
 from www.misc import consts
-from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount, RecommendUser
+from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
+from www.account.models import RecommendUser, LastActive
 from www.message.interface import UnreadCountBase
 
 dict_err = {
@@ -405,6 +406,23 @@ class UserBase(object):
         cache_obj.delete(key)
         cache_obj.delete(code)
         return 0, user_login
+
+    def update_user_last_active_time(self, user_id, ip=None, last_active_source=0):
+        '''
+        @note: 更新用户最后活跃时间
+        '''
+        cache_obj = cache.Cache()
+        # 一小时更新一次
+        if not cache_obj.get_time_is_locked(key=u'last_active_time', time_out=3600):
+            try:
+                la = LastActive.objects.get(user_id=user_id)
+                la.ip = ip
+                la.last_active_source = last_active_source
+                la.last_active_time = datetime.datetime.now()
+                la.save()
+            except LastActive.DoesNotExist:
+                LastActive.objects.create(user_id=user_id, last_active_time=datetime.datetime.now(),
+                                          ip=ip, last_active_source=last_active_source)
 
 
 class InvitationBase(object):

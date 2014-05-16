@@ -99,8 +99,10 @@ def at_answer(request, template_name='message/at_answer.html'):
 # ===================================================ajax部分=================================================================#
 @member_required
 def get_unread_count_total(request):
-
     count_info = urb.get_unread_count_total(request.user)
+
+    # 更新最后活跃时间
+    ub.update_user_last_active_time(request.user.id, ip=utils.get_clientip(request))
     return HttpResponse(json.dumps(count_info), mimetype='application/json')
 
 

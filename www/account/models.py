@@ -106,7 +106,15 @@ class UserChangeLog(models.Model):
 
 
 class LastActive(models.Model):
-    pass
+    last_active_source_choices = ((0, u'web页面'), (1, u'手机app'))
+
+    user_id = models.CharField(max_length=32, unique=True)
+    ip = models.CharField(max_length=32, null=True)
+    last_active_time = models.DateTimeField(db_index=True)
+    last_active_source = models.IntegerField(default=0, choices=last_active_source_choices)
+
+    class Meta:
+        ordering = ["-last_active_time"]
 
 
 class ExternalToken(models.Model):
