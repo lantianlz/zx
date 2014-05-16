@@ -14,6 +14,7 @@ from www.timeline.models import UserFollow, Feed
 dict_err = {
     30100: u'自己关注自己不被允许',
     30101: u'查无此人',
+    30102: u'feed不存在或者已删除',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -184,6 +185,16 @@ class FeedBase(object):
             if cache_queue.exists():
                 cache_queue.push(feed_id)
 
+    def pop_feed_from_follower(self, user_id, feed_id):
+        '''
+        @note: 推送feed到粉丝的队列中
+        '''
+        followers = UserFollowBase().get_followers_by_user_id(user_id)
+        for follower in followers:
+            cache_queue = cache.CacheQueue(key='user_timeline_%s' % follower.from_user_id, max_len=100, time_out=3600 * 24 * 7)
+            if cache_queue.exists():
+                cache_queue.pop(feed_id)
+
     def get_user_timeline(self, user_id, last_feed_id='', page_count=5):
         page_count = int(page_count)
         assert 1 < page_count < 10
@@ -226,3 +237,17 @@ class FeedBase(object):
             return Feed.objects.get(id=feed_id)
         except Feed.DoesNotExist:
             return ''
+
+    def remove_feed(self, user_id, obj_id, feed_type=1):
+        '''
+        @note: 删除feed
+        '''
+        try:
+            feed = Feed.objects.get(user_id=user_id, feed_type=feed_type, obj_id=obj_id)
+        except Feed.DoesNotExist:
+            return 30102, dict_err.get(30102)
+
+        self.pop_feed_from_follower(user_id, feed.id)
+        feed.delete()
+
+        return 0, dict_err.get(0)
