@@ -28,7 +28,14 @@ def test():
 
     # print fb.get_user_timeline_feed_ids(user_id)
     # print fb.create_feed(to_user_id, feed_type=0, obj_id=3)
-    pprint(fb.get_user_timeline(user_id, page_count=5, last_feed_id=5))
+    # pprint(fb.get_user_timeline(user_id, page_count=5, last_feed_id=5))
+
+    from common.utils import format_object_to_dict
+    from www.account.interface import UserBase
+    user = UserBase().get_user_by_id(user_id)
+
+    data = format_object_to_dict(user)
+    pprint(data)
 
 
 if __name__ == '__main__':
