@@ -285,8 +285,14 @@ class QuestionBase(object):
                                     question_summary=question.get_summary(), question_answer_count=question.answer_count)
         return question_summary
 
-    def get_questions(self):
-        pass
+    def get_question_by_title(self, title):
+        '''
+        根据标题查询提问
+        '''
+        if title:
+            return self.format_quesitons(Question.objects.filter(title=title))
+        else:
+            return self.format_quesitons(Question.objects.all())
 
 
 class AnswerBase(object):

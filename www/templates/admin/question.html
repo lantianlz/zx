@@ -5,9 +5,7 @@
 
 {% block css %}
 <style type="text/css">
-.search-question{
-    right: 0;
-}
+
 </style>
 {% endblock %}
 
@@ -28,16 +26,17 @@ $(document).ready(function(){
 
         // 默认值
         defaults: {
+            'num': 1,
+            'questionId': '',
             'userId': '',
-            'userName': '',
+            'userNick': '',
             'title': '',
             'description': '',
-            'questionTypes': [],
-            'tags': [],
             'viewCount': 0,
             'answerCount': 0,
             'isImportant': false,
             'isHideUser': false,
+            'state': 0,
             'createdTime': new Date()
         }
 
@@ -47,25 +46,44 @@ $(document).ready(function(){
     var Questions = Backbone.Collection.extend({
         model: Question,
 
+        _modelMaps: {
+            'num': 'num',
+            'questionId': 'question_id',
+            'userId': 'user_id',
+            'userNick': 'user_nick',
+            'title': 'title',
+            'description': 'description',
+            'viewCount': 'view_count',
+            'answerCount': 'answer_count',
+            'isImportant': 'is_important',
+            'isHideUser': 'is_hide_user',
+            'state': 'state',
+            'createdTime': 'created_time'
+        },
         // 查询方法
-        search: function(questionName, pageIndex){
-            this.pageIndex = pageIndex;
-            this.pageCount = 2;
-            this.questionName = questionName||'';
+        search: function(title, pageIndex){
 
-            this.reset([
-                {'userId': '1', 'userName': '胡萝卜分你一半', 'title': '炒股的逻辑到底是什么？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 9, 'isImportant': true, 'createdTime': '2014-03-16 23:23:26'},
-                {'userId': '2', 'userName': '李小侃', 'title': '单独二胎还能创造人口红利吗？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 2, 'isImportant': false, 'createdTime': '2014-04-28 09:02:24'},
-                {'userId': '3', 'userName': '嘎嘎', 'title': '成都，杭州的楼市都有降价的个案了，今年是楼市拐点？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢？', 'answerCount': 13, 'isImportant': true, 'createdTime': '2014-03-16 23:23:26'}
-            ]);
+            var me = this;
 
-            return this;
+            ajaxSend(
+                "/admin/question/search", 
+                {'title': title||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    
+                    me.pageIndex = pageIndex;
+                    me.pageCount = data.page_count;
+                    me.title = title||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+
         },
 
         // 获取一个提问的model
         getOne: function(questionId){
             return this.find(function(question){
-                return question.get('userId') == questionId
+                return question.get('questionId') == questionId
             });
         }
 
@@ -84,6 +102,10 @@ $(document).ready(function(){
             this.listenTo(this.collection, 'reset', this.render);
         },
 
+        events: {
+            'click .search-question': 'searchQuestion'
+        },
+
         // 渲染函数
         render: function(){
             var data = this.collection.toJSON();
@@ -93,13 +115,19 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.questionName
+                'search/' + this.collection.title
             );
         },
 
         // 显示面板
         showPanel: function(){
             $('.zx-nav-pills a[href="#question_list"]').tab('show');
+        },
+
+        searchQuestion: function(){
+            var title = this.$('.key-word').val();
+
+            router.navigate('/search/' + title + '/1', {trigger: true});
         }
 
     });
@@ -189,11 +217,9 @@ $(document).ready(function(){
 
     });
 
-    
-
 
     // 提问的 路由
-    var questionRouter = Backbone.Router.extend({
+    var QuestionRouter = Backbone.Router.extend({
 
         routes: {
             "":                     "search",
@@ -202,15 +228,9 @@ $(document).ready(function(){
         },
 
         // 分页显示
-        search: function(pageIndex){
-            console.log(pageIndex)
-            var data = this.collection.search(),
-                pageCount = 5;
-
-            listView.showPanel();
-            listView.render(data.toJSON());
-
-            listView.pagination.render(pageIndex, pageCount);
+        search: function(title, pageIndex){
+            
+            questions.search(title, pageIndex);
         },
 
         // 显示修改界面
@@ -224,7 +244,7 @@ $(document).ready(function(){
     var questions = new Questions(),
         listView = new QuestionListView({'collection': questions}),
         modifyView = new QuestionModifyView({'collection': questions}),
-        router = new questionRouter();
+        router = new QuestionRouter();
 
     Backbone.history.start();
 
@@ -241,28 +261,28 @@ $(document).ready(function(){
     <li>
         <a href="#modify_question" class="black-blue" data-toggle="pill">修改提问</a>
     </li>
-    <div class="pa search-question col-md-3">
-        <div class="input-group input-group-sm">
-            <input type="text" class="form-control border-radius-0" placeholder="输入提问标题...">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button">查询</button>
-            </span>
-        </div>
-    </div>
 </ul>
 
 <div class="tab-content">
     <!-- 提问列表 -->
     <div class="tab-pane fade pt-15 in active" id="question_list">
+        <div class="pl-0 pb-10 col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入提问标题..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search-question" type="button">查询</button>
+                </span>
+            </div>
+        </div>
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>序号</th>
-                    <th>提问标题</th>
+                    <th>#</th>
+                    <th>精华</th>
+                    <th>标题</th>
                     <th>提问者</th>
                     <th>提问时间</th>
-                    <th>回答个数</th>
-                    <th>是否精华</th>
+                    <th>状态</th>
                 </tr>
             </thead>
             <tbody>
@@ -286,15 +306,22 @@ $(document).ready(function(){
 <!-- 问题列表模板 -->
 <script type="text/template" id="item_question_template">
     <% _.each(questions, function(question){ %>
-        <tr data-question_id="<%= question.userId %>">
-            <td><%= question.userId %></td>
-            <td><a class="black-blue pointer question-edit" href="#/modify/<%= question.userId %>"><%= question.title %></a></td>
-            <td><%= question.userName %></td>
-            <td><%= question.createdTime %></td>
-            <td><%= question.answerCount %></td>
+        <tr data-question_id="<%= question.questionId %>">
+            <td><%= question.num %></td>
             <td>
                 <% if (question.isImportant) { %>
                     <span class="glyphicon glyphicon-ok co-zx"></span>
+                <% } %>
+            </td>
+            <td><%= question.title %></td>
+
+            <td><%= question.userNick %></td>
+            <td><%= question.createdTime %></td>
+            <!-- <td><span class="fb fi f12"><%= question.viewCount %></span>次浏览, <span class="fb fi f12"><%= question.answerCount %></span>个回答</td> -->
+            
+            <td>
+                <% if (!question.state) { %>
+                    <span class="glyphicon glyphicon-remove cl_red"></span>
                 <% } %>
             </td>
         </tr>
