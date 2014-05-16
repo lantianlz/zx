@@ -264,6 +264,32 @@ class QuestionBase(object):
             questions.append(question)
         return questions
 
+    def get_important_question_by_title(self, title):
+        '''
+        根据标题查询精选
+        '''
+        important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True)
+
+        if title:
+            important_questions = important_questions.filter(question__title=title)
+
+        for iq in important_questions:
+            question = iq.question
+            question.user = question.get_user()
+
+        return important_questions
+
+    def get_important_question_by_question_id(self, question_id):
+        '''
+        根据提问id查询精选
+        '''
+        iq = ImportantQuestion.objects.filter(question__id=question_id)
+        if iq:
+            iq = iq[0]
+            question = iq.question
+            question.user = question.get_user()
+        return iq
+
     @question_required
     def get_question_admin_permission(self, question, user):
         # 返回question值用于question对象赋值
@@ -319,10 +345,13 @@ class QuestionBase(object):
         '''
         根据标题查询提问
         '''
+        questions = []
         if title:
-            return self.format_quesitons(Question.objects.filter(title=title))
+            questions = Question.objects.filter(title=title)
         else:
-            return self.format_quesitons(Question.objects.all())
+            questions = Question.objects.all()
+
+        return self.format_quesitons(questions.order_by('create_time'))
 
 
 class AnswerBase(object):

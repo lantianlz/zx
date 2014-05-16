@@ -5,9 +5,6 @@
 
 {% block css %}
 <style type="text/css">
-.search-important{
-    right: 0;
-}
 </style>
 {% endblock %}
 
@@ -19,13 +16,17 @@ $(document).ready(function(){
 
         // 默认值
         defaults: {
+            'num': 0,
+            'questionId': 0,
             'userId': '',
-            'userName': '',
+            'userNick': '',
             'title': '',
             'description': '',
-            'topics': [],
             'img': '',
-            'createdTime': new Date()
+            'imgAlt': '',
+            'sort': '',
+            'createdTime': new Date(),
+            'setImportantTime': new Date()
         }
 
     });
@@ -34,49 +35,118 @@ $(document).ready(function(){
     var Importants = Backbone.Collection.extend({
         model: Important,
 
-        // 查询
-        search: function(pageIndex){
-            this.reset([
-                {'userId': '1', 'userName': '胡萝卜分你一半', 'title': '炒股的逻辑到底是什么？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢111？', 'createdTime': '2014-03-16 23:23:26', 'img': '/static/img/common/topic1.jpg', 'imgTitle': '图片描述1', 'order': '8', 'topics': []},
-                {'userId': '2', 'userName': '李小侃', 'title': '单独二胎还能创造人口红利吗？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢222？', 'createdTime': '2014-04-28 09:02:24', 'img': '/static/img/common/topic2.jpg', 'imgTitle': '图片描述2', 'order': '6', 'topics': []},
-                {'userId': '3', 'userName': '嘎嘎', 'title': '成都，杭州的楼市都有降价的个案了，今年是楼市拐点？', 'description': '在股市中，作为非业内人士的个人投资者，最需要学习的东西是什么呢333？', 'createdTime': '2014-03-16 23:23:26', 'img': '/static/img/common/topic3.jpg', 'imgTitle': '图片描述3', 'order': '7', 'topics': []},
-                {'userId': '4', 'userName': '多高兴', 'title': '基本面选股和技术图形选股的实质区别是什么？', 'description': '我个人理解是： 1、基本面基于自己对该公司各方面的认识做出投资决策，是一个相对自信的过程。 2、技术图形选股，是看别人买卖，尤其是所谓机构或者主力买卖做出投资决策。', 'createdTime': '2014-03-16 23:23:26', 'img': '/static/img/common/topic4.jpg', 'imgTitle': '图片描述4', 'order': '3', 'topics': []}
-            ]);
+        _modelMaps: {
+            'num': 'num',
+            'questionId': 'question_id',
+            'userId': 'user_id',
+            'userNick': 'user_nick',
+            'title': 'title',
+            'description': 'description',
+            'img': 'img',
+            'imgAlt': 'img_alt',
+            'sort': 'sort_num',
+            'createdTime': 'create_time',
+            'setImportantTime': 'set_important_time'
+        },
 
-            return this;
+        // 查询
+        search: function(title, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/important_question/get_important_question_by_title", 
+                {'title': title||'', 'page_index': pageIndex}, 
+                function(data){
+                    me.pageIndex = pageIndex;
+                    me.pageCount = data.page_count;
+                    me.title = title||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
         },
 
         // 获取一个提问的model
-        getOne: function(importantId){
-            return this.find(function(important){
-                return important.get('userId') == importantId
-            });
+        getOne: function(questionId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/important_question/get_important_question_by_question_id", 
+                {'question_id': questionId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        cancelImportant: function(questionId, callback){
+            ajaxSend(
+                "/admin/important_question/cancel_important", 
+                {'question_id': questionId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
         }
 
     });
 
     // listView
-    var ImportantListView = Backbone.View.extend({
+    var ListView = Backbone.View.extend({
         el: '#important_list',
 
         pagination: new $.ZXPagination.PaginationView(),
 
         template: _.template($('#item_important_template').html()),
 
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search-important': 'searchImportant',
+            'click .pointer': 'modifyImportant'
+        },
+
         // 渲染函数
-        render: function(data){
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
             this.$('tbody').html(this.template({'importants': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.title
+            );
         },
 
         // 显示面板
         showPanel: function(){
             $('.zx-nav-pills a[href="#important_list"]').tab('show');
+        },
+
+        searchImportant: function(){
+            var title = this.$('.key-word').val();
+
+            router.navigate('/search/' + title + '/1', {trigger: true});
+        },
+
+        modifyImportant: function(sender){
+            var target = $(sender.currentTarget),
+                questionId = target.data('question_id');
+
+            router.navigate('/modify/' + questionId, {trigger: true});
         }
 
     });
 
     // modifyView
-    var ImportantModifyView = Backbone.View.extend({
+    var ModifyView = Backbone.View.extend({
         
         el: '#modify_important',
 
@@ -84,7 +154,7 @@ $(document).ready(function(){
 
         events: {
             'click .save-important': 'saveImportant',
-            'click .remove-important': 'removeImportant'
+            'click .cancel-important': 'cancelImportant'
         },
 
         // 初始化日期控件
@@ -134,36 +204,51 @@ $(document).ready(function(){
         // 渲染
         render: function(data){
             this.$el.html(this.template(data));
-            this.initDatetimepicker();
-            this.initTextboxList();
+
+            //this.initDatetimepicker();
+            //this.initTextboxList();
         },
 
         // 显示提问信息
-        modifyImportant: function(importantId){
-            this.showPanel();
-            this.render(this.collection.getOne(importantId).toJSON());
+        modifyImportant: function(questionId){
+            var me = this;
+
+            this.collection.getOne(questionId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                    
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000)
+                    $.ZXMsg.alert('提示', '没有找到对应的精选');
+                }
+            });
         },
 
         // 保存提问
         saveImportant: function(){
-            var importantId = this.$('form').data('important_id');
+            var questionId = this.$('form').data('question_id'),
+                me = this;
 
-            $.ZXMsg.alert('提示', importantId+"保存成功!");
-
-            // 重新加载
-            this.modifyImportant(importantId);
+            me.$('form').submit();
+            
         },
 
         // 删除提问
-        removeImportant: function(){
-            var importantId = this.$('form').data('important_id');
+        cancelImportant: function(){
+            var questionId = this.$('form').data('question_id'),
+                me = this;
 
             $.ZXMsg.confirm('提示', '确认要删除此提问吗?', function(result){
                 //todo...
                 if(result){
-                    $.ZXMsg.alert('提示', importantId+"删除成功!");
-                    
-                    listView.showPanel();
+                    me.collection.cancelImportant(questionId, function(data){
+                        if(data.errcode === 0){
+                            me.collection.search();
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
                 }
                 
             });
@@ -172,38 +257,111 @@ $(document).ready(function(){
     });
 
     
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_important_template').html()),
+
+        _windowHtml: [
+            '<div class="modal fade" id="add_important_modal" tabindex="-1" role="dialog">',
+                '<div class="modal-dialog">',
+                    '<div class="modal-content">',
+                        '<div class="modal-header pb-5">',
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
+                            '<h4 class="modal-title">添加精选</h4>',
+                        '</div>',
+                        '<div class="modal-body">',
+                            '{0}',
+                        '</div>',
+                        '<div class="modal-footer">',
+                            '<button type="button" class="btn btn-default cancel">取消</button>',
+                            '<button type="button" class="btn btn-primary add-important">确定</button>',
+                        '</div>',
+                    '</div>',
+                '</div>',
+            '</div>'
+        ].join(''),
+
+        _setWindow: function(content){
+            
+            var target = $('#add_important_modal'),
+                me = this;
+
+            if(target.length == 0){
+                $('body').append(String.format(this._windowHtml, content));
+                target = $('#add_important_modal');
+
+                target.find('.cancel').bind('click', function(){
+                    history.go(-1);
+                });
+
+                target.find('.add-important').bind('click', function(){
+                    me.addImportant();
+                });
+
+            } else {
+                target.find('.modal-body').html(content);
+            }
+
+            target.modal({'show': true, 'backdrop': 'static'});
+        },
+
+        showPanel: function(questionId){
+            var me = this;
+
+            ajaxSend(
+                "/admin/question/get_question_by_id", 
+                {'question_id': questionId}, 
+                function(data){
+                    
+                    if(data){
+                        me._setWindow(me.template(data));
+                    } else {
+                        $.ZXMsg.alert('提示', '没有找到对应的提问');
+                    }
+                }
+            );
+
+        },
+
+        addImportant: function(){
+            var me = this;
+
+            $('#add_important_modal').find('form').submit();
+        }
+    });
 
     // router
     var importantRouter = Backbone.Router.extend({
 
         routes: {
-            "":                     "search",
-            "modify/:importantId":  "modify",
-            "search/:pageIndex":    "search"
+            "":                             "search",
+            "modify/:importantId":          "modify",
+            "search/(:title)/:pageIndex":   "search",
+            "add/:questionId":              "add"
         },
 
         // 查询
-        search: function(pageIndex){
-            var data = importants.search(pageIndex),
-                pageCount = 30;
-
-            listView.showPanel();
-            listView.render(data.toJSON());
-            
-            listView.pagination.render(pageIndex||1, pageCount, 'search');
+        search: function(title, pageIndex){
+            importants.search(title, pageIndex);
         },
 
         // 显示修改界面
         modify: function(importantId){
             modifyView.modifyImportant(importantId);
+        },
+
+        add: function(questionId){
+            addView.showPanel(questionId);
         }
 
     });
     
     // 初始化
     var importants = new Importants(),
-        listView = new ImportantListView({'collection': importants}),
-        modifyView = new ImportantModifyView({'collection': importants}),
+        listView = new ListView({'collection': importants}),
+        modifyView = new ModifyView({'collection': importants}),
+        addView = new AddView(),
         router = new importantRouter();
 
     Backbone.history.start();
@@ -221,19 +379,19 @@ $(document).ready(function(){
     <li>
         <a href="#modify_important" class="black-blue" data-toggle="pill">修改每日精选</a>
     </li>
-    <div class="pa search-important col-md-3">
-        <div class="input-group input-group-sm">
-            <input type="text" class="form-control border-radius-0" placeholder="输入每日精选标题...">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button">查询</button>
-            </span>
-        </div>
-    </div>
 </ul>
 
 <div class="tab-content">
     <!-- 提问列表 -->
     <div class="tab-pane fade pt-15 in active" id="important_list">
+        <div class="pl-0 pb-10 col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入提问标题..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search-important" type="button">查询</button>
+                </span>
+            </div>
+        </div>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -241,6 +399,8 @@ $(document).ready(function(){
                     <th>标题</th>
                     <th>提问者</th>
                     <th>提问时间</th>
+                    <th>排序</th>
+                    <th>设置时间</th>
                 </tr>
             </thead>
             <tbody>
@@ -264,77 +424,82 @@ $(document).ready(function(){
 <!-- 问题列表模板 -->
 <script type="text/template" id="item_important_template">
     <% _.each(importants, function(important){ %>
-        <tr data-important_id="<%= important.userId %>">
-            <td><%= important.userId %></td>
-            <td><a class="black-blue pointer important-edit" href="#/modify/<%= important.userId %>"><%= important.title %></a></td>
-            <td><%= important.userName %></td>
+        <tr class="pointer" data-question_id="<%= important.questionId %>">
+            <td><%= important.num %></td>
+            <td><%= important.title %></td>
+            <td><%= important.userNick %></td>
             <td><%= important.createdTime %></td>
+            <td><%= important.sort %></td>
+            <td><%= important.setImportantTime %></td>
         </tr>
     <% }) %>
 </script>
 
 <!-- 修改问题模板 -->
 <script type="text/template" id="modify_important_template">
-    <form class="form-horizontal modify-important-form" data-important_id="<%= userId %>" role="form" method="post" action="">
+    <form class="form-horizontal modify-important-form" data-question_id="<%= questionId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/modify_important">
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">提问ID</label>
+            <label class="col-sm-2 control-label">提问标题</label>
             <div class="col-sm-6">
-                <p class="form-control-static"><%= userId %></p>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">关联话题</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="important_topics" value=''>
+                <p class="form-control-static"><%= title %></p>
+                <input type="hidden" value="<%= questionId %>" name="questionId" />
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">精选图片</label>
             <div class="col-sm-6">
                 <img src="<%= img %>" class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee">
-                <input class="pt-15" name="file" type="file" class="important-file" />
+                <input class="pt-15" name="importantImg" type="file" class="important-file" />
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">图片描述</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" value='<%= imgTitle %>'>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">提问标题</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" value='<%= title %>'>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">提问描述</label>
-            <div class="col-sm-6">
-                <textarea name="des" rows="6" class="form-control"><%= description %></textarea>
+                <input type="text" class="form-control" name='imgAlt' value='<%= imgAlt %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">排序权重</label>
             <div class="col-sm-2">
-                <input type="text" class="form-control" value='<%= order %>'>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">提问者</label>
-            <div class="col-sm-6">
-                <p class="form-control-static"><%= userName %></p>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">提问时间</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control datetimepicker" value='<%= createdTime %>' readonly>
+                <input type="text" class="form-control" name='sort' value='<%= sort %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <div class="col-sm-12">
                 <button type="button" class="btn btn-primary save-important">提交你的修改</button>
-                <button type="button" class="btn btn-danger ml-15 remove-important">删除此精华</button>
+                <button type="button" class="btn btn-danger ml-15 cancel-important">取消此精华</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!-- 添加问题模板 -->
+<script type="text/template" id="add_important_template">
+    <form class="form-horizontal add-important-form" data-question_id="<%= question_id %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/add_important">
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问标题</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= question_title %></p>
+                <input type="hidden" value="<%= question_id %>" name="questionId" />
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">精选图片</label>
+            <div class="col-sm-6">
+                <img src="" class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee">
+                <input class="pt-15" name="importantImg" type="file" class="important-file" />
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">图片描述</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name='imgAlt' value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">排序权重</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name='sort' value=''>
             </div>
         </div>
     </form>

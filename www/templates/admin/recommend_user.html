@@ -150,7 +150,7 @@ $(document).ready(function(){
             var data = this.collection.toJSON();
             
             this.showPanel();
-            this.$el.find('tbody').html(this.template({'users': data}));
+            this.$('tbody').html(this.template({'users': data}));
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
@@ -218,7 +218,7 @@ $(document).ready(function(){
         render: function(){
             var data = this.collection.toJSON();
             
-            this.$el.find('tbody').html(this.template({'recommendUsers': data}));
+            this.$('tbody').html(this.template({'recommendUsers': data}));
         },
 
         // 取消推荐

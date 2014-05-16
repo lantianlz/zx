@@ -81,11 +81,18 @@ $(document).ready(function(){
         },
 
         // 获取一个提问的model
-        getOne: function(questionId){
-            return this.find(function(question){
-                return question.get('questionId') == questionId
-            });
+        getOne: function(questionId, callback){
+            ajaxSend(
+                "/admin/question/get_question_by_id", 
+                {'question_id': questionId}, 
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
         }
+
 
     });
     
@@ -103,7 +110,9 @@ $(document).ready(function(){
         },
 
         events: {
-            'click .search-question': 'searchQuestion'
+            'click .search-question': 'searchQuestion',
+            //'click .pointer': 'modifyQuestion',
+            'click .set-important': 'setImportant'
         },
 
         // 渲染函数
@@ -111,7 +120,7 @@ $(document).ready(function(){
             var data = this.collection.toJSON();
 
             this.showPanel();
-            this.$el.find('tbody').html(this.template({'questions': data}));
+            this.$('tbody').html(this.template({'questions': data}));
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
@@ -128,6 +137,14 @@ $(document).ready(function(){
             var title = this.$('.key-word').val();
 
             router.navigate('/search/' + title + '/1', {trigger: true});
+        },
+
+        modifyQuestion: function(sender){
+            var target = $(sender.currentTarget),
+                questionId = target.data('question_id'),
+                me = this;
+
+            router.navigate('/modify/' + questionId, {trigger: true});
         }
 
     });
@@ -181,13 +198,17 @@ $(document).ready(function(){
         render: function(data){
             this.$el.html(this.template(data));
 
-            this.initTextboxList();
+            //this.initTextboxList();
         },
 
         // 显示提问信息
         modifyQuestion: function(questionId){
             this.showPanel();
-            this.render(this.collection.getOne(questionId).toJSON());
+
+            this.collection.getOne(questionId, function(data){
+                this.render(data);
+            });
+            
         },
 
         // 保存提问
@@ -278,7 +299,7 @@ $(document).ready(function(){
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>精华</th>
+                    <th>精选</th>
                     <th>标题</th>
                     <th>提问者</th>
                     <th>提问时间</th>
@@ -311,6 +332,8 @@ $(document).ready(function(){
             <td>
                 <% if (question.isImportant) { %>
                     <span class="glyphicon glyphicon-ok co-zx"></span>
+                <% } else { %>
+                    <a href="/admin/important_question#add/<%= question.questionId %>" title="设置精华"><span class="glyphicon glyphicon-ok co19 pointer set-important"></span></a>
                 <% } %>
             </td>
             <td><%= question.title %></td>
@@ -321,7 +344,7 @@ $(document).ready(function(){
             
             <td>
                 <% if (!question.state) { %>
-                    <span class="glyphicon glyphicon-remove cl_red"></span>
+                    <span class="glyphicon glyphicon-remove cl_red" title="已删除"></span>
                 <% } %>
             </td>
         </tr>

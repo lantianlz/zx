@@ -26,6 +26,7 @@ def search(request):
 
     data = []
     num = 0
+
     for question in page_objs[0]:
         num += 1
         data.append({
@@ -47,3 +48,17 @@ def search(request):
         json.dumps({'data': data, 'page_count': page_objs[4], 'total_count': page_objs[5]}),
         mimetype='application/json'
     )
+
+
+def get_question_by_id(request):
+    question_id = request.REQUEST.get('question_id')
+
+    data = ''
+    question = QuestionBase().get_question_by_id(question_id)
+    if question:
+        data = {
+            'question_id': question.id,
+            'question_title': question.title,
+            'question_desc': question.content
+        }
+    return HttpResponse(json.dumps(data), mimetype='application/json')

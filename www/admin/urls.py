@@ -28,12 +28,19 @@ urlpatterns += patterns('www.admin.views_topic',
 # 每日精选
 urlpatterns += patterns('www.admin.views_important_question',
 
+                        url(r'^important_question/get_important_question_by_question_id$', 'get_important_question_by_question_id'),
+                        url(r'^important_question/get_important_question_by_title$', 'get_important_question_by_title'),
+                        url(r'^important_question/add_important$', 'add_important'),
+                        url(r'^important_question/modify_important$', 'modify_important'),
+                        url(r'^important_question/cancel_important$', 'cancel_important'),
                         url(r'^important_question$', 'important_question'),
                         )
 
 
 # 提问
 urlpatterns += patterns('www.admin.views_question',
+
+                        url(r'^question/get_question_by_id$', 'get_question_by_id'),
                         url(r'^question/search$', 'search'),
                         url(r'^question$', 'question'),
                         )
