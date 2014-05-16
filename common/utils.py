@@ -226,9 +226,6 @@ def get_random_code(length=16):
     postfix = ''
     for i in xrange(length):
         postfix += str_src[random.randint(0, len(str_src) - 1)]
-    # for id, value in enumerate(range(4)):
-    #     for i in range(4):
-    #         postfix += str_src[random.randint(0, 32)]
     return postfix
 
 
@@ -263,3 +260,37 @@ def exec_command(command, timeout=25):
     import commands
     content = commands.getoutput(command)
     return True, content
+
+
+class DictLikeObject(dict):
+
+    '''
+    @note: 格式化字典对象为object
+    '''
+
+    def __getattr__(self, item):
+        return self[item]
+
+    def __setattr__(self, name, value):
+        self[name] = value
+
+
+def format_object_to_dict(obj):
+    '''
+    @note: 将一个对象格式化为一个字典
+    '''
+    data = DictLikeObject()
+
+    dict_obj = obj.__dict__
+    keys = dict_obj.keys()
+    keys = ['auto_id', 'mobilenumber', 'domain', 'source', 'gender', 'des', '_state', 'state', 'email', 'username', 'nick', 'ip',
+            'birthday', 'create_time', 'avatar', 'email_verified', 'last_login', 'user_login', 'password', 'id', 'mobile_verified']
+    for key in keys:
+        if isinstance(dict_obj[key], (int, bool, long, float, unicode, str,
+                                      list, tuple, set, dict, type(None))):
+            data[key] = dict_obj[key]
+        elif isinstance(dict_obj[key], (datetime.datetime, datetime.date)):
+            data[key] = str(dict_obj[key])
+        # else:
+        #     print key
+    return data
