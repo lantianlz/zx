@@ -16,7 +16,7 @@
 </style>
 {% endblock %}
 
-{% block js %}
+{% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
     $('.securities-list .showMap').bind('click', function(e){
@@ -44,7 +44,7 @@ $(document).ready(function(){
 </div>
 <ul class="list-inline row pl-25 pr-25 pt-5">
     <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
-        <img class="pa avatar-55 avatar-circle" src="{{MEDIA_URL}}img/common/user1.jpg">
+        <a href="#"><img class="pa avatar-55 avatar-circle" src="{{MEDIA_URL}}img/common/user1.jpg"></a>
         <div class="pl-85 row pr-10">
             <div class="pb-5">
                 <a href="#">半夜没事瞎溜达</a>
