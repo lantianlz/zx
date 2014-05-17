@@ -25,7 +25,7 @@ def search(request):
     page_objs = page.Cpt(questions, count=10, page=page_index).info
 
     data = []
-    num = 0
+    num = 10 * (page_index - 1) + 0
 
     for question in page_objs[0]:
         num += 1

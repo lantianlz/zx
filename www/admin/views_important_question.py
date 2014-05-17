@@ -27,7 +27,7 @@ def get_important_question_by_title(request):
     page_objs = page.Cpt(important_questions, count=10, page=page_index).info
 
     data = []
-    num = 0
+    num = 10 * (page_index - 1) + 0
 
     for important_question in page_objs[0]:
         num += 1
