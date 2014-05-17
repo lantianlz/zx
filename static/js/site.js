@@ -173,8 +173,6 @@ if (!String.format) {
     }
 
 
-
-
     /*
         工具包
     */
@@ -556,7 +554,7 @@ if (!String.format) {
             description: '地图插件',
             createMap: function(mapTitle){
                 if(!map){
-                    // 是否第一次创建反馈框
+                    // 是否第一次创建地图框
                     if($('#map_modal').length == 0){
                         // 将反馈框添加进body
                         $('body').append(mapHtml);
