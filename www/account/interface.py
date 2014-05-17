@@ -7,28 +7,30 @@ from django.utils.encoding import smart_unicode
 from django.conf import settings
 
 from common import utils, debug, validators, cache
-from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser
+# from www.misc.decorators import cache_required
+from www.misc import consts
+from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
+from www.account.models import RecommendUser, LastActive
 from www.message.interface import UnreadCountBase
 
 dict_err = {
-    100: u'邮箱重复',
-    101: u'昵称重复',
-    102: u'手机号重复',
-    103: u'被逮到了，无效的性别值',
-    104: u'这么奇葩的生日怎么可能',
-    105: u'两次输入密码不相同',
-    106: u'当前密码错误',
-    107: u'新密码和老密码不能相同',
-    108: u'登陆密码验证失败',
-    109: u'新邮箱和老邮箱不能相同',
-    110: u'邮箱验证码错误或者已过期，请重新验证',
-    111: u'该邮箱尚未注册',
-    112: u'code已失效，请重新执行重置密码操作',
-
-    998: u'参数缺失',
-    999: u'系统错误',
-    000: u'成功'
+    10100: u'邮箱重复',
+    10101: u'昵称重复',
+    10102: u'手机号重复',
+    10103: u'被逮到了，无效的性别值',
+    10104: u'这么奇葩的生日怎么可能',
+    10105: u'两次输入密码不相同',
+    10106: u'当前密码错误',
+    10107: u'新密码和老密码不能相同',
+    10108: u'登陆密码验证失败',
+    10109: u'新邮箱和老邮箱不能相同',
+    10110: u'邮箱验证码错误或者已过期，请重新验证',
+    10111: u'该邮箱尚未注册',
+    10112: u'code已失效，请重新执行重置密码操作',
+    10113: u'没有找到对象',
 }
+dict_err.update(consts.G_DICT_ERROR)
+
 ACCOUNT_DB = settings.ACCOUNT_DB
 
 
@@ -105,17 +107,17 @@ class UserBase(object):
             return False, smart_unicode(e)
 
         if self.get_user_by_email(email):
-            return False, dict_err.get(100)
+            return 10100, dict_err.get(10100)
         if self.get_user_by_nick(nick):
-            return False, dict_err.get(101)
+            return 10101, dict_err.get(10101)
         if self.get_user_by_mobilenumber(mobilenumber):
-            return False, dict_err.get(102)
-        return True, dict_err.get(000)
+            return 10102, dict_err.get(10102)
+        return 0, dict_err.get(0)
 
     def check_gender(self, gender):
         if not str(gender) in ('0', '1', '2'):
-            return False, dict_err.get(103)
-        return True, dict_err.get(000)
+            return 10103, dict_err.get(10103)
+        return 0, dict_err.get(0)
 
     def check_birthday(self, birthday):
         try:
@@ -123,8 +125,8 @@ class UserBase(object):
             now = datetime.datetime.now()
             assert (now + datetime.timedelta(days=100 * 365)) > birthday > (now - datetime.timedelta(days=100 * 365))
         except:
-            return False, dict_err.get(104)
-        return True, dict_err.get(000)
+            return 10104, dict_err.get(10104)
+        return 0, dict_err.get(0)
 
     @transaction.commit_manually(using=ACCOUNT_DB)
     def regist_user(self, email, nick, password, ip, mobilenumber=None, username=None,
@@ -135,12 +137,12 @@ class UserBase(object):
         try:
             if not (email and nick and password):
                 transaction.rollback(using=ACCOUNT_DB)
-                return False, dict_err.get(998)
+                return 99800, dict_err.get(99800)
 
-            flag, result = self.check_user_info(email, nick, password, mobilenumber)
-            if not flag:
+            errcode, errmsg = self.check_user_info(email, nick, password, mobilenumber)
+            if errcode != 0:
                 transaction.rollback(using=ACCOUNT_DB)
-                return flag, result
+                return errcode, errmsg
 
             id = utils.uuid_without_dash()
             now = datetime.datetime.now()
@@ -158,14 +160,18 @@ class UserBase(object):
                     content = u'成功邀请一个注册用户 <a href="%s">%s</a>' % (profile.get_url(), profile.nick)
                     UnreadCountBase().add_system_message(user_id=invitation.user_id, content=content)
 
+                    # 自动关注邀请者
+                    from www.timeline.interface import UserFollowBase
+                    UserFollowBase().follow_people(profile.id, invitation.user_id)
+
             transaction.commit(using=ACCOUNT_DB)
 
             # todo发送验证邮件
-            return True, profile
+            return 0, profile
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=ACCOUNT_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     def get_user_by_external_info(self, source, access_token, external_user_id,
                                   refresh_token, nick, ip, expire_time,
@@ -180,8 +186,8 @@ class UserBase(object):
             if not nick:
                 return False, u'生成名称异常'
             expire_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(time.time()) + int(expire_time)))
-            flag, result = self.regist_user(email=email, nick=nick, password=email, ip=ip, source=1, gender=gender)
-            if flag:
+            errcode, result = self.regist_user(email=email, nick=nick, password=email, ip=ip, source=1, gender=gender)
+            if errcode == 0:
                 user = result
                 ExternalToken.objects.create(source=source, external_user_id=external_user_id,
                                              access_token=access_token, refresh_token=refresh_token, user_url=user_url,
@@ -229,23 +235,23 @@ class UserBase(object):
         '''
         user_id = user.id
         if not (user_id and nick and gender and birthday):
-            return False, dict_err.get(998)
+            return 99800, dict_err.get(99800)
 
         try:
             validators.vnick(nick)
         except Exception, e:
-            return False, smart_unicode(e)
+            return 99900, smart_unicode(e)
 
         if user.nick != nick and self.get_user_by_nick(nick):
-            return False, dict_err.get(101)
+            return 10101, dict_err.get(10101)
 
-        flag, result = self.check_gender(gender)
-        if not flag:
-            return flag, result
+        errcode, errmsg = self.check_gender(gender)
+        if errcode != 0:
+            return errcode, errmsg
 
-        flag, result = self.check_birthday(birthday)
-        if not flag:
-            return flag, result
+        errcode, errmsg = self.check_birthday(birthday)
+        if errcode != 0:
+            return errcode, errmsg
 
         user = self.get_user_by_id(user_id)
         user.nick = nick
@@ -256,58 +262,58 @@ class UserBase(object):
         user.save()
 
         # todo:触发事件，比如清除缓存等
-        return True, user
+        return 0, user
 
     def change_pwd(self, user, old_password, new_password_1, new_password_2):
         '''
         @note: 密码修改
         '''
         if not all((old_password, new_password_1, new_password_2)):
-            return False, dict_err.get(998)
+            return 99800, dict_err.get(99800)
 
         if new_password_1 != new_password_2:
-            return False, dict_err.get(105)
+            return 10105, dict_err.get(10105)
         if not self.check_password(old_password, user.password):
-            return False, dict_err.get(106)
+            return 10106, dict_err.get(10106)
         if old_password == new_password_1:
-            return False, dict_err.get(107)
+            return 10107, dict_err.get(10107)
         try:
             validators.vpassword(new_password_1)
         except Exception, e:
-            return False, smart_unicode(e)
+            return 99900, smart_unicode(e)
 
         user_login = self.get_user_login_by_id(user.id)
         user_login.password = self.set_password(new_password_1)
         user_login.save()
-        return True, dict_err.get(000)
+        return 0, dict_err.get(0)
 
     def change_email(self, user, email, password):
         '''
         @note: 邮箱修改
         '''
         if not all((email, password)):
-            return False, dict_err.get(998)
+            return 99800, dict_err.get(99800)
 
         if not self.check_password(password, user.password):
-            return False, dict_err.get(108)
+            return 10108, dict_err.get(10108)
 
         if user.email == email:
-            return False, dict_err.get(109)
+            return 10109, dict_err.get(10109)
 
         try:
             validators.vemail(email)
         except Exception, e:
-            return False, smart_unicode(e)
+            return 99900, smart_unicode(e)
 
         if user.email != email and self.get_user_by_email(email):
-            return False, dict_err.get(100)
+            return 10100, dict_err.get(10100)
 
         user_login = self.get_user_login_by_id(user.id)
         user_login.email = email
         user_login.save()
 
         # todo发送验证邮件
-        return True, dict_err.get(000)
+        return 0, dict_err.get(0)
 
     def send_confirm_email(self, user):
         '''
@@ -333,29 +339,29 @@ class UserBase(object):
         @note: 确认邮箱
         '''
         if not code:
-            return False, dict_err.get(998)
+            return 99800, dict_err.get(99800)
 
         cache_obj = cache.Cache()
         key = u'confirm_email_code_%s' % user.id
         cache_code = cache_obj.get(key)
 
         if cache_code != code:
-            return False, dict_err.get(110)
+            return 10110, dict_err.get(10110)
 
         user.email_verified = True
         user.save()
-        return True, user
+        return 0, user
 
     def send_forget_password_email(self, email):
         '''
         @note: 发送密码找回邮件
         '''
         if not email:
-            return False, dict_err.get(998)
+            return 99800, dict_err.get(99800)
 
         user = self.get_user_by_email(email)
         if not user:
-            return False, dict_err.get(111)
+            return 10111, dict_err.get(10111)
         cache_obj = cache.Cache()
         key = u'forget_password_email_code_%s' % email
         code = cache_obj.get(key)
@@ -373,7 +379,7 @@ class UserBase(object):
 
             async_send_email(email, u'智选找回密码',
                              utils.render_email_template('email/reset_password.html', context), 'html')
-        return True, dict_err.get(000)
+        return 0, dict_err.get(0)
 
     def get_user_by_code(self, code):
         cache_obj = cache.Cache()
@@ -382,14 +388,14 @@ class UserBase(object):
     def reset_password_by_code(self, code, new_password_1, new_password_2):
         user = self.get_user_by_code(code)
         if not user:
-            return False, dict_err.get(112)
+            return 10112, dict_err.get(10112)
 
         if new_password_1 != new_password_2:
-            return False, dict_err.get(105)
+            return 10105, dict_err.get(10105)
         try:
             validators.vpassword(new_password_1)
         except Exception, e:
-            return False, smart_unicode(e)
+            return 99900, smart_unicode(e)
 
         user_login = self.get_user_login_by_id(user.id)
         user_login.password = self.set_password(new_password_1)
@@ -399,7 +405,24 @@ class UserBase(object):
         key = u'forget_password_email_code_%s' % user.email
         cache_obj.delete(key)
         cache_obj.delete(code)
-        return True, user_login
+        return 0, user_login
+
+    def update_user_last_active_time(self, user_id, ip=None, last_active_source=0):
+        '''
+        @note: 更新用户最后活跃时间
+        '''
+        cache_obj = cache.Cache()
+        # 一小时更新一次
+        if not cache_obj.get_time_is_locked(key=u'last_active_time', time_out=3600):
+            try:
+                la = LastActive.objects.get(user_id=user_id)
+                la.ip = ip
+                la.last_active_source = last_active_source
+                la.last_active_time = datetime.datetime.now()
+                la.save()
+            except LastActive.DoesNotExist:
+                LastActive.objects.create(user_id=user_id, last_active_time=datetime.datetime.now(),
+                                          ip=ip, last_active_source=last_active_source)
 
 
 class InvitationBase(object):
@@ -440,7 +463,6 @@ def user_profile_required(func):
     '''
     def _decorator(request, user_id, *args, **kwargs):
         from www.timeline.interface import UserFollowBase
-        from www.question.interface import QuestionBase
         from django.http import HttpResponse
 
         ufb = UserFollowBase()
@@ -455,10 +477,159 @@ def user_profile_required(func):
         request.is_me = (request.user == user)
         if not request.is_me:
             request.is_follow = ufb.check_is_follow(request.user.id, user.id)
-        request.user_question_count, request.user_answer_count, request.user_liked_count = QuestionBase().\
-            get_user_qa_count_info(user.id)
-        request.following_count = ufb.get_following_count(user.id)
-        request.follower_count = ufb.get_follower_count(user.id)
+
+        user_count_info = UserCountBase().get_user_count_info(user_id)
+        request.user_question_count = user_count_info['user_question_count']
+        request.user_answer_count = user_count_info['user_answer_count']
+        request.user_liked_count = user_count_info['user_liked_count']
+        request.following_count = user_count_info['following_count']
+        request.follower_count = user_count_info['follower_count']
 
         return func(request, user, *args, **kwargs)
     return _decorator
+
+
+class UserCountBase(object):
+
+    def __init__(self):
+        pass
+
+    def get_user_count_info(self, user_id):
+        try:
+            uc = UserCount.objects.get(user_id=user_id)
+            return dict(user_question_count=uc.user_question_count, user_answer_count=uc.user_answer_count,
+                        user_liked_count=uc.user_liked_count, following_count=uc.following_count,
+                        follower_count=uc.follower_count)
+        except UserCount.DoesNotExist:
+            return dict(user_question_count=0, user_answer_count=0, user_liked_count=0,
+                        following_count=0, follower_count=0)
+
+    def update_user_count(self, user_id, code, operate="add"):
+        assert (user_id and code)
+        uc, created = UserCount.objects.get_or_create(user_id=user_id)
+        count = getattr(uc, code)
+        if operate == 'add':
+            count += 1
+        else:
+            count -= 1
+        setattr(uc, code, count)
+        uc.save()
+
+
+class RecommendUserBase(object):
+
+    def __init__(self):
+        pass
+
+    def format_recommend_user(self, recommend_users):
+        '''
+        格式化
+        '''
+        for recommend_user in recommend_users:
+            recommend_user.user = UserBase().get_user_by_id(recommend_user.user_id)
+            recommend_user.user_count = UserCountBase().get_user_count_info(recommend_user.user_id)
+
+        return recommend_users
+
+    # @cache_required(cache_key='recommend_user_%s', expire=3600)
+    def get_recommend_users(self, user_id, random=False):
+        from www.timeline.interface import UserFollowBase
+        exclude_user_ids = [f.to_user_id for f in UserFollowBase().get_following_by_user_id(user_id)]
+        exclude_user_ids.append(user_id)
+        if not random:
+            rusers = RecommendUser.objects.exclude(user_id__in=exclude_user_ids)
+        else:
+            rusers = RecommendUser.objects.exclude(user_id__in=exclude_user_ids).order_by('?')
+        return rusers[:4]
+
+    def get_all_recommend_users(self):
+        '''
+        获取所有的推荐用户信息(admin)
+        '''
+
+        return self.format_recommend_user(RecommendUser.objects.all())
+
+    def set_recommend_user_sort(self, user_id, sort_num):
+        '''
+        设置推荐用户排序
+
+        user_id: 用户id
+        sort_num: 排序数值
+        '''
+        if not user_id or not sort_num:
+            return 99800, dict_err.get(99800)
+
+        recommend_user = RecommendUser.objects.filter(user_id=user_id)
+        if recommend_user:
+            try:
+                recommend_user = recommend_user[0]
+                recommend_user.sort_num = sort_num
+                recommend_user.save()
+                return 0, dict_err.get(0)
+            except Exception, e:
+                debug.get_debug_detail(e)
+                return 99900, smart_unicode(e)
+
+        return 10113, dict_err.get(10113)
+
+    def un_recommend_user(self, user_id):
+        '''
+        取消推荐用户设置
+
+        user_id: 用户id
+        '''
+        if not user_id:
+            return 99800, dict_err.get(99800)
+
+        recommend_user = RecommendUser.objects.filter(user_id=user_id)
+        if recommend_user:
+            try:
+                recommend_user = recommend_user[0]
+                recommend_user.delete()
+                return 0, dict_err.get(0)
+            except Exception, e:
+                debug.get_debug_detail(e)
+                return 99900, smart_unicode(e)
+
+        return 10113, dict_err.get(10113)
+
+    def set_recommend_user(self, user_id):
+        '''
+        设置推荐用户
+
+        user_id: 用户id
+        '''
+        if not user_id:
+            return 99800, dict_err.get(99800)
+
+        recommend_user = RecommendUser.objects.filter(user_id=user_id)
+        if not recommend_user:
+            try:
+                RecommendUser.objects.create(user_id=user_id)
+                return 0, dict_err.get(0)
+            except Exception, e:
+                debug.get_debug_detail(e)
+                return 99900, smart_unicode(e)
+
+        return 10113, dict_err.get(10113)
+
+    def get_user_by_nick(self, user_nick):
+        '''
+        '''
+        if not user_nick:
+            return None
+
+        user = UserBase().get_user_by_nick(user_nick)
+
+        if user:
+            # 判断是否已经是推荐用户了
+            if RecommendUser.objects.filter(user_id=user.id).count() > 0:
+                user.is_recommend = True
+            else:
+                user.is_recommend = False
+
+            # 补充统计信息
+            user.user_count = UserCountBase().get_user_count_info(user.id)
+            return user
+
+        return None

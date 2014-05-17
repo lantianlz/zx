@@ -96,20 +96,22 @@ def user_qa_count_info_right_nav_dispaly(context):
     """
     @note: 个人问答相关统计总数信息获取
     """
-    from www.question import interface
-    user_question_count, user_answer_count, user_liked_count = interface.QuestionBase()\
-        .get_user_qa_count_info(context['request'].user.id)
+    from www.account.interface import UserCountBase
+    user_count_info = UserCountBase().get_user_count_info(context['request'].user.id)
+    user_question_count, user_answer_count, user_liked_count = user_count_info['user_question_count'],\
+        user_count_info['user_answer_count'], user_count_info['user_liked_count']
+
     return render_to_response('question/_user_qa_count_info_right_nav_dispaly.html', locals(), context_instance=context).content
 
 
-@register.simple_tag(takes_context=True)
-def global_hotest_tags(context):
-    """
-    @note: 热门话题提取
-    """
-    from www.question.interface import TagBase
-    global_hotest_tags = TagBase().get_all_tags()
-    return render_to_response('question/_global_hotest_tags.html', locals(), context_instance=context).content
+# @register.simple_tag(takes_context=True)
+# def global_hotest_tags(context):
+#     """
+#     @note: 热门话题提取
+#     """
+#     from www.question.interface import TagBase
+#     global_hotest_tags = TagBase().get_all_tags()
+#     return render_to_response('question/_global_hotest_tags.html', locals(), context_instance=context).content
 
 
 @register.simple_tag(takes_context=True)
@@ -117,8 +119,8 @@ def global_hot_topics(context):
     """
     @note: 热门话题
     """
-    #from www.question.interface import TagBase
-    #global_hotest_tags = TagBase().get_all_tags()
+    from www.question.interface import TagBase
+    global_hotest_tags = TagBase().get_all_tags()[:5]
     return render_to_response('question/_global_hot_topics.html', locals(), context_instance=context).content
 
 

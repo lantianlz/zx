@@ -1,0 +1,415 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}问题管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+    // 初始化日期控件
+    $('#ask_question_date').datetimepicker({
+        format: 'yyyy-mm-dd hh:mm:s',
+        language: 'zh-CN',
+        minView: 0,
+        autoclose: true
+    });
+
+    // 提问 models
+    var Question = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': 1,
+            'questionId': '',
+            'userId': '',
+            'userNick': '',
+            'title': '',
+            'description': '',
+            'viewCount': 0,
+            'answerCount': 0,
+            'isImportant': false,
+            'isHideUser': false,
+            'state': 0,
+            'createdTime': new Date()
+        }
+
+    });
+
+    // 提问 collection
+    var Questions = Backbone.Collection.extend({
+        model: Question,
+
+        _modelMaps: {
+            'num': 'num',
+            'questionId': 'question_id',
+            'userId': 'user_id',
+            'userNick': 'user_nick',
+            'title': 'title',
+            'description': 'description',
+            'viewCount': 'view_count',
+            'answerCount': 'answer_count',
+            'isImportant': 'is_important',
+            'isHideUser': 'is_hide_user',
+            'state': 'state',
+            'createdTime': 'created_time'
+        },
+        // 查询方法
+        search: function(title, pageIndex){
+
+            var me = this;
+
+            ajaxSend(
+                "/admin/question/search", 
+                {'title': title||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    
+                    me.pageIndex = pageIndex;
+                    me.pageCount = data.page_count;
+                    me.title = title||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+
+        },
+
+        // 获取一个提问的model
+        getOne: function(questionId, callback){
+            ajaxSend(
+                "/admin/question/get_question_by_id", 
+                {'question_id': questionId}, 
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+
+    });
+    
+    
+    // 提问 view
+    var QuestionListView = Backbone.View.extend({
+        el: '#question_list',
+
+        template: _.template($('#item_question_template').html()),
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search-question': 'searchQuestion',
+            //'click .pointer': 'modifyQuestion',
+            'click .set-important': 'setImportant'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+            this.$('tbody').html(this.template({'questions': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.title
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#question_list"]').tab('show');
+        },
+
+        searchQuestion: function(){
+            var title = this.$('.key-word').val();
+
+            router.navigate('/search/' + title + '/1', {trigger: true});
+        },
+
+        modifyQuestion: function(sender){
+            var target = $(sender.currentTarget),
+                questionId = target.data('question_id'),
+                me = this;
+
+            router.navigate('/modify/' + questionId, {trigger: true});
+        }
+
+    });
+
+    // 提问修改 view
+    var QuestionModifyView = Backbone.View.extend({
+        
+        el: '#modify_question',
+
+        template: _.template($('#modify_question_template').html()),
+
+        events: {
+            'click .save-question': 'saveQuestion',
+            'click .remove-question': 'removeQuestion'
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_question"]').tab('show');
+        },
+
+        //
+        initTextboxList: function(){
+            var text_topics = new $.TextboxList('#question_topics', {
+                bitsOptions: {
+                    box: {deleteButton: true}
+                },
+                unique: true, 
+                max: 100,
+                plugins: {
+                    autocomplete: {
+                        minLength: 1, // 最小字符
+                        queryRemote: true, // 远程查询
+                        placeholder: '添加话题',
+                        highlight: false,
+                        onlyFromValues: true, // 是否默认选中第一个结果
+                        remote: {
+                            url: '/question/get_topic_info_by_name', 
+                            param: 'topic_name',
+                            loadPlaceholder: '正在加载...',
+                        }
+                    }
+                }
+
+            });
+
+            return text_topics;
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+
+            //this.initTextboxList();
+        },
+
+        // 显示提问信息
+        modifyQuestion: function(questionId){
+            this.showPanel();
+
+            this.collection.getOne(questionId, function(data){
+                this.render(data);
+            });
+            
+        },
+
+        // 保存提问
+        saveQuestion: function(){
+            var questionId = this.$('form').data('question_id');
+
+            $.ZXMsg.alert('提示', questionId+"保存成功!");
+
+            // 重新加载
+            this.modifyQuestion(questionId);
+        },
+
+        // 删除提问
+        removeQuestion: function(){
+            var questionId = this.$('form').data('question_id');
+
+            $.ZXMsg.confirm('提示', '确认要删除此提问吗?', function(result){
+                //todo...
+                if(result){
+                    $.ZXMsg.alert('提示', questionId+"删除成功!");
+                    
+                    listView.showPanel();
+                }
+                
+            });
+        }
+
+    });
+
+
+    // 提问的 路由
+    var QuestionRouter = Backbone.Router.extend({
+
+        routes: {
+            "":                     "search",
+            "modify/:questionId":   "modify",
+            "search/(:title)/:pageIndex":   "search"
+        },
+
+        // 分页显示
+        search: function(title, pageIndex){
+            
+            questions.search(title, pageIndex);
+        },
+
+        // 显示修改界面
+        modify: function(questionId){
+            modifyView.modifyQuestion(questionId);
+        }
+
+    });
+
+    // 初始化
+    var questions = new Questions(),
+        listView = new QuestionListView({'collection': questions}),
+        modifyView = new QuestionModifyView({'collection': questions}),
+        router = new QuestionRouter();
+
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#question_list" class="black-blue" data-toggle="pill">提问列表</a>
+    </li>
+    <li>
+        <a href="#modify_question" class="black-blue" data-toggle="pill">修改提问</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 提问列表 -->
+    <div class="tab-pane fade pt-15 in active" id="question_list">
+        <div class="pl-0 pb-10 col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入提问标题..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search-question" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>精选</th>
+                    <th>标题</th>
+                    <th>提问者</th>
+                    <th>提问时间</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改提问 -->
+    <div class="tab-pane fade" id="modify_question">
+        
+    </div>
+</div>
+
+<!-- 问题列表模板 -->
+<script type="text/template" id="item_question_template">
+    <% _.each(questions, function(question){ %>
+        <tr data-question_id="<%= question.questionId %>">
+            <td><%= question.num %></td>
+            <td>
+                <% if (question.isImportant) { %>
+                    <span class="glyphicon glyphicon-ok co-zx"></span>
+                <% } else if(!question.isImportant && question.state) { %>
+                    <a href="/admin/important_question#add/<%= question.questionId %>" title="设置精华"><span class="glyphicon glyphicon-ok co20 pointer set-important"></span></a>
+                <% } %>
+            </td>
+            <td><%= question.title %></td>
+
+            <td><%= question.userNick %></td>
+            <td><%= question.createdTime %></td>
+            <!-- <td><span class="fb fi f12"><%= question.viewCount %></span>次浏览, <span class="fb fi f12"><%= question.answerCount %></span>个回答</td> -->
+            
+            <td>
+                <% if (!question.state) { %>
+                    <span class="glyphicon glyphicon-remove cl_red" title="已删除"></span>
+                <% } %>
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="modify_question_template">
+    <form class="form-horizontal modify-question-form" data-question_id="<%= userId %>" role="form" method="post" action="">
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问ID</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= userId %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">关联话题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="question_topics" value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问标题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" value='<%= title %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问描述</label>
+            <div class="col-sm-6">
+                <textarea name="des" rows="6" class="form-control"><%= description %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问者</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= userName %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问时间</label>
+            <div class="col-sm-3">
+                <input type="text" id="ask_question_date" class="form-control" value='<%= createdTime %>' readonly>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">回答个数</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= answerCount %>个</p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">是否精华</label>
+            <div class="col-sm-3 form-control-static">
+                <label class="checkbox-inline zx-checkbox">
+                    <input name="tag" type="checkbox" <% if (isImportant){ %>checked="checked"<% } %>>
+                </label>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save-question">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove-question">删除此提问</button>
+            </div>
+        </div>
+    </form>
+</script>
+{% endblock admin-right %}

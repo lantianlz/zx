@@ -18,21 +18,6 @@ if (!String.format) {
 
 
 /*
-  自动补零
-*/
-function addZero(data){
-    var temp = data + '';
-    if(temp.length === 0){
-        return '00'
-    } else if(temp.length === 1){
-        return  '0' + temp;
-    } else{
-        return data;
-    }
-}
-
-
-/*
     拓展Jquery方法 
 */
 (function(){
@@ -246,6 +231,57 @@ function addZero(data){
     $.ZXUtils.isDesktop = function(){
         return (992 <= $(window).width()) ? true : false;
     };
+
+    /*
+        字典映射
+
+        用例：
+        $.ZXUtils.dictMap({'a': '1', 'b': '2'}, {'a': 'a1', 'b': 'b1'})
+        返回 {'a1': '1', 'b1': '2'}
+    */
+    $.ZXUtils.dictMap = function(originDict, maps){
+        var newDict = {};
+        for(var m in maps){
+            newDict[m] = originDict[maps[m]]
+        }
+
+        return newDict;
+    };
+
+    /*
+        批量字典映射解析
+
+        $.ZXUtils.dictMapParse([{'a': '1', 'b': '2'}], {'a': 'a1', 'b': 'b1'});
+    */
+    $.ZXUtils.dictMapParse = function(data, maps){
+        var temp = [];
+
+            _.each(data, function(d){
+                temp.push($.ZXUtils.dictMap(d, maps));
+            });
+
+        return temp;
+    };
+
+
+    /*
+        自动补零
+        始终返回两位字符串，不够自动补零
+
+        用例:
+        $.ZXUtils.addZero('0');
+    */
+    $.ZXUtils.addZero = function(data){
+        var temp = data + '';
+        if(temp.length === 0){
+            return '00'
+        } else if(temp.length === 1){
+            return  '0' + temp;
+        } else{
+            return data;
+        }
+    }
+
 
 
     /* 
@@ -680,7 +716,11 @@ function addZero(data){
         $.ZXOperation.unfollowPeople('1', function(){alert('1')})
     */
     $.ZXOperation.unfollowPeople = function(userId, callback){
-        ajaxSend("/timeline/unfollow/" + userId, {}, callback, 'GET');
+        $.ZXMsg.confirm('提示', '确认要取消关注吗?', function(result){
+            if(result){
+                ajaxSend("/timeline/unfollow/" + userId, {}, callback, 'GET');
+            }
+        });
     };
 
     /*
@@ -706,6 +746,474 @@ function addZero(data){
     $.ZXOperation.unfollowTopic = function(topicId, callback){
         
     };
+
+
+    /*
+        名片操作
+    */
+    $.ZXTooltipster = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '名片操作'
+    };
+    /*
+        用户名片
+        自动将class为 zx-cardtips 的元素注册弹出名片
+        需要设置 data-user_id 属性为用户id
+
+        用例:
+        $.ZXTooltipster.PersonCard();
+    */
+    $.ZXTooltipster.PersonCard = function(){
+        var cardtipsHtml = [
+            '<div class="cardtips f12">',
+                '<div class="profile row f14">',
+                    '<div class="col-md-3">',
+                        '<a href="/p/{14}"><img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" ></a>',
+                    '</div>',
+                    '<div class="col-md-9">',
+                        '<div class="pt-10 pb-5"><a href="/p/{10}">{1}</a>{12}</div>',
+                        '<div class="pt-5">',
+                            '<span>提问<a href="/p/{15}/questions" class="pl-3 pr-15">{2}</a></span>',
+                            '<span>回答<a href="/p/{16}/answers" class="pl-3 pr-15">{3}</a></span>',
+                            '<span>赞<a href="javascript: void(0)" class="pl-3 pr-15">{4}</a></span>',
+                        '</div>',
+                    '</div>',
+                '</div>',
+                '<div class="desc pl-10 pt-5 w300 co6">{5}</div>',
+                '<div class="topics pl-10 pt-10 pb-5 w300 co6 none">擅长话题: {11}</div>',
+                '<div class="tools top-border bdc-eee pt-5 mt-5 {13}" data-user_name="{6}" data-user_id="{7}">',
+                    '<a class="send-message pr-10 pt-5 pl-5 none" href="javascript: void(0)">',
+                        '<span class="glyphicon glyphicon-envelope"></span> 私信ta',
+                    '</a>',
+                    '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 pull-right {8}">添加关注</button>',
+                    '<button type="button" class="btn btn-default btn-xs unfollow mr-5 pull-right {9}">取消关注</button>',
+                '</div>',
+            '</div>'
+        ].join('');
+
+        // 手机访问不要设置弹出名片
+        if($.ZXUtils.isPhone()){
+            return;
+        }
+
+        // 未登录不弹出名片
+        if(!CURRENT_USER_ID){
+            return;
+        }
+
+        // 设置插件
+        $('.zx-cardtips').tooltipster({
+            animation: 'swing',
+            delay: 150,
+            trigger: 'hover',
+            theme: 'tooltipster-shadow',
+            interactive: true,
+            interactiveTolerance: 300,
+            speed: 350,
+            updateAnimation: false,
+            autoClose: true,
+            //content: cardtipsHtml,
+            contentAsHTML: true,
+            content: '名片加载中...',
+            functionBefore: function(origin, continueTooltip) {
+
+                // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+                continueTooltip();
+                
+                // next, we want to check if our data has already been cached
+                if (origin.data('ajax') !== 'cached') {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/account/get_user_info_by_id?user_id=' + origin.data('user_id'),
+                        success: function(data) {
+                            if(data.user_id){
+                                origin.tooltipster('content', String.format(
+                                    cardtipsHtml, 
+                                    data.avatar,
+                                    data.nick, 
+                                    data.user_question_count,
+                                    data.user_answer_count,
+                                    data.user_liked_count,
+                                    data.des,
+                                    data.nick,
+                                    data.user_id,
+                                    data.is_follow?'none':'', // 关注按钮
+                                    data.is_follow?'':'none', //取消关注按钮
+                                    data.user_id,
+                                    // 拼装话题
+                                    $(data.topics).map(function(){
+                                        return  String.format(
+                                            '<a class="border-block-blue ml-5 pl-5 pr-5" href="/topic/{0}">{1}</a>', 
+                                            this['topic_id'], 
+                                            this['topic_name']
+                                        )
+                                    }).get().join(''),
+                                    // 根据性别设置对应的图片
+                                    (function(gender){
+                                        var genderData = {
+                                            '0': '', 
+                                            '1': '<img class="w15 mt--2 ml-5" src="'+MEDIA_URL+'img/common/male.png" title="男" />', 
+                                            '2': '<img class="w15 mt--2 ml-5" src="'+MEDIA_URL+'img/common/female.png" title="女" />'
+                                        }; 
+                                        return genderData[gender]
+                                    })(data.gender),
+                                    CURRENT_USER_ID == data.user_id ? 'none' : '',
+                                    data.user_id,
+                                    data.user_id,
+                                    data.user_id
+                                )).data('ajax', 'cached');
+                                
+                                // 监听清除缓存事件
+                                $.ZXEvent.on('removePersonCardCache', function(){
+                                    origin.data('ajax', '');
+                                });
+                            } else {
+                                origin.tooltipster('content', '加载名片失败');
+                            }
+                        }
+                    });
+                }
+            },
+
+            functionReady: function(origin, tooltip){
+                
+                // 诡异！！
+                setTimeout(function(){
+                    
+                    // 关注事件
+                    tooltip.find('.follow').bind('click', function(){
+                        var me = $(this), 
+                            target = me.parents('.tools').eq(0);
+                        
+                        //$.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
+                        g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        $.ZXOperation.followPeople(target.data('user_id'), function(){
+                            target.children('.unfollow').show(1, function(){
+                                me.hide(1);
+                                
+                                // 关注之后需要清除名片的缓存
+                                $.ZXEvent.trigger("removePersonCardCache");
+                            });
+                        });
+                        
+                    });
+
+                    // 取消关注事件
+                    tooltip.find('.unfollow').bind('click', function(){
+                        var me = $(this), 
+                            target = me.parents('.tools').eq(0);
+                        
+                        //$.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
+                        g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
+                            target.children('.follow').show(1, function(){
+                                me.hide(1);
+                                
+                                // 取消关注之后需要清除名片的缓存
+                                $.ZXEvent.trigger("removePersonCardCache");
+                            });
+                        });
+
+                    });
+
+                    // 从名片上点击发私信事件 
+                    tooltip.find('.send-message').bind('click', function(){
+                        var target = $(this).parents('.tools').eq(0);
+                        $.ZXMsg.sendPrivateMsg(target.data('user_id'), target.data('user_name'));
+                    });
+
+                }, 100);
+                
+            }
+        });
+        
+        
+        
+    };
+
+    /*
+        话题名片
+        自动将class为 zx-topictips 的元素注册弹出名片
+        需要设置 data-topic_id 属性为话题id
+
+        用例:
+        $.ZXTooltipster.PersonCard();
+    */
+    $.ZXTooltipster.TopicCard = function(){
+        // 弹出话题名片设置
+        var topictipsHtml = [
+            '<div class="topictips f12">',
+                '<div class="profile row f14">',
+                    '<div class="col-md-3">',
+                        '<a href="/topic/{7}"><img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}"></a>',
+                    '</div>',
+                    '<div class="col-md-9">',
+                        '<div class="pt-10 pb-5"><a href="/topic/{7}">{1}</a></div>',
+                        '<div class="question-info pt-5">',
+                            '<span class="none">关注者<span class="pl-3 pr-15 fb">{2}</span></span>',
+                            '<span>提问<span class="pl-3 pr-15 fb">{3}</span></span>',
+                        '</div>',
+                    '</div>',
+                '</div>',
+                '<div class="desc pl-10 pt-5 w300 co6">{4}</div>',
+                '<div class="none tools top-border bdc-eee pt-5 mt-5 text-right" data-topic_id="{7}">',
+                    '<button type="button" class="btn btn-primary btn-xs follow mr-5 ml-10 {5}">添加关注</button>',
+                    '<button type="button" class="btn btn-default btn-xs unfollow mr-5 {6}">取消关注</button>',
+                '</div>',
+            '</div>'
+        ].join('');
+
+        // 手机访问不要设置弹出名片
+        if($.ZXUtils.isPhone()){
+            return;
+        }
+
+        // 未登录不弹出名片
+        if(!CURRENT_USER_ID){
+            return;
+        }
+
+        // 设置插件
+        $('.zx-topictips').tooltipster({
+            animation: 'swing',
+            delay: 200,
+            trigger: 'hover',
+            theme: 'tooltipster-shadow',
+            interactive: true,
+            interactiveTolerance: 300,
+            autoClose: true,
+            //content: topictipsHtml,
+            updateAnimation: false,
+            contentAsHTML: true,
+            content: '信息加载中...',
+            functionBefore: function(origin, continueTooltip) {
+
+                // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+                continueTooltip();
+                
+                // next, we want to check if our data has already been cached
+                if (origin.data('ajax') !== 'cached') {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/question/get_topic_info_by_id?topic_id=' + origin.data('topic_id'),
+                        success: function(data) {
+                            if(data.domain){
+                                origin.tooltipster('content', String.format(
+                                    topictipsHtml, 
+                                    data.img,
+                                    data.name, 
+                                    data.follow_count,
+                                    data.tag_question_count,
+                                    data.des || '暂无话题介绍',
+                                    data.is_follow?'none':'', // 关注按钮
+                                    data.is_follow?'':'none', //取消关注按钮
+                                    data.domain
+                                )).data('ajax', 'cached');
+
+                                // 监听清除缓存事件
+                                $.ZXEvent.on('removeTopicCardCache', function(){
+                                    origin.data('ajax', '');
+                                });
+                            } else {
+                                origin.tooltipster('content', '加载名片失败');
+                            }
+                        }
+                    });
+                }
+            },
+
+            functionReady: function(origin, tooltip){
+                // 诡异！！
+                setTimeout(function(){
+                    
+                    // 关注事件
+                    tooltip.find('.follow').bind('click', function(){
+                        var me = $(this),
+                            target = $(this).parents('.tools').eq(0);
+
+                        target.children('.unfollow').show(1, function(){
+                            me.hide(1);
+
+                            // 关注之后需要清除名片的缓存
+                            $.ZXEvent.trigger("removeTopicCardCache");
+                        });
+                    });
+
+                    // 取消关注事件
+                    tooltip.find('.unfollow').bind('click', function(){
+                        var me = $(this),
+                            target = $(this).parents('.tools').eq(0);
+
+                        target.children('.follow').show(1, function(){
+                            me.hide(1);
+
+                            // 取消关注之后需要清除名片的缓存
+                            $.ZXEvent.trigger("removeTopicCardCache");
+                        });
+                    });
+                }, 100);
+            }
+        });
+        
+        
+    };
+
+    /*
+        事件对象
+    */
+    $.ZXEvent = {};
+    _.extend($.ZXEvent, Backbone.Events);
+
+
+    /*
+        分页组件
+    */
+    $.ZXPagination = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '分页组件'
+    }
+    /*
+        分页组件
+    */
+    $.ZXPagination.PaginationView = Backbone.View.extend({
+        el: '.zx-pagination',
+
+        step: 4,
+
+        totalStep: 10,
+
+        searchUrl: 'search',
+
+        // 防止超出范围
+        _protectRange: function(tempMin, tempMax, min, max){
+            if(tempMin < min){
+                tempMin = min;
+            }
+
+            if(tempMax > max){
+                tempMax = max
+            }
+
+            return [tempMin, tempMax]
+        },
+
+        // 生成分页区间
+        _generateRange: function(current, total){
+            var pages = [], 
+                current = parseInt(current),
+                total = parseInt(total),
+                min = current - this.step,
+                max = current + this.step,
+                temp = [];
+
+            // 防止超出范围
+            temp = this._protectRange(min, max, 1, total);
+            min = temp[0]
+            max = temp[1]
+
+            // 维持列表在 totalStep-1 这个长度
+            var tempCount = max - min + 2;
+            if(tempCount < this.totalStep){
+                if(max >= total){
+                    max = total;
+                    min = max - this.totalStep + 2;
+                } else {
+                    max = this.totalStep - 1;
+                }
+            }
+
+            // 防止超出范围
+            temp = this._protectRange(min, max, 1, total);
+
+            // 生成列表
+            pages = _.range(temp[0], temp[1]+1);
+
+            return pages;
+        },
+
+        render: function(pageIndex, pageCount, searchUrl){
+            var url = searchUrl || this.searchUrl,
+                pageHtml = '',
+                pages = this._generateRange(pageIndex, pageCount);
+            
+            for (var i = 0; i < pages.length; i++) {
+
+                pageHtml += String.format(
+                    '<li {0}><a href="#{1}/{2}">{3}</a></li>', 
+                    pages[i] == pageIndex ? 'class="active"' : '', // 为当前页添加active类
+                    url, 
+                    pages[i], 
+                    pages[i]
+                );
+            };
+
+            // 首页
+            pageHtml = String.format(
+                '<li {0}><a href="{1}">&laquo;</a>', 
+                pageIndex == 1 ? 'class="disabled"' : '',
+                pageIndex == 1 ? 'javascript: void(0);' : ('#' + url + '/' + 1)
+            ) + pageHtml;
+            
+            // 末页
+            pageHtml += String.format(
+                '<li {0}><a href="{1}">&raquo;</a>', 
+                pageIndex == pageCount ? 'class="disabled"' : '',
+                pageIndex == pageCount ? 'javascript: void(0);' : ('#' + url + '/' + pageCount)
+            );
+
+            this.$el.html(pageHtml);
+        }
+    });
+
+
+    /*
+        文本框组件
+    */
+    $.ZXTextboxList = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '文本框组件'
+    }
+    /**/
+    $.ZXTextboxList.create = function(selector, options){
+        var temp = new $.TextboxList(selector, {
+            bitsOptions: {
+                box: {deleteButton: true}
+            },
+            unique: true, 
+            max: options.max,
+            plugins: {
+                autocomplete: {
+                    minLength: 1, // 最小字符
+                    queryRemote: true, // 远程查询
+                    placeholder: options.placeholder,
+                    highlight: false,
+                    onlyFromValues: true, // 是否默认选中第一个结果
+                    remote: {
+                        url: options.url, 
+                        param: options.param,
+                        loadPlaceholder: options.loadPlaceholder,
+                    }
+                }
+            }
+
+        });
+
+        return {
+            target: temp,
+            add: function(name, value){
+                temp.add(name, value)
+            },
+            getValues: function(){
+                return _.map(temp.getValues(), function(v){return v[0]});
+            }
+        };
+    }
+
 
 })(jQuery);
 
@@ -782,17 +1290,19 @@ $(document).ready(function(){
     // 回到顶部动画效果
     var userClickTop = false;
 
-    $(window).scroll(function(){
-        var me = $(this);
+    $(window).scroll(
+        _.throttle(function(){
+            var me = $(this);
 
-        if(!userClickTop){
-            if(me.scrollTop() < 400){
-                $('.scroll-top').hide('fast');
-            }else{
-                $('.scroll-top').show('fast');
+            if(!userClickTop){
+                if(me.scrollTop() < 400){
+                    $('.scroll-top').hide('fast');
+                }else{
+                    $('.scroll-top').show('fast');
+                }
             }
-        }
-    });
+        }, 300)
+    );
 
     $('.scroll-top').bind('mouseover', function(){
         var me = $(this);
@@ -843,188 +1353,9 @@ $(document).ready(function(){
     // 初始化所有的 tooltip 
     $('.zx-tooltip').tooltip('hide');
     
-
-    // 弹出用户名片设置
-    var cardtipsHtml = [
-        '<div class="cardtips f12">',
-            '<div class="profile row f14">',
-                '<div class="col-md-3">',
-                    '<img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" >',
-                '</div>',
-                '<div class="col-md-9">',
-                    '<div class="pt-10 pb-5"><a href="/p/{10}">{1}</a></div>',
-                    '<div class="pt-5">',
-                        '<span>提问<a href="#" class="pl-3 pr-15">{2}</a></span>',
-                        '<span>回答<a href="#" class="pl-3 pr-15">{3}</a></span>',
-                        '<span>赞<a href="#" class="pl-3 pr-15">{4}</a></span>',
-                    '</div>',
-                '</div>',
-            '</div>',
-            '<div class="desc pl-10 pt-5 w300 co6">{5}</div>',
-            '<div class="topics pl-10 pt-10 pb-5 w300 co6">擅长话题: {11}</div>',
-            '<div class="tools top-border bdc-eee pt-5 mt-5" data-user_name="{6}" data-user_id="{7}">',
-                '<a class="send-message pr-10 pt-5 pl-5" href="javascript: void(0)">',
-                    '<span class="glyphicon glyphicon-envelope"></span> 私信ta',
-                '</a>',
-                '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 pull-right {8}">关注ta</button>',
-                '<button type="button" class="btn btn-default btn-xs unfollow mr-5 pull-right {9}">取消关注</button>',
-            '</div>',
-        '</div>'
-    ].join('');
-    // 除了手机其他设备都设置弹出名片
-    if(!$.ZXUtils.isPhone()){
-        $('.zx-cardtips').tooltipster({
-            animation: 'swing',
-            delay: 150,
-            trigger: 'hover',
-            theme: 'tooltipster-shadow',
-            interactive: true,
-            interactiveTolerance: 300,
-            speed: 350,
-            updateAnimation: false,
-            autoClose: true,
-            //content: cardtipsHtml,
-            contentAsHTML: true,
-            content: '名片加载中...',
-            functionBefore: function(origin, continueTooltip) {
-
-                // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
-                continueTooltip();
-                
-                // next, we want to check if our data has already been cached
-                if (origin.data('ajax') !== 'cached') {
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'json',
-                        url: '/account/get_user_info_by_id?user_id=' + origin.data('user_id'),
-                        success: function(data) {
-                            if(data.flag=='0'){
-                                origin.tooltipster('content', String.format(
-                                    cardtipsHtml, 
-                                    data.avatar,
-                                    data.name, 
-                                    data.question_count,
-                                    data.answer_count,
-                                    data.like_count,
-                                    data.desc,
-                                    data.name,
-                                    data.id,
-                                    data.is_follow?'hide':'', // 关注按钮
-                                    data.is_follow?'':'hide', //取消关注按钮
-                                    data.id,
-                                    // 拼装话题
-                                    $(data.topics).map(function(){
-                                        return  String.format(
-                                            '<a class="border-block-blue ml-5 pl-5 pr-5" href="question/topic/{0}">{1}</a>', 
-                                            this['topic_id'], 
-                                            this['topic_name']
-                                        )
-                                    }).get().join('')
-                                )).data('ajax', 'cached');
-                            } else {
-                                origin.tooltipster('content', '加载名片失败');
-                            }
-                        }
-                    });
-                }
-            }
-        });
-        // 从名片上点击发私信事件 
-        $('.cardtips .send-message').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.sendPrivateMsg(target.data('user_id'), target.data('user_name'));
-        });
-        // 关注事件
-        $('.cardtips .follow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('关注人', target.data('user_id') + target.data('user_name'));
-        });
-        // 取消关注事件
-        $('.cardtips .unfollow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('取消关注', target.data('user_id') + target.data('user_name'));
-        });
-    }
-
-    // 弹出话题名片设置
-    var topictipsHtml = [
-        '<div class="topictips f12">',
-            '<div class="profile row f14">',
-                '<div class="col-md-3">',
-                    '<img class="avatar avatar-55 avatar-circle ml-10 mt-5" src="{0}" >',
-                '</div>',
-                '<div class="col-md-9">',
-                    '<div class="pt-10 pb-5"><a href="/question/topic/1">{1}</a></div>',
-                    '<div class="question-info pt-5">',
-                        '<span>关注者<span class="pl-3 pr-15 fb">{2}</span></span>',
-                        '<span>提问<span class="pl-3 pr-15 fb">{3}</span></span>',
-                    '</div>',
-                '</div>',
-            '</div>',
-            '<div class="desc pl-10 pt-5 w300 co6">{4}</div>',
-            '<div class="tools top-border bdc-eee pt-5 mt-5 text-right" data-topic_id="{7}">',
-                '<button type="button" class="btn btn-primary btn-xs follow mr-5 ml-10 {5}">关注ta</button>',
-                '<button type="button" class="btn btn-default btn-xs unfollow mr-5 {6}">取消关注</button>',
-            '</div>',
-        '</div>'
-    ].join('');
-    // 除了手机其他设备都设置弹出名片
-    if(!$.ZXUtils.isPhone()){
-        $('.zx-topictips1').tooltipster({
-            animation: 'fade',
-            delay: 200,
-            trigger: 'hover',
-            theme: 'tooltipster-shadow',
-            interactive: true,
-            interactiveTolerance: 300,
-            autoClose: true,
-            //content: topictipsHtml,
-            contentAsHTML: true,
-            content: '信息加载中...',
-            functionBefore: function(origin, continueTooltip) {
-
-                // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
-                continueTooltip();
-                
-                // next, we want to check if our data has already been cached
-                if (origin.data('ajax') !== 'cached') {
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'json',
-                        url: '/question/get_topic_info_by_id?topic_id=' + origin.data('topic_id'),
-                        success: function(data) {
-                            if(data.flag=='0'){
-                                origin.tooltipster('content', String.format(
-                                    topictipsHtml, 
-                                    data.avatar,
-                                    data.name, 
-                                    data.follow_count,
-                                    data.question_count,
-                                    data.desc,
-                                    data.is_follow?'hide':'', // 关注按钮
-                                    data.is_follow?'':'hide', //取消关注按钮
-                                    data.id
-                                )).data('ajax', 'cached');
-                            } else {
-                                origin.tooltipster('content', '加载名片失败');
-                            }
-                        }
-                    });
-                }
-            }
-        });
-        // 关注事件
-        $('.topictips .follow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('关注话题', target.data('topic_id'));
-        });
-        // 取消关注事件
-        $('.topictips .unfollow').live('click', function(){
-            var target = $(this).parents('.tools').eq(0);
-            $.ZXMsg.alert('取消关注话题', target.data('topic_id'));
-        });
-    }
-
+    // 初始化名片
+    $.ZXTooltipster.PersonCard();
+    $.ZXTooltipster.TopicCard();
 
 
     // 鼠标移动到导航条登录用户名时自动弹出下拉框

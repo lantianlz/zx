@@ -47,10 +47,8 @@ def str_display(str_in, str_parms):
     from django.utils.encoding import smart_unicode
     str_in = smart_unicode(str_in)
     parms = str(str_parms).split(':')
-    if len(parms) > 1:
-        suffix = parms[1]
-    else:
-        suffix = u'...'
+    suffix = parms[1] if len(parms) > 1 else u'...'
+
     maxlength = int(parms[0]) * 2
     str_out = []
     str_count = 0

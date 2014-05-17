@@ -47,7 +47,15 @@ DATABASES = {
     },
     'account': {
         'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'account',                      # Or path to database file if using sqlite3.
+        'NAME': ACCOUNT_DB,                      # Or path to database file if using sqlite3.
+        'USER': DB_USER,                      # Not used with sqlite3.
+        'PASSWORD': DB_PWD,                  # Not used with sqlite3.
+        'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    },
+    'question': {
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'question',                      # Or path to database file if using sqlite3.
         'USER': DB_USER,                      # Not used with sqlite3.
         'PASSWORD': DB_PWD,                  # Not used with sqlite3.
         'HOST': DB_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
@@ -84,18 +92,13 @@ STATICFILES_DIRS = (
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    # 'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
 SECRET_KEY = 'ud-9^7=s3eot_id*ltpnklid3tfr*w@z5x#1y0^hn6enfr+@i4'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    # 'django.template.loaders.app_directories.Loader',
-    # 'django.template.loaders.eggs.Loader',
+    ('django.template.loaders.cached.Loader', ('django.template.loaders.filesystem.Loader',)),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

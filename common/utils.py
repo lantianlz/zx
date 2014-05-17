@@ -207,6 +207,8 @@ def get_summary_from_html_by_sub(content, max_num=100):
     """
     @note: 通过内容获取摘要，采用替换标签的方式实现
     """
+    if content is None:
+        return content
     tag_s = re.compile('<.+?>')
     tag_e = re.compile('</\w+?>')
     content = tag_s.sub('', content)
@@ -224,37 +226,34 @@ def get_random_code(length=16):
     postfix = ''
     for i in xrange(length):
         postfix += str_src[random.randint(0, len(str_src) - 1)]
-    # for id, value in enumerate(range(4)):
-    #     for i in range(4):
-    #         postfix += str_src[random.randint(0, 32)]
     return postfix
 
 
-def exec_command(command, timeout=25):
-    """
-    call shell-command and either return its output or kill it
-    if it doesn't normally exit within timeout seconds and return None
-    带超时设置的执行命令
-    用例：
-    common.utils.exec_command('your command', 25)
-    """
-    import subprocess
-    import datetime
-    import os
-    import time
-    import signal
-    import shlex
-    
-    start = datetime.datetime.now()
-    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    while process.poll() is None:
-        time.sleep(0.2)
-        now = datetime.datetime.now()
-        if (now - start).seconds > timeout:
-            os.kill(process.pid, signal.SIGKILL)
-            os.waitpid(-1, os.WNOHANG)
-            return False, u'执行超时'
-    return True, process.stdout.readlines()
+# def exec_command(command, timeout=25):
+#     """
+#     call shell-command and either return its output or kill it
+#     if it doesn't normally exit within timeout seconds and return None
+#     带超时设置的执行命令
+#     用例：
+#     common.utils.exec_command('your command', 25)
+#     """
+#     import subprocess
+#     import datetime
+#     import os
+#     import time
+#     import signal
+#     import shlex
+
+#     start = datetime.datetime.now()
+#     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#     while process.poll() is None:
+#         time.sleep(0.2)
+#         now = datetime.datetime.now()
+#         if (now - start).seconds > timeout:
+#             os.kill(process.pid, signal.SIGKILL)
+#             os.waitpid(-1, os.WNOHANG)
+#             return False, u'执行超时'
+#     return True, process.stdout.readlines()
 
 
 def exec_command(command, timeout=25):
@@ -262,3 +261,34 @@ def exec_command(command, timeout=25):
     content = commands.getoutput(command)
     return True, content
 
+
+class DictLikeObject(dict):
+
+    '''
+    @note: 格式化字典对象为object
+    '''
+
+    def __getattr__(self, item):
+        return self[item]
+
+    def __setattr__(self, name, value):
+        self[name] = value
+
+
+def format_object_to_dict(obj):
+    '''
+    @note: 将一个对象格式化为一个字典
+    '''
+    data = DictLikeObject()
+
+    dict_obj = obj.__dict__
+    keys = dict_obj.keys()
+    for key in keys:
+        if isinstance(dict_obj[key], (int, bool, long, float, unicode, str,
+                                      list, tuple, set, dict, type(None))):
+            data[key] = dict_obj[key]
+        elif isinstance(dict_obj[key], (datetime.datetime, datetime.date)):
+            data[key] = str(dict_obj[key])
+        # else:
+        #     print key
+    return data

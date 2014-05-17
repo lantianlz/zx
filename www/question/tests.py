@@ -11,7 +11,7 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
 os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 
-user_id = '83baf86160e611e3b491f319607cbb35'
+user_id = 'f762a6f5d2b711e39a09685b35d0bf16'
 
 
 def main():
@@ -22,18 +22,15 @@ def main():
 
     lb = interface.LikeBase()
     ab = interface.AnswerBase()
+    qb = interface.QuestionBase()
 
-    # flag, result = lb.like_it(7, from_user_id=user_id, ip='127.0.0.1')
-    flag, result = ab.remove_answer(41, user)
+    # lb.like_it(7, from_user_id=user_id, ip='127.0.0.1')
+    # ab.remove_answer(41, user)
+    # print ab.get_answer_summary_by_id(1)
 
-    print result.encode('utf8').__repr__()
-    print result.encode('utf8')
+    print qb.set_important(8, user, img='http://img0.zhixuan.com/important_28.jpg', img_alt='精选描述', sort_num=4)
+    # print qb.cancel_important(8, user)
 
 
 if __name__ == '__main__':
-    # main()
-
-    from common import utils
-    import random
-    # print random.randint(0, 2)
-    print utils.get_random_code()
+    main()

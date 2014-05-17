@@ -1,0 +1,423 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}推荐用户管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    var User = Backbone.Model.extend({
+        defaults: {
+            'userId': '',
+            'userAvatar': '',
+            'userNick': '',
+            'userDesc': '',
+            'questionCount': 0,
+            'answerCount': 0,
+            'likeCount': 0,
+            'followers': 0,
+            'following': 0,
+            'sort': 0,
+            'num': 1,
+            'isRecommend': false
+        }
+    });
+
+    var Users = Backbone.Collection.extend({
+        model: User,
+
+        pageIndex: 0,
+        pageCount: 0,
+        userNick: '',
+
+        _modelMaps: {
+            'userId': 'user_id',
+            'userAvatar': 'user_avatar',
+            'userNick': 'user_nick',
+            'userDesc': 'user_des',
+            'questionCount': 'question_count',
+            'answerCount': 'answer_count',
+            'likeCount': 'liked_count',
+            'followers': 'follower_count',
+            'following': 'following_count',
+            'sort': 'sort_num',
+            'num': 'num',
+            'isRecommend': 'is_recommend'
+        },
+
+        search: function(userNick, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/recommend_user/get_user_by_nick", 
+                {'nick_name': userNick}, 
+                function(data){
+                    me.pageIndex = pageIndex;
+                    me.pageCount = 1;
+                    me.userNick = userNick;
+
+                    me.reset($.ZXUtils.dictMapParse(data, me._modelMaps))
+                }
+            );
+        },
+
+        recommend: function(userId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/recommend_user/set_recommend_user", 
+                {'user_id': userId}, 
+                function(data){
+                    callback(data);
+                }
+            );
+        }
+    });
+
+    var RecommendUsers = Backbone.Collection.extend({
+        model: User,
+
+        _modelMaps: {
+            'userId': 'user_id',
+            'userAvatar': 'user_avatar',
+            'userNick': 'user_nick',
+            'userDesc': 'user_des',
+            'questionCount': 'question_count',
+            'answerCount': 'answer_count',
+            'likeCount': 'liked_count',
+            'followers': 'follower_count',
+            'following': 'following_count',
+            'sort': 'sort_num',
+            'num': 'num',
+            'isRecommend': 'is_recommend'
+        },
+
+        search: function(){
+            var me = this;
+
+            ajaxSend("/admin/recommend_user/get_all_recommend_users", {}, function(data){
+                me.reset($.ZXUtils.dictMapParse(data, me._modelMaps));
+            });
+
+        },
+
+        // 保存排序
+        saveSort: function(userId, sort, callback){
+            ajaxSend(
+                "/admin/recommend_user/set_recommend_user_sort", 
+                {'user_id': userId, 'sort_num': sort}, 
+                function(data){
+                    callback(data); 
+                }
+            );
+        },
+
+        // 取消推荐
+        unRecommend: function(userId, callback){
+            ajaxSend(
+                "/admin/recommend_user/un_recommend_user", 
+                {'user_id': userId}, 
+                function(data){
+                    callback(data);
+                }
+            );
+        }
+    });
+
+    var UsersView = Backbone.View.extend({
+        el: '#user_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#user-template').html()),
+
+        events: {
+            'click .recommend': 'recommend',
+            'click .search-user': 'searchUser'
+        },
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        render: function(){
+            var data = this.collection.toJSON();
+            
+            this.showPanel();
+            this.$('tbody').html(this.template({'users': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'searchUser/' + this.collection.userNick
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#user_list"]').tab('show');
+        },
+
+        // 推荐
+        recommend: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要设置此用户为推荐用户?', function(result){
+                if(result){
+                    // 设置ajax元素id,防止多次点击
+                    g_ajax_processing_obj_id = target.setUUID().attr('id');
+
+                    me.collection.recommend(userId, function(data){
+                        if(data.errcode === 0){
+                            var nickName = me.$('.key-word').val();
+                            me.collection.search(nickName, 1);
+
+                            // 更新一下推荐用户列表
+                            userRouter.navigate('', {trigger: true});
+
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                    
+                }
+            });
+        },
+
+        // 查询用户
+        searchUser: function(){
+            var nickName = this.$('.key-word').val();
+
+            userRouter.navigate('/searchUser/' + nickName + '/1', {trigger: true});
+        }
+
+    });
+    var RecommendUsersView = Backbone.View.extend({
+
+        el: '#recommend_user_list',
+
+        template: _.template($('#recommend-user-template').html()),
+
+        events: {
+            'click .unRecommend': 'unRecommend',
+            'dblclick .editSort': 'editSort',
+            'blur .editSort': 'saveSort'
+        },
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        render: function(){
+            var data = this.collection.toJSON();
+            
+            this.$('tbody').html(this.template({'recommendUsers': data}));
+        },
+
+        // 取消推荐
+        unRecommend: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id'),
+                me = this;
+                
+            $.ZXMsg.confirm('提示', '确认要取消推荐?', function(result){
+                if(result){
+                    // 设置ajax元素id,防止多次点击
+                    g_ajax_processing_obj_id = target.setUUID().attr('id');
+
+                    me.collection.unRecommend(userId, function(data){
+                        if(data.errcode === 0){
+                            me.collection.search();
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                }
+            });
+        },
+
+        // 编辑顺序
+        editSort: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id');
+
+            target.find('span').hide();
+            target.find('input').show().focus();
+        },
+
+        // 保存顺序
+        saveSort: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id'),
+                sort = target.find('input').val(),
+                originSort = target.find('span').html(),
+                me = this;
+
+            // 如果有修改
+            if(originSort != sort){
+                this.collection.saveSort(userId, sort, function(data){
+                    if(data.errcode === 0){
+                        me.collection.search();
+                    } else {
+                        $.ZXMsg.alert('提示', data.errmsg);
+                    }
+                });
+            }
+            
+            target.find('span').show();
+            target.find('input').hide();
+        }
+    });
+
+    var UserRouter = Backbone.Router.extend({
+        routes: {
+            "":                                     "searchRecommendUser",
+            "searchUser/(:userNick)/:pageIndex":    "searchUser"
+        },
+
+        // 获取推荐用户
+        searchRecommendUser: function(){
+            recommendUsers.search();
+        },
+
+        // 查询用户
+        searchUser: function(userNick, pageIndex){
+            
+            users.search(userNick, pageIndex);
+        }
+    });
+
+    var users = new Users(),
+        recommendUsers = new RecommendUsers(),
+        usersView = new UsersView({'collection': users}),
+        recommendUsersView  = new RecommendUsersView({'collection': recommendUsers}),
+        userRouter = new UserRouter();
+
+    Backbone.history.start();
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#recommend_user_list" class="black-blue" data-toggle="pill">推荐用户列表</a>
+    </li>
+    <li>
+        <a href="#user_list" class="black-blue" data-toggle="pill">用户列表</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 推荐用户列表 -->
+    <div class="tab-pane fade pt-15 in active" id="recommend_user_list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>头像</th>
+                    <th>用户名称</th>
+                    <th>用户简介</th>
+                    <th>用户统计信息</th>
+                    <th>排序</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 用户列表 -->
+    <div class="tab-pane fade pt-15" id="user_list">
+        <div class="pl-0 pb-10 col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入用户名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search-user" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>头像</th>
+                    <th>用户名称</th>
+                    <th>用户简介</th>
+                    <th>用户统计信息</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/template" id="recommend-user-template">
+<% _.each(recommendUsers, function(recommendUser){ %>
+    <tr>
+        <td><%= recommendUser.num %></td>
+        <td><img src="<%= recommendUser.userAvatar %>" class="avatar-35 avatar-circle" ></td>
+        <td><%= recommendUser.userNick %></td>
+        <td><span><%= recommendUser.userDesc %></span></td>
+        <td>
+            <span class="fb fi pr-3"><%= recommendUser.questionCount %></span>提问 | 
+            <span class="fb fi pr-3"><%= recommendUser.answerCount %></span>回答 |
+            <span class="fb fi pr-3"><%= recommendUser.likeCount %></span>获赞 |
+            <span class="fb fi pr-3"><%= recommendUser.followers %></span>粉丝 |
+            <span class="fb fi pr-3"><%= recommendUser.following %></span>关注
+        </td>
+        <td class="editSort" data-user_id="<%= recommendUser.userId %>">
+            <span><%= recommendUser.sort %></span>
+            <input class="w40 none" type="text" value="<%= recommendUser.sort %>" />
+        </td>
+        <td>
+            <button class="btn btn-xs btn-default unRecommend" data-user_id="<%= recommendUser.userId %>">取消推荐用户</button>
+        </td>
+    </tr>
+<% }) %>
+</script>
+
+<script type="text/template" id="user-template">
+<% _.each(users, function(user){ %>
+    <tr>
+        <td>1</td>
+        <td><img src="<%= user.userAvatar %>" class="avatar-35 avatar-circle" ></td>
+        <td><%= user.userNick %></td>
+        <td><span><%= user.userDesc %></span></td>
+        <td>
+            <span class="fb fi pr-3"><%= user.questionCount %></span>提问 | 
+            <span class="fb fi pr-3"><%= user.answerCount %></span>回答 |
+            <span class="fb fi pr-3"><%= user.likeCount %></span>获赞 |
+            <span class="fb fi pr-3"><%= user.followers %></span>粉丝 |
+            <span class="fb fi pr-3"><%= user.following %></span>关注
+        </td>
+        <td>
+            <% if(user.isRecommend){ %>
+            已经是推荐用户
+            <% } else {%>
+            <button class="btn btn-xs btn-primary recommend" data-user_id="<%= user.userId %>">设置推荐用户</button>
+            <% } %>
+        </td>
+    </tr>
+<% }) %>
+</script>
+{% endblock admin-right %}

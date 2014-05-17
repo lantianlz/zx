@@ -34,7 +34,7 @@ $.TextboxList = function(element, _options){
 				return chk(v) ? v.toString().replace(/,/, '') : null;
 			}), function(o){ return o != undefined; }).join(','); 
 		},
-		decode: function(o){ console.log(o);return o?o.split(','):[] }
+		decode: function(o){ return o?o.split(','):[] }
   }, _options);
 	
 	element = $(element);
@@ -307,7 +307,7 @@ $.TextboxListBit = function(type, value, textboxlist, _options){
 			}
 			bit.children().click(function(e){ e.stopPropagation(); e.preventDefault(); });
 		} else {
-			element = $('<input type="text" class="'+ typeprefix +'-input" autocomplete="off" placeholder="标签" />').val(self.value ? self.value[1] : '').appendTo(bit);
+			element = $('<input type="text" class="'+ typeprefix +'-input" autocomplete="off" placeholder="话题" />').val(self.value ? self.value[1] : '').appendTo(bit);
 			if (chk(options.tabIndex)) element.tabIndex = options.tabIndex;
 			if (options.growing) new $.GrowingInput(element, options.growingOptions);		
 			element.focus(function(){ focus(true); }).blur(function(){

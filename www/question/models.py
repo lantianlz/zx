@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.conf import settings
+from www.misc.decorators import cache_required
 
 
 class Question(models.Model):
@@ -34,8 +36,7 @@ class Question(models.Model):
 
     def get_user(self):
         from www.account.interface import UserBase
-        user = UserBase().get_user_by_id(self.user_id)
-        return user
+        return UserBase().get_user_by_id(self.user_id)
 
 
 class Answer(models.Model):
@@ -56,8 +57,7 @@ class Answer(models.Model):
 
     def get_from_user(self):
         from www.account.interface import UserBase
-        user = UserBase().get_user_by_id(self.from_user_id)
-        return user
+        return UserBase().get_user_by_id(self.from_user_id)
 
     def get_summary(self):
         """
@@ -139,7 +139,21 @@ class Tag(models.Model):
 
     def get_url(self):
         # 标签
-        return u'/question/topic/%s' % self.domain
+        return u'/topic/%s' % self.domain
+
+    def get_img(self):
+        return self.img or '%s/img/common/default-topic.png' % settings.MEDIA_URL
+
+    @cache_required(cache_key='tag_question_count_%s', cache_key_type=2, expire=600)
+    def get_tag_question_count(self):
+        return TagQuestion.objects.filter(tag=self).count()
+
+    def get_summary(self):
+        """
+        @attention: 通过内容获取摘要
+        """
+        from common import utils
+        return utils.get_summary_from_html_by_sub(self.des, max_num=35)
 
 
 class TagQuestion(models.Model):
@@ -157,3 +171,15 @@ class TagQuestion(models.Model):
 
     def __unicode__(self):
         return '%s, %s' % (self.tag_id, self.question_id)
+
+
+class ImportantQuestion(models.Model):
+    question = models.ForeignKey(Question, unique=True)
+    img = models.CharField(max_length=128, default='')
+    img_alt = models.CharField(max_length=256, null=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    operate_user_id = models.CharField(verbose_name=u'设置精选的人', max_length=32, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-sort_num', '-id']

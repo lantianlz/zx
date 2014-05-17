@@ -1,0 +1,299 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}话题管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    var Topic = Backbone.Model.extend({
+        defaults: {
+            'topicId': 0,
+            'topicImg': '',
+            'topicName': '',
+            'topicDesc': '',
+            'topicDomain': '',
+            'topicSort': '',
+            'parentId': '',
+            'parentName': ''
+        }
+    });
+
+    var Topics = Backbone.Collection.extend({
+        model: Topic,
+
+        search: function(topicName, pageIndex){
+            this.pageIndex = pageIndex;
+            this.pageCount = 2;
+            this.topicName = topicName||'';
+
+            this.reset([
+                {'topicId': 1, 'topicImg': '/static/img/common/topic1.jpg', 'topicName': '大盘', 'topicDesc': '大盘大盘', 'topicDomain': 'dp', 'topicSort': 2, 'parentId': 1, 'parentName': '父话题1'},
+                {'topicId': 2, 'topicImg': '/static/img/common/topic2.jpg', 'topicName': '个股', 'topicDesc': '个股个股', 'topicDomain': 'gg', 'topicSort': 4, 'parentId': 2, 'parentName': '父话题2'},
+                {'topicId': 3, 'topicImg': '/static/img/common/topic3.jpg', 'topicName': '其他', 'topicDesc': '其他其他', 'topicDomain': 'qt', 'topicSort': 9, 'parentId': 3, 'parentName': '父话题3'}
+            ]);
+        },
+
+        getOne: function(topicId){
+            return this.find(function(topic){
+                return topic.get('topicId') == topicId
+            });
+        }
+    });
+
+    var ListView = Backbone.View.extend({
+        el: '#topic_list',
+
+        template: _.template($('#topic-list-template').html()),
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        events:{
+            'click .pointer': 'modifyTopic',
+            'click .search-topic': 'searchTopic'
+        },
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        // 渲染方法
+        render: function(){
+            var data = this.collection.toJSON();
+            
+            this.showPanel();
+            this.$el.find('tbody').html(this.template({'topics': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.topicName
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#topic_list"]').tab('show');
+        },
+
+        searchTopic: function(){
+            var topicName = this.$('.key-word').val();
+
+            topicRouter.navigate('/search/' + topicName + '/1', {trigger: true});
+        },
+
+        modifyTopic: function(sender){
+            var target = $(sender.currentTarget),
+                topicId = target.data('topic_id');
+
+            topicRouter.navigate('modify/' + topicId, {trigger: true});
+        }
+    });
+
+    var ModifyView = Backbone.View.extend({
+        el: '#modify_topic',
+
+        topicParentTextbox: null,
+
+        initialize: function(){
+
+        },
+
+        events: {
+            'click .save-topic': 'saveTopic',
+            'click .remove-topic': 'removeTopic'
+        },
+
+        template: _.template($('#modify-topic-template').html()),
+
+        // 渲染方法
+        render: function(data){
+            this.$el.html(this.template(data));
+
+            this.topicParentTextbox = $.ZXTextboxList.create('#topic_parent', {
+                max: 1,
+                placeholder: '设置父话题',
+                url: '/',
+                param: 'topic_name',
+                postName: 'topic_id',
+                loadPlaceholder: '正在加载...'
+            });
+            
+            this.topicParentTextbox.add(data.topicName, data.topicId);
+            
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_topic"]').tab('show');
+        },
+
+        // 修改话题
+        modifyTopic: function(topicId){
+            this.showPanel();
+
+            this.render(this.collection.getOne(topicId).toJSON())
+        },
+
+        saveTopic: function(){
+            
+            console.log('保存修改');
+        },
+
+        removeTopic: function(sender){
+            $.ZXMsg.confirm('提示', '确认要删除此话题?', function(result){
+                if(result){
+                    console.log('删除');
+                }
+            });
+            
+        }
+    });
+
+    var TopicRouter = Backbone.Router.extend({
+        routes: {
+            "":                                 "search",
+            "search/(:topicName)/:pageIndex":   "search",
+            "modify/:topicId":                  "modify"
+        },
+
+        // 查询方法
+        search: function(topicName, pageIndex){
+            topics.search(topicName, pageIndex);
+        },
+
+        // 修改话题
+        modify: function(topicId){
+            modifyView.modifyTopic(topicId);
+        }
+    });
+
+    var topics = new Topics(),
+        listView = new ListView({'collection': topics}),
+        modifyView = new ModifyView({'collection': topics}),
+        topicRouter = new TopicRouter();
+
+    Backbone.history.start();
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#topic_list" class="black-blue" data-toggle="pill">话题列表</a>
+    </li>
+    <li>
+        <a href="#modify_topic" class="black-blue" data-toggle="pill">修改话题信息</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 话题列表 -->
+    <div class="tab-pane fade pt-15 in active" id="topic_list">
+        <div class="pl-0 pb-10 col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入话题名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search-topic" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>图像</th>
+                    <th>名称</th>
+                    <th>域名</th>
+                    <th>排序</th>
+                    <th>所属父话题</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改话题 -->
+    <div class="tab-pane fade" id="modify_topic">
+        
+    </div>
+</div>
+
+<script type="text/template" id="topic-list-template">
+<% _.each(topics, function(topic){ %>
+    <tr class="pointer" data-topic_id="<%= topic.topicId %>">
+        <td>1</td>
+        <td><img src="<%= topic.topicImg %>" class="avatar-35 avatar-circle" ></td>
+        <td><%= topic.topicName %></td>
+        <td><%= topic.topicDomain %></td>
+        <td><%= topic.topicSort %></td>
+        <td><%= topic.parentName %></td>
+    </tr>
+<% }) %>
+</script>
+
+<script type="text/template" id="modify-topic-template">
+    <form class="form-horizontal modify-topic-form" data-topic_id="<%= topicId %>" role="form" method="post" action="." enctype="multipart/form-data">
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题ID</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= topicId %></p>
+                <input type="hidden" name="topicId" value="<%= topicId %>" />
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">所属父话题</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="topic_parent">
+
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题图片</label>
+            <div class="col-sm-6">
+                <img class="avatar-65 avatar-circle mb-10" src="<%= topicImg %>" />
+                <input name="img" type="file" />
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题名称</label>
+            <div class="col-sm-6">
+                <input type="text" name="name" class="form-control" value='<%= topicName %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题描述</label>
+            <div class="col-sm-6">
+                <textarea name="des" rows="6" class="form-control"><%= topicDesc %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题排序</label>
+            <div class="col-sm-2">
+                <input type="text" name="sort" class="form-control" value='<%= topicSort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save-topic">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove-topic">删除此话题</button>
+            </div>
+        </div>
+    </form>
+</script>
+{% endblock admin-right %}

@@ -1,7 +1,7 @@
 {% extends "question/base_question.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}问答首页{% endblock %}
+{% block title %}{% if question_type %}{{question_type.name}} - 热门问答{% else %}最新问答{% endif %}{% endblock %}
 
 {% block css %}{% endblock %}
 

@@ -65,9 +65,9 @@
 			<span class="date co8">{{like.create_time|date:'Y-m-d'}}</span>
 			<span class="time">{{like.create_time|date:'H:i:s'}}</span>
 		</div>
-		<div class="tml-user"><img class="avatar" src="{{like.from_user.get_avatar}}"></div>
+		<div class="tml-user"><img class="avatar" alt="{{like.from_user.nick}}" src="{{like.from_user.get_avatar}}"></div>
 		<div class="tml-content">
-			<a href="{{like.from_user.get_url}}">{{like.from_user.nick}}</a>
+			<a href="{{like.from_user.get_url}}" class="zx-cardtips" data-user_id="{{like.from_user.id}}">{{like.from_user.nick}}</a>
 			在提问 <a href="{{like.question.get_url}}">{{like.question.title|str_display:20}}</a>
 			中赞了你的回答
 		</div>

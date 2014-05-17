@@ -4,6 +4,48 @@
 
 {% block home_css %}
 <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/user_profile.css?v={{MEDIA_VERSION}}" />
+
+<style type="text/css">
+.wave-in{
+    display: none;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 0 5px #428bca;
+    border: 1px solid #428bca;
+    border-radius: 50%;
+    left: 115px;
+    position: absolute;
+    -webkit-transform:scale(0);
+    -webkit-animation:wave-in 3s ease-out infinite;
+}
+
+@-webkit-keyframes wave-in{
+    0%   {-webkit-transform: scale(0);opacity: 0;}
+    10%  {-webkit-transform: scale(1.0);opacity: 0.5;}
+    80%  {-webkit-transform: scale(1.35);opacity: 0;}
+    100% {-webkit-transform: scale(0);opacity: 0;} 
+}
+
+.wave-out{
+    display: none;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 0 5px #428bca;
+    border: 1px solid #428bca;
+    border-radius: 50%;
+    left: 115px;
+    position: absolute;
+    -webkit-transform:scale(0);
+    -webkit-animation:wave-out 3s ease-out infinite;
+}
+
+@-webkit-keyframes wave-out{
+    0%   {-webkit-transform: scale(0);opacity: 0;}
+    20%  {-webkit-transform: scale(1.2);opacity: 0.5;}
+    80%  {-webkit-transform: scale(1.85);opacity: 0;}
+    100% {-webkit-transform: scale(0);opacity: 0;} 
+}
+</style>
 {% endblock %}
 
 {% block home_js%}
@@ -13,7 +55,11 @@
 {% block container_content %}
 <div class="user-profile-left col-md-4 text-center">
     <div class="profile pt-80 ">
-        <img class="avatar-100 avatar-circle" src="{{user.get_avatar_100}}"></div>
+        <span class="wave-in"></span>
+        <span class="wave-out"></span>
+        <img class="avatar-100 avatar-circle" alt="{{user.nick}}" src1="{{MEDIA_URL}}img/common/user3.jpg" src="{{user.get_avatar_100}}">
+        
+    </div>
     <div class="username">
         <h3 class="ff-yahei fb">{{user.nick}}</h3>
     </div>

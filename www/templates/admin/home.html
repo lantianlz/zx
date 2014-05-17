@@ -3,124 +3,82 @@
 {% load custom_filters %}
 {% block title %}后台首页{% endblock %}
 
-{% block bheader %}
+{% block base_css %}
 <style type="text/css">
 body{
-    background-color: #F0F4F7;
+    background-color: #f1f1f1;
 }
 
-.admin-profile{
-    color: #ddd;
-    padding-top: 5px;
-    font-size: 12px;
-} 
-
-.admin-profile .profile{
-    padding-top: 5px;
+.login{
+    right: 13px;
+    bottom: -18px;
 }
 
-.avatar{
-    width: 60px;
-    height: 60px;
-    margin-right: 10px;
+.admin-nav>.list-group-item{
+    transition: all 0.5s;
+}
+.admin-nav>.list-group-item:hover{
+    background-color: #86C1D6;
+    box-shadow: 2px 2px 4px #666666;
+    color: white;
+    padding-left: 20px;
+}
+.admin-nav>.list-group-item.active{
+    box-shadow: 2px 2px 1px #428bca;
 }
 
-.zx-admin-container{
-    min-height: 360px;
-    padding: 10px 0 0 0;
-    margin-top: 80px;
-    background-color: white;
-    border: solid 1px #ddd;
-    border-radius: 4px;
+.admin-right .form-horizontal .form-group{
+    margin-right: 15px;
+    margin-left: 15px;
 }
-
-.zx-admin-left .list-group-item{
-    border-left: 0px;
-    border-radius: 0px;
-    border-right: 0px;
-    transition: background-color 0.5s; 
-}
-
-.zx-admin-left .list-group-item:hover{
-    background-color: #dbdbdb;
-}
-
-.zx-admin-left{
-    padding-top: 10px;
-}
-
-.zx-admin-left .list-group-item:first-child{
-    border-top: 0px;
-}
-
-.zx-admin-main{
-    border-left: solid 1px #ddd;
-    margin-bottom: 20px;
-    min-height: 380px;
-}
-
-.zx-admin-main{
-    min-height: 450px;
-    border-left: 1px solid #ddd;
-    margin-bottom: 20px;
-    /*padding-top: 10px;*/
-}
-
-.zx-admin-main .form-group{
-    padding-top: 20px;
-    margin-right: 10px;
-    border-top: solid 1px #f2f2f2;
-    margin-left: 10px;
-}
-
-.zx-admin-main .form-group:first-child{
-    border-top: 0px;
-}
-
 </style>
-<script type="text/javascript">
-$(document).ready(function(){
-    window.setInterval(function(){
-        var d = new Date();
-        var strDate = String.format(
-            '{0}-{1}-{2} {3}:{4}:{5}', 
-            addZero(d.getFullYear()), 
-            addZero(d.getMonth()+1), 
-            addZero(d.getDate()),
-            addZero(d.getHours()),
-            addZero(d.getMinutes()),
-            addZero(d.getSeconds())
-        ); 
-        $('.clock').html(strDate);
-    }, 1000);
-});
-</script>
 {% block css %}{% endblock %}
-{% block javascript %}{% endblock %}
+{% endblock base_css %}
 
-{% endblock bheader %}
+{% block base_js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        // clock
+        window.setInterval(function(){
+            var d = new Date();
+
+            $('.current-time').html(
+                String.format(
+                    '{0}-{1}-{2} {3}:{4}:{5}',
+                    $.ZXUtils.addZero(d.getFullYear()), 
+                    $.ZXUtils.addZero(d.getMonth()+1), 
+                    $.ZXUtils.addZero(d.getDate()),
+                    $.ZXUtils.addZero(d.getHours()),
+                    $.ZXUtils.addZero(d.getMinutes()),
+                    $.ZXUtils.addZero(d.getSeconds())
+                )
+            );
+        }, 1000);
+
+        // 初始化自定义多选按钮
+        $('.zx-checkbox').zxCheckbox();
+    });
+</script>
+{% block javascript %}{% endblock %}
+{% endblock base_js %}
 
 {% block container %}
-<div class="col-md-3 zx-admin-left">
-    <a class="list-group-item {% if '/admin/question_type' == request.path %} active {% endif %}" href="/admin/question_type">
-        {% if '/admin/question_type' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-        问题分类管理
-    </a>
-    <a class="list-group-item {% if '/s/about' == request.path %} active {% endif %}" href="#">
-        {% if '/s/about' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-        问题管理
-    </a>
-    <a class="list-group-item {% if '/s/disclaimer' == request.path %} active {% endif %}" href="#">
-        {% if '/s/disclaimer' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-        每日精华管理
-    </a>
-    <a class="list-group-item {% if '/s/links' == request.path %} active {% endif %}" href="#">
-        {% if '/s/links' == request.path %}<span class="glyphicon glyphicon-bookmark"></span> {% endif %}
-        用户管理
-    </a>
-    
+<div class="col-md-2">
+    <div class="list-group admin-nav pt-25">
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if 'admin/question' in request.path %}active{% endif %}" href="question">提问管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if 'important_question' in request.path %}active{% endif %}" href="important_question">每日精选管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if 'recommend_user' in request.path %}active{% endif %}" href="recommend_user">推荐用户管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if 'topic' in request.path %}active{% endif %}" href="topic">话题管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff" href="#">专栏管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff" href="#">用户管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff" href="#">友情链接管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff" href="#">用户反馈管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff" href="#">权限管理</a>
+    </div>
 </div>
-<div class="col-md-9 zx-admin-main">
-    {% block admin-main %}{% endblock %}
+
+<div class="col-md-10 box-shadow-224 bgc-fff mt-25 admin-right">
+    {% block admin-right %}{% endblock admin-right %}
 </div>
 {% endblock container %}

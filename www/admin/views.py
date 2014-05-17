@@ -9,9 +9,21 @@ from django.shortcuts import render_to_response
 from common import utils, page
 
 
-def home(request, template_name='admin/home.html'):
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+def home(request):
+    return HttpResponseRedirect('/admin/recommend_user')
 
 
-def question_type_list(request, template_name='admin/question_type_list.html'):
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+# def question(request, template_name='admin/question.html'):
+#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+# def important_question(request, template_name='admin/important_question.html'):
+#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+# def suggest_user(request, template_name='admin/suggest_user.html'):
+#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+# def topic(request, template_name='admin/topic.html'):
+#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))

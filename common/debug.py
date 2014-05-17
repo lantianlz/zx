@@ -41,7 +41,7 @@ def get_debug_detail(e, log_it=True):
     frames = []
     tb = exc_traceback
     frames.append(tb.tb_frame)
-    detail = u"system error -Exception:\n%s\n\ndetail info is:\n" % e
+    detail = u"system error -Exception:\n%s\n\ndetail info is:\n" % smart_unicode(e)
     while tb.tb_next:
         tb = tb.tb_next
         fm = Frame(tb)

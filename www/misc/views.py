@@ -52,7 +52,7 @@ def save_img(request):
     else:
         result = dict(error=-1, url='')
 
-    return HttpResponse(json.dumps(result), mimetype='application/json')
+    return HttpResponse(json.dumps(result))
 
 
 @member_required
@@ -102,4 +102,4 @@ def crop_img(request):
             else:
                 result = dict(flag='-1', result=u'剪裁失败, 请稍后重试')
 
-    return HttpResponse(json.dumps(result))
+    return HttpResponse(json.dumps(result), mimetype='application/json')

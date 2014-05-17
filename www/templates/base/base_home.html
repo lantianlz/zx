@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load custom_filters %}
 {% block base_css %}
-<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/_home.css" />
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/_home.css?v={{MEDIA_VERSION}}" />
 {% block home_css %}{% endblock %}
 {% endblock %}
 
@@ -12,7 +12,7 @@
 {% block container_head %}
 <div class="navbar navbar-fixed-top zx-navbar" role="navigation">
     <div class="container zx-container">
-        <div class="navbar-header zx-header pt-5">
+        <div class="navbar-header zx-header pt-5 pr">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".zx-navbar-collapse">
                 <span class="icon-bar bgc-zx"></span>
                 <span class="icon-bar bgc-zx"></span>
@@ -22,7 +22,7 @@
                 智选
                 <!-- <img title="智选" alt="智选" src="{{MEDIA_URL}}img/common/logo.png"> -->
             </a>
-            <span class="mr-45 f12">beta</span>
+            <span class="zx-beta pa f12 co-zx">Beta</span>
         </div>
         <div class="collapse navbar-collapse zx-navbar-collapse">
             <ul class="nav navbar-nav">
@@ -32,8 +32,8 @@
                 <li {% if '/question/' == request.path %} class="active" {% endif %}>
                     <a href="/question/">问答</a>
                 </li>
-                <li {% if '/question/important' in request.path %} class="active" {% endif %}>
-                    <a href="/question/important">每日精选</a>
+                <li {% if '/important' in request.path %} class="active" {% endif %}>
+                    <a href="/important">每日精选</a>
                 </li>
                 <li {% if '/account/invitation' in request.path %} class="active" {% endif %}>
                     <a href="/account/invitation">邀请注册</a>
@@ -50,8 +50,8 @@
                 {% if request.user.is_authenticated %}
                 <!-- 菜单 -->
                 <li class="user-menu dropdown">
-                    <a href="#" class="dropdown-toggle user min-w140" data-toggle="dropdown" title="{{request.user.nick}}">
-                        <img class='avatar-25 avatar-circle user mt--2' src="{{request.user.get_avatar_25}}">
+                    <a href="#" class="dropdown-toggle user w140" data-toggle="dropdown" title="{{request.user.nick}}">
+                        <img alt="{{request.user.nick}}" class='avatar-25 avatar-circle user mt--2' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
                         <!-- <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span> -->
                         <!-- <span class="caret"></span> -->

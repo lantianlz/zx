@@ -47,6 +47,12 @@ $.TextboxList.Autocomplete = function(textboxlist, _options){
 		list = $('<ul class="'+ prefix +'-results" />').appendTo(container).click(function(ev){
 			ev.stopPropagation(); ev.preventDefault();
 		});
+
+		setTimeout(function(){
+			container.width(textboxlist.getContainer().width())
+			aa = container;
+			bb = textboxlist;
+		}, 200)
 	};
 	
 	var setupBit = function(bit){

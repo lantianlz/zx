@@ -1,0 +1,42 @@
+{% extends "base/base_static.html" %}
+
+{% block title %}更新日志{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/logs.css?v={{MEDIA_VERSION}}" />
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="{{MEDIA_URL}}js/site/logs.js?v={{MEDIA_VERSION}}"></script>
+{% endblock %}
+
+{% block static_main %}
+<ul class="list-group logs">
+    
+</ul>
+
+<!-- 更新日志模板 -->
+<script type="text/template" id="log-template">
+<% _.each(logs, function(log){ %>
+    <li class="list-group-item no-l-r-bd bdc-transparent">
+        <div class="row">
+            <div class="col-md-2 col-xs-12 pl-0 pr-0 text-right pr-10">
+                <div class="co8 f12"><%= log.year %></div>
+                <div class="f18 co-zx"><%= log.date %></div>
+            </div>
+            <div class="col-md-1 col-xs-12 hidden-xs pl-0 pr-0">
+                <div class="w40 h40 pl-5 pr-5 pt-5 pb-5 bgc-86C1D6 border-radius-50">
+                    <div class="w30 h30 bgc-zx border-radius-50 co3 text-center f12 line-height-30 fb"><%= log.count %></div>
+                </div>
+            </div>
+            <div class="col-md-9 col-xs-12 pl-0 pr-0 bgc-zx co3 border-radius-2 f12 pt-10 pb-10 box-shadow-224">
+                <span class="arrow"></span>
+                <ol>
+                    <%= log.contents %>
+                </ol>
+            </div>
+        </div>
+    </li>
+<% }) %>
+</script>
+{% endblock %}

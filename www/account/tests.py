@@ -36,8 +36,8 @@ class SimpleTest(TestCase):
         ub = interface.UserBase()
         # print ub.set_password(raw_password='123')
         # print ub.check_password(raw_password='123')
-        flag, result = ub.regist_user(email='lantian-lz@163.com', nick='simplejoy', password='851129', ip='127.0.0.1')
-        if not flag:
+        errcode, result = ub.regist_user(email='lantian-lz@163.com', nick='simplejoy', password='851129', ip='127.0.0.1')
+        if not errcode == 0:
             print result.__repr__()
             print result.encode('utf-8')
         else:

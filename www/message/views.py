@@ -99,8 +99,10 @@ def at_answer(request, template_name='message/at_answer.html'):
 # ===================================================ajax部分=================================================================#
 @member_required
 def get_unread_count_total(request):
-
     count_info = urb.get_unread_count_total(request.user)
+
+    # 更新最后活跃时间
+    ub.update_user_last_active_time(request.user.id, ip=utils.get_clientip(request))
     return HttpResponse(json.dumps(count_info), mimetype='application/json')
 
 
@@ -117,7 +119,7 @@ def show_received_like(request, template_name='message/show_received_like.html')
         return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
     request.user = user
-    
+
     likes = lb.get_to_user_likes(request.user.id)
 
     # 分页
@@ -141,12 +143,12 @@ def share_received_like(request):
     '''
     import os
     from django.conf import settings
-    
+
     result = {'flag': -1, 'result': '操作失败'}
 
     # 拼装获取指定用户赞的页面url
     url = "%s://%s/message/show_received_like?user_id=%s" % (
-        request.META['wsgi.url_scheme'], 
+        request.META['wsgi.url_scheme'],
         'wwwinside.zhixuan.com',
         # request.META['HTTP_HOST'],
         request.user.id
@@ -182,4 +184,4 @@ def share_received_like(request):
             temp.close()
             os.remove(file_name)
 
-    return HttpResponse(json.dumps(result))
+    return HttpResponse(json.dumps(result), mimetype='application/json')

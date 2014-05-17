@@ -50,7 +50,7 @@ $(document).ready(function(){
     $('#div_types .zx-radio').zxRadio();
 
     // 鼠标移动到图片淡入淡出效果
-    $('.img-fade-hover').imgFadeHover();
+    setTimeout(function(){$('.img-fade-hover').imgFadeHover();}, 1000);
 
     // 初始化分享答案事件
     $('.answer-share').toolbar({
@@ -238,7 +238,7 @@ $(document).ready(function(){
                     // 设置ajax元素id,防止多次点击
                     g_ajax_processing_obj_id = this.$('.cancel-important').setUUID().attr('id');
 
-                    ajaxSend("/question/cachel_important", {'question_id': questionId}, common_callback);
+                    ajaxSend("/question/cancel_important", {'question_id': questionId}, common_callback);
                 }
             });
         },
@@ -256,14 +256,14 @@ $(document).ready(function(){
                         "/question/remove_question", 
                         {'question_id': questionId},
                         function(data){
-                            if (data['flag'] == '0') {
+                            if (data['errcode'] == '0') {
                                 $.ZXMsg.alert('提示', '操作成功!页面即将刷新', 2000);
                                 window.setTimeout(function(){
                                     window.location = '/question';
                                 }, 3000)
                                 
                             } else {
-                                $.ZXMsg.alert('提示', data['result']);
+                                $.ZXMsg.alert('提示', data['errmsg']);
                             }
                         } 
                     );
@@ -352,8 +352,8 @@ $(document).ready(function(){
                 "/question/like_answer", 
                 {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
                 function(data){
-                    if(data['flag'] != '0'){
-                        $.ZXMsg.alert('提示', data['result']);
+                    if(data['errcode'] != '0'){
+                        $.ZXMsg.alert('提示', data['errmsg']);
                         return;
                     }
 
@@ -385,7 +385,10 @@ $(document).ready(function(){
             } else {
                 // 滚动到输入框的位置框
                 $('html,body').animate({
-                    scrollTop: $('.answer-main').offset().top + ($.browser.msie ? document.documentElement.scrollTop : 0) - parseInt($('.container_content').css('margin-top')) - 5
+                    scrollTop: $('.answer-main').offset().top 
+                        + ($.browser.msie ? document.documentElement.scrollTop : 0) 
+                        - parseInt($('.container_content').css('margin-top')) 
+                        - 5
                 });
                 answerEditor.focus();
                 answerEditor.html('');
@@ -400,7 +403,11 @@ $(document).ready(function(){
             // 设置ajax元素id,防止多次点击
             g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-            ajaxSend("/question/set_answer_bad", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+            ajaxSend(
+                "/question/set_answer_bad", 
+                {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
+                common_callback
+            );
         },
 
         // 取消回答没有帮助
@@ -410,7 +417,11 @@ $(document).ready(function(){
             // 设置ajax元素id,防止多次点击
             g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-            ajaxSend("/question/cancel_answer_bad", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+            ajaxSend(
+                "/question/cancel_answer_bad", 
+                {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
+                common_callback
+            );
         },
 
         // 编辑回答
@@ -442,7 +453,11 @@ $(document).ready(function(){
                     // 设置ajax元素id,防止多次点击
                     g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-                    ajaxSend("/question/remove_answer", {'answer_id': $(sender.delegateTarget).data('answer_id')}, common_callback);
+                    ajaxSend(
+                        "/question/remove_answer", 
+                        {'answer_id': $(sender.delegateTarget).data('answer_id')}, 
+                        common_callback
+                    );
                 }
             });
         },

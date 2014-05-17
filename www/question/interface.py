@@ -6,28 +6,29 @@ from django.db import transaction
 from django.db.models import F
 
 from common import utils, debug, cache
+from www.misc.decorators import cache_required
+from www.misc import consts
 from www.account.interface import UserBase
 from www.message.interface import UnreadCountBase
-from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad
+from www.account.interface import UserCountBase
+from www.timeline.interface import FeedBase
+from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad, ImportantQuestion
 
 
 dict_err = {
-    100: u'标题过于简单，稍微详述一下',
-    101: u'标题过于冗长，稍微提炼一下',
-    102: u'内容过于简单，稍微详述一下',
-    103: u'内容过于冗长，稍微提炼一下',
-    104: u'喜欢一次足矣',
-    105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
-    106: u'不要重复给没有帮助的选项哦',
+    20100: u'标题过于简单，稍微详述一下',
+    20101: u'标题过于冗长，稍微提炼一下',
+    20102: u'内容过于简单，稍微详述一下',
+    20103: u'内容过于冗长，稍微提炼一下',
+    20104: u'喜欢一次足矣',
+    20105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
+    20106: u'不要重复给没有帮助的选项哦',
 
-    800: u'问题不存在或者已删除',
-    801: u'回答不存在或者已删除',
-    802: u'绝对不会让你得逞的，因为你没得权限',
-
-    998: u'参数缺失',
-    999: u'系统错误',
-    000: u'成功'
+    20800: u'问题不存在或者已删除',
+    20801: u'回答不存在或者已删除',
+    20802: u'绝对不会让你得逞的，因为你没得权限',
 }
+dict_err.update(consts.G_DICT_ERROR)
 
 QUESTION_DB = 'question'
 
@@ -39,7 +40,7 @@ def question_required(func):
             try:
                 question = Question.objects.get(id=question_id_or_object, state=True)
             except Question.DoesNotExist:
-                return False, dict_err.get(800)
+                return 20800, dict_err.get(20800)
         return func(self, question, *args, **kwargs)
     return _decorator
 
@@ -48,7 +49,7 @@ def question_admin_required(func):
     def _decorator(self, question, user, *args, **kwargs):
         flag, question = QuestionBase().get_question_admin_permission(question, user)
         if not flag:
-            return False, dict_err.get(802)
+            return 20802, dict_err.get(20802)
         return func(self, question, user, *args, **kwargs)
     return _decorator
 
@@ -60,7 +61,7 @@ def answer_required(func):
             try:
                 answer = Answer.objects.select_related('question').get(id=answer_id_or_object, state=True)
             except Answer.DoesNotExist:
-                return False, dict_err.get(801)
+                return 20801, dict_err.get(20801)
         return func(self, answer, *args, **kwargs)
     return _decorator
 
@@ -69,7 +70,7 @@ def answer_admin_required(func):
     def _decorator(self, answer, user, *args, **kwargs):
         flag, answer = AnswerBase().get_answer_admin_permission(answer, user)
         if not flag:
-            return False, dict_err.get(802)
+            return 20802, dict_err.get(20802)
         return func(self, answer, user, *args, **kwargs)
     return _decorator
 
@@ -87,31 +88,31 @@ class QuestionBase(object):
 
     def validate_title(self, title):
         if len(title) < 10:
-            return False, dict_err.get(100)
+            return 20100, dict_err.get(20100)
         if len(title) > 128:
-            return False, dict_err.get(101)
-        return True, dict_err.get(000)
+            return 20101, dict_err.get(20101)
+        return 0, dict_err.get(0)
 
-    def validate_content(self, content):
-        if len(content) < 10:
-            return False, dict_err.get(102)
+    def validate_content(self, content, min_len=10):
+        if len(content) < min_len:
+            return 20102, dict_err.get(20102)
         if len(content) > 65535:
-            return False, dict_err.get(103)
-        return True, dict_err.get(000)
+            return 20103, dict_err.get(20103)
+        return 0, dict_err.get(0)
 
     def validata_question_element(self, question_type, question_title, question_content):
-        flag, result = self.validate_title(question_title)
-        if not flag:
-            return False, result
+        errcode, errmsg = self.validate_title(question_title)
+        if not errcode == 0:
+            return errcode, errmsg
 
-        flag, result = self.validate_content(question_content)
-        if not flag:
-            return False, result
+        errcode, errmsg = self.validate_content(question_content, min_len=2)
+        if not errcode == 0:
+            return errcode, errmsg
 
         if not all((int(question_type), question_title, question_content)):
-            return False, dict_err.get(998)
+            return 99800, dict_err.get(99800)
 
-        return True, dict_err.get(000)
+        return 0, dict_err.get(0)
 
     @transaction.commit_manually(using=QUESTION_DB)
     def create_question(self, user_id, question_type, question_title, question_content,
@@ -121,11 +122,10 @@ class QuestionBase(object):
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            flag, result = self.validata_question_element(question_type, question_title, question_content)
-            transaction.rollback(using=QUESTION_DB)
-            if not flag:
+            errcode, errmsg = self.validata_question_element(question_type, question_title, question_content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             question = Question.objects.create(user_id=user_id, question_type_id=question_type,
                                                title=question_title, content=question_content,
@@ -140,15 +140,17 @@ class QuestionBase(object):
                     pass
 
             # 更新用户话题数信息
-            cache.get_or_update_data_from_cache('question_count_%s' % user_id, False, 3600 * 24,
-                                                self.get_user_question_count, user_id)
+            UserCountBase().update_user_count(user_id=user_id, code='user_question_count')
+
+            # 发送feed
+            FeedBase().create_feed(user_id, feed_type=1, obj_id=question.id)
 
             transaction.commit(using=QUESTION_DB)
-            return True, question
+            return 0, question
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     @question_admin_required
     @transaction.commit_manually(using=QUESTION_DB)
@@ -159,10 +161,10 @@ class QuestionBase(object):
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            flag, result = self.validata_question_element(question_type, question_title, question_content)
-            if not flag:
+            errcode, errmsg = self.validata_question_element(question_type, question_title, question_content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             question.question_type_id = question_type
             question.title = question_title
@@ -185,11 +187,11 @@ class QuestionBase(object):
                         pass
 
             transaction.commit(using=QUESTION_DB)
-            return True, question
+            return 0, question
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     def add_question_view_count(self, question_id):
         '''
@@ -204,16 +206,18 @@ class QuestionBase(object):
             question.state = False
             question.save()
 
-            # 更新用户回答统计总数
-            cache.get_or_update_data_from_cache('question_count_%s' % question.user_id, False, 3600 * 24,
-                                                self.get_user_question_count, question.user_id)
+            # 更新用户话题数信息
+            UserCountBase().update_user_count(user_id=question.user_id, code='user_question_count', operate='minus')
+
+            # 更新timeline
+            FeedBase().remove_feed(question.user_id, question.id, feed_type=1)
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(000)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     def get_question_by_user_id(self, user_id):
         return Question.objects.filter(user_id=user_id, state=True)
@@ -221,7 +225,10 @@ class QuestionBase(object):
     def get_questions_by_type(self, question_type_domain=None):
         ps = dict(state=True)
         if question_type_domain:
-            ps.update(question_type=QuestionTypeBase().get_question_type_by_id_or_domain(question_type_domain))
+            question_type = question_type_domain
+            if not isinstance(question_type_domain, QuestionType):
+                question_type = QuestionTypeBase().get_question_type_by_id_or_domain(question_type_domain)
+            ps.update(question_type=question_type)
         questions = Question.objects.filter(**ps)
         return questions
 
@@ -234,29 +241,54 @@ class QuestionBase(object):
         else:
             return []
 
-    def get_question_by_id(self, id):
+    def get_question_by_id(self, id, need_state=True):
         try:
-            return Question.objects.select_related('question_type').get(id=id, state=True)
+            ps = dict(id=id)
+            if need_state:
+                ps.update(dict(state=True))
+            return Question.objects.select_related('question_type').get(**ps)
         except Question.DoesNotExist:
             return None
 
     def get_user_question_count(self, user_id):
         return self.get_question_by_user_id(user_id).count()
 
-    def get_user_qa_count_info(self, user_id):
-        '''
-        @note: 获取问、答、被赞统计信息
-        '''
-        user_question_count = cache.get_or_update_data_from_cache('question_count_%s' % user_id, True, 3600 * 24,
-                                                                  self.get_user_question_count, user_id)
-        user_answer_count = cache.get_or_update_data_from_cache('answer_count_%s' % user_id, True, 3600 * 24,
-                                                                AnswerBase().get_user_sended_answers_count, user_id)
-        user_liked_count = cache.get_or_update_data_from_cache('liked_count_%s' % user_id, True, 3600 * 24,
-                                                               LikeBase().get_user_liked_count, user_id)
-        return user_question_count, user_answer_count, user_liked_count
-
     def get_all_important_question(self):
-        return Question.objects.filter(is_important=True, state=True).order_by('-id')
+        # return Question.objects.filter(is_important=True, state=True).order_by('-id')
+        questions = []
+        important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True)
+        for iq in important_questions:
+            for attr in ['img', 'img_alt', 'sort_num', 'operate_user_id', ]:
+                question = iq.question
+                setattr(question, attr, getattr(iq, attr))
+            questions.append(question)
+        return questions
+
+    def get_important_question_by_title(self, title):
+        '''
+        根据标题查询精选
+        '''
+        important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True)
+
+        if title:
+            important_questions = important_questions.filter(question__title=title)
+
+        for iq in important_questions:
+            question = iq.question
+            question.user = question.get_user()
+
+        return important_questions
+
+    def get_important_question_by_question_id(self, question_id):
+        '''
+        根据提问id查询精选
+        '''
+        iq = ImportantQuestion.objects.filter(question__id=question_id)
+        if iq:
+            iq = iq[0]
+            question = iq.question
+            question.user = question.get_user()
+        return iq
 
     @question_required
     def get_question_admin_permission(self, question, user):
@@ -264,17 +296,62 @@ class QuestionBase(object):
         return question.user_id == user.id or user.is_staff(), question
 
     @question_required
-    def set_important(self, question, user):
-        question.is_important = True
-        question.save()
-        return True, dict_err.get(000)
+    @transaction.commit_manually(using=QUESTION_DB)
+    def set_important(self, question, user, img='', img_alt=None, sort_num=0):
+        try:
+            question.is_important = True
+            question.save()
+
+            if img:
+                if not ImportantQuestion.objects.filter(question=question):
+                    ImportantQuestion.objects.create(question=question, operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num)
+                else:
+                    ImportantQuestion.objects.filter(question=question).update(operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num)
+            transaction.commit(using=QUESTION_DB)
+            return 0, dict_err.get(0)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return 99900, dict_err.get(99900)
 
     @question_required
-    def cachel_important(self, question, user):
-        question.is_important = False
-        question.save()
+    @transaction.commit_manually(using=QUESTION_DB)
+    def cancel_important(self, question, user):
+        try:
+            question.is_important = False
+            question.save()
 
-        return True, dict_err.get(000)
+            ImportantQuestion.objects.filter(question=question).delete()
+            transaction.commit(using=QUESTION_DB)
+            return 0, dict_err.get(0)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
+            return 99900, dict_err.get(99900)
+
+    @cache_required(cache_key='question_summary_%s', expire=3600)
+    def get_question_summary_by_id(self, question_id, must_update_cache=False):
+        '''
+        @note: 获取提问摘要信息，用于feed展现
+        '''
+        question = self.get_question_by_id(question_id, need_state=False)
+        question_summary = {}
+        if question:
+            question_summary = dict(question_id=question.id, question_title=question.title,
+                                    question_summary=question.get_summary(), question_answer_count=question.answer_count)
+        return question_summary
+
+    def get_question_by_title(self, title):
+        '''
+        根据标题查询提问
+        '''
+        questions = []
+        if title:
+            questions = Question.objects.filter(title=title)
+        else:
+            questions = Question.objects.all()
+
+        return self.format_quesitons(questions.order_by('create_time'))
 
 
 class AnswerBase(object):
@@ -302,12 +379,12 @@ class AnswerBase(object):
             content = utils.filter_script(content)
             if not all((question, from_user_id, content)):
                 transaction.rollback(using=QUESTION_DB)
-                return False, dict_err.get(998)
+                return 99800, dict_err.get(99800)
 
-            flag, result = QuestionBase().validate_content(content)
-            if not flag:
+            errcode, errmsg = QuestionBase().validate_content(content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             to_user_id = question.user_id
             answer = Answer.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, content=content,
@@ -329,20 +406,22 @@ class AnswerBase(object):
                 UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
 
             # 更新用户回答统计总数
-            cache.get_or_update_data_from_cache('answer_count_%s' % from_user_id, False, 3600 * 24,
-                                                self.get_user_sended_answers_count, from_user_id)
+            UserCountBase().update_user_count(user_id=from_user_id, code='user_answer_count')
 
             # 更新回答数冗余信息
             question.answer_count += 1
             question.last_answer_time = datetime.datetime.now()
             question.save()
 
+            # 发送feed
+            FeedBase().create_feed(from_user_id, feed_type=3, obj_id=answer.id)
+
             transaction.commit(using=QUESTION_DB)
-            return True, answer
+            return 0, answer
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     @answer_admin_required
     def modify_answer(self, answer, user, content):
@@ -350,20 +429,20 @@ class AnswerBase(object):
             content = utils.filter_script(content)
             if not content:
                 transaction.rollback(using=QUESTION_DB)
-                return False, dict_err.get(998)
+                return 99800, dict_err.get(99800)
 
-            flag, result = QuestionBase().validate_content(content)
-            if not flag:
+            errcode, errmsg = QuestionBase().validate_content(content)
+            if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
-                return False, result
+                return errcode, errmsg
 
             answer.content = content
             answer.save()
 
-            return True, answer
+            return 0, answer
         except Exception, e:
             debug.get_debug_detail(e)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     def get_answers_by_question_id(self, question_id):
         return Answer.objects.select_related('question').filter(question=question_id, state=True)
@@ -405,15 +484,14 @@ class AnswerBase(object):
             AtAnswer.objects.filter(user_id=user.id).delete()
 
             # 更新用户回答统计总数
-            cache.get_or_update_data_from_cache('answer_count_%s' % answer.from_user_id, False, 3600 * 24,
-                                                self.get_user_sended_answers_count, answer.from_user_id)
+            UserCountBase().update_user_count(user_id=answer.from_user_id, code='user_answer_count', operate='minus')
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(000)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     @answer_required
     @transaction.commit_manually(using=QUESTION_DB)
@@ -421,7 +499,7 @@ class AnswerBase(object):
         try:
             if AnswerBad.objects.filter(answer=answer, user_id=user.id):
                 transaction.rollback(using=QUESTION_DB)
-                return False, dict_err.get(106)
+                return 20106, dict_err.get(20106)
 
             AnswerBad.objects.create(answer=answer, user_id=user.id)
             if user.is_staff() or AnswerBad.objects.filter(answer=answer).count() >= 9:
@@ -429,11 +507,11 @@ class AnswerBase(object):
                 answer.save()
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(000)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
 
     @answer_required
     @transaction.commit_manually(using=QUESTION_DB)
@@ -445,23 +523,41 @@ class AnswerBase(object):
                 answer.save()
 
             transaction.commit(using=QUESTION_DB)
-            return True, dict_err.get(000)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
-            return False, dict_err.get(999)
+            return 99900, dict_err.get(99900)
+
+    def get_answer_by_id(self, id, need_state=True):
+        try:
+            ps = dict(id=id)
+            if need_state:
+                ps.update(dict(state=True))
+            return Answer.objects.select_related('question').get(**ps)
+        except Answer.DoesNotExist:
+            return None
+
+    @cache_required(cache_key='answer_summary_%s', expire=3600)
+    def get_answer_summary_by_id(self, answer_id, must_update_cache=False):
+        '''
+        @note: 获取回答摘要信息，用于feed展现
+        '''
+        answer = self.get_answer_by_id(answer_id, need_state=False)
+        answer_summary = {}
+        if answer:
+            user = answer.get_from_user()
+            answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
+                                  answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
+                                  answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=user.des or '')
+        return answer_summary
 
 
 class QuestionTypeBase(object):
 
-    def get_all_question_type(self, cached=True):
-        key = 'all_question_type'
-        cache_obj = cache.Cache(config=cache.CACHE_STATIC)
-        qts = cache_obj.get(key)
-        if not qts or not cached:
-            qts = QuestionType.objects.filter(state=True).order_by('-sort_num', 'id')
-            cache_obj.set(key, qts)
-        return qts
+    @cache_required(cache_key='all_question_type', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_all_question_type(self, must_update_cache=False):
+        return QuestionType.objects.filter(state=True).order_by('-sort_num', 'id')
 
     def get_question_type_by_id_or_domain(self, id_or_domain):
         aqts = self.get_all_question_type()
@@ -487,38 +583,40 @@ class LikeBase(object):
             if from_user_id:
                 if Like.objects.filter(from_user_id=from_user_id, answer=answer):
                     transaction.rollback(QUESTION_DB)
-                    return False, dict_err.get(104)
+                    return 20104, dict_err.get(20104)
             else:
                 from_user_id = ''
                 is_anonymous = False
                 if Like.objects.filter(ip=ip, answer=answer):
                     transaction.rollback(QUESTION_DB)
-                    return False, dict_err.get(104)
+                    return 20104, dict_err.get(20104)
 
             # 不支持自赞
             to_user_id = answer.from_user_id
             if from_user_id == to_user_id:
                 transaction.rollback(QUESTION_DB)
-                return False, dict_err.get(105)
+                return 20105, dict_err.get(20105)
 
             Like.objects.create(answer=answer, question=answer.question, is_anonymous=is_anonymous,
                                 from_user_id=from_user_id, to_user_id=to_user_id, ip=ip)
             Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
 
+            # 更新被赞次数
+            UserCountBase().update_user_count(user_id=to_user_id, code='user_liked_count')
+
             # 更新未读消息
             from www.message.interface import UnreadCountBase
             UnreadCountBase().update_unread_count(to_user_id, code='received_like')
 
-            # 更新被赞次数
-            cache.get_or_update_data_from_cache('liked_count_%s' % to_user_id, False, 3600 * 24,
-                                                self.get_user_liked_count, to_user_id)
+            # 发送feed
+            FeedBase().create_feed(from_user_id, feed_type=2, obj_id=answer.id)
 
             transaction.commit(QUESTION_DB)
-            return True, dict_err.get(000)
+            return 0, dict_err.get(0)
         except Exception, e:
-            logging.error(debug.get_debug_detail(e))
+            debug.get_debug_detail(e)
             transaction.rollback(QUESTION_DB)
-            return False, str(e)
+            return 99900, dict_err.get(99900)
 
     def get_likes_by_question(self, question, user_id=None, ip=None):
         '''
@@ -545,19 +643,20 @@ class LikeBase(object):
 
 class TagBase(object):
 
-    def get_all_tags(self, cached=True):
-        key = 'all_question_tag'
-        cache_obj = cache.Cache(config=cache.CACHE_STATIC)
-        tags = cache_obj.get(key)
-        if not tags or not cached:
-            tags = Tag.objects.filter(state=True)
-            cache_obj.set(key, tags)
-        return tags
+    @cache_required(cache_key='all_question_tag', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_all_tags(self, must_update_cache=False):
+        return Tag.objects.select_related('question_type').filter(state=True)
 
     def get_tag_by_domain(self, domain):
         tags = self.get_all_tags()
         for tag in tags:
             if tag.domain == domain:
+                return tag
+
+    def get_tag_by_id(self, tag_id):
+        tags = self.get_all_tags()
+        for tag in tags:
+            if str(tag.id) == str(tag_id):
                 return tag
 
     def get_tags_by_question_type(self, question_type):

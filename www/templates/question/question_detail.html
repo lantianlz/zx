@@ -22,7 +22,7 @@ $(document).ready(function(){
 
 {% block question_main%}
 <span class="jinghua">
-    <img src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
+    <img alt="精华" src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
 
 <ol class="breadcrumb">
     <li>
@@ -71,6 +71,8 @@ $(document).ready(function(){
                 
                 <span class="question-tools f12 gray-a">
                     {% if request.user.is_staff %}
+
+                    {% comment %} 
                     {% if not question.is_important %}
                     <a href="javascript: void(0);" class="set-important">
                         设置精华
@@ -80,6 +82,9 @@ $(document).ready(function(){
                         取消精华
                     </a>
                     {% endif %}
+                    {% endcomment %} 
+
+
                     {% endif %}
                     {% if request.user.id == question.user.id or request.user.is_staff %}
                     <a href="#" data-toggle="modal" data-target="#edit_question_modal" data-backdrop="static">
@@ -92,12 +97,10 @@ $(document).ready(function(){
                     </a>
                     {% endif %}
                     
-                    <a class="invite" href="javascript: void(0);">
+                    <a class="invite hide" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-transfer"></span>
                         邀请回答
                     </a>
-                    
-
                 </span>
                 
             </div>
@@ -215,9 +218,9 @@ $(document).ready(function(){
         {% if bad_answers %}
         <li class="list-group-item no-l-r-bd bdc-eee">
             <div class="gray-a">
-                <a class="answer-collapse zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" data-trigger="hover" title="" href="javascript: void(0)">
+                <a class="answer-collapse" href="javascript: void(0)">
                     共有 {{bad_answers_count}} 个回答被折叠
-                    <span class="glyphicon glyphicon-question-sign" ></span>
+                    <span class="glyphicon glyphicon-question-sign zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="智选希望用户通过点击「没有帮助」按钮去参与维护一个更高质量、更有价值的问答氛围，当一个回答被多次点击「没有帮助」便会被折叠。" data-trigger="hover" title=""></span>
                 </a>
             </div>
         </li>
