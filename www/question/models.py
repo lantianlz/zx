@@ -13,7 +13,7 @@ class Question(models.Model):
     views_count = models.IntegerField(default=0)
     answer_count = models.IntegerField(default=0)
     last_answer_time = models.DateTimeField(db_index=True)
-    sort_num = models.IntegerField(default=-999, db_index=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
     like_count = models.IntegerField(default=0)
     is_important = models.BooleanField(default=False)   # 是否是精华帖
     ip = models.CharField(max_length=32, null=True)
@@ -44,7 +44,7 @@ class Answer(models.Model):
     to_user_id = models.CharField(verbose_name=u'提问者', max_length=32, db_index=True)
     content = models.TextField()
     question = models.ForeignKey(Question)
-    sort_num = models.IntegerField(verbose_name=u'排序值', default=-999, db_index=True)
+    sort_num = models.IntegerField(verbose_name=u'排序值', default=0, db_index=True)
     like_count = models.IntegerField(verbose_name=u'赞的次数', default=0)
     ip = models.CharField(max_length=32, null=True)
     is_bad = models.BooleanField(default=False)  # 是否是无用回复，无用回复需要折叠
@@ -89,7 +89,7 @@ class QuestionType(models.Model):
     name = models.CharField(max_length=32, unique=True)
     value = models.CharField(max_length=16, unique=True)
     domain = models.CharField(max_length=16, unique=True)
-    sort_num = models.IntegerField(default=-999, db_index=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
     state = models.BooleanField(default=True)
 
     def get_url(self):
@@ -126,7 +126,7 @@ class Tag(models.Model):
     question_type = models.ForeignKey(QuestionType)
     img = models.CharField(max_length=128, default='')  # 子分类可能有图片
     des = models.CharField(max_length=512, null=True)
-    sort_num = models.IntegerField(default=-999, db_index=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
     is_show = models.BooleanField(default=True)  # 过滤的时候是否显示
     state = models.BooleanField(default=True)
     data_body = models.TextField(default='')
@@ -163,7 +163,7 @@ class TagQuestion(models.Model):
     '''
     tag = models.ForeignKey('Tag')
     question = models.ForeignKey('Question')
-    sort_num = models.IntegerField(default=-999, db_index=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
 
     class Meta:
         unique_together = [("tag", "question")]
