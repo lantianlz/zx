@@ -332,7 +332,7 @@ $(document).ready(function(){
             <td>
                 <% if (question.isImportant) { %>
                     <span class="glyphicon glyphicon-ok co-zx"></span>
-                <% } else { %>
+                <% } else if(!question.isImportant && question.state) { %>
                     <a href="/admin/important_question#add/<%= question.questionId %>" title="设置精华"><span class="glyphicon glyphicon-ok co19 pointer set-important"></span></a>
                 <% } %>
             </td>
