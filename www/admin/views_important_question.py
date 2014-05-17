@@ -4,6 +4,7 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.conf import settings
 
 from www.misc.decorators import staff_required, common_ajax_response
 from www.misc import qiniu_client
@@ -24,7 +25,7 @@ def get_important_question_by_title(request):
 
     important_questions = QuestionBase().get_important_question_by_title(title)
     page_objs = page.Cpt(important_questions, count=10, page=page_index).info
-    print page_objs
+
     data = []
     num = 0
 
@@ -65,7 +66,7 @@ def add_important(request):
     img_alt = request.REQUEST.get('imgAlt', '')
     sort_num = request.REQUEST.get('sort', 0)
 
-    code, msg = qb.set_important(question, request.user, img_name, img_alt, sort_num)
+    code, msg = qb.set_important(question, request.user, '%s/%s' % (settings.IMG0_DOMAIN, img_name), img_alt, sort_num)
 
     url = ''
     if code == 0:
@@ -95,7 +96,7 @@ def modify_important(request):
     if img:
         flag, img_name = qiniu_client.upload_img(img, img_type='important')
 
-    code, msg = qb.set_important(question, request.user, img_name, img_alt, sort_num)
+    code, msg = qb.set_important(question, request.user, '%s/%s' % (settings.IMG0_DOMAIN, img_name), img_alt, sort_num)
 
     url = '/admin/important_question#modify/%s' % iq.question.id
 
