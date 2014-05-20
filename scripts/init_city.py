@@ -53,20 +53,21 @@ def init_city():
     from www.kaihu.models import City
 
     dict_areas = {
-        u'华北地区': [u'北京市', u'天津市', u'河北省', u'山西省', u'内蒙古自治区'],
-        u'东北地区': [u'辽宁省', u'吉林省', u'黑龙江省'],
-        u'华东地区': [u'上海市', u'江苏省', u'浙江省', u'安徽省', u'福建省', u'江西省', u'山东省'],
-        u'华中地区': [u'河南省', u'湖北省', u'湖南省'],
-        u'华南地区': [u'广东省', u'广西壮族自治区', u'海南省'],
-        u'西南地区': [u'重庆市', u'四川省', u'贵州省', u'云南省', u'西藏自治区'],
-        u'西北地区': [u'陕西省', u'甘肃省', u'青海省', u'宁夏回族自治区', u'新疆维吾尔自治区'],
+        u'华北地区': (10, [u'北京市', u'天津市', u'河北省', u'山西省', u'内蒙古自治区']),
+        u'东北地区': (9, [u'辽宁省', u'吉林省', u'黑龙江省']),
+        u'华东地区': (8, [u'上海市', u'江苏省', u'浙江省', u'安徽省', u'福建省', u'江西省', u'山东省']),
+        u'华中地区': (7, [u'河南省', u'湖北省', u'湖南省']),
+        u'华南地区': (6, [u'广东省', u'广西壮族自治区', u'海南省']),
+        u'西南地区': (5, [u'重庆市', u'四川省', u'贵州省', u'云南省', u'西藏自治区']),
+        u'西北地区': (4, [u'陕西省', u'甘肃省', u'青海省', u'宁夏回族自治区', u'新疆维吾尔自治区']),
     }
     pinyin = pinyin.Pinyin()
     lst_pinyin = []
     lst_pinyin_abbr = []
     for area in dict_areas:
-        area = City.objects.create(area=area, location_type=0)
-        for province in dict_areas[area.area]:
+        area = City.objects.create(area=area, location_type=0, sort_num=dict_areas[area][0])
+        provinces = dict_areas[area.area][1]
+        for province in provinces:
             province_name = province
             province = City.objects.create(area=area.id, province=province, location_type=1, province_type=get_province_type(province))
             citys = get_city_by_province(province_name)

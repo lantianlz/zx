@@ -52,6 +52,9 @@ class City(models.Model):
     province_type = models.IntegerField(choices=province_type_choices, db_index=True, null=True)
     sort_num = models.IntegerField(default=0, db_index=True)
 
+    class Meta:
+        ordering = ["-sort_num", "id"]
+
     def get_url(self):
         if self.location_type == 2:
             return '/kaihu/%s' % self.pinyin_abbr

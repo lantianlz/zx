@@ -44,14 +44,14 @@ def get_upload_token(img_key=None, img_type='avatar', scope='zimg0'):
     return uptoken
 
 
-def upload_img(file_data, img_type='other'):
+def upload_img(file_data, img_type='other', file_name=None):
     # extra = qiniu.io.PutExtra()
     # extra.mime_type = "image/jpeg"
 
-    # data 可以是str或read()able对象
+    # data 可以是str或readable对象
     data = StringIO.StringIO(file_data.read())
     uptoken = get_upload_token(img_type=img_type)
-    key = '%s_%s' % (img_type, utils.uuid_without_dash())
+    key = '%s_%s' % (img_type, file_name or utils.uuid_without_dash())
     ret, err = qiniu.io.put(uptoken, key, data)
     if err is not None:
         logging.error('upload_img error is:%s' % err)

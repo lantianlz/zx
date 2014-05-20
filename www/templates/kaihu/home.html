@@ -53,178 +53,38 @@ $(document).ready(function(){
 <div class="col-md-2 pr-0">
     <div class="pt-3 pb-5 bottom-border bdc-ddd text-center f16">按区域查找券商信息</div>
     <ul class="list-group area bottom-border bdc-ddd">
-        <li class="list-group-item no-l-r-bd text-center active">
-            <a href="#huabei" data-toggle="tab" class="no-unl no-hover-unl">
-                华北地区
+        {% for area in areas %}
+        <li class="list-group-item no-l-r-bd text-center {% if forloop.counter0 == 0 %}active{% endif %}">
+            <a href="#area_{{area.id}}" data-toggle="tab" class="no-unl no-hover-unl">
+                {{area.area}}
                 <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
             </a>
         </li>
-        <li class="list-group-item no-l-r-bd text-center">
-            <a href="#dongbei" data-toggle="tab" class="no-unl no-hover-unl">
-                东北地区
-                <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
-            </a>
-        </li>
-        <li class="list-group-item no-l-r-bd text-center">
-            <a href="#huadong" data-toggle="tab" class="no-unl no-hover-unl">
-                华东地区
-                <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
-            </a>
-        </li>
-        <li class="list-group-item no-l-r-bd text-center">
-            <a href="#huazhong" data-toggle="tab" class="no-unl no-hover-unl">
-                华中地区
-                <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
-            </a>
-        </li>
-        <li class="list-group-item no-l-r-bd text-center">
-            <a href="#huanan" data-toggle="tab" class="no-unl no-hover-unl">
-                华南地区
-                <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
-            </a>
-        </li>
-        <li class="list-group-item no-l-r-bd text-center">
-            <a href="#xinan" data-toggle="tab" class="no-unl no-hover-unl">
-                西南地区
-                <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
-            </a>
-        </li>
-        <li class="list-group-item no-l-r-bd text-center">
-            <a href="#xibei" data-toggle="tab" class="no-unl no-hover-unl">
-                西北地区
-                <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
-            </a>
-        </li>
+        {% endfor %}
     </ul>
 </div>
 
 <div class="col-md-10 tab-content pl-0 pr-0 mt-30 border-1 bdc-ddd box-shadow-559">
-  <div class="tab-pane in active col-md-12" id="huabei">
-    <ul class="list-inline">
-        <li class="col-md-6 col-xs-12">
-            <div class="pt-10 pl-25">
-                <a href="/kaihu/department_list/1" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">北京</a>
-            </div>
-            <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">东城区</a><span class="co17 pr-10">|</span> 
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">西城区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">朝阳区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">丰台区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">石景山区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">海淀区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">门头沟区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">房山区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">通州区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">顺义区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">昌平区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">大兴区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">怀柔区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">平谷区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">密云区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">延庆区</a>
-            </div>
-        </li>
-        <li class="col-md-6 col-xs-12">
-            <div class="pt-10 pl-25">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">天津</a>
-            </div>
-            <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">和平区</a><span class="co17 pr-10">|</span> 
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">河东区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">河西区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">南开区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">河北区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">红桥区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">东丽区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">西青区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">津南区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">北辰区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">武清区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">宝坻区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">滨海新区</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">宁河县</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">静海县</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">蓟县</a>
-            </div>
-        </li>
-        <li class="col-md-6 col-xs-12">
-            <div class="pt-10 pl-25">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">河北</a>
-            </div>
-            <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">石家庄市</a><span class="co17 pr-10">|</span> 
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">唐山市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">秦皇岛市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">邯郸市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">邢台市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">保定市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">张家口市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">承德市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">沧州市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">廊坊市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">衡水市</a>                
-            </div>
-        </li>
-        <li class="col-md-6 col-xs-12 right1-border">
-            <div class="pt-10 pl-25">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">山西</a>
-            </div>
-            <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">太原市</a><span class="co17 pr-10">|</span> 
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">大同市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">阳泉市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">长治市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">晋城市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">朔州市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">晋中市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">运城市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">忻州市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">临汾市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">吕梁市</a>                
-            </div>
-        </li>
-        <li class="col-md-6 col-xs-12">
-            <div class="pt-10 pl-25">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">内蒙古</a>
-            </div>
-            <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">呼和浩特市</a><span class="co17 pr-10">|</span> 
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">包头市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">乌海市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">赤峰市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">通辽市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">鄂尔多斯市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">呼伦贝尔市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">巴彦淖尔市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">乌兰察布市</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">兴安盟</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">锡林郭勒盟</a><span class="co17 pr-10">|</span>
-                <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">阿拉善盟</a>
-            </div>
-        </li>
-    </ul>
-  </div>
-  <div class="tab-pane" id="dongbei">
-    辽宁、吉林、黑龙江
-  </div>
-  <div class="tab-pane" id="huadong">
-    上海、江苏、浙江、安徽、福建、江西、山东
-  </div>
-  <div class="tab-pane" id="huazhong">
-    河南、湖北、湖南
-  </div>
-  <div class="tab-pane" id="huanan">
-    广东、广西、海南
-  </div>
-  <div class="tab-pane" id="xinan">
-    重庆、四川、贵州、云南、西藏
-  </div>
-  <div class="tab-pane" id="xibei">
-    陕西、甘肃、青海、宁夏、新疆
-  </div>
+    {% for cba in citys_by_area %}
+    <div class="tab-pane in active col-md-12" id="area_{{cba.0.id}}">
+        <ul class="list-inline">
+            {% for cbp in cba.1 %}
+            <li class="col-md-6 col-xs-12">
+                <div class="pt-10 pl-25">
+                    <a href="/kaihu/department_list/1" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">{{cbp.0.province}}</a>
+                </div>
+                <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
+                    {% for city in cbp.1 %}
+                    <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">{{city.city}}</a>{% if not forloop.last %}<span class="co17 pr-10">|</span>{% endif %}
+                    {% endfor %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
 </div>
 
 </div>
-<!-- <a class="active border-block-blue pa ml-5 pl-10 pr-10 pt-3 pb-3" href="#">所有券商</a> -->
 
 {% endblock %}
