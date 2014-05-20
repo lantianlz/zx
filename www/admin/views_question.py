@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from misc.decorators import staff_required, common_ajax_response
+from misc.decorators import staff_required, common_ajax_response, verify_permission
 from common import utils, page
 
 from www.question.interface import QuestionBase
@@ -18,6 +18,9 @@ def question(request, template_name='admin/question.html'):
 
 @staff_required
 def search(request):
+    '''
+    分页查询提问，可以根据标题过滤
+    '''
     title = request.POST.get('title')
     page_index = int(request.POST.get('page_index', 1))
 
@@ -51,6 +54,9 @@ def search(request):
 
 
 def get_question_by_id(request):
+    '''
+    根据提问id查询提问信息
+    '''
     question_id = request.REQUEST.get('question_id')
 
     data = ''

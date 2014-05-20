@@ -9,9 +9,11 @@
 
 import urllib
 import json
-from django.http import HttpResponse, HttpResponseRedirect
+from functools import wraps
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 
 from common import cache
+from misc import consts
 
 
 def member_required(func):
@@ -108,3 +110,38 @@ def common_ajax_response(func):
         r = dict(errcode=errcode, errmsg=errmsg)
         return HttpResponse(json.dumps(r), mimetype='application/json')
     return _decorator
+
+
+def verify_permission(permissions):
+    '''
+    权限验证装饰器
+
+    @verify_permission('delete_user')
+    def delete(request):
+        pass
+
+    '''
+    def permission_decorator(func):
+
+        @wraps(func)
+        def wrapper(request, *args, **kwargs):
+            from admin.interface import PermissionBase
+            # 获取用户所有权限
+            user_permissions = PermissionBase().get_user_permissions(request.user.id)
+            # print user_permissions
+
+            # 如果是空，说明不是管理员
+            if user_permissions == []:
+                return HttpResponse(u'需要管理员权限')
+
+            # 如果没有对应的权限
+            if permissions not in user_permissions:
+                # ajax 请求
+                if request.is_ajax():
+                    return HttpResponse('permission_denied', mimetype='application/json')
+                else:
+                    return HttpResponse(u'需要管理员权限')
+            else:
+                return func(request, *args, **kwargs)
+        return wrapper
+    return permission_decorator

@@ -44,3 +44,13 @@ urlpatterns += patterns('www.admin.views_question',
                         url(r'^question/search$', 'search'),
                         url(r'^question$', 'question'),
                         )
+
+
+# 权限
+urlpatterns += patterns('www.admin.views_permission',
+
+                        url(r'^permission/save_user_permission$', 'save_user_permission'),
+                        url(r'^permission/get_user_permissions$', 'get_user_permissions'),
+                        url(r'^permission/get_all_administrators$', 'get_all_administrators'),
+                        url(r'^permission$', 'permission'),
+                        )

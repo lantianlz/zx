@@ -104,13 +104,17 @@ jQ(document).ajaxComplete(function(event, request, settings) {
 	 * @author:	 	lizheng 2010-12-21
 	 */
 	if (request.responseText == 'need_login' || request.responseText == 'perm_refuse') {
-		alert('请先登录');
+		$.ZXMsg.alert('提示', '请先登录');
 		// window.location = login_url;
 	}
 	if (request.responseText == 'need_staff') {
-		alert('需要管理员权限才能执行');
+		$.ZXMsg.alert('提示', '需要管理员权限才能执行');
 	}
-
+	
+	if (request.responseText == 'permission_denied') {
+		$.ZXMsg.alert('提示', '权限不足！');
+	}
+	
 	if (window.g_ajax_processing_obj_id) {
 		hide_ajax_processing();
 	}

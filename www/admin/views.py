@@ -6,9 +6,12 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
+from misc.decorators import verify_permission
+
 from common import utils, page
 
 
+#@verify_permission(11)
 def home(request):
     return HttpResponseRedirect('/admin/recommend_user')
 

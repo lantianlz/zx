@@ -922,7 +922,7 @@ if (!String.format) {
                         $.ZXMsg.sendPrivateMsg(target.data('user_id'), target.data('user_name'));
                     });
 
-                }, 100);
+                }, 500);
                 
             }
         });
@@ -1052,7 +1052,7 @@ if (!String.format) {
                             $.ZXEvent.trigger("removeTopicCardCache");
                         });
                     });
-                }, 100);
+                }, 500);
             }
         });
         

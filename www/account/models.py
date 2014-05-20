@@ -91,6 +91,12 @@ class Profile(models.Model):
     def get_ta_display(self):
         return {1: u'他', 2: u'她'}.get(self.gender, u'Ta')
 
+    def get_permissions(self):
+        '''
+        获取用户权限
+        '''
+        return []
+
     def __unicode__(self):
         return u'%s, %s' % (self.id, self.nick)
 
