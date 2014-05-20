@@ -1375,21 +1375,24 @@ $(document).ready(function(){
             //}
         };
     
-    $('.user-menu .dropdown-toggle')
-    .bind('mouseenter', function(){showDropdown('.user-menu')})
-    .bind('mouseleave', function(){hideDropdown('.user-menu')});
+    // 电脑访问添加鼠标事件
+    if($.ZXUtils.isDesktop()){
+        $('.user-menu .dropdown-toggle')
+        .bind('mouseenter', function(){showDropdown('.user-menu')})
+        .bind('mouseleave', function(){hideDropdown('.user-menu')});
 
-    $('.user-menu .dropdown-menu')
-    .bind('mouseenter', function(){showDropdown('.user-menu')})
-    .bind('mouseleave', function(){hideDropdown('.user-menu')});
+        $('.user-menu .dropdown-menu')
+        .bind('mouseenter', function(){showDropdown('.user-menu')})
+        .bind('mouseleave', function(){hideDropdown('.user-menu')});
 
-    $('.user-notice .dropdown-toggle')
-    .bind('mouseenter', function(){showDropdown('.user-notice')})
-    .bind('mouseleave', function(){hideDropdown('.user-notice')});
+        $('.user-notice .dropdown-toggle')
+        .bind('mouseenter', function(){showDropdown('.user-notice')})
+        .bind('mouseleave', function(){hideDropdown('.user-notice')});
 
-    $('.user-notice .dropdown-menu')
-    .bind('mouseenter', function(){showDropdown('.user-notice')})
-    .bind('mouseleave', function(){hideDropdown('.user-notice')});
+        $('.user-notice .dropdown-menu')
+        .bind('mouseenter', function(){showDropdown('.user-notice')})
+        .bind('mouseleave', function(){hideDropdown('.user-notice')});
+    }
 
 
     // 隐藏所有 auto-hide 样式
