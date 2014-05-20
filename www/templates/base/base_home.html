@@ -50,7 +50,7 @@
                 {% if request.user.is_authenticated %}
                 <!-- 菜单 -->
                 <li class="user-menu dropdown">
-                    <a href="#" class="dropdown-toggle user w140" data-toggle="dropdown" title="{{request.user.nick}}">
+                    <a href="#" class="dropdown-toggle user w140" data-toggle="dropdown" data-target="#" title="{{request.user.nick}}">
                         <img alt="{{request.user.nick}}" class='avatar-25 avatar-circle user mt--2' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
                         <!-- <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span> -->
@@ -84,7 +84,7 @@
 
                 <!-- 消息中心 -->
                 <li class="user-notice dropdown ml--10">
-                    <a href="#" class="dropdown-toggle user" data-target="#" title="">
+                    <a href="#" class="dropdown-toggle user" data-toggle="dropdown" data-target="#" title="">
                         <!-- 有消息则会显示具体消息数量 -->
                         <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
                         

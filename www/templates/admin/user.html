@@ -1,0 +1,223 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}推荐用户管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    var User = Backbone.Model.extend({
+        defaults: {
+            'num': 1,
+            'userId': '',
+            'userAvatar': '',
+            'userNick': '',
+            'userDesc': '',
+            'questionCount': 0,
+            'answerCount': 0,
+            'likeCount': 0,
+            'followers': 0,
+            'following': 0,
+            'isRecommend': false,
+            'isAdmin': false,
+            'state': true
+        }
+    });
+
+    var Users = Backbone.Collection.extend({
+        model: User,
+
+        _modelMaps: {
+            'num': 'num',
+            'userId': 'user_id',
+            'userAvatar': 'user_avatar',
+            'userNick': 'user_nick',
+            'userDesc': 'user_des',
+            'questionCount': 'question_count',
+            'answerCount': 'answer_count',
+            'likeCount': 'liked_count',
+            'followers': 'follower_count',
+            'following': 'following_count',
+            'isRecommend': 'is_recommend',
+            'isAdmin': 'is_admin',
+            'state': 'state'
+        },
+
+        search: function(userNick, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/user/search", 
+                {'user_nick': userNick||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    
+                    me.pageIndex = pageIndex;
+                    me.pageCount = data.page_count;
+                    me.userNick = userNick||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+        }
+        
+    });
+    
+    var ListView = Backbone.View.extend({
+        el: '#user_list',
+
+        template: _.template($('#user_list_template').html()),
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        events: {
+            'click .search-user': 'searchUser',
+        },
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        render: function(){
+            var data = this.collection.toJSON();
+            
+            this.showPanel();
+            this.$('tbody').html(this.template({'users': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.userNick
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#user_list"]').tab('show');
+        },
+
+        searchUser: function(){
+            var userNick = this.$('.key-word').val();
+
+            router.navigate('/search/' + userNick + '/1', {trigger: true});
+        }
+
+    });
+    
+    
+
+    var Router = Backbone.Router.extend({
+        routes: {
+            "":                                 "search",
+            "search/(:userNick)/:pageIndex":    "search"
+        },
+
+        // 获取推荐用户
+        search: function(userNick, pageIndex){
+            users.search(userNick||'', pageIndex||1);
+        }
+
+    });
+
+    var users = new Users(),
+        listView = new ListView({collection: users}),
+        router = new Router();
+
+    Backbone.history.start();
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#user_list" class="black-blue" data-toggle="pill">用户列表</a>
+    </li>
+    <li>
+        <a href="#modify_user" class="black-blue" data-toggle="pill">修改用户信息</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 用户列表 -->
+    <div class="tab-pane fade pt-15 in active" id="user_list">
+        <div class="pl-0 pb-10 col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入用户呢称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search-user" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>头像</th>
+                    <th>用户名称</th>
+                    <th>用户统计信息</th>
+                    <th>推荐用户</th>
+                    <th>是否管理员</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改用户信息 -->
+    <div class="tab-pane fade pt-15" id="modify_user">
+        
+    </div>
+</div>
+
+<script type="text/template" id="user_list_template">
+<% _.each(users, function(user){ %>
+    <tr>
+        <td><%= user.num %></td>
+        <td><img src="<%= user.userAvatar %>" class="avatar-35 avatar-circle" ></td>
+        <td><%= user.userNick %></td>
+        <td>
+            <span class="fb fi pr-3"><%= user.questionCount %></span>提问 | 
+            <span class="fb fi pr-3"><%= user.answerCount %></span>回答 |
+            <span class="fb fi pr-3"><%= user.likeCount %></span>获赞 |
+            <span class="fb fi pr-3"><%= user.followers %></span>粉丝 |
+            <span class="fb fi pr-3"><%= user.following %></span>关注
+        </td>
+        <td>
+            <% if (user.isRecommend) { %>
+                <span class="glyphicon glyphicon-ok co-zx"></span>
+            <% } %>
+        </td>
+        <td>
+            <% if (user.isAdmin) { %>
+                <a href="/admin/permission#modifyUserPermission/<%= user.userId %>" title="修改管理员权限">
+                    <span class="glyphicon glyphicon-ok co-zx"></span>
+                </a>
+            <% } else if(!user.isAdmin && user.state) { %>
+                <a href="/admin/permission#addAdmin/<%= user.userId %>" title="设置管理员"><span class="glyphicon glyphicon-ok co20 pointer set-admin"></span></a>
+            <% } %>
+        </td>
+        <td>
+            <% if (user.state === 0) { %>
+                <span class="glyphicon glyphicon-remove cl_red" title="已删除"></span>
+            <% } %>
+        </td>
+    </tr>
+<% }) %>
+</script>
+
+{% endblock admin-right %}

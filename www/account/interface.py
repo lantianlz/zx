@@ -61,19 +61,19 @@ class UserBase(object):
         except User.DoesNotExist:
             return None
 
-    def get_user_by_id(self, id):
+    def get_user_by_id(self, id, state=[1, 2]):
         try:
             profile = Profile.objects.get(id=id)
-            user = User.objects.get(id=profile.id, state__gt=0)
+            user = User.objects.get(id=profile.id, state__in=state)
             self.set_profile_login_att(profile, user)
             return profile
         except (Profile.DoesNotExist, User.DoesNotExist):
             return None
 
-    def get_user_by_nick(self, nick):
+    def get_user_by_nick(self, nick, state=[1, 2]):
         try:
             profile = Profile.objects.get(nick=nick)
-            user = User.objects.get(id=profile.id, state__gt=0)
+            user = User.objects.get(id=profile.id, state__in=state)
             self.set_profile_login_att(profile, user)
             return profile
         except (Profile.DoesNotExist, User.DoesNotExist):
@@ -423,6 +423,33 @@ class UserBase(object):
             except LastActive.DoesNotExist:
                 LastActive.objects.create(user_id=user_id, last_active_time=datetime.datetime.now(),
                                           ip=ip, last_active_source=last_active_source)
+
+    def get_all_users(self):
+        '''
+        '''
+        return User.objects.all()
+
+    def format_user_full_info(self, user_id):
+        '''
+        '''
+        format_user = self.get_user_by_id(user_id)
+        # 判断是否已经是推荐用户了
+        if RecommendUser.objects.filter(user_id=user_id).count() > 0:
+            format_user.is_recommend = True
+        else:
+            format_user.is_recommend = False
+
+        # 统计信息
+        format_user.user_count = UserCountBase().get_user_count_info(user_id)
+
+        # 是否管理员
+        from www.admin.interface import PermissionBase
+        if PermissionBase().get_user_permissions(user_id):
+            format_user.is_admin = True
+        else:
+            format_user.is_admin = False
+
+        return format_user
 
 
 class InvitationBase(object):

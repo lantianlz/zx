@@ -81,6 +81,21 @@ $(document).ready(function(){
                     }
                 }
             );
+        },
+
+        cancelAdmin: function(userId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/permission/cancel_admin", 
+                {'user_id': userId}, 
+                function(data){
+                    //me.reset($.ZXUtils.dictMapParse(data.permissions, me._modelMaps))
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
         }
         
     });
@@ -89,9 +104,6 @@ $(document).ready(function(){
         el: '#administrator_list',
 
         template: _.template($('#administrator-template').html()),
-
-        events: {
-        },
 
         initialize: function(){
             this.listenTo(this.collection, 'reset', this.render);
@@ -119,7 +131,8 @@ $(document).ready(function(){
             var target = $(sender.currentTarget),
                 userId = target.data('user_id');
 
-            modifyUserPermissionView.modifyUserPermission(userId);
+            router.navigate('/modifyUserPermission/' + userId, {trigger: true});
+            //modifyUserPermissionView.modifyUserPermission(userId);
         }
 
     });
@@ -216,21 +229,106 @@ $(document).ready(function(){
         },
 
         cancelAdmin: function(sender){
-            var userId = this.$('.user-name').data('user_id');
-            console.log(userId);
+            var userId = this.$('.user-name').data('user_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要删除此管理员?', function(result){
+                if(result){
+                    me.collection.cancelAdmin(userId, function(data){
+                        if(data.errcode === 0){
+                            $.ZXMsg.alert('提示', '删除此管理员成功!');
+                            router.navigate('', {trigger: true});
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                }
+            });
+
+            
+        }
+
+    });
+    
+    var AddUserPermissionView = Backbone.View.extend({
+        el: '#add_user_permission',
+
+        template: _.template($('#add-user-permission-template').html()),
+
+        render: function(userId, userNick){
+            var me = this;
+
+            $('#add_user_permission_modal').remove();
+            
+            $('body').append(this.template({'userId': userId, 'userNick': userNick}));
+
+            $('#add_user_permission_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+
+            $('#add_user_permission_modal .add-admin').bind('click', function(){
+                me.addAdmin();
+            });
+            
+            $('#add_user_permission_modal').modal({'show': true, 'backdrop': 'static'});
+        },
+
+        showPanel: function(userId){
+            var me = this;
+
+            ajaxSend(
+                "/admin/user/get_user_by_id", 
+                {'user_id': userId}, 
+                function(data){
+                    
+                    if(data){
+                        me.render(data.user_id, data.user_nick);
+                    } else {
+                        $.ZXMsg.alert('提示', '没有找到对应的用户');
+                    }
+                }
+            );
+
+        },
+
+        addAdmin: function(){
+            
+            var modal = $('#add_user_permission_modal'),
+                userId = modal.find('.user-name').data('user_id'),
+                me = this;
+            
+            modifyUserPermissionView.collection.saveUserPermission(userId, modal.find('form').serialize(), function(data){
+                if(data.errcode === 0){
+                    modifyUserPermissionView.modifyUserPermission(userId);
+                    modal.modal('hide');
+                    $.ZXMsg.alert('提示', '添加成功!');
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+                
+            });
         }
 
     });
 
     var Router = Backbone.Router.extend({
         routes: {
-            "":                                     "search",
-            "searchUser/(:userNick)/:pageIndex":    "searchUser"
+            "":                                 "search",
+            "addAdmin/:userId":                 "addAdmin",
+            "modifyUserPermission/:userId":     "modifyUserPermission"
         },
 
         // 获取推荐用户
         search: function(){
             administrators.search();
+        },
+
+        addAdmin: function(userId){
+            addUserPermissionView.showPanel(userId);
+        },
+
+        modifyUserPermission: function(userId){
+            modifyUserPermissionView.modifyUserPermission(userId);
         }
         
     });
@@ -239,6 +337,7 @@ $(document).ready(function(){
         userPermissions = new UserPermissions(),
         administratorView = new AdministratorView({'collection': administrators}),
         modifyUserPermissionView = new ModifyUserPermissionView({'collection': userPermissions}),
+        addUserPermissionView = new AddUserPermissionView(),
         router = new Router();
 
     Backbone.history.start();
@@ -314,7 +413,41 @@ $(document).ready(function(){
 <% }) %>
 </script>
 
-<script type="text/template" id="modify-user-permission-template">
-
+<script type="text/template" id="add-user-permission-template">
+<div class="modal fade" id="add_user_permission_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加管理员</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" method="post" action="">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <p>为用户添加<span class="pl-15 pr-15 fb fi user-name" data-user_id="<%= userId %>"><%= userNick %></span>的管理权限</p>
+                    </div>
+                    {% for parent in permissions %}
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label pointer">
+                            <input class="parent-checkbox" type="checkbox" id="p_{{ parent.code }}" value="{{ parent.code }}"> {{ parent.name }}
+                        </label>
+                        <div class="col-sm-10">
+                            {% for child in parent.children.all %}
+                            <label class="checkbox-inline pl-40">
+                                <input class="child-checkbox" type="checkbox" id="p_{{ child.code }}" name="permissions" value="{{ child.id }}"> {{ child.name }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel">取消</button>
+                <button type="button" class="btn btn-primary add-admin">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 </script>
 {% endblock admin-right %}

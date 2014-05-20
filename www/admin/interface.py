@@ -45,7 +45,7 @@ class PermissionBase(object):
         '''
         修改用户权限
         '''
-        print 'user_id, permissions, creator', user_id, permissions, creator
+
         if not user_id or not permissions or not creator:
             return 99800, dict_err.get(99800)
 
