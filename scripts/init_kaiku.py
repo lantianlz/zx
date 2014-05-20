@@ -13,6 +13,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 import json
 from pprint import pprint
+from django.conf import settings
+from www.misc import qiniu_client
 from www.kaihu.models import Company, Department, City
 
 dict_zip_code = {}
@@ -117,14 +119,26 @@ def init_kaihu_info():
         for city_name in miss_citys:
             print (u'%s 未找到对应城市' % city_name).encode('utf8')
 
-    # 更新证券公司图片信息
-    for company in Company.objects.all():
-        name = company.name
+        # 更新证券公司图片信息
+        for company in Company.objects.all():
+            name = company.name
+            file_name = (u'./kaihu/logo/%s.jpg' % name).encode('utf8')
+            if not os.path.exists(file_name):
+                raise Exception, (u'未扎到对应图片：%s' % name).encode('utf8')
 
-    pprint(departments[0])
-    print len(departments)
-    print len(set([d['BUSINESS_CITY'] for d in departments]))
+            # temp = open(file_name, 'rb')
+            # flag, img_name = qiniu_client.upload_img(temp, img_type="kaihu_company", file_name=company.id)
+            flag, img_name = True, 'kaihu_company_%s' % company.id
+            if flag:
+                img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
+                company.img = img_name
+                company.save()
+            else:
+                raise Exception, (u'图片上传失败：%s' % name).encode('utf8')
 
+    # pprint(departments[0])
+    # print len(departments)
+    # print len(set([d['BUSINESS_CITY'] for d in departments]))
     print 'ok'
 
 
