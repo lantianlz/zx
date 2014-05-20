@@ -12,7 +12,8 @@ class Pinyin():
 
     def __init__(self, splitter='', data_path='pinyin.dat'):
         self.dict = {}
-        data_path = os.path.abspath(os.path.join('./%s' % data_path))
+        py_path = os.path.dirname(os.path.abspath(__file__))
+        data_path = os.path.abspath(os.path.join('%s/%s' % (py_path, data_path)))   # 取文件绝对位置
         for line in open(data_path):
             k, v = line.strip().split('\t')
             self.dict[k] = v
@@ -29,17 +30,21 @@ class Pinyin():
                 result.append(char)
         return self.splitter.join(result)
 
-    def get_initials(self, char=u'你'):
+    def get_initials(self, chars=u'你'):
         try:
-            char = smart_unicode(char)
-            print char.__repr__()
-            print self.dict["%X" % ord(char)].__repr__()
-            return self.dict["%X" % ord(char)].split(" ")[0][0]
+            chars = smart_unicode(chars)
+            data = u''
+            for char in chars:
+                char = smart_unicode(char)
+                # print char.__repr__()
+                # print self.dict["%X" % ord(char)].__repr__()
+                data += self.dict["%X" % ord(char)].split(" ")[0][0].lower()
+            return data
         except:
-            return char
+            return chars
 
 
 if __name__ == '__main__':
     p = Pinyin()
-    # print p.get_pinyin('FD中SF')
-    print p.get_initials(u'中')
+    # print p.get_pinyin('中国')
+    print p.get_initials('中')

@@ -30,7 +30,29 @@ class Department(models.Model):
     zip_code = models.CharField(verbose_name=u'邮政编码', max_length=32, null=True)
     licence = models.CharField(verbose_name=u'评定等级like A0008', max_length=32, null=True, db_index=True)
     assess_date = models.DateField(verbose_name=u'评定日期', null=True)
+    city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True, null=True)
+    district_id = models.IntegerField(verbose_name=u'区信息', db_index=True, null=True)
 
     sort_num = models.IntegerField(default=0, db_index=True)
     state = models.BooleanField(default=True, db_index=True)
     create_time = models.DateTimeField(auto_now_add=True)
+
+
+class City(models.Model):
+    location_type_choices = ((0, u'区域'), (1, u'省'), (2, u'市'), (3, u'区'))
+    province_type_choices = ((0, u'省'), (1, u'自治区'), (2, u'直辖市'), (3, u'特别行政区'))
+
+    area = models.CharField(max_length=32, null=True, db_index=True)
+    province = models.CharField(max_length=32, null=True, db_index=True)
+    city = models.CharField(max_length=32, null=True, db_index=True)
+    district = models.CharField(max_length=32, null=True, db_index=True)
+    pinyin = models.CharField(verbose_name=u'city对应的拼音', max_length=32, null=True, unique=True)
+    pinyin_abbr = models.CharField(verbose_name=u'city对应的拼音缩写', max_length=32, null=True, unique=True)
+    location_type = models.IntegerField(choices=location_type_choices, db_index=True, null=True)
+    province_type = models.IntegerField(choices=province_type_choices, db_index=True, null=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+
+    def get_url(self):
+        if self.location_type == 2:
+            return '/kaihu/%s' % self.pinyin_abbr
+        return ''
