@@ -22,11 +22,14 @@ class CityBase(object):
     def get_all_areas(self):
         return City.objects.filter(location_type=0)
 
+    def get_all_citys(self):
+        return City.objects.filter(location_type=2)
+
     def get_all_city_group_by_province(self):
         data = []
         areas = self.get_all_areas()
         provinces = City.objects.filter(location_type=1)
-        citys = City.objects.filter(location_type=2)
+        citys = self.get_all_citys()
 
         for area in areas:
             area_provices = provinces.filter(area=area.id)
@@ -36,3 +39,35 @@ class CityBase(object):
                 data_citys.append([ap, province_citys])
             data.append([area, data_citys])
         return data
+
+    def get_city_by_pinyin_abbr(self, pinyin_abbr):
+        if pinyin_abbr:
+            citys = self.get_all_citys().filter(pinyin_abbr=pinyin_abbr)
+            if citys:
+                return citys[0]
+
+    def get_city_by_id(self, city_id):
+        if city_id:
+            citys = self.get_all_citys().filter(id=city_id)
+            if citys:
+                return citys[0]
+
+
+class DepartmentBase(object):
+
+    def __init__(self):
+        pass
+
+    def get_all_departments(self):
+        return Department.objects.select_related('company').all()
+
+    def get_departments_by_city_id(self, city_id):
+        return list(self.get_all_departments().filter(city_id=city_id))
+
+    def get_department_by_id(self, department_id):
+        try:
+            department = self.get_all_departments().filter(id=department_id)[0]
+            department.city = CityBase().get_city_by_id(department.city_id)
+        except Exception:
+            department = None
+        return department

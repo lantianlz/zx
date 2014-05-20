@@ -15,6 +15,14 @@ class Company(models.Model):
     state = models.BooleanField(default=True, db_index=True)
     create_time = models.DateTimeField(auto_now_add=True)
 
+    def get_short_name(self):
+        import re
+        p = re.compile(u'.+?证券', re.DOTALL | re.IGNORECASE)
+        names = p.findall(self.name or "")
+        if names:
+            return names[0]
+        return self.name
+
 
 class Department(models.Model):
     company = models.ForeignKey(Company)
@@ -36,6 +44,15 @@ class Department(models.Model):
     sort_num = models.IntegerField(default=0, db_index=True)
     state = models.BooleanField(default=True, db_index=True)
     create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-sort_num", "id"]
+
+    def get_url(self):
+        return '/kaihu/department_detail/%s' % self.id
+
+    def get_short_name(self):
+        return self.name.replace(self.company.name, self.company.get_short_name())
 
 
 class City(models.Model):
@@ -59,3 +76,12 @@ class City(models.Model):
         if self.location_type == 2:
             return '/kaihu/%s' % self.pinyin_abbr
         return ''
+
+    def get_city_name_for_seo(self):
+        return self.city.replace(u'市', '')
+
+    def is_show(self):
+        '''
+        @note: 临时使用，只展示部分城市
+        '''
+        return self.city[:2] in (u'成都', u'重庆')

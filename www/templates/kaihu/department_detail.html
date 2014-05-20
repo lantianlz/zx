@@ -2,7 +2,7 @@
 {% load custom_tags %}
 {% load custom_filters %}
 
-{% block title %}国泰君安北京方庄路营业部{% endblock %}
+{% block title %}{{department.get_short_name}}{% endblock %}
 
 {% block css %}
 <style type="text/css">
@@ -20,7 +20,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $('.showMap').bind('click', function(e){
-        $.ZXMap.locationByName($(this).prev().html());
+        $.ZXMap.locationByName($(this).parent().next().next().next().html());
     });
 });
 </script>
@@ -33,36 +33,26 @@ $(document).ready(function(){
         <a href="/kaihu">全国股票开户</a>
     </li>
     <li>
-        <a href="/kaihu/department_list/1">北京股票开户</a>
+        <a href="{{department.city.get_url}}">{{department.city.city}}股票开户</a>
     </li>
     <li>
-        <a href="/kaihu/department_detail/1">国泰君安北京德外大街营业部</a>
+        <a href="{{department.get_url}}">{{department.get_short_name}}</a>
     </li>
 </ol>
 
 <div class="pt-15 row">
-    <!-- <img class="pa w150 h90 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee" src="/static/img/common/quanshang1.jpg">
-    <div class="pl-170">
-        <div class="pb-10">
-            <span class="f18">国泰君安北京德外大街营业部</span>
-            <a href="javascript: void(0);" class="co8 f12 pull-right showMap"><span class="glyphicon glyphicon-map-marker"></span>查看地图</a>
-        </div>
-        <div>所属公司: <span class="pl-5">国泰君安</span></div>
-        <div>联系电话: <span class="pl-5">010-88888888</span></div>
-        <div>联系地址: <span class="pl-5">北京市丰台区方庄路一号北京方庄路营业部北京方庄路证券营业部</span></div>
-    </div> -->
 
     <div class="col-md-3 col-xs-12">
-            <img class="w150 h90 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee" src="{{MEDIA_URL}}img/common/quanshang1.jpg">
+        <img class="w150 h90 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee" src="{{department.company.img}}" alt="{{department.get_short_name}}" >
     </div>
     <div class="col-md-9 col-xs-12">
         <div class="pb-10">
-            <span class="f18">国泰君安北京德外大街营业部</span>
+            <span class="f18">{{department.get_short_name}}</span>
             <a href="javascript: void(0);" class="co8 f12 pull-right showMap"><span class="glyphicon glyphicon-map-marker"></span>查看地图</a>
         </div>
-        <div>所属公司: <span class="pl-5">国泰君安</span></div>
-        <div>联系电话: <span class="pl-5">010-88888888</span></div>
-        <div>联系地址: <span class="pl-5">北京市丰台区方庄路一号北京方庄路营业部北京方庄路证券营业部</span></div>
+        <div>所属公司: <span class="pl-5">{{department.company.get_short_name}}</span></div>
+        <div>联系电话: <span class="pl-5">{{department.tel}}</span></div>
+        <div>联系地址: <span class="pl-5">{{department.addr}}</span></div>
     </div>
 </div>
 
@@ -76,79 +66,9 @@ $(document).ready(function(){
     </li>
 </ul>
 <div class="tab-content">
-    <div class="tab-pane fade pt-15 in active" id="description">
-        <p>国泰君安成都顺城大街营业部交易总额在全省128家营业部中排名第二。</p>
-        <p>2001年我部股票交易量稳步攀升，在全省名列前茅，其中B股交易量稳居全省第一位，股份代办转让托管市值和交易金额均排在全省第一名。2002年股票、基金交易量排在全省第二。荣获2003年度四川省证券期货行业十佳“优秀营业部”。</p>
-        <p>国泰君安成都顺城大街营业部真诚地欢迎您来我部开户投资，您的需要就是我们努力的目标，您的满意就是我们的成绩。我们将以最优质的服务来报答您对我们的信任与支持。选择国泰君安，是您投资成功的第一步。</p>
-        <p>欢迎前来咨询国泰君安成都顺城大街营业部开户。</p>
-    </div>
+    <div class="tab-pane fade pt-15 in active" id="description">{{department.des|default:'暂无简介'}}</div>
     <div class="tab-pane fade pt-15 in" id="members">
-        <ul class="list-inline row pl-25 pr-25 pt-5">
-            <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
-                <a href="#"><img class="pa avatar-55 avatar-circle" src="{{MEDIA_URL}}img/common/user1.jpg"></a>
-                <div class="pl-85 row pr-10">
-                    <div class="pb-5">
-                        <a href="#">半夜没事瞎溜达</a>
-                    </div>
-                    <div class="pb-5">
-                        <span class="pr-10">提问 <a href="#">56</a></span>
-                        <span class="pr-10">回答 <a href="#">114</a></span>
-                        <span class="pr-10">赞 <a href="#">322</a></span>
-                    </div>
-                    <div class="pb-5 co6 f13">
-                        <span class="glyphicon glyphicon-tower pr-3 co19"></span>盛大资本投资总监
-                    </div>
-                </div>
-            </li>
-            <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
-                <img class="pa avatar-55 avatar-circle" src="{{MEDIA_URL}}img/common/user2.jpg">
-                <div class="pl-85 row pr-10">
-                    <div class="pb-5">
-                        <a href="#">女王大人</a>
-                    </div>
-                    <div class="pb-5">
-                        <span class="pr-10">提问 <a href="#">68</a></span>
-                        <span class="pr-10">回答 <a href="#">245</a></span>
-                        <span class="pr-10">赞 <a href="#">453</a></span>
-                    </div>
-                    <div class="pb-5 co6 f13">
-                        <span class="glyphicon glyphicon-tower pr-3 co19"></span>盛大资本投资总监
-                    </div>
-                </div>
-            </li>
-            <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
-                <img class="pa avatar-55 avatar-circle" src="{{MEDIA_URL}}img/common/user3.jpg">
-                <div class="pl-85 row pr-10">
-                    <div class="pb-5">
-                        <a href="#">半夜没事瞎溜达</a>
-                    </div>
-                    <div class="pb-5">
-                        <span class="pr-10">提问 <a href="#">56</a></span>
-                        <span class="pr-10">回答 <a href="#">114</a></span>
-                        <span class="pr-10">赞 <a href="#">322</a></span>
-                    </div>
-                    <div class="pb-5 co6 f13">
-                        <span class="glyphicon glyphicon-tower pr-3 co19"></span>盛大资本投资总监
-                    </div>
-                </div>
-            </li>
-            <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
-                <img class="pa avatar-55 avatar-circle" src="{{MEDIA_URL}}img/common/user4.png">
-                <div class="pl-85 row pr-10">
-                    <div class="pb-5">
-                        <a href="#">女王大人</a>
-                    </div>
-                    <div class="pb-5">
-                        <span class="pr-10">提问 <a href="#">68</a></span>
-                        <span class="pr-10">回答 <a href="#">245</a></span>
-                        <span class="pr-10">赞 <a href="#">453</a></span>
-                    </div>
-                    <div class="pb-5 co6 f13">
-                        <span class="glyphicon glyphicon-tower pr-3 co19"></span>盛大资本投资总监
-                    </div>
-                </div>
-            </li>
-        </ul>
+        <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无成员，虚位以待</div>
     </div>
 </div>
 {% endblock %}

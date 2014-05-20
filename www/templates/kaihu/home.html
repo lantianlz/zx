@@ -66,16 +66,21 @@ $(document).ready(function(){
 
 <div class="col-md-10 tab-content pl-0 pr-0 mt-30 border-1 bdc-ddd box-shadow-559">
     {% for cba in citys_by_area %}
-    <div class="tab-pane in active col-md-12" id="area_{{cba.0.id}}">
+    <div class="tab-pane in {% if forloop.first %}active{% endif %} col-md-12" id="area_{{cba.0.id}}">
         <ul class="list-inline">
             {% for cbp in cba.1 %}
             <li class="col-md-6 col-xs-12">
                 <div class="pt-10 pl-25">
-                    <a href="/kaihu/department_list/1" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue f14 fb">{{cbp.0.province}}</a>
+                    <span class="pr-10 line-height-25 h25 f14 fb">{{cbp.0.province}}</span>
                 </div>
                 <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
                     {% for city in cbp.1 %}
-                    <a href="#" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">{{city.city}}</a>{% if not forloop.last %}<span class="co17 pr-10">|</span>{% endif %}
+                    {% if city.is_show %}
+                    <a href="{{city.get_url}}" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">{{city.city}}</a>
+                    {% else %}
+                    <span class="no-unl no-hover-unl pr-10 line-height-25 h25 ws-nowrap">{{city.city}}</span>
+                    {% endif %}
+                    {% if not forloop.last %}<span class="co17 pr-10">|</span>{% endif %}
                     {% endfor %}
                 </div>
             </li>
