@@ -104,10 +104,10 @@ STATICFILES_FINDERS = (
 
 SECRET_KEY = 'ud-9^7=s3eot_id*ltpnklid3tfr*w@z5x#1y0^hn6enfr+@i4'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', ('django.template.loaders.filesystem.Loader',)),
-)
+if not LOCAL_FLAG:
+    TEMPLATE_LOADERS = (('django.template.loaders.cached.Loader', ('django.template.loaders.filesystem.Loader',)),)
+else:
+    TEMPLATE_LOADERS = (('django.template.loaders.filesystem.Loader',),)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     # "django.core.context_processors.debug",

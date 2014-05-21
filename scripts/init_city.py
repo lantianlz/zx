@@ -15,7 +15,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 import json
 from pprint import pprint
 
-city_data = open('./kaihu/city.txt').read()
+file_path = os.path.abspath(os.path.join(SITE_ROOT, './kaihu/city.txt'))
+city_data = open(file_path).read()
 city_data = json.loads(city_data)['province']
 
 

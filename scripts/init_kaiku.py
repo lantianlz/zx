@@ -23,7 +23,8 @@ lst_miss_zip_code = []
 
 def init_city_zip_code():
     global dict_zip_code
-    for line in open('./kaihu/zip_code.txt'):
+    file_path = os.path.abspath(os.path.join(SITE_ROOT, './kaihu/zip_code.txt'))
+    for line in open(file_path):
         line = unicode(line.strip(), 'utf8')
         if line:
             data = line.split('=')
@@ -52,7 +53,8 @@ def get_city_name_by_zip_code(zip_code):
 def init_kaihu_info():
     from django.db.utils import IntegrityError
 
-    data = open('./kaihu/quanshang.txt').read()
+    file_path = os.path.abspath(os.path.join(SITE_ROOT, './kaihu/quanshang.txt'))
+    data = open(file_path).read()
     data = json.loads(data)
     departments = data['result']
 
@@ -122,9 +124,11 @@ def init_kaihu_info():
         # 更新证券公司图片信息
         for company in Company.objects.all():
             name = company.name
-            file_name = (u'./kaihu/logo/%s.jpg' % name).encode('utf8')
+            file_name = os.path.abspath(os.path.join(SITE_ROOT, (u'./kaihu/logo/%s.jpg' % name).encode('utf8')))
+            # print file_name
+            # file_name = (u'./kaihu/logo/%s.jpg' % name).encode('utf8')
             if not os.path.exists(file_name):
-                raise Exception, (u'未扎到对应图片：%s' % name).encode('utf8')
+                raise Exception, (u'未找到对应图片：%s' % name).encode('utf8')
 
             # temp = open(file_name, 'rb')
             # flag, img_name = qiniu_client.upload_img(temp, img_type="kaihu_company", file_name=company.id)
@@ -145,3 +149,8 @@ def init_kaihu_info():
 if __name__ == '__main__':
     init_city_zip_code()
     init_kaihu_info()
+
+    # 执行sql提升国泰君安排名
+    '''
+    update kaihu_department set sort_num=100  where city_id in (select `id` from kaihu_city where location_type = 2 and city in ('成都市', '重庆市')) and company_id=33;
+    '''
