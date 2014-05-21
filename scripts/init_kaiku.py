@@ -76,7 +76,7 @@ def init_kaihu_info():
                   name=d['BRANCHNAME']))
 
     cobjs_by_id = {}
-    if False:
+    if True:
         # 创建证券公司信息
         for c in cs:
             try:
