@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.conf import settings
 
 
 class Company(models.Model):
@@ -74,7 +75,7 @@ class City(models.Model):
 
     def get_url(self):
         if self.location_type == 2:
-            return '/kaihu/%s' % self.pinyin_abbr
+            return 'http://%s.%s' % (self.pinyin_abbr, settings.SERVER_DOMAIN)
         return ''
 
     def get_city_name_for_seo(self):

@@ -107,13 +107,15 @@ def crop_img(request):
 def show_index_for_all_domain(request):
     import urlparse
     from www.account.views import show_index
-    from www.kaihu.views import department_list
+    from www.kaihu.views import department_list, home
 
     # 通配符域名的情况下，跳转到不同的views
     http_host = request.META.get('HTTP_HOST', '')
     if http_host:
         http_host = ('http://%s' % http_host) if not http_host.startswith('http') else http_host
         prefix = urlparse.urlparse(http_host)[1].split('.', 1)[0]
+        if prefix == 'kaihu':
+            return home(request)
         if prefix not in ('www', ):
             return department_list(request, city_abbr=prefix)
 

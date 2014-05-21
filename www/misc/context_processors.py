@@ -16,5 +16,6 @@ def config(request):
     return {
         'DEBUG': settings.DEBUG,
         'MEDIA_VERSION': '003',
+        'SERVER_DOMAIN': settings.SERVER_DOMAIN,
         # 'MEDIA_URL':settings.MEDIA_URL,
     }
