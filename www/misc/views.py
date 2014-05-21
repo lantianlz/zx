@@ -2,7 +2,6 @@
 
 import base64
 import json
-import time
 import urllib
 
 from django.http import HttpResponse
@@ -103,3 +102,19 @@ def crop_img(request):
                 result = dict(flag='-1', result=u'剪裁失败, 请稍后重试')
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
+
+
+def show_index_for_all_domain(request):
+    import urlparse
+    from www.account.views import show_index
+    from www.kaihu.views import department_list
+
+    # 通配符域名的情况下，跳转到不同的views
+    http_host = request.META.get('HTTP_HOST', '')
+    if http_host:
+        http_host = ('http://%s' % http_host) if not http_host.startswith('http') else http_host
+        prefix = urlparse.urlparse(http_host)[1].split('.', 1)[0]
+        if prefix not in ('www', ):
+            return department_list(request, city_abbr=prefix)
+
+    return show_index(request)

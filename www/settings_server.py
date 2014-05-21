@@ -19,8 +19,8 @@ SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../'))])
 
 SERVER_NAME = 'ZHIXUAN_WEB0' if not LOCAL_FLAG else 'DEVELOPER'
-SERVER_DOMAIN = 'zhixuan.com'
-MAIN_DOMAIN = 'http://www.%s' % SERVER_DOMAIN
+SERVER_DOMAIN = 'zhixuan.com' if not LOCAL_FLAG else 'a.com'
+MAIN_DOMAIN = ('http://www.%s' % SERVER_DOMAIN) if not LOCAL_FLAG else ('http://www.%s:8000' % SERVER_DOMAIN)
 IMG0_DOMAIN = 'http://img0.zhixuan.com'    # 'http://zimg0.qiniudn.com'
 
 EMAIL_FROM = u'"智选" <service@zhixuan.com>'
@@ -174,6 +174,7 @@ LOGGING = {
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 10
 SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_DOMAIN = '.zhixuan.com' if not LOCAL_FLAG else '.a.com'
 
 import logging
 logging.basicConfig(format='%(asctime)s %(message)s ---------- %(pathname)s:%(module)s.%(funcName)s Line:%(lineno)d',
