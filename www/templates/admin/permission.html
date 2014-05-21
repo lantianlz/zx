@@ -262,15 +262,52 @@ $(document).ready(function(){
             
             $('body').append(this.template({'userId': userId, 'userNick': userNick}));
 
+            // 绑定事件
             $('#add_user_permission_modal .cancel').bind('click', function(){
                 history.go(-1);
             });
-
             $('#add_user_permission_modal .add-admin').bind('click', function(){
                 me.addAdmin();
             });
+            $('#add_user_permission_modal .parent-checkbox').bind('click', function(){
+                me.parentCheck($(this));
+            });
+            $('#add_user_permission_modal .child-checkbox').bind('click', function(){
+                me.childCheck($(this));
+            });
+
             
             $('#add_user_permission_modal').modal({'show': true, 'backdrop': 'static'});
+        },
+
+        // 父选项选中事件
+        parentCheck: function(sender){
+            
+            var target = sender;//$(sender.currentTarget);
+            
+            target
+            .parent()
+            .next()
+            .find('.child-checkbox')
+            .attr('checked', target.attr('checked') ? true : false);
+                  
+        },
+
+        // 子选项选中事件
+        childCheck: function(sender){
+            var target = sender,//$(sender.currentTarget);
+                flag = '';
+            
+            $.map(target.parents('.col-sm-10').find('.child-checkbox'), function(c){
+                flag += c.checked ? '1' : '0';
+            });
+            
+            // 父选项是否选中控制
+            target
+            .parents('.form-group')
+            .find('.parent-checkbox')
+            .attr('checked', (flag.indexOf('0') == -1) ? true : false);
+            
         },
 
         showPanel: function(userId){
@@ -382,7 +419,7 @@ $(document).ready(function(){
             {% for parent in permissions %}
             <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                 <label class="col-sm-2 control-label pointer">
-                    <input class="parent-checkbox" type="checkbox" id="p_{{ parent.code }}" value="{{ parent.code }}"> {{ parent.name }}
+                    <input class="parent-checkbox" type="checkbox" id="{{ parent.code }}" value="{{ parent.code }}"> {{ parent.name }}
                 </label>
                 <div class="col-sm-10">
                     {% for child in parent.children.all %}
@@ -424,7 +461,7 @@ $(document).ready(function(){
             <div class="modal-body">
                 <form class="form-horizontal" role="form" method="post" action="">
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <p>为用户添加<span class="pl-15 pr-15 fb fi user-name" data-user_id="<%= userId %>"><%= userNick %></span>的管理权限</p>
+                        <p>为用户<span class="pl-15 pr-15 fb fi user-name" data-user_id="<%= userId %>"><%= userNick %></span>添加管理权限</p>
                     </div>
                     {% for parent in permissions %}
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

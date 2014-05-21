@@ -33,6 +33,13 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
     display: inline;
 }
 
+@media(min-width: 768px){
+  .map-modal-dialog {
+    width: 900px;
+  }
+}
+
+
 @media(min-width: 1200px){
     .zx-container{
         width: 1000px;

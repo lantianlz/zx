@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'www.message',
     'www.timeline',
     'www.kaihu',
+    'www.admin',
 )
 
 AUTHENTICATION_BACKENDS = ('www.middleware.user_backend.AuthBackend',)
