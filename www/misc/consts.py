@@ -18,7 +18,7 @@ PERMISSIONS = [
     {'code': 'add_user_permission', 'name': u'添加用户权限', 'parent': 'permission_manage'},
     {'code': 'query_user_permission', 'name': u'查询用户权限', 'parent': 'permission_manage'},
     {'code': 'modify_user_permission', 'name': u'修改用户权限', 'parent': 'permission_manage'},
-    {'code': 'remove_user_permission', 'name': u'取消管理员', 'parent': 'permission_manage'},
+    {'code': 'cancel_admin', 'name': u'取消管理员', 'parent': 'permission_manage'},
 
     {'code': 'manage_recommend_user', 'name': u'推荐用户管理', 'parent': None},
     {'code': 'set_recommend_user', 'name': u'设置推荐用户', 'parent': 'manage_recommend_user'},

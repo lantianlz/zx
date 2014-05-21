@@ -12,13 +12,13 @@ from www.admin.interface import PermissionBase
 from www.account.interface import UserBase
 
 
-@staff_required
+@verify_permission('')
 def permission(request, template_name='admin/permission.html'):
     permissions = PermissionBase().get_all_permissions()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@staff_required
+@verify_permission('query_user_permission')
 def get_all_administrators(request):
     '''
     获取所有管理员
@@ -38,7 +38,7 @@ def get_all_administrators(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@staff_required
+@verify_permission('query_user_permission')
 def get_user_permissions(request):
     '''
     获取用户对应权限
@@ -49,7 +49,7 @@ def get_user_permissions(request):
     return HttpResponse(json.dumps({'permissions': data, 'user': {'user_id': user.id, 'user_nick': user.nick}}), mimetype='application/json')
 
 
-@staff_required
+@verify_permission('modify_user_permission')
 @common_ajax_response
 def save_user_permission(request):
     '''
@@ -61,7 +61,7 @@ def save_user_permission(request):
     return PermissionBase().save_user_permission(user_id, permissions, request.user.id)
 
 
-@staff_required
+@verify_permission('cancel_admin')
 @common_ajax_response
 def cancel_admin(request):
     '''

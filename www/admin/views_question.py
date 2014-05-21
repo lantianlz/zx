@@ -11,12 +11,12 @@ from common import utils, page
 from www.question.interface import QuestionBase
 
 
-@staff_required
+@verify_permission('')
 def question(request, template_name='admin/question.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@staff_required
+@verify_permission('query_question')
 def search(request):
     '''
     分页查询提问，可以根据标题过滤
@@ -53,6 +53,7 @@ def search(request):
     )
 
 
+@verify_permission('query_question')
 def get_question_by_id(request):
     '''
     根据提问id查询提问信息

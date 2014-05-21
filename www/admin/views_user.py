@@ -8,17 +8,17 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import utils, page
-from misc.decorators import staff_required, common_ajax_response
+from misc.decorators import staff_required, common_ajax_response, verify_permission
 
 from www.account.interface import UserBase, UserCountBase
 
 
-@staff_required
+@verify_permission('')
 def user(request, template_name='admin/user.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@staff_required
+@verify_permission('query_user')
 def search(request):
     user_nick = request.POST.get('user_nick')
     page_index = int(request.POST.get('page_index', 1))
@@ -65,7 +65,7 @@ def search(request):
     )
 
 
-@staff_required
+@verify_permission('query_user')
 def get_user_by_id(request):
     user_id = request.REQUEST.get('user_id')
     data = ''

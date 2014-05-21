@@ -112,7 +112,7 @@ def common_ajax_response(func):
     return _decorator
 
 
-def verify_permission(permissions):
+def verify_permission(permission):
     '''
     权限验证装饰器
 
@@ -135,7 +135,7 @@ def verify_permission(permissions):
                 return HttpResponse(u'需要管理员权限')
 
             # 如果没有对应的权限
-            if permissions not in user_permissions:
+            if permission and permission not in user_permissions:
                 # ajax 请求
                 if request.is_ajax():
                     return HttpResponse('permission_denied', mimetype='application/json')

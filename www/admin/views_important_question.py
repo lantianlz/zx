@@ -6,19 +6,19 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 
-from www.misc.decorators import staff_required, common_ajax_response
+from www.misc.decorators import staff_required, common_ajax_response, verify_permission
 from www.misc import qiniu_client
 from common import utils, page
 
 from www.question.interface import QuestionBase
 
 
-@staff_required
+@verify_permission('')
 def important_question(request, template_name='admin/important_question.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@staff_required
+@verify_permission('query_important_question')
 def get_important_question_by_title(request):
     title = request.POST.get('title')
     page_index = int(request.POST.get('page_index', 1))
@@ -51,7 +51,7 @@ def get_important_question_by_title(request):
     )
 
 
-@staff_required
+@verify_permission('add_important_question')
 def add_important(request):
     '''
     添加精选
@@ -77,7 +77,7 @@ def add_important(request):
     return HttpResponseRedirect(url)
 
 
-@staff_required
+@verify_permission('modify_important_question')
 def modify_important(request):
     '''
     修改精选
@@ -103,7 +103,7 @@ def modify_important(request):
     return HttpResponseRedirect(url)
 
 
-@staff_required
+@verify_permission('query_important_question')
 def get_important_question_by_question_id(request):
     question_id = request.REQUEST.get('question_id')
 
@@ -126,7 +126,7 @@ def get_important_question_by_question_id(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@staff_required
+@verify_permission('cancel_important_question')
 @common_ajax_response
 def cancel_important(request):
     question_id = request.REQUEST.get('question_id')

@@ -11,9 +11,9 @@ from misc.decorators import verify_permission
 from common import utils, page
 
 
-#@verify_permission(11)
+@verify_permission('')
 def home(request):
-    return HttpResponseRedirect('/admin/recommend_user')
+    return HttpResponseRedirect('/admin/important_question')
 
 
 # def question(request, template_name='admin/question.html'):

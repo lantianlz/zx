@@ -5,17 +5,17 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from misc.decorators import staff_required, common_ajax_response
+from misc.decorators import staff_required, common_ajax_response, verify_permission
 
 from www.account.interface import RecommendUserBase
 
 
-@staff_required
+@verify_permission('')
 def recommend_user(request, template_name='admin/recommend_user.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@staff_required
+@verify_permission('query_recommend_user')
 def get_all_recommend_users(request):
     '''
     获取所有推荐用户
@@ -45,7 +45,7 @@ def get_all_recommend_users(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@staff_required
+@verify_permission('modify_recommend_user')
 @common_ajax_response
 def set_recommend_user_sort(request):
     '''
@@ -57,7 +57,7 @@ def set_recommend_user_sort(request):
     return RecommendUserBase().set_recommend_user_sort(user_id, sort_num)
 
 
-@staff_required
+@verify_permission('set_recommend_user')
 @common_ajax_response
 def set_recommend_user(request):
     '''
@@ -68,7 +68,7 @@ def set_recommend_user(request):
     return RecommendUserBase().set_recommend_user(user_id)
 
 
-@staff_required
+@verify_permission('cancel_recommend_user')
 @common_ajax_response
 def un_recommend_user(request):
     '''
@@ -79,7 +79,7 @@ def un_recommend_user(request):
     return RecommendUserBase().un_recommend_user(user_id)
 
 
-@staff_required
+@verify_permission('query_recommend_user')
 def get_user_by_nick(request):
     '''
     根据用户呢称查询用户详细信息

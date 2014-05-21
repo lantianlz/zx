@@ -49,7 +49,7 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block container_content %}
-<div class="zx-kaihu-main col-md-12 row pt-10">
+<div class="zx-kaihu-main col-md-12 row pt-10 min-h600">
 <div class="col-md-2 pr-0">
     <div class="pt-3 pb-5 bottom-border bdc-ddd text-center f16">按区域查找券商信息</div>
     <ul class="list-group area bottom-border bdc-ddd">
@@ -69,7 +69,7 @@ $(document).ready(function(){
     <div class="tab-pane in {% if forloop.first %}active{% endif %} col-md-12" id="area_{{cba.0.id}}">
         <ul class="list-inline">
             {% for cbp in cba.1 %}
-            <li class="col-md-6 col-xs-12">
+            <li class="col-md-12 col-xs-12">
                 <div class="pt-10 pl-25">
                     <span class="pr-10 line-height-25 h25 f14 fb">{{cbp.0.province}}</span>
                 </div>
