@@ -207,11 +207,11 @@ $(document).ready(function(){
         </td>
         <td>
             <% if (user.isManager) { %>
-                <a href="/admin/permission#modifyUserPermission/<%= user.userId %>" title="修改客户经理信息">
+                <a href="/admin/customer_manager#modify/<%= user.userId %>" title="修改客户经理信息">
                     <span class="glyphicon glyphicon-ok co-zx"></span>
                 </a>
             <% } else if(!user.isManager && user.state) { %>
-                <a href="/admin/permission#addAdmin/<%= user.userId %>" title="设置客户经理"><span class="glyphicon glyphicon-ok co20 pointer"></span></a>
+                <a href="/admin/customer_manager#add/<%= user.userId %>" title="设置客户经理"><span class="glyphicon glyphicon-ok co20 pointer"></span></a>
             <% } %>
         </td>
         <td>

@@ -123,6 +123,7 @@ $(document).ready(function(){
     // 问题详情页面 的 问题内容
     if(QUESTION_CONTENT && questionEditor){
         var temp = QUESTION_CONTENT;
+
         // if($('#edit_question_modal .ke-container').length == 0){
         //     temp = $.ZXUtils.clearHtmlTags(temp);
         // }

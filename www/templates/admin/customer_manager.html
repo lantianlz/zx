@@ -20,9 +20,12 @@ $(document).ready(function(){
             'userId': '',
             'userNick': '',
             'userAvatar': '',
-            'city': '',
-            'department': '',
-            'sort': ''
+            'cityName': '',
+            'cityId': '',
+            'departmentName': '',
+            'departmentId': '',
+            'sort': '',
+            'approveDate': ''
         }
 
     });
@@ -36,9 +39,12 @@ $(document).ready(function(){
             'userId': 'user_id',
             'userNick': 'user_nick',
             'userAvatar': 'user_avatar',
-            'city': 'city',
-            'department': 'department',
-            'sort': 'sort'
+            'cityName': 'city_name',
+            'cityId': 'city_id',
+            'departmentName': 'department_name',
+            'departmentId': 'department_id',
+            'sort': 'sort',
+            'approveDate': 'approve_date'
         },
 
         // 查询
@@ -55,17 +61,23 @@ $(document).ready(function(){
                 'userId': '123',
                 'userNick': 'aa',
                 'userAvatar': '',
-                'city': '成都',
-                'department': '国泰君安',
-                'sort': '2'
+                'cityName': '成都',
+                'cityId': '1',
+                'departmentName': '国泰君安',
+                'departmentId': '11',
+                'sort': '2',
+                'approveDate': '2013-05-05'
             }, {
                 'num': 2,
-                'userId': '123',
+                'userId': '113',
                 'userNick': 'bb',
                 'userAvatar': '',
-                'city': '成都',
-                'department': '国泰君安',
-                'sort': '2'
+                'cityName': '成都',
+                'cityId': '2',
+                'departmentName': '国泰君安2',
+                'departmentId': '21',
+                'sort': '3',
+                'approveDate': '2013-02-05'
             }]);
 
             ajaxSend(
@@ -144,9 +156,9 @@ $(document).ready(function(){
 
         modifyCustomerManager: function(sender){
             var target = $(sender.currentTarget),
-                customerManagerId = target.data('customer_manager_id');
+                userId = target.data('user_id');
 
-            router.navigate('/modify/' + customerManagerId, {trigger: true});
+            router.navigate('/modify/' + userId, {trigger: true});
         }
 
     });
@@ -154,107 +166,105 @@ $(document).ready(function(){
     // modifyView
     var ModifyView = Backbone.View.extend({
         
-        el: '#modify_important',
+        el: '#modify_customer_manager',
 
-        template: _.template($('#modify_important_template').html()),
+        template: _.template($('#modify_customer_manager_template').html()),
 
         events: {
-            'click .save-important': 'saveImportant',
-            'click .cancel-important': 'cancelImportant'
+            'click .save': 'save',
+            'click .remove': 'remove'
         },
 
-        // 初始化日期控件
-        initDatetimepicker: function(){
-           
-            $('.datetimepicker').datetimepicker({
-                format: 'yyyy-mm-dd hh:mm:s',
+        departmentTextBox: null,
+        initDepartmentTextBox: function(name, value){
+            this.departmentTextBox = $.ZXTextboxList.create('#belong_department_modify', {
+                max: 1,
+                placeholder: '选择营业部',
+                url: 'customer_manager/get_departments_by_name',
+                param: 'department_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.departmentTextBox.add(name, value)
+            }
+        },
+
+        initDate: function(){
+            $('#approve_date_modify').datetimepicker({
+                format: 'yyyy-mm-dd',
                 language: 'zh-CN',
-                minView: 0,
+                minView: 2,
                 autoclose: true
             });
         },
 
-        // 初始化话题控件
-        initTextboxList: function(){
-            var text_topics = new $.TextboxList('#important_topics', {
-                bitsOptions: {
-                    box: {deleteButton: true}
-                },
-                unique: true, 
-                max: 100,
-                plugins: {
-                    autocomplete: {
-                        minLength: 1, // 最小字符
-                        queryRemote: true, // 远程查询
-                        placeholder: '添加话题',
-                        highlight: false,
-                        onlyFromValues: true, // 是否默认选中第一个结果
-                        remote: {
-                            url: '/question/get_topic_info_by_name', 
-                            param: 'topic_name',
-                            loadPlaceholder: '正在加载...',
-                        }
-                    }
-                }
-
-            });
-
-            return text_topics;
-        },
-
         // 显示面板
         showPanel: function(){
-            $('.zx-nav-pills a[href="#modify_important"]').tab('show');
+            $('.zx-nav-pills a[href="#modify_customer_manager"]').tab('show');
         },
 
         // 渲染
         render: function(data){
             this.$el.html(this.template(data));
 
-            //this.initDatetimepicker();
-            //this.initTextboxList();
+            this.initDepartmentTextBox(data.departmentName, data.departmentId);
+            this.initDate();
         },
 
         // 显示提问信息
-        modifyImportant: function(questionId){
+        modifyCustomerManager: function(userId){
             var me = this;
 
-            this.collection.getOne(questionId, function(data){
+            this.render({'num': 1,
+                'userId': '123',
+                'userNick': 'aa',
+                'userAvatar': '',
+                'cityName': '成都',
+                'cityId': '1',
+                'departmentName': '国泰君安',
+                'departmentId': '11',
+                'sort': '2',
+                'approveDate': '2013-05-05'});
+            this.showPanel();
+            return;
+
+            this.collection.getOne(userId, function(data){
                 if(data){
                     me.render(data);
                     me.showPanel();
                     
                 } else {
-                    setTimeout(function(){history.go(-1);}, 3000)
-                    $.ZXMsg.alert('提示', '没有找到对应的精选');
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的用户!');
                 }
             });
         },
 
         // 保存提问
-        saveImportant: function(){
-            var questionId = this.$('form').data('question_id'),
+        save: function(){
+            var userId = this.$('form').data('user_id'),
                 me = this;
 
-            me.$('form').submit();
+            console.log(this.cityTextBox.getValues(), userId, this.$('form').serialize())
             
         },
 
         // 删除提问
-        cancelImportant: function(){
-            var questionId = this.$('form').data('question_id'),
+        remove: function(){
+            var userId = this.$('form').data('user_id'),
                 me = this;
 
-            $.ZXMsg.confirm('提示', '确认要删除此提问吗?', function(result){
-                //todo...
+            $.ZXMsg.confirm('提示', '确认要删除此客户经理吗?', function(result){
+                
                 if(result){
-                    me.collection.cancelImportant(questionId, function(data){
-                        if(data.errcode === 0){
-                            me.collection.search();
-                        } else {
-                            $.ZXMsg.alert('提示', data.errmsg);
-                        }
-                    });
+                    // me.collection.cancelImportant(questionId, function(data){
+                    //     if(data.errcode === 0){
+                    //         me.collection.search();
+                    //     } else {
+                    //         $.ZXMsg.alert('提示', data.errmsg);
+                    //     }
+                    // });
                 }
                 
             });
@@ -266,74 +276,77 @@ $(document).ready(function(){
     var AddView = Backbone.View.extend({
         el: 'body',
 
-        template: _.template($('#add_important_template').html()),
+        template: _.template($('#add_customer_manager_template').html()),
 
-        _windowHtml: [
-            '<div class="modal fade" id="add_important_modal" tabindex="-1" role="dialog">',
-                '<div class="modal-dialog">',
-                    '<div class="modal-content">',
-                        '<div class="modal-header pb-5">',
-                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
-                            '<h4 class="modal-title">添加精选</h4>',
-                        '</div>',
-                        '<div class="modal-body">',
-                            '{0}',
-                        '</div>',
-                        '<div class="modal-footer">',
-                            '<button type="button" class="btn btn-default cancel">取消</button>',
-                            '<button type="button" class="btn btn-primary add-important">确定</button>',
-                        '</div>',
-                    '</div>',
-                '</div>',
-            '</div>'
-        ].join(''),
+        departmentTextBox: null,
+        initDepartmentTextBox: function(name, value){
+            this.departmentTextBox = $.ZXTextboxList.create('#belong_department_add', {
+                max: 1,
+                placeholder: '选择营业部',
+                url: 'customer_manager/get_departments_by_name',
+                param: 'department_name',
+                loadPlaceholder: '正在加载...'
+            });
 
-        _setWindow: function(content){
-            
-            var target = $('#add_important_modal'),
-                me = this;
-
-            if(target.length == 0){
-                $('body').append(String.format(this._windowHtml, content));
-                target = $('#add_important_modal');
-
-                target.find('.cancel').bind('click', function(){
-                    history.go(-1);
-                });
-
-                target.find('.add-important').bind('click', function(){
-                    me.addImportant();
-                });
-
-            } else {
-                target.find('.modal-body').html(content);
+            if(value){
+                this.departmentTextBox.add(name, value)
             }
-
-            target.modal({'show': true, 'backdrop': 'static'});
         },
 
-        showPanel: function(questionId){
+        initDate: function(){
+            $('#approve_date_add').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        showPanel: function(userId){
             var me = this;
 
             ajaxSend(
-                "/admin/question/get_question_by_id", 
-                {'question_id': questionId}, 
+                "/admin/user/get_user_by_id", 
+                {'user_id': userId}, 
                 function(data){
                     
                     if(data){
-                        me._setWindow(me.template(data));
+                        me.render(data.user_id, data.user_nick);
                     } else {
-                        $.ZXMsg.alert('提示', '没有找到对应的提问');
+                        $.ZXMsg.alert('提示', '没有找到对应的用户');
                     }
                 }
             );
 
         },
 
-        addImportant: function(){
+        render: function(userId, userNick){
             var me = this;
 
-            $('#add_important_modal').find('form').submit();
+            $('#add_customer_manager_modal').remove();
+            
+            $('body').append(this.template({'userId': userId, 'userNick': userNick}));
+
+            // 绑定事件
+            $('#add_customer_manager_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_customer_manager_modal .add-admin').bind('click', function(){
+                me.addCustomerManager();
+            });
+            
+            $('#add_customer_manager_modal').modal({'show': true, 'backdrop': 'static'});
+
+
+            this.initDepartmentTextBox();
+            this.initDate();
+        },
+
+        addCustomerManager: function(){
+            var userId = this.$('form').data('user_id'),
+                me = this;
+
+            console.log(this.cityTextBox.getValues(), userId, this.$('form').serialize())
         }
     });
 
@@ -354,11 +367,11 @@ $(document).ready(function(){
 
         // 显示修改界面
         modify: function(userId){
-            modifyView.modifyImportant(userId);
+            modifyView.modifyCustomerManager(userId);
         },
 
         add: function(userId){
-            //addView.showPanel(questionId);
+            addView.showPanel(userId);
         }
 
     });
@@ -408,10 +421,11 @@ $(document).ready(function(){
                 <tr>
                     <th>#</th>
                     <th>头像</th>
-                    <th>名字</th>
+                    <th>客户经理</th>
                     <th>所属城市</th>
                     <th>所属营业部</th>
                     <th>排序</th>
+                    <th>认证到期时间</th>
                 </tr>
             </thead>
             <tbody>
@@ -439,80 +453,94 @@ $(document).ready(function(){
             <td><%= customerManager.num %></td>
             <td><%= customerManager.userAvatar %></td>
             <td><%= customerManager.userNick %></td>
-            <td><%= customerManager.city %></td>
-            <td><%= customerManager.department %></td>
+            <td><%= customerManager.cityName %></td>
+            <td><%= customerManager.departmentName %></td>
             <td><%= customerManager.sort %></td>
+            <td><%= customerManager.approveDate %></td>
         </tr>
     <% }) %>
 </script>
 
 <!-- 修改问题模板 -->
-<script type="text/template" id="modify_important_template">
-    <form class="form-horizontal modify-important-form" data-question_id="<%= questionId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/modify_important">
+<script type="text/template" id="modify_customer_manager_template">
+    <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/modify_important">
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">提问标题</label>
+            <label class="col-sm-2 control-label">客户经理名称</label>
             <div class="col-sm-6">
-                <p class="form-control-static"><%= title %></p>
-                <input type="hidden" value="<%= questionId %>" name="questionId" />
+                <p class="form-control-static"><%= userNick %></p>
+                <input type="hidden" name="user_id" value="<%= userId %>" />
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">精选图片</label>
+            <label class="col-sm-2 control-label">所属营业部</label>
             <div class="col-sm-6">
-                <img src="<%= img %>" class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee">
-                <input class="pt-15" name="importantImg" type="file" class="important-file" />
+                <input type="text" class="form-control" name="belong_department" id="belong_department_modify" value=''>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">图片描述</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" name='imgAlt' value='<%= imgAlt %>'>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">排序权重</label>
+            <label class="col-sm-2 control-label">排序</label>
             <div class="col-sm-2">
-                <input type="text" class="form-control" name='sort' value='<%= sort %>'>
+                <input type="text" class="form-control" name="sort" value='<%= sort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">认证到期时间</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name='approve_date' id="approve_date_modify" value='<%= approveDate %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <div class="col-sm-12">
-                <button type="button" class="btn btn-primary save-important">提交你的修改</button>
-                <button type="button" class="btn btn-danger ml-15 cancel-important">取消此精华</button>
+                <button type="button" class="btn btn-primary save">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove">删除此客户经理</button>
             </div>
         </div>
     </form>
 </script>
 
 <!-- 添加问题模板 -->
-<script type="text/template" id="add_important_template">
-    <form class="form-horizontal add-important-form" data-question_id="<%= question_id %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/add_important">
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">提问标题</label>
-            <div class="col-sm-6">
-                <p class="form-control-static"><%= question_title %></p>
-                <input type="hidden" value="<%= question_id %>" name="questionId" />
+<script type="text/template" id="add_customer_manager_template">
+<div class="modal fade" id="add_customer_manager_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">认证客户经理</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/modify_important">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">客户经理名称</label>
+                        <div class="col-sm-6">
+                            <p class="form-control-static"><%= userNick %></p>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">所属营业部</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="belong_department_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">排序</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">认证到期时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name='approve_date' id="approve_date_add" value=''>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
             </div>
         </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">精选图片</label>
-            <div class="col-sm-6">
-                <img src="" class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee">
-                <input class="pt-15" name="importantImg" type="file" class="important-file" />
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">图片描述</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" name='imgAlt' value=''>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">排序权重</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" name='sort' value=''>
-            </div>
-        </div>
-    </form>
+    </div>
+</div>
 </script>
 {% endblock admin-right %}
