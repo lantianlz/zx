@@ -1,14 +1,14 @@
 <div class="hot-topics top-border bdc-eee pt-15">
     <div class="pb-5">
         <span class="f16 fb">热门话题</span>
-        <a href="/topics" class="f12 co8 pull-right more-topics">更多话题 »</a>
+        <a href="{{MAIN_DOMAIN}}/topics" class="f12 co8 pull-right more-topics">更多话题 »</a>
     </div>
     <ul class="list-group">
         {% for tag in global_hotest_tags %}
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="{{tag.get_url}}"><img class="pa avatar-45 avatar-circle" src="{{tag.get_img}}" alt="{{tag.name}}"></a>
+            <a href="{{MAIN_DOMAIN}}{{tag.get_url}}"><img class="pa avatar-45 avatar-circle" src="{{tag.get_img}}" alt="{{tag.name}}"></a>
             <div class="pl-55 pt-5">
-                <div><a href="{{tag.get_url}}" class="zx-topictips" data-topic_id='{{tag.id}}'>{{tag.name}}</a></div>
+                <div><a href="{{MAIN_DOMAIN}}{{tag.get_url}}" class="zx-topictips" data-topic_id='{{tag.id}}'>{{tag.name}}</a></div>
                 <div class="f12 co8 pt-3">共 {{tag.get_tag_question_count}} 个问题</div>
             </div>
         </li>

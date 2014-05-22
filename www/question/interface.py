@@ -127,10 +127,11 @@ class QuestionBase(object):
                 transaction.rollback(using=QUESTION_DB)
                 return errcode, errmsg
 
+            is_hide_user = True if is_hide_user else False
             question = Question.objects.create(user_id=user_id, question_type_id=question_type,
                                                title=question_title, content=question_content,
                                                last_answer_time=datetime.datetime.now(), ip=ip,
-                                               is_hide_user=True if is_hide_user else False)
+                                               is_hide_user=is_hide_user)
 
             # 创建话题和tags关系
             for tag in tags:
@@ -143,7 +144,8 @@ class QuestionBase(object):
             UserCountBase().update_user_count(user_id=user_id, code='user_question_count')
 
             # 发送feed
-            FeedBase().create_feed(user_id, feed_type=1, obj_id=question.id)
+            if not is_hide_user:
+                FeedBase().create_feed(user_id, feed_type=1, obj_id=question.id)
 
             transaction.commit(using=QUESTION_DB)
             return 0, question
