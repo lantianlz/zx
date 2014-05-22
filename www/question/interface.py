@@ -351,7 +351,7 @@ class QuestionBase(object):
         else:
             questions = Question.objects.all()
 
-        return self.format_quesitons(questions.order_by('create_time'))
+        return self.format_quesitons(questions.order_by('-create_time'))
 
 
 class AnswerBase(object):
