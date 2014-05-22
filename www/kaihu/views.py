@@ -11,6 +11,7 @@ from www.kaihu import interface
 
 cb = interface.CityBase()
 db = interface.DepartmentBase()
+cmb = interface.CustomerManagerBase()
 
 
 def home(request, template_name='kaihu/home.html'):
@@ -33,6 +34,7 @@ def department_list(request, city_abbr, template_name='kaihu/department_list.htm
     departments = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
+    customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_city_id(city.id))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

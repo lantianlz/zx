@@ -4,12 +4,13 @@ import datetime
 
 from www.misc.decorators import cache_required
 from www.misc import consts
-from www.account.interface import UserBase
+from www.account.interface import UserBase, UserCountBase
 from www.kaihu.models import Company, Department, City, CustomerManager
 
 
 dict_err = {
     50100: u'找不到指定用户',
+    50101: u'找不到指定营业部',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -97,18 +98,24 @@ class CustomerManagerBase(object):
     def format_customer_managers(self, objs):
         for obj in objs:
             obj.user = UserBase().get_user_by_id(obj.user_id)
+            obj.user.user_count_info = UserCountBase().get_user_count_info(obj.user_id)
+        return objs
 
-    def add_customer_manager(self, user_id, department_id, end_date, qq=None, entry_time=None, mobile=None,
+    def add_customer_manager(self, user_id, department_id_or_obj, end_date, qq=None, entry_time=None, mobile=None,
                              real_name=None, id_card=None, id_cert=None, des=None):
-        if not (user_id and department_id and end_date):
+        if not (user_id and department_id_or_obj and end_date):
             return 99800, dict_err.get(99800)
 
-        user = UserBase().get_user_by_id(id)
+        user = UserBase().get_user_by_id(user_id)
         if not user:
             return 50100, dict_err.get(50100)
 
-        CustomerManager.objects.create(user_id=user_id, department_id=department_id, end_date=end_date, qq=qq,
-                                       entry_time=entry_time, mobile=mobile,
+        department = department_id_or_obj if isinstance(department_id_or_obj, Department) else DepartmentBase().get_department_by_id(department_id_or_obj)
+        if not department:
+            return 50101, dict_err.get(50101)
+
+        CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, city_id=department.city_id,
+                                       qq=qq, entry_time=entry_time, mobile=mobile,
                                        real_name=real_name, id_card=id_card, id_cert=id_cert, des=des)
         return 0, dict_err.get(0)
 
