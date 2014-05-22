@@ -94,6 +94,7 @@ class CustomerManager(models.Model):
     department = models.ForeignKey(Department)
     end_date = models.DateField(verbose_name=u'到期时间', db_index=True)
 
+    img = models.CharField(verbose_name=u'个人真实照片', max_length=64, null=True)
     qq = models.CharField(verbose_name=u'qq号码', max_length=32, null=True)
     entry_time = models.DateField(verbose_name=u'入行时间', null=True)
     mobile = models.CharField(verbose_name=u'手机号', max_length=32, null=True)
