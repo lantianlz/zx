@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import json
+import datetime
 
-from common import utils, cache
 from www.misc.decorators import cache_required
 from www.misc import consts
-from www.kaihu.models import Company, Department, City
+from www.account.interface import UserBase
+from www.kaihu.models import Company, Department, City, CustomerManager
 
 
 dict_err = {
-    50100: u'',
+    50100: u'找不到指定用户',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -71,3 +71,30 @@ class DepartmentBase(object):
         except Exception:
             department = None
         return department
+
+
+class CustomerManagerBase(object):
+
+    def __init__(self):
+        pass
+
+    def format_customer_managers(self, objs):
+        for obj in objs:
+            obj.user = UserBase().get_user_by_id(obj.user_id)
+
+    def add_customer_manager(self, user_id, department_id, end_date, qq=None, entry_time=None, mobile=None,
+                             real_name=None, id_card=None, id_cert=None, des=None):
+        if not (user_id and department_id and end_date):
+            return 99800, dict_err.get(99800)
+
+        user = UserBase().get_user_by_id(id)
+        if not user:
+            return 50100, dict_err.get(50100)
+
+        CustomerManager.objects.create(user_id=user_id, department_id=department_id, end_date=end_date, qq=qq,
+                                       entry_time=entry_time, mobile=mobile,
+                                       real_name=real_name, id_card=id_card, id_cert=id_cert, des=des)
+        return 0, dict_err.get(0)
+
+    def get_customer_managers_by_city_id(self, city_id):
+        return CustomerManager.objects.filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True)

@@ -86,3 +86,25 @@ class City(models.Model):
         @note: 临时使用，只展示部分城市
         '''
         return self.city[:2] in (u'成都', u'重庆')
+
+
+class CustomerManager(models.Model):
+    user_id = models.CharField(max_length=32, unique=True)
+    city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True)
+    department = models.ForeignKey(Department)
+    end_date = models.DateField(verbose_name=u'到期时间', db_index=True)
+
+    qq = models.CharField(verbose_name=u'qq号码', max_length=32, null=True)
+    entry_time = models.DateField(verbose_name=u'入行时间', null=True)
+    mobile = models.CharField(verbose_name=u'手机号', max_length=32, null=True)
+    real_name = models.CharField(verbose_name=u'真实姓名', max_length=32, null=True)
+    id_card = models.CharField(verbose_name=u'身份证', max_length=32, null=True)
+    id_cert = models.CharField(verbose_name=u'从业资格证编号', max_length=32, null=True)
+    des = models.TextField(verbose_name=u'个人简介', null=True)
+
+    sort_num = models.IntegerField(default=0, db_index=True)
+    state = models.BooleanField(default=True, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-sort_num", "id"]
