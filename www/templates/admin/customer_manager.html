@@ -1,0 +1,546 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}客户经理管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var CustomerManager = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': '',
+            'userId': '',
+            'userNick': '',
+            'userAvatar': '',
+            'cityName': '',
+            'cityId': '',
+            'departmentName': '',
+            'departmentId': '',
+            'sort': '',
+            'approveDate': ''
+        }
+
+    });
+
+    // collections
+    var CustomerManagers = Backbone.Collection.extend({
+        model: CustomerManager,
+
+        _modelMaps: {
+            'num': 'num',
+            'userId': 'user_id',
+            'userNick': 'user_nick',
+            'userAvatar': 'user_avatar',
+            'cityName': 'city_name',
+            'cityId': 'city_id',
+            'departmentName': 'department_name',
+            'departmentId': 'department_id',
+            'sort': 'sort',
+            'approveDate': 'approve_date'
+        },
+
+        // 查询
+        search: function(nick, city, pageIndex){
+            var me = this;
+
+            me.pageIndex = pageIndex;
+            me.pageCount = 1;
+            me.nick = nick||'';
+            me.city = city||'';
+
+            return me.reset([{
+                'num': 1,
+                'userId': '123',
+                'userNick': 'aa',
+                'userAvatar': '',
+                'cityName': '成都',
+                'cityId': '1',
+                'departmentName': '国泰君安',
+                'departmentId': '11',
+                'sort': '2',
+                'approveDate': '2013-05-05'
+            }, {
+                'num': 2,
+                'userId': '113',
+                'userNick': 'bb',
+                'userAvatar': '',
+                'cityName': '成都',
+                'cityId': '2',
+                'departmentName': '国泰君安2',
+                'departmentId': '21',
+                'sort': '3',
+                'approveDate': '2013-02-05'
+            }]);
+
+            ajaxSend(
+                "/admin/important_question/get_important_question_by_title", 
+                {'title': title||'', 'page_index': pageIndex}, 
+                function(data){
+                    me.pageIndex = pageIndex;
+                    me.pageCount = data.page_count;
+                    me.title = title||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+        },
+
+        // 获取一个提问的model
+        getOne: function(questionId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/important_question/get_important_question_by_question_id", 
+                {'question_id': questionId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        }
+
+        
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#customer_manager_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#customer_manager_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search': 'searchCustomerManager',
+            'click .pointer': 'modifyCustomerManager'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+            this.$('tbody').html(this.template({'customerManagers': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.title
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#important_list"]').tab('show');
+        },
+
+        searchCustomerManager: function(){
+            var nick = this.$('.key-word-nick').val(),
+                city = this.$('.key-word-city').val();
+
+            router.navigate(String.format('/search/{0}/{1}/1', nick, city), {trigger: true});
+        },
+
+        modifyCustomerManager: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id');
+
+            router.navigate('/modify/' + userId, {trigger: true});
+        }
+
+    });
+
+    // modifyView
+    var ModifyView = Backbone.View.extend({
+        
+        el: '#modify_customer_manager',
+
+        template: _.template($('#modify_customer_manager_template').html()),
+
+        events: {
+            'click .save': 'save',
+            'click .remove': 'remove'
+        },
+
+        departmentTextBox: null,
+        initDepartmentTextBox: function(name, value){
+            this.departmentTextBox = $.ZXTextboxList.create('#belong_department_modify', {
+                max: 1,
+                placeholder: '选择营业部',
+                url: 'customer_manager/get_departments_by_name',
+                param: 'department_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.departmentTextBox.add(name, value)
+            }
+        },
+
+        initDate: function(){
+            $('#approve_date_modify').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_customer_manager"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+
+            this.initDepartmentTextBox(data.departmentName, data.departmentId);
+            this.initDate();
+        },
+
+        // 显示提问信息
+        modifyCustomerManager: function(userId){
+            var me = this;
+
+            this.render({'num': 1,
+                'userId': '123',
+                'userNick': 'aa',
+                'userAvatar': '',
+                'cityName': '成都',
+                'cityId': '1',
+                'departmentName': '国泰君安',
+                'departmentId': '11',
+                'sort': '2',
+                'approveDate': '2013-05-05'});
+            this.showPanel();
+            return;
+
+            this.collection.getOne(userId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                    
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的用户!');
+                }
+            });
+        },
+
+        // 保存提问
+        save: function(){
+            var userId = this.$('form').data('user_id'),
+                me = this;
+
+            console.log(this.cityTextBox.getValues(), userId, this.$('form').serialize())
+            
+        },
+
+        // 删除提问
+        remove: function(){
+            var userId = this.$('form').data('user_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要删除此客户经理吗?', function(result){
+                
+                if(result){
+                    // me.collection.cancelImportant(questionId, function(data){
+                    //     if(data.errcode === 0){
+                    //         me.collection.search();
+                    //     } else {
+                    //         $.ZXMsg.alert('提示', data.errmsg);
+                    //     }
+                    // });
+                }
+                
+            });
+        }
+
+    });
+
+    
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_customer_manager_template').html()),
+
+        departmentTextBox: null,
+        initDepartmentTextBox: function(name, value){
+            this.departmentTextBox = $.ZXTextboxList.create('#belong_department_add', {
+                max: 1,
+                placeholder: '选择营业部',
+                url: 'customer_manager/get_departments_by_name',
+                param: 'department_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.departmentTextBox.add(name, value)
+            }
+        },
+
+        initDate: function(){
+            $('#approve_date_add').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        showPanel: function(userId){
+            var me = this;
+
+            ajaxSend(
+                "/admin/user/get_user_by_id", 
+                {'user_id': userId}, 
+                function(data){
+                    
+                    if(data){
+                        me.render(data.user_id, data.user_nick);
+                    } else {
+                        $.ZXMsg.alert('提示', '没有找到对应的用户');
+                    }
+                }
+            );
+
+        },
+
+        render: function(userId, userNick){
+            var me = this;
+
+            $('#add_customer_manager_modal').remove();
+            
+            $('body').append(this.template({'userId': userId, 'userNick': userNick}));
+
+            // 绑定事件
+            $('#add_customer_manager_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_customer_manager_modal .add-admin').bind('click', function(){
+                me.addCustomerManager();
+            });
+            
+            $('#add_customer_manager_modal').modal({'show': true, 'backdrop': 'static'});
+
+
+            this.initDepartmentTextBox();
+            this.initDate();
+        },
+
+        addCustomerManager: function(){
+            var userId = this.$('form').data('user_id'),
+                me = this;
+
+            console.log(this.cityTextBox.getValues(), userId, this.$('form').serialize())
+        }
+    });
+
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                                     "search",
+            "modify/:userId":                       "modify",
+            "search/(:nick)/(:city)/:pageIndex":    "search",
+            "add/:search":                          "add"
+        },
+
+        // 查询
+        search: function(nick, city, pageIndex){
+            customerManagers.search(nick, city, pageIndex);
+        },
+
+        // 显示修改界面
+        modify: function(userId){
+            modifyView.modifyCustomerManager(userId);
+        },
+
+        add: function(userId){
+            addView.showPanel(userId);
+        }
+
+    });
+    
+    // 初始化
+    var customerManagers = new CustomerManagers(),
+        listView = new ListView({'collection': customerManagers}),
+        modifyView = new ModifyView({'collection': customerManagers}),
+        addView = new AddView(),
+        router = new Router();
+ 
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#customer_manager_list" class="black-blue" data-toggle="pill">客户经理列表</a>
+    </li>
+    <li>
+        <a href="#modify_customer_manager" class="black-blue" data-toggle="pill">修改客户经理信息</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="customer_manager_list">
+        <div class="pl-0 pr-0 pb-10 col-md-2">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control key-word-nick" placeholder="输入客户经理昵称..." />
+            </div>
+        </div>
+        <div class="pl-0 pr-0 pb-10 col-md-2">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word-city" placeholder="输入城市名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>头像</th>
+                    <th>客户经理</th>
+                    <th>所属城市</th>
+                    <th>所属营业部</th>
+                    <th>排序</th>
+                    <th>认证到期时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改客户经理信息 -->
+    <div class="tab-pane fade" id="modify_customer_manager">
+        
+    </div>
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="customer_manager_template">
+    <% _.each(customerManagers, function(customerManager){ %>
+        <tr class="pointer" data-user_id="<%= customerManager.userId %>">
+            <td><%= customerManager.num %></td>
+            <td><%= customerManager.userAvatar %></td>
+            <td><%= customerManager.userNick %></td>
+            <td><%= customerManager.cityName %></td>
+            <td><%= customerManager.departmentName %></td>
+            <td><%= customerManager.sort %></td>
+            <td><%= customerManager.approveDate %></td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="modify_customer_manager_template">
+    <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/modify_important">
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">客户经理名称</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= userNick %></p>
+                <input type="hidden" name="user_id" value="<%= userId %>" />
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">所属营业部</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="belong_department" id="belong_department_modify" value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">排序</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="sort" value='<%= sort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">认证到期时间</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name='approve_date' id="approve_date_modify" value='<%= approveDate %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove">删除此客户经理</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!-- 添加问题模板 -->
+<script type="text/template" id="add_customer_manager_template">
+<div class="modal fade" id="add_customer_manager_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">认证客户经理</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/modify_important">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">客户经理名称</label>
+                        <div class="col-sm-6">
+                            <p class="form-control-static"><%= userNick %></p>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">所属营业部</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="belong_department_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">排序</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">认证到期时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name='approve_date' id="approve_date_add" value=''>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock admin-right %}

@@ -332,7 +332,7 @@ $(document).ready(function(){
     });
 
     // router
-    var importantRouter = Backbone.Router.extend({
+    var ImportantRouter = Backbone.Router.extend({
 
         routes: {
             "":                             "search",
@@ -362,7 +362,7 @@ $(document).ready(function(){
         listView = new ListView({'collection': importants}),
         modifyView = new ModifyView({'collection': importants}),
         addView = new AddView(),
-        router = new importantRouter();
+        router = new ImportantRouter();
 
     Backbone.history.start();
 

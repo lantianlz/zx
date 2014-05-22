@@ -49,10 +49,8 @@ $.TextboxList.Autocomplete = function(textboxlist, _options){
 		});
 
 		setTimeout(function(){
-			container.width(textboxlist.getContainer().width())
-			aa = container;
-			bb = textboxlist;
-		}, 200)
+			container.width(textboxlist.getContainer().width());
+		}, 1000)
 	};
 	
 	var setupBit = function(bit){

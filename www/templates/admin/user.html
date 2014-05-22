@@ -26,6 +26,7 @@ $(document).ready(function(){
             'following': 0,
             'isRecommend': false,
             'isAdmin': false,
+            'isManager': false,
             'state': true
         }
     });
@@ -46,6 +47,7 @@ $(document).ready(function(){
             'following': 'following_count',
             'isRecommend': 'is_recommend',
             'isAdmin': 'is_admin',
+            'isManager': 'is_manager',
             'state': 'state'
         },
 
@@ -162,7 +164,8 @@ $(document).ready(function(){
                     <th>用户名称</th>
                     <th>用户统计信息</th>
                     <th>推荐用户</th>
-                    <th>是否管理员</th>
+                    <th>客户经理</th>
+                    <th>管理员</th>
                     <th>状态</th>
                 </tr>
             </thead>
@@ -203,12 +206,21 @@ $(document).ready(function(){
             <% } %>
         </td>
         <td>
+            <% if (user.isManager) { %>
+                <a href="/admin/customer_manager#modify/<%= user.userId %>" title="修改客户经理信息">
+                    <span class="glyphicon glyphicon-ok co-zx"></span>
+                </a>
+            <% } else if(!user.isManager && user.state) { %>
+                <a href="/admin/customer_manager#add/<%= user.userId %>" title="设置客户经理"><span class="glyphicon glyphicon-ok co20 pointer"></span></a>
+            <% } %>
+        </td>
+        <td>
             <% if (user.isAdmin) { %>
                 <a href="/admin/permission#modifyUserPermission/<%= user.userId %>" title="修改管理员权限">
                     <span class="glyphicon glyphicon-ok co-zx"></span>
                 </a>
             <% } else if(!user.isAdmin && user.state) { %>
-                <a href="/admin/permission#addAdmin/<%= user.userId %>" title="设置管理员"><span class="glyphicon glyphicon-ok co20 pointer set-admin"></span></a>
+                <a href="/admin/permission#addAdmin/<%= user.userId %>" title="设置管理员"><span class="glyphicon glyphicon-ok co20 pointer"></span></a>
             <% } %>
         </td>
         <td>

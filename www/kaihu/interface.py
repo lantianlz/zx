@@ -52,6 +52,14 @@ class CityBase(object):
             if citys:
                 return citys[0]
 
+    def get_citys_by_name(self, city_name):
+        citys = []
+
+        if city_name:
+            citys = self.get_all_citys().filter(city__contains=city_name)
+
+        return citys
+
 
 class DepartmentBase(object):
 
@@ -71,6 +79,14 @@ class DepartmentBase(object):
         except Exception:
             department = None
         return department
+
+    def get_departments_by_name(self, department_name):
+        departments = []
+
+        if department_name:
+            departments = self.get_all_departments().filter(name__contains=department_name)
+
+        return departments
 
 
 class CustomerManagerBase(object):

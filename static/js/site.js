@@ -1186,7 +1186,7 @@ if (!String.format) {
             max: options.max,
             plugins: {
                 autocomplete: {
-                    minLength: 1, // 最小字符
+                    minLength: 2, // 最小字符
                     queryRemote: true, // 远程查询
                     placeholder: options.placeholder,
                     highlight: false,

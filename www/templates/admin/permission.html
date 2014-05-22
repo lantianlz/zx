@@ -460,15 +460,15 @@ $(document).ready(function(){
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" role="form" method="post" action="">
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                    <div class="form-group pt-20 pb-20 pl-15 mb-0 bottom-border bdc-eee">
                         <p>为用户<span class="pl-15 pr-15 fb fi user-name" data-user_id="<%= userId %>"><%= userNick %></span>添加管理权限</p>
                     </div>
                     {% for parent in permissions %}
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-2 control-label pointer">
+                        <label class="col-sm-3 control-label pointer">
                             <input class="parent-checkbox" type="checkbox" id="p_{{ parent.code }}" value="{{ parent.code }}"> {{ parent.name }}
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             {% for child in parent.children.all %}
                             <label class="checkbox-inline pl-40">
                                 <input class="child-checkbox" type="checkbox" id="p_{{ child.code }}" name="permissions" value="{{ child.id }}"> {{ child.name }}
