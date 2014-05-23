@@ -93,6 +93,7 @@ class CustomerManager(models.Model):
     city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True)
     department = models.ForeignKey(Department)
     end_date = models.DateField(verbose_name=u'到期时间', db_index=True)
+    vip_info = models.CharField(verbose_name=u'认证信息', max_length=64)
 
     img = models.CharField(verbose_name=u'个人真实照片', max_length=64, null=True)
     qq = models.CharField(verbose_name=u'qq号码', max_length=32, null=True)

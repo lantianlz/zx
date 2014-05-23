@@ -60,8 +60,9 @@ def add_customer_manager(request):
     department_id = request.REQUEST.get('belong_department')
     end_date = request.REQUEST.get('end_date')
     sort_num = request.REQUEST.get('sort')
+    vip_info = request.REQUEST.get('vip_info')
 
-    return CustomerManagerBase().add_customer_manager(user_id, department_id, end_date, sort_num)
+    return CustomerManagerBase().add_customer_manager(user_id, department_id, end_date, vip_info, sort_num)
 
 
 def format_customer_managers(objs, num):
@@ -79,6 +80,7 @@ def format_customer_managers(objs, num):
             'department_name': x.department.name,
             'department_id': x.department.id,
             'sort': x.sort_num,
+            'vip_info': x.vip_info,
             'end_date': str(x.end_date)[:10],
             'state': x.state
         })
@@ -151,7 +153,8 @@ def modify_customer_manager(request):
     department_id = request.REQUEST.get('belong_department')
     end_date = request.REQUEST.get('end_date')
     sort_num = request.REQUEST.get('sort')
+    vip_info = request.REQUEST.get('vip_info')
 
     return CustomerManagerBase().modify_customer_manager(
-        user_id, department_id=department_id, end_date=end_date, sort_num=sort_num
+        user_id, department_id=department_id, end_date=end_date, sort_num=sort_num, vip_info=vip_info
     )

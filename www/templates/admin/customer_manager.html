@@ -24,6 +24,7 @@ $(document).ready(function(){
             'cityId': '',
             'departmentName': '',
             'departmentId': '',
+            'vipInfo': '',
             'sort': '',
             'endDate': '',
             'state': ''
@@ -45,6 +46,7 @@ $(document).ready(function(){
             'departmentName': 'department_name',
             'departmentId': 'department_id',
             'sort': 'sort',
+            'vipInfo': 'vip_info',
             'endDate': 'end_date',
             'state': 'state'
         },
@@ -359,7 +361,7 @@ $(document).ready(function(){
                 if(data.errcode === 0){
                     router.navigate('modify/' + userId, {trigger: true});
                     $('#add_customer_manager_modal').modal('hide');
-                    $.ZXMsg.alert('提示', '修改成功!');
+                    $.ZXMsg.alert('提示', '添加成功!');
                 } else {
                     $.ZXMsg.alert('提示', data.errmsg);
                 }
@@ -502,6 +504,12 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">认证信息</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="vip_info" value='<%= vipInfo %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">认证到期时间</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" name='end_date' id="end_date_modify" value='<%= endDate %>'>
@@ -544,6 +552,12 @@ $(document).ready(function(){
                         <label class="col-sm-3 control-label">排序</label>
                         <div class="col-sm-3">
                             <input type="text" name="sort" class="form-control" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">认证信息</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="vip_info" value=''>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
