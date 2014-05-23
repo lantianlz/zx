@@ -115,6 +115,11 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
     height: 65px;
 }
 
+.avatar-75{
+    width: 75px;
+    height: 75px;
+}
+
 .avatar-100{
     width: 100px;
     height: 100px;

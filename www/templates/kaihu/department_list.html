@@ -43,11 +43,11 @@ $(document).ready(function(){
     <a class="co8 pull-right f12 pr-15" href="#"><span class="glyphicon glyphicon-refresh pr-3"></span>换一换</a>
 </div>
 {% if customer_managers %}
-<ul class="list-inline row pl-25 pr-25 pt-5">
+<ul class="list-inline row pl-20 pr-20 pt-5">
     {% for cm in customer_managers %}
     <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
-        <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}"><img class="pa avatar-55 avatar-circle" alt="{{cm.user.nick}}" src="{{cm.user.get_avatar_65}}"></a>
-        <div class="pl-85 row pr-10">
+        <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}"><img class="pa avatar-75 avatar-circle" alt="{{cm.user.nick}}" src="{{cm.user.get_avatar_65}}"></a>
+        <div class="pl-100 row pr-10">
             <div class="pb-5">
                 <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}">{{cm.user.nick}}</a>
             </div>
@@ -57,7 +57,7 @@ $(document).ready(function(){
                 <span class="pr-10">赞 <a href="javascript:void(0);">{{cm.user.user_count_info.user_liked_count}}</a></span>
             </div>
             <div class="pb-5 co6 f13">
-                <span class="glyphicon glyphicon-tower pr-3 co19"></span>{{cm.user.des}}
+                <span class="glyphicon glyphicon-fire f18 pr-3 co19"></span>{{cm.user.des}}
             </div>
         </div>
     </li>
