@@ -449,6 +449,13 @@ class UserBase(object):
         else:
             format_user.is_admin = False
 
+        # 客户经理
+        from www.kaihu.interface import CustomerManagerBase
+        if CustomerManagerBase().get_customer_manager_by_user_id(user_id):
+            format_user.is_customer_manager = True
+        else:
+            format_user.is_customer_manager = False
+
         return format_user
 
 

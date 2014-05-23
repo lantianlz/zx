@@ -56,6 +56,7 @@ def search(request):
             'following_count': user.user_count['following_count'],
             'is_recommend': user.is_recommend,
             'is_admin': user.is_admin,
+            'is_customer_manager': user.is_customer_manager,
             'state': user.state
         })
 

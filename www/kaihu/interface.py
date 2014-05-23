@@ -11,6 +11,7 @@ from www.kaihu.models import Company, Department, City, CustomerManager
 dict_err = {
     50100: u'找不到指定用户',
     50101: u'找不到指定营业部',
+    50102: u'找不到指定客户经理',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -61,6 +62,12 @@ class CityBase(object):
 
         return citys
 
+    def get_one_city_by_name(self, city_name):
+        objs = self.get_all_citys().filter(city=city_name)
+        if objs:
+            return objs[0]
+        return None
+
 
 class DepartmentBase(object):
 
@@ -99,9 +106,10 @@ class CustomerManagerBase(object):
         for obj in objs:
             obj.user = UserBase().get_user_by_id(obj.user_id)
             obj.user.user_count_info = UserCountBase().get_user_count_info(obj.user_id)
+            obj.department = DepartmentBase().get_department_by_id(obj.department.id)
         return objs
 
-    def add_customer_manager(self, user_id, department_id_or_obj, end_date, qq=None, entry_time=None, mobile=None,
+    def add_customer_manager(self, user_id, department_id_or_obj, end_date, sort_num=0, qq=None, entry_time=None, mobile=None,
                              real_name=None, id_card=None, id_cert=None, des=None):
         if not (user_id and department_id_or_obj and end_date):
             return 99800, dict_err.get(99800)
@@ -114,10 +122,71 @@ class CustomerManagerBase(object):
         if not department:
             return 50101, dict_err.get(50101)
 
-        CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, city_id=department.city_id,
-                                       qq=qq, entry_time=entry_time, mobile=mobile,
-                                       real_name=real_name, id_card=id_card, id_cert=id_cert, des=des)
+        try:
+            CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id,
+                                           qq=qq, entry_time=entry_time, mobile=mobile,
+                                           real_name=real_name, id_card=id_card, id_cert=id_cert, des=des)
+        except Exception, e:
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
+    def modify_customer_manager(self, user_id, **kwargs):
+        if not user_id:
+            return 99800, dict_err.get(99800)
+
+        user = UserBase().get_user_by_id(user_id)
+        if not user:
+            return 50100, dict_err.get(50100)
+
+        customer_manager = self.get_customer_manager_by_user_id(user_id)
+        if not customer_manager:
+            return 50102, dict_err.get(50102)
+
+        # 如果修改了营业部，所属城市也要一并修改
+        department_id = kwargs.get('department_id')
+        if department_id:
+            temp = DepartmentBase().get_department_by_id(department_id)
+            if not temp:
+                return 50101, dict_err.get(50101)
+            else:
+                kwargs.update({'city_id': temp.city_id})
+
+        try:
+            for k, v in kwargs.items():
+                setattr(customer_manager, k, v)
+
+            customer_manager.save()
+        except Exception, e:
+            print e
+            return 99900, dict_err.get(99900)
+
         return 0, dict_err.get(0)
 
     def get_customer_managers_by_city_id(self, city_id):
         return CustomerManager.objects.filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True)
+
+    def get_customer_manager_by_user_id(self, user_id):
+        obj = CustomerManager.objects.filter(user_id=user_id)
+        if obj:
+            return obj[0]
+        else:
+            return None
+
+    def get_all_customer_managers(self, active=True, state=True):
+        objs = CustomerManager.objects.all()
+        if active:
+            objs = objs.filter(end_date__gte=datetime.datetime.now())
+
+        if state != None:
+            objs = objs.filter(state=state)
+
+        return objs
+
+    def remove_customer_manager(self, user_id):
+        obj = self.get_customer_manager_by_user_id(user_id)
+        if obj:
+            obj.delete()
+            return 0, dict_err.get(0)
+
+        return 50100, dict_err.get(50100)

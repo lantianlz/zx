@@ -44,4 +44,9 @@ PERMISSIONS = [
     {'code': 'modify_user', 'name': u'修改用户', 'parent': 'user_manage'},
     {'code': 'remove_user', 'name': u'删除用户', 'parent': 'user_manage'},
 
+    {'code': 'customer_manager_manage', 'name': u'客户经理管理', 'parent': None},
+    {'code': 'add_customer_manager', 'name': u'添加客户经理', 'parent': 'customer_manager_manage'},
+    {'code': 'query_customer_manager', 'name': u'查询客户经理', 'parent': 'customer_manager_manage'},
+    {'code': 'modify_customer_manager', 'name': u'修改客户经理', 'parent': 'customer_manager_manage'},
+    {'code': 'remove_customer_manager', 'name': u'删除客户经理', 'parent': 'customer_manager_manage'},
 ]

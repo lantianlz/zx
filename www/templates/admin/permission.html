@@ -336,7 +336,7 @@ $(document).ready(function(){
             
             modifyUserPermissionView.collection.saveUserPermission(userId, modal.find('form').serialize(), function(data){
                 if(data.errcode === 0){
-                    modifyUserPermissionView.modifyUserPermission(userId);
+                    router.navigate('modifyUserPermission/' + userId, {trigger: true});
                     modal.modal('hide');
                     $.ZXMsg.alert('提示', '添加成功!');
                 } else {

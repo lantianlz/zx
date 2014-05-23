@@ -26,7 +26,7 @@ $(document).ready(function(){
             'following': 0,
             'isRecommend': false,
             'isAdmin': false,
-            'isManager': false,
+            'isCustomerManager': false,
             'state': true
         }
     });
@@ -48,6 +48,7 @@ $(document).ready(function(){
             'isRecommend': 'is_recommend',
             'isAdmin': 'is_admin',
             'isManager': 'is_manager',
+            'isCustomerManager': 'is_customer_manager',
             'state': 'state'
         },
 
@@ -206,11 +207,11 @@ $(document).ready(function(){
             <% } %>
         </td>
         <td>
-            <% if (user.isManager) { %>
+            <% if (user.isCustomerManager) { %>
                 <a href="/admin/customer_manager#modify/<%= user.userId %>" title="修改客户经理信息">
                     <span class="glyphicon glyphicon-ok co-zx"></span>
                 </a>
-            <% } else if(!user.isManager && user.state) { %>
+            <% } else if(!user.isCustomerManager && user.state) { %>
                 <a href="/admin/customer_manager#add/<%= user.userId %>" title="设置客户经理"><span class="glyphicon glyphicon-ok co20 pointer"></span></a>
             <% } %>
         </td>

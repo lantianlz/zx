@@ -69,6 +69,11 @@ urlpatterns += patterns('www.admin.views_user',
 # 客户经理
 urlpatterns += patterns('www.admin.views_customer_manager',
 
+                        url(r'^customer_manager/get_customer_manager_by_user_id$', 'get_customer_manager_by_user_id'),
+                        url(r'^customer_manager/delete_customer_manager$', 'delete_customer_manager'),
+                        url(r'^customer_manager/modify_customer_manager$', 'modify_customer_manager'),
+                        url(r'^customer_manager/add_customer_manager$', 'add_customer_manager'),
+                        url(r'^customer_manager/search$', 'search'),
                         url(r'^customer_manager/get_departments_by_name$', 'get_departments_by_name'),
                         url(r'^customer_manager/get_citys_by_name$', 'get_citys_by_name'),
                         url(r'^customer_manager$', 'customer_manager'),
