@@ -61,8 +61,10 @@ def add_customer_manager(request):
     end_date = request.REQUEST.get('end_date')
     sort_num = request.REQUEST.get('sort')
     vip_info = request.REQUEST.get('vip_info')
+    qq = request.REQUEST.get('qq')
+    mobile = request.REQUEST.get('mobile')
 
-    return CustomerManagerBase().add_customer_manager(user_id, department_id, end_date, vip_info, sort_num)
+    return CustomerManagerBase().add_customer_manager(user_id, department_id, end_date, vip_info, sort_num, qq=qq, mobile=mobile)
 
 
 def format_customer_managers(objs, num):
@@ -82,6 +84,8 @@ def format_customer_managers(objs, num):
             'sort': x.sort_num,
             'vip_info': x.vip_info,
             'end_date': str(x.end_date)[:10],
+            'qq': x.qq,
+            'mobile': x.mobile,
             'state': x.state
         })
 
@@ -154,7 +158,9 @@ def modify_customer_manager(request):
     end_date = request.REQUEST.get('end_date')
     sort_num = request.REQUEST.get('sort')
     vip_info = request.REQUEST.get('vip_info')
+    qq = request.REQUEST.get('qq')
+    mobile = request.REQUEST.get('mobile')
 
     return CustomerManagerBase().modify_customer_manager(
-        user_id, department_id=department_id, end_date=end_date, sort_num=sort_num, vip_info=vip_info
+        user_id, department_id=department_id, end_date=end_date, sort_num=sort_num, vip_info=vip_info, qq=qq, mobile=mobile
     )

@@ -80,6 +80,11 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
 
 .placeholder { color: #aaa; }
 
+.avatar-15{
+    width: 15px;
+    height: 15px;
+}
+
 .avatar-20{
     width: 20px;
     height: 20px;

@@ -27,6 +27,8 @@ $(document).ready(function(){
             'vipInfo': '',
             'sort': '',
             'endDate': '',
+            'qq': '',
+            'mobile': '',
             'state': ''
         }
 
@@ -48,6 +50,8 @@ $(document).ready(function(){
             'sort': 'sort',
             'vipInfo': 'vip_info',
             'endDate': 'end_date',
+            'qq': 'qq',
+            'mobile': 'mobile',
             'state': 'state'
         },
 
@@ -510,6 +514,18 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">QQ</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="qq" value='<%= qq %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">手机</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="mobile" value='<%= mobile %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">认证到期时间</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" name='end_date' id="end_date_modify" value='<%= endDate %>'>
@@ -558,6 +574,18 @@ $(document).ready(function(){
                         <label class="col-sm-3 control-label">认证信息</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="vip_info" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">QQ</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="qq" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">手机</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="mobile" value=''>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

@@ -40,7 +40,7 @@ $(document).ready(function(){
 <!-- 推荐客户经理 -->
 <div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
     <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">推荐客户经理</span>
-    <a class="co8 pull-right f12 pr-15" href="#"><span class="glyphicon glyphicon-refresh pr-3"></span>换一换</a>
+    <!-- <a class="co8 pull-right f12 pr-15" href="#"><span class="glyphicon glyphicon-refresh pr-3"></span>换一换</a> -->
 </div>
 {% if customer_managers %}
 <ul class="list-inline row pl-20 pr-20 pt-5">
@@ -52,13 +52,25 @@ $(document).ready(function(){
                 <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}">{{cm.user.nick}}</a>
             </div>
             <div class="pb-5">
-                <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/{{user.id}}/questions">{{cm.user.user_count_info.user_question_count}}</a></span>
-                <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/{{user.id}}/answers">{{cm.user.user_count_info.user_answer_count}}</a></span>
+                <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/questions">{{cm.user.user_count_info.user_question_count}}</a></span>
+                <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/answers">{{cm.user.user_count_info.user_answer_count}}</a></span>
                 <span class="pr-10">赞 <a href="javascript:void(0);">{{cm.user.user_count_info.user_liked_count}}</a></span>
             </div>
             <div class="pb-5 co6 f13">
                 <span class="glyphicon glyphicon-fire f18 pr-3 co19"></span>{{cm.vip_info|default:"暂无认证信息"}}
             </div>
+        </div>
+        <div class="pt-10">
+            <span class="pl-5">
+                {{cm.department.company.get_short_name}}
+            </span>
+            
+            <span class="pl-25">
+                <span class="glyphicon glyphicon-earphone co-zx"></span>{{cm.mobile|default:"暂无"}}
+            </span> 
+            <span class="pr-5">
+                <a href="tencent://message/?uin={{cm.qq}}" target="_blank" class="pl-5 pr-3"><img class="avatar-15 mt--2" src="{{MEDIA_URL}}img/common/contact-qq.png"></a>
+            </span>
         </div>
     </li>
     {% endfor%}
@@ -68,7 +80,7 @@ $(document).ready(function(){
 {% endif %}
 
 <div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
-    <span class="bgc-zx co3 pb-5 pt-5 pl-10 pr-10">共 {{departments_count}} 家营业部</span>
+    <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">共 {{departments_count}} 家营业部</span>
 </div>
 <!-- 营业部列表 -->
 {% if departments %}

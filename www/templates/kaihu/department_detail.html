@@ -56,44 +56,54 @@ $(document).ready(function(){
     </div>
 </div>
 
-
-<ul class="nav nav-pills pt-15 zx-nav-pills">
-    <li class="active">
-        <a href="#description" class="black-blue" data-toggle="pill">营业部简介</a>
-    </li>
-    <li>
-        <a href="#members" class="black-blue" data-toggle="pill">营业部成员</a>
-    </li>
-</ul>
-<div class="tab-content">
-    <div class="tab-pane fade pt-15 in active" id="description">{{department.des|default:'暂无简介'}}</div>
-    {% if customer_managers %}
-    <div class="tab-pane fade pt-15 in" id="members">
-        <ul class="list-inline row pl-20 pr-20 pt-5">
-            {% for cm in customer_managers %}
-            <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
-                <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}"><img class="pa avatar-75 avatar-circle" alt="{{cm.user.nick}}" src="{{cm.user.get_avatar_65}}"></a>
-                <div class="pl-100 row pr-10">
-                    <div class="pb-5">
-                        <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}">{{cm.user.nick}}</a>
-                    </div>
-                    <div class="pb-5">
-                        <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/questions">{{cm.user.user_count_info.user_question_count}}</a></span>
-                        <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/answers">{{cm.user.user_count_info.user_answer_count}}</a></span>
-                        <span class="pr-10">赞 <a href="javascript:void(0);">{{cm.user.user_count_info.user_liked_count}}</a></span>
-                    </div>
-                    <div class="pb-5 co6 f13">
-                        <span class="glyphicon glyphicon-fire f18 pr-3 co19"></span>{{cm.vip_info|default:"暂无认证信息"}}
-                    </div>
-                </div>
-            </li>
-            {% endfor%}
-        </ul>
-    </div>
-    {% else %}
-    <div class="tab-pane fade pt-15 in" id="members">
-        <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无成员，虚位以待</div>
-    </div>
-    {% endif %}
+<div class="bottom-border bdc-zx pb-3 pl-10 mt-35">
+    <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">营业部简介</span>
 </div>
+<div class="tab-pane fade pt-15 in active" id="description">{{department.des|default:'暂无简介'}}</div>
+
+<div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
+    <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">营业部成员</span>
+</div>
+{% if customer_managers %}
+<div class="tab-pane fade pt-15 in" id="members">
+    <ul class="list-inline row pl-20 pr-20 pt-5">
+        {% for cm in customer_managers %}
+        <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
+            <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}"><img class="pa avatar-75 avatar-circle" alt="{{cm.user.nick}}" src="{{cm.user.get_avatar_65}}"></a>
+            <div class="pl-100 row pr-10">
+                <div class="pb-5">
+                    <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}">{{cm.user.nick}}</a>
+                </div>
+                <div class="pb-5">
+                    <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/questions">{{cm.user.user_count_info.user_question_count}}</a></span>
+                    <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/answers">{{cm.user.user_count_info.user_answer_count}}</a></span>
+                    <span class="pr-10">赞 <a href="javascript:void(0);">{{cm.user.user_count_info.user_liked_count}}</a></span>
+                </div>
+                <div class="pb-5 co6 f13">
+                    <span class="glyphicon glyphicon-fire f18 pr-3 co19"></span>{{cm.vip_info|default:"暂无认证信息"}}
+                </div>
+            </div>
+            <div class="pt-10">
+                <span class="pl-5">
+                    {{cm.department.company.get_short_name}}
+                </span>
+                
+                <span class="pl-25">
+                    <span class="glyphicon glyphicon-earphone co-zx"></span>{{cm.mobile|default:"暂无"}}
+                </span> 
+                <span class="pr-5">
+                    <a href="tencent://message/?uin={{cm.qq}}" target="_blank" class="pl-5 pr-3"><img class="avatar-15 mt--2" src="{{MEDIA_URL}}img/common/contact-qq.png"></a>
+                </span>
+            </div>
+        </li>
+        {% endfor%}
+    </ul>
+</div>
+{% else %}
+<div class="tab-pane fade pt-15 in" id="members">
+    <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无成员，虚位以待</div>
+</div>
+{% endif %}
+
+
 {% endblock %}
