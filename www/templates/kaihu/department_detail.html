@@ -67,8 +67,33 @@ $(document).ready(function(){
 </ul>
 <div class="tab-content">
     <div class="tab-pane fade pt-15 in active" id="description">{{department.des|default:'暂无简介'}}</div>
+    {% if customer_managers %}
+    <div class="tab-pane fade pt-15 in" id="members">
+        <ul class="list-inline row pl-20 pr-20 pt-5">
+            {% for cm in customer_managers %}
+            <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
+                <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}"><img class="pa avatar-75 avatar-circle" alt="{{cm.user.nick}}" src="{{cm.user.get_avatar_65}}"></a>
+                <div class="pl-100 row pr-10">
+                    <div class="pb-5">
+                        <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}">{{cm.user.nick}}</a>
+                    </div>
+                    <div class="pb-5">
+                        <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/questions">{{cm.user.user_count_info.user_question_count}}</a></span>
+                        <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/answers">{{cm.user.user_count_info.user_answer_count}}</a></span>
+                        <span class="pr-10">赞 <a href="javascript:void(0);">{{cm.user.user_count_info.user_liked_count}}</a></span>
+                    </div>
+                    <div class="pb-5 co6 f13">
+                        <span class="glyphicon glyphicon-fire f18 pr-3 co19"></span>{{cm.vip_info|default:"暂无认证信息"}}
+                    </div>
+                </div>
+            </li>
+            {% endfor%}
+        </ul>
+    </div>
+    {% else %}
     <div class="tab-pane fade pt-15 in" id="members">
         <div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无成员，虚位以待</div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -166,6 +166,9 @@ class CustomerManagerBase(object):
     def get_customer_managers_by_city_id(self, city_id):
         return CustomerManager.objects.filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True)
 
+    def get_customer_managers_by_department(self, department):
+        return CustomerManager.objects.filter(department=department, state=True)
+
     def get_customer_manager_by_user_id(self, user_id):
         obj = CustomerManager.objects.filter(user_id=user_id)
         if obj:

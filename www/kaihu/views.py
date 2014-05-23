@@ -34,7 +34,7 @@ def department_list(request, city_abbr, template_name='kaihu/department_list.htm
     departments = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
-    customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_city_id(city.id))
+    customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_city_id(city.id)[:4])
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -42,4 +42,6 @@ def department_detail(request, department_id, template_name='kaihu/department_de
     department = db.get_department_by_id(department_id)
     if not department:
         raise Http404
+
+    customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_department(department))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
