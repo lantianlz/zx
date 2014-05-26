@@ -19,8 +19,8 @@ def main():
     cmb = interface.CustomerManagerBase()
     flb = interface.FriendlyLinkBase()
     # print cmb.add_customer_manager(user_id, 2082, end_date='2014-06-01')
-    print flb.add_friendly_link(name=u'163', href='http://www.163.com', link_type=0, city_id=1932)
-    print flb.get_friendly_link_by_city_id(city_id=1932).count()
+    # print flb.add_friendly_link(name=u'163', href='http://www.163.com', link_type=0, city_id=1932)
+    print flb.get_friendly_link_by_city_id(city_id=1932)
 
 
 if __name__ == '__main__':

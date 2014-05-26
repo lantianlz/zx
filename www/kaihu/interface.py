@@ -225,6 +225,17 @@ class FriendlyLinkBase(object):
     def get_all_friendly_link(self, must_update_cache=False):
         return FriendlyLink.objects.filter(state=True)
 
-    @cache_required(cache_key='friendly_link_by_city_id', expire=0, cache_config=cache.CACHE_STATIC)
-    def get_friendly_link_by_city_id(self, city_id, must_update_cache=False):
-        return self.get_all_friendly_link().filter(city_id=city_id)
+    def get_friendly_link_by_city_id(self, city_id, link_type=(0, )):
+        flinks = []
+        for flink in (self.get_all_friendly_link()):
+            if flink.city_id == city_id and flink.link_type in link_type:
+                flinks.append(flink)
+        return flinks
+
+    def get_friendly_link_by_link_type(self, link_type):
+        flinks = []
+        link_type = link_type if isinstance(link_type, (list, tuple)) else (link_type,)
+        for flink in (self.get_all_friendly_link()):
+            if flink.link_type in link_type:
+                flinks.append(flink)
+        return flinks
