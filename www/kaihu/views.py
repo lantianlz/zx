@@ -47,5 +47,4 @@ def department_detail(request, department_id, template_name='kaihu/department_de
         raise Http404
 
     customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_department(department))
-    flinks = flb.get_friendly_link_by_city_id(department.city_id)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
