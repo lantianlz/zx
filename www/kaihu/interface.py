@@ -223,8 +223,6 @@ class FriendlyLinkBase(object):
 
             # 更新缓存
             self.get_all_friendly_link(must_update_cache=True)
-            if city_id:
-                self.get_friendly_link_by_city_id(city_id, must_update_cache=True)
         except Exception, e:
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
@@ -238,19 +236,26 @@ class FriendlyLinkBase(object):
 
         return objects
 
-    @cache_required(cache_key='friendly_link_by_city_id', expire=0, cache_config=cache.CACHE_STATIC)
-    def get_friendly_link_by_city_id(self, city_id, must_update_cache=False):
-        return self.get_all_friendly_link().filter(city_id=city_id)
+    def get_friendly_link_by_city_id(self, city_id, link_type=(0, )):
+        flinks = []
+        for flink in (self.get_all_friendly_link()):
+            if flink.city_id == city_id and flink.link_type in link_type:
+                flinks.append(flink)
+        return flinks
 
     def get_friendly_link_by_id(self, link_id, state=True):
-
         return self.get_all_friendly_link(state).filter(id=link_id)
 
     def get_friendly_link_by_name(self, link_name):
-        '''
-
-        '''
         return self.get_all_friendly_link(state=None).filter(name=link_name)
+
+    def get_friendly_link_by_link_type(self, link_type):
+        flinks = []
+        link_type = link_type if isinstance(link_type, (list, tuple)) else (link_type,)
+        for flink in (self.get_all_friendly_link()):
+            if flink.link_type in link_type:
+                flinks.append(flink)
+        return flinks
 
     def modify_friendly_link(self, link_id, **kwargs):
         if not link_id:
@@ -270,8 +275,6 @@ class FriendlyLinkBase(object):
 
             # 更新缓存
             self.get_all_friendly_link(must_update_cache=True)
-            if kwargs.get('city_id'):
-                self.get_friendly_link_by_city_id(kwargs['city_id'], must_update_cache=True)
         except Exception, e:
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)

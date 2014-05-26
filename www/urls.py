@@ -36,10 +36,11 @@ urlpatterns = patterns('',
 
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^500$', 'www.account.views.test500'),
-                       url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-                           {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
+                       url(r'^(?P<txt_file_name>\w+)\.txt$', 'www.misc.views.txt_view'),
+                       url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
                        )
 
+# 冗余url，由于减少url层级
 urlpatterns += patterns('',
                         url(r'^topic/(?P<tag_domain>\w+)$', 'www.question.views.topic_question'),
                         url(r'^topics', 'www.question.views.topics'),

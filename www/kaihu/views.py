@@ -12,11 +12,13 @@ from www.kaihu import interface
 cb = interface.CityBase()
 db = interface.DepartmentBase()
 cmb = interface.CustomerManagerBase()
+flb = interface.FriendlyLinkBase()
 
 
 def home(request, template_name='kaihu/home.html'):
     areas = cb.get_all_areas()
     citys_by_area = cb.get_all_city_group_by_province()
+    flinks = flb.get_friendly_link_by_link_type(link_type=1)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -35,6 +37,7 @@ def department_list(request, city_abbr, template_name='kaihu/department_list.htm
     page_params = (page_objs[1], page_objs[4])
 
     customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_city_id(city.id)[:4])
+    flinks = flb.get_friendly_link_by_city_id(city.id)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
