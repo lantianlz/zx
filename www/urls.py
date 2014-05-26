@@ -34,9 +34,10 @@ urlpatterns = patterns('',
                        url(r'^kaihu/', include('www.kaihu.urls')),
                        url(r'^admin/', include('www.admin.urls')),
 
+                       url(r'^sitemap$', 'www.misc.views.sitemap'),
+                       url(r'^(?P<txt_file_name>\w+)\.txt$', 'www.misc.views.txt_view'),
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^500$', 'www.account.views.test500'),
-                       url(r'^(?P<txt_file_name>\w+)\.txt$', 'www.misc.views.txt_view'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
                        )
 
