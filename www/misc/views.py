@@ -4,7 +4,7 @@ import base64
 import json
 import urllib
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponseRedirect
 from django.conf import settings
@@ -22,10 +22,21 @@ def static_view(request, template_name):
 
 def txt_view(request, txt_file_name):
     '''
-    @note: 静态模板采用通用目录
+    @note: txt文件展示，主要是提供给搜索引擎
     '''
     import os
-    return HttpResponse(open(os.path.abspath(os.path.join(settings.SITE_ROOT, '../static_local/%s.txt' % txt_file_name))))
+    file_name = os.path.abspath(os.path.join(settings.SITE_ROOT, '../static_local/%s.txt' % txt_file_name))
+    if not os.path.exists(file_name):
+        raise Http404
+    return HttpResponse(open(file_name))
+
+
+def sitemap(request):
+    '''
+    @note: site文件动态提供
+    '''
+    from www.misc.interface import generate_sitemap
+    return HttpResponse(generate_sitemap())
 
 
 @member_required

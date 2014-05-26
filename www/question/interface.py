@@ -239,7 +239,7 @@ class QuestionBase(object):
             else tag_object_or_domain
         if tag:
             return [tq.question for tq in TagQuestion.objects.select_related('question')
-                    .filter(tag=tag).order_by("-question__sort_num", '-question__like_count', "-question__last_answer_time")]
+                    .filter(tag=tag, question__state=True).order_by("-question__sort_num", '-question__like_count', "-question__last_answer_time")]
         else:
             return []
 
