@@ -158,7 +158,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.title
+                'search/' + this.collection.nick + '/' + this.collection.city
             );
         },
 
@@ -381,7 +381,7 @@ $(document).ready(function(){
             "":                                     "search",
             "modify/:userId":                       "modify",
             "search/(:nick)/(:city)/:pageIndex":    "search",
-            "add/:search":                          "add"
+            "add/:userId":                          "add"
         },
 
         // 查询

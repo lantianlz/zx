@@ -105,7 +105,7 @@ def common_ajax_response(func):
     """
     def _decorator(request, *args, **kwargs):
         errcode, errmsg = func(request, *args, **kwargs)
-        errmsg = 'ok' if errcode == 0 else errmsg
+        #errmsg = 'ok' if errcode == 0 else errmsg
         r = dict(errcode=errcode, errmsg=errmsg)
         return HttpResponse(json.dumps(r), mimetype='application/json')
     return _decorator

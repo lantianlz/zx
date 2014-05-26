@@ -13,6 +13,7 @@ dict_err = {
     50100: u'找不到指定用户',
     50101: u'找不到指定营业部',
     50102: u'找不到指定客户经理',
+    50103: u'找不到指定友情链接',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -202,6 +203,14 @@ class FriendlyLinkBase(object):
     def __init__(self):
         pass
 
+    def format_friendly_links(self, friendly_links):
+        cb = CityBase()
+
+        for x in friendly_links:
+            x.city = cb.get_city_by_id(x.city_id)
+
+        return friendly_links
+
     def add_friendly_link(self, name, href, link_type=0, city_id=None, img=None, sort_num=0):
         try:
             try:
@@ -210,7 +219,7 @@ class FriendlyLinkBase(object):
                     assert city_id
             except:
                 return 99800, dict_err.get(99800)
-            FriendlyLink.objects.create(name=name, href=href, city_id=city_id, img=img, link_type=link_type, sort_num=sort_num)
+            obj = FriendlyLink.objects.create(name=name, href=href, city_id=city_id, img=img, link_type=link_type, sort_num=sort_num)
 
             # 更新缓存
             self.get_all_friendly_link(must_update_cache=True)
@@ -219,12 +228,65 @@ class FriendlyLinkBase(object):
         except Exception, e:
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
-        return 0, dict_err.get(0)
+        return 0, obj.id
 
     @cache_required(cache_key='all_friendly_link', expire=0, cache_config=cache.CACHE_STATIC)
-    def get_all_friendly_link(self, must_update_cache=False):
-        return FriendlyLink.objects.filter(state=True)
+    def get_all_friendly_link(self, state=True, must_update_cache=False):
+        objects = FriendlyLink.objects.all()
+        if state != None:
+            objects = objects.filter(state=state)
+
+        return objects
 
     @cache_required(cache_key='friendly_link_by_city_id', expire=0, cache_config=cache.CACHE_STATIC)
     def get_friendly_link_by_city_id(self, city_id, must_update_cache=False):
         return self.get_all_friendly_link().filter(city_id=city_id)
+
+    def get_friendly_link_by_id(self, link_id, state=True):
+
+        return self.get_all_friendly_link(state).filter(id=link_id)
+
+    def get_friendly_link_by_name(self, link_name):
+        '''
+
+        '''
+        return self.get_all_friendly_link(state=None).filter(name=link_name)
+
+    def modify_friendly_link(self, link_id, **kwargs):
+        if not link_id:
+            return 99800, dict_err.get(99800)
+
+        friendly_link = self.get_friendly_link_by_id(link_id, state=None)
+        if not friendly_link:
+            return 50103, dict_err.get(50103)
+
+        friendly_link = friendly_link[0]
+
+        try:
+            for k, v in kwargs.items():
+                setattr(friendly_link, k, v)
+
+            friendly_link.save()
+
+            # 更新缓存
+            self.get_all_friendly_link(must_update_cache=True)
+            if kwargs.get('city_id'):
+                self.get_friendly_link_by_city_id(kwargs['city_id'], must_update_cache=True)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
+    def remove_friendly_link(self, link_id):
+        if not link_id:
+            return 99800, dict_err.get(99800)
+
+        friendly_link = self.get_friendly_link_by_id(link_id, state=None)
+        if not friendly_link:
+            return 50103, dict_err.get(50103)
+        friendly_link = friendly_link[0]
+        friendly_link.delete()
+
+        self.get_all_friendly_link(must_update_cache=True)
+        return 0, dict_err.get(0)

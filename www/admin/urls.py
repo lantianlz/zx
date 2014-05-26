@@ -78,3 +78,15 @@ urlpatterns += patterns('www.admin.views_customer_manager',
                         url(r'^customer_manager/get_citys_by_name$', 'get_citys_by_name'),
                         url(r'^customer_manager$', 'customer_manager'),
                         )
+
+
+# 友情链接
+urlpatterns += patterns('www.admin.views_friendly_link',
+
+                        url(r'^friendly_link/modify_friendly_link$', 'modify_friendly_link'),
+                        url(r'^friendly_link/remove_friendly_link$', 'remove_friendly_link'),
+                        url(r'^friendly_link/get_friendly_link_by_id$', 'get_friendly_link_by_id'),
+                        url(r'^friendly_link/add_friendly_link$', 'add_friendly_link'),
+                        url(r'^friendly_link/search$', 'search'),
+                        url(r'^friendly_link$', 'friendly_link'),
+                        )
