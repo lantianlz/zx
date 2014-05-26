@@ -20,6 +20,14 @@ def static_view(request, template_name):
     return render_to_response('static_templates/%s.html' % template_name, locals(), context_instance=RequestContext(request))
 
 
+def txt_view(request, txt_file_name):
+    '''
+    @note: 静态模板采用通用目录
+    '''
+    import os
+    return HttpResponse(open(os.path.abspath(os.path.join(settings.SITE_ROOT, '../static_local/%s.txt' % txt_file_name))))
+
+
 @member_required
 def qiniu_img_return(request):
     '''
