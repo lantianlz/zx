@@ -96,7 +96,7 @@
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 提出了该问题
                 </div>
                 <div class="pt-5">
-                    <a class="black-blue f16 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
+                    <a class="black-blue f14 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
                 <div class="pt-10 f13"><%= feed.questionDesc %></div>
                 <div class="f12 co8 gray-a pt-5">
@@ -114,7 +114,7 @@
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 赞了该回答
                 </div>
                 <div class="pt-5">
-                    <a class="black-blue f16 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
+                    <a class="black-blue f14 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
                 <div class="pt-10 f12">
                     <a href="/p/<%= feed.answerUserId %>" class="zx-cardtips pr-5 black-blue fb" data-user_id='<%= feed.answerUserId %>'><%= feed.answerUserName %></a><% if(feed.answerUserDesc) {%><span class="fb">(<%= feed.answerUserDesc %>)</span><% } %>
@@ -140,7 +140,7 @@
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 回答了该提问
                 </div>
                 <div class="pt-5">
-                    <a class="black-blue f16 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
+                    <a class="black-blue f14 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
                 <div class="pt-10 f13">
                     <%= feed.answerContent %>
