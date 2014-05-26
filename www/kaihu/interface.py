@@ -2,10 +2,11 @@
 
 import datetime
 
+from common import cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
-from www.kaihu.models import Company, Department, City, CustomerManager
+from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink
 
 
 dict_err = {
@@ -127,6 +128,7 @@ class CustomerManagerBase(object):
                                            qq=qq, entry_time=entry_time, mobile=mobile, vip_info=vip_info,
                                            real_name=real_name, id_card=id_card, id_cert=id_cert, des=des)
         except Exception, e:
+            debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
 
         return 0, dict_err.get(0)
@@ -158,7 +160,7 @@ class CustomerManagerBase(object):
 
             customer_manager.save()
         except Exception, e:
-            print e
+            debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
 
         return 0, dict_err.get(0)
@@ -193,3 +195,36 @@ class CustomerManagerBase(object):
             return 0, dict_err.get(0)
 
         return 50100, dict_err.get(50100)
+
+
+class FriendlyLinkBase(object):
+
+    def __init__(self):
+        pass
+
+    def add_friendly_link(self, name, href, link_type=0, city_id=None, img=None, sort_num=0):
+        try:
+            try:
+                assert name and href
+                if link_type == 0:
+                    assert city_id
+            except:
+                return 99800, dict_err.get(99800)
+            FriendlyLink.objects.create(name=name, href=href, city_id=city_id, img=img, link_type=link_type, sort_num=sort_num)
+
+            # 更新缓存
+            self.get_all_friendly_link(must_update_cache=True)
+            if city_id:
+                self.get_friendly_link_by_city_id(city_id, must_update_cache=True)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+        return 0, dict_err.get(0)
+
+    @cache_required(cache_key='all_friendly_link', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_all_friendly_link(self, must_update_cache=False):
+        return FriendlyLink.objects.filter(state=True)
+
+    @cache_required(cache_key='friendly_link_by_city_id', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_friendly_link_by_city_id(self, city_id, must_update_cache=False):
+        return self.get_all_friendly_link().filter(city_id=city_id)

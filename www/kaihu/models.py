@@ -110,3 +110,19 @@ class CustomerManager(models.Model):
 
     class Meta:
         ordering = ["-sort_num", "id"]
+
+
+class FriendlyLink(models.Model):
+    link_type_choices = ((0, u'开户子站单个城市的链接'), (1, u'开户子站全局链接'), (2, u'网站全局链接'))
+
+    name = models.CharField(max_length=32)
+    href = models.CharField(max_length=128)
+    city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True, null=True)
+    img = models.CharField(max_length=64, null=True)
+    link_type = models.IntegerField(default=0, choices=link_type_choices)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    state = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        unique_together = [("name", "city_id", 'link_type'), ]
+        ordering = ["-sort_num", "id"]
