@@ -214,8 +214,6 @@ class FriendlyLinkBase(object):
 
             # 更新缓存
             self.get_all_friendly_link(must_update_cache=True)
-            if city_id:
-                self.get_friendly_link_by_city_id(city_id, must_update_cache=True)
         except Exception, e:
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
