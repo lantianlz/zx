@@ -4,7 +4,7 @@ import time
 import logging
 from django.http import Http404
 from django.conf import settings
-from common import debug
+from common import debug, utils
 
 
 class UserMiddware(object):
@@ -15,6 +15,15 @@ class UserMiddware(object):
     def process_request(self, request):
         setattr(request, "_process_start_timestamp", time.time())
 
+        sub_domain = utils.get_sub_domain_from_http_host(request.META.get('HTTP_HOST', ''))
+        path = request.get_full_path()
+
+        if sub_domain not in ('www', 'wwwinside', 'static') and (path not in ('/', '') and not path.startswith('/static') and not path.startswith('/kaihu')):
+            raise Http404
+
+        if sub_domain in ('www', 'wwwinside', 'static') and path.startswith('/kaihu'):
+            raise Http404
+
     def process_response(self, request, response):
         if hasattr(request, '_process_start_timestamp'):
             t = int((time.time() - float(getattr(request, '_process_start_timestamp'))))
@@ -24,16 +33,11 @@ class UserMiddware(object):
         return response
 
     def process_exception(self, request, exception):
-        # print '*' * 50 + 'debug info start' + '*' * 50
         if type(exception) == Http404:
             return
 
-        url = request.path
-        # ext_data = {"url": url, "method": request.method,
-        #             "query_string": ",".join(["".join([k, request.REQUEST.get(k)]) for k in request.REQUEST])}
-        title = u'%s error in %s' % (settings.SERVER_NAME, url)
+        title = u'%s error in %s' % (settings.SERVER_NAME, request.get_full_path())
         content = debug.get_debug_detail(exception)
-        # print '*' * 50 + 'debug info end' + '*' * 50
-        if settings.SERVER_NAME != 'DEVELOPER':  # not settings.DEBUG or True:
+        if settings.SERVER_NAME != 'DEVELOPER':
             from www.tasks import async_send_email
             async_send_email(settings.NOTIFICATION_EMAIL, title, content)

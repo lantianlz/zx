@@ -292,3 +292,14 @@ def format_object_to_dict(obj):
         # else:
         #     print key
     return data
+
+
+def get_sub_domain_from_http_host(http_host):
+    '''
+    @note: 从http host中获取子域名前缀
+    '''
+    import urlparse
+    if http_host:
+        http_host = ('http://%s' % http_host) if not http_host.startswith('http') else http_host
+        prefix = urlparse.urlparse(http_host)[1].split('.', 1)[0]
+        return prefix

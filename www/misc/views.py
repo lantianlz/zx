@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponseRedirect
 from django.conf import settings
 
+from common import utils
 from www.misc.decorators import member_required
 from www.misc import qiniu_client
 
@@ -37,6 +38,13 @@ def sitemap(request):
     '''
     from www.misc.interface import generate_sitemap
     return HttpResponse(generate_sitemap())
+
+
+def link_view(request):
+    '''
+    @note: 交换友链等验证链接
+    '''
+    return HttpResponse('ok')
 
 
 @member_required
@@ -124,18 +132,15 @@ def crop_img(request):
 
 
 def show_index_for_all_domain(request):
-    import urlparse
     from www.account.views import show_index
     from www.kaihu.views import department_list, home
 
     # 通配符域名的情况下，跳转到不同的views
-    http_host = request.META.get('HTTP_HOST', '')
-    if http_host:
-        http_host = ('http://%s' % http_host) if not http_host.startswith('http') else http_host
-        prefix = urlparse.urlparse(http_host)[1].split('.', 1)[0]
-        if prefix == 'kaihu':
+    sub_domain = utils.get_sub_domain_from_http_host(request.META.get('HTTP_HOST', ''))
+    if sub_domain:
+        if sub_domain == 'kaihu':
             return home(request)
-        if prefix not in ('www', ):
-            return department_list(request, city_abbr=prefix)
+        if sub_domain not in ('www', ):
+            return department_list(request, city_abbr=sub_domain)
 
     return show_index(request)
