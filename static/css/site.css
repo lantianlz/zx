@@ -240,6 +240,14 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
   color: #349cd8;
 }
 
+.gray-white{
+  color: #999;
+}
+
+.gray-white:hover{
+  text-decoration: none;
+  color: #fff;
+}
 /******自定义控件样式********/
 .zx-checkbox{
     padding-left: 30px;

@@ -46,6 +46,7 @@
 .f24{font-size: 24px}
 .f30{font-size: 30px;}
 .f65{font-size: 65px;}
+.f85{font-size: 85px;}
 
 .ff-yahei{font-family: "Microsoft YaHei"}
 
@@ -184,6 +185,8 @@
 .pb-20{padding-bottom: 20px;}
 .pb-25{padding-bottom: 25px;}
 .pb-30{padding-bottom: 30px;}
+.pb-40{padding-bottom: 40px;}
+.pb-60{padding-bottom: 60px;}
 
 .m_tc{margin:0 auto;}
 /*链接和常用文字颜色*/
@@ -253,7 +256,7 @@ a:hover{color: #259;}
 
 
 .box-shadow-224{box-shadow: 2px 2px 4px #666;}
-.box-shadow-024{box-shadow: 2px 2px 4px #666;}
+.box-shadow-024{box-shadow: 0px 2px 4px #666;}
 .box-shadow-559{box-shadow: 5px 5px 9px #bbb, -2px 2px 10px #eee}
 
 .border-radius-0{border-radius: 0px;}
