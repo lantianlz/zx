@@ -47,6 +47,15 @@ def link_view(request):
     return HttpResponse('ok')
 
 
+def friendly_links(request, template_name="static_templates/links.html"):
+    '''
+    @note: 全站友情链接
+    '''
+    from www.kaihu.interface import FriendlyLinkBase
+    flinks = FriendlyLinkBase().get_friendly_link_by_link_type(link_type=2)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
 @member_required
 def qiniu_img_return(request):
     '''
