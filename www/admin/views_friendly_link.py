@@ -30,8 +30,9 @@ def add_friendly_link(request):
     name = request.REQUEST.get('name')
     href = request.REQUEST.get('href')
     sort_num = request.REQUEST.get('sort')
+    des = request.REQUEST.get('des')
 
-    return FriendlyLinkBase().add_friendly_link(name, href, link_type=link_type, city_id=city_id, sort_num=sort_num)
+    return FriendlyLinkBase().add_friendly_link(name, href, link_type=link_type, city_id=city_id, sort_num=sort_num, des=des)
 
 
 def format_friendly_link(objs, num):
@@ -48,7 +49,8 @@ def format_friendly_link(objs, num):
             'city_id': x.city.id if x.city else '',
             'sort': x.sort_num,
             'state': x.state,
-            'type': x.link_type
+            'type': x.link_type,
+            'des': x.des
         })
 
     return data
@@ -120,7 +122,8 @@ def modify_friendly_link(request):
     name = request.REQUEST.get('name')
     href = request.REQUEST.get('href')
     sort_num = request.REQUEST.get('sort')
+    des = request.REQUEST.get('des')
 
     return FriendlyLinkBase().modify_friendly_link(
-        link_id, link_type=link_type, city_id=city_id, name=name, href=href, sort_num=sort_num
+        link_id, link_type=link_type, city_id=city_id, name=name, href=href, sort_num=sort_num, des=des
     )

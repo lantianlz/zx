@@ -13,6 +13,11 @@
 .securities-list>li:hover{
     background-color: aliceblue;
 }
+
+.btn-get-more{
+    border-color: #fff;
+    box-shadow: none;
+}
 </style>
 {% endblock %}
 
@@ -22,6 +27,101 @@ $(document).ready(function(){
     $('.securities-list .showMap').bind('click', function(e){
         $.ZXMap.locationByName($(this).parent().next().next().html());
     });
+
+    var CustomerManager = Backbone.Model.extend({
+        defaults: {
+            'userId': '1',
+            'userNick': '',
+            'userAvatar': '',
+            'departmentName': '',
+            'departmentShortName': '',
+            'departmentId': '',
+            'vipInfo': '',
+            'sort': '',
+            'qq': '',
+            'mobile': '',
+            'questionCount': '0',
+            'answerCount': '0',
+            'likeCount': '0'
+        }
+    });
+
+    var CustomerManagers = Backbone.Collection.extend({
+        model: CustomerManager,
+
+        _modelMaps: {
+            'num': 'num',
+            'userId': 'user_id',
+            'userNick': 'user_nick',
+            'userAvatar': 'user_avatar',
+            'cityName': 'city_name',
+            'cityId': 'city_id',
+            'departmentName': 'department_name',
+            'departmentShortName': 'department_short_name',
+            'departmentId': 'department_id',
+            'sort': 'sort',
+            'vipInfo': 'vip_info',
+            'endDate': 'end_date',
+            'qq': 'qq',
+            'mobile': 'mobile',
+            'state': 'state',
+            'questionCount': 'question_count',
+            'answerCount': 'answer_count',
+            'likeCount': 'like_count'
+        },
+
+        getMore: function(pageIndex){
+            var me = this;
+            
+            g_ajax_processing_obj_id = $('.btn-get-more').setUUID().attr('id');
+            ajaxSend(
+                "/admin/customer_manager/search", 
+                {'user_nick': '', 'city_name': '', 'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = parseInt(pageIndex) + 1;
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+        }
+    });
+
+    var ListView = Backbone.View.extend({
+        el: '.customer-managers',
+
+        template: _.template($('#customer_manager_template').html()),
+
+        initialize: function(){
+            
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .btn-get-more': 'getMore'
+        },
+
+        render: function(){
+            var data = this.collection.toJSON();
+            
+            if(data.length > 0){
+                this.$('.btn-get-more').data('page_index', this.collection.pageIndex);
+                this.$('.get-more').before(this.template({'customerManagers': data}));
+            } else {
+                this.$('.get-more').hide();
+            }
+            
+        },
+
+        getMore: function(sender){
+            var target = $(sender.currentTarget),
+                pageIndex = target.data('page_index');
+            
+            this.collection.getMore(pageIndex);
+        }
+    });
+
+    var customerManagers = new CustomerManagers(),
+        listView = new ListView({'collection': customerManagers});
 });
 </script>
 {% endblock %}
@@ -43,9 +143,9 @@ $(document).ready(function(){
     <!-- <a class="co8 pull-right f12 pr-15" href="#"><span class="glyphicon glyphicon-refresh pr-3"></span>换一换</a> -->
 </div>
 {% if customer_managers %}
-<ul class="list-inline row pl-20 pr-20 pt-5">
+<ul class="customer-managers list-inline row pl-20 pr-20 pt-5">
     {% for cm in customer_managers %}
-    <li class="col-md-6 col-md-12 bottom-border bdc-eee pb-10 pt-10">
+    <li class="col-md-6 col-xs-12 bottom-border bdc-eee pb-10 pt-10">
         <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}"><img class="pa avatar-75 avatar-circle" alt="{{cm.user.nick}}" src="{{cm.user.get_avatar_65}}"></a>
         <div class="pl-100 row pr-10">
             <div class="pb-5">
@@ -74,10 +174,49 @@ $(document).ready(function(){
         </div>
     </li>
     {% endfor%}
+    <li class="col-md-12 col-xs-12 pb-10 pt-10 get-more">
+        <div class="text-center">
+            <span id="loadingMore"></span>
+            <button type="button" class="btn btn-block btn-default btn-get-more" data-page_index="2">查看更多...</button>
+        </div>
+    </li>
 </ul>
 {% else %}
 <div class="alert alert-info popmsg box-shadow-224 border-radius-0 mt-10">虚位以待</div> 
 {% endif %}
+
+<script type="text/template" id="customer_manager_template">
+<% _.each(customerManagers, function(customerManager){ %>
+    <li class="col-md-6 col-xs-12 bottom-border bdc-eee pb-10 pt-10">
+        <a href="{{MAIN_DOMAIN}}/p/<%= customerManager.userId %>"><img class="pa avatar-75 avatar-circle" alt="<%= customerManager.userNick %>" src="<%= customerManager.userAvatar %>"></a>
+        <div class="pl-100 row pr-10">
+            <div class="pb-5">
+                <a href="{{MAIN_DOMAIN}}/p/<%= customerManager.userId %>"><%= customerManager.userNick %></a>
+            </div>
+            <div class="pb-5">
+                <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/<%= customerManager.userId %>/questions"><%= customerManager.questionCount %></a></span>
+                <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/<%= customerManager.userId %>/answers"><%= customerManager.answerCount %></a></span>
+                <span class="pr-10">赞 <a href="javascript:void(0);"><%= customerManager.likeCount %></a></span>
+            </div>
+            <div class="pb-5 co6 f13">
+                <span class="glyphicon glyphicon-fire f18 pr-3 co19"></span><%= customerManager.vipInfo?customerManager.vipInfo:'暂无认证信息' %>
+            </div>
+        </div>
+        <div class="pt-10">
+            <span class="pl-5">
+                <%= customerManager.departmentShortName %>
+            </span>
+            
+            <span class="pl-25">
+                <span class="glyphicon glyphicon-earphone co-zx"></span><%= customerManager.mobile?customerManager.mobile:'暂无' %>
+            </span>
+            <span class="pr-5">
+                <a href="tencent://message/?uin=<%= customerManager.qq %>" target="_blank" class="pl-5 pr-3"><img class="avatar-15 mt--2" src="{{MEDIA_URL}}img/common/contact-qq.png"></a>
+            </span>
+        </div>
+    </li>
+<% }) %>
+</script>
 
 <div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
     <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">共 {{departments_count}} 家营业部</span>

@@ -25,7 +25,8 @@ $(document).ready(function(){
             'cityId': '',
             'sort': '',
             'state': '',
-            'type': ''
+            'type': '',
+            'des': ''
         }
 
     });
@@ -44,7 +45,8 @@ $(document).ready(function(){
             'cityId': 'city_id',
             'sort': 'sort',
             'state': 'state',
-            'type': 'type'
+            'type': 'type',
+            'des': 'des'
         },
 
         // 查询
@@ -495,6 +497,12 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">链接描述</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="" name="des" value='<%= des %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">排序</label>
             <div class="col-sm-1">
                 <input type="text" name="sort" class="form-control" value='<%= sort %>'>
@@ -562,9 +570,15 @@ $(document).ready(function(){
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">链接描述</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="" class="form-control" name="des" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-3 control-label">排序</label>
                         <div class="col-sm-2">
-                            <input type="text" name="sort" class="form-control" value=''>
+                            <input type="text" name="sort" class="form-control" value='0'>
                         </div>
                     </div>
                 </form>
