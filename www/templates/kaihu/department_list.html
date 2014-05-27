@@ -233,11 +233,12 @@ $(document).ready(function(){
         </div>
         <div class="col-md-9 col-xs-12">
             <div>
-                <a class="f16" href="{{department.get_url}}">{{department.get_short_name}}</a>
+                <a class="f16" href="{{department.get_url}}">{{department.get_short_name}}</a><span class="pointer ml-5 badge zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="共 4 位成员" data-trigger="hover" title="">42</span>
                 <a href="javascript:void(0);" class="co8 f12 pull-right showMap"><span class="glyphicon glyphicon-map-marker"></span>查看地图</a>
             </div>
             <div class="pt-10">联系电话：{{department.tel}}</div>
             <div>联系地址：{{department.addr}}</div>
+
         </div>
     </li>
     {% endfor %}
