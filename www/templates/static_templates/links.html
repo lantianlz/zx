@@ -15,59 +15,13 @@
 
 {% block static_main %}
 <ul class="links list-inline pt-20 pl-20">
+	{% for flink in flinks %}
 	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
 		<div>
-			<div><a href="#" class="black-blue1">煎蛋网</a></div>
-			<div class="f12 co8">以译介方式传播网络新鲜资讯</div>
+			<div><a href="{{flink.href}}" target="_blank" class="black-blue1">{{flink.name}}</a></div>
+			<div class="f12 co8">{{flink.des|default:""}}</div>
 		</div>
 	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">阿里云</a></div>
-			<div class="f12 co8">打造数据分享第一平台、云计算第一平台</div>
-		</div>
-	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">GOOGLE</a></div>
-			<div class="f12 co8">致力于互联网搜索、雲端運算、广告技术</div>
-		</div>
-	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">网易云音乐</a></div>
-			<div class="f12 co8">网易云音乐听见好时光</div>
-		</div>
-	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">新浪</a></div>
-			<div class="f12 co8">新浪网为全球用户24小时提供全面及时的中文资讯</div>
-		</div>
-	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">腾讯</a></div>
-			<div class="f12 co8">腾讯网是中国浏览量最大的中文门户网站</div>
-		</div>
-	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">天猫Tmall</a></div>
-			<div class="f12 co8">天猫，亚洲最大网上购物网站——在线B2C购物平台。</div>
-		</div>
-	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">豆瓣电影</a></div>
-			<div class="f12 co8">提供最新的电影介绍及评论包括上映影片的影讯查询</div>
-		</div>
-	</li>
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
-			<div><a href="#" class="black-blue1">虾米音乐网</a></div>
-			<div class="f12 co8">提供高品质音乐MP3的个性化推荐、发布、P2P下载服务</div>
-		</div>
-	</li>
+	{% endfor %}
 </ul>
 {% endblock %}

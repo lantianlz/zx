@@ -211,7 +211,7 @@ class FriendlyLinkBase(object):
 
         return friendly_links
 
-    def add_friendly_link(self, name, href, link_type=0, city_id=None, img=None, sort_num=0):
+    def add_friendly_link(self, name, href, link_type=0, city_id=None, img=None, des=None, sort_num=0):
         try:
             try:
                 assert name and href
@@ -219,7 +219,7 @@ class FriendlyLinkBase(object):
                     assert city_id
             except:
                 return 99800, dict_err.get(99800)
-            obj = FriendlyLink.objects.create(name=name, href=href, city_id=city_id, img=img, link_type=link_type, sort_num=sort_num)
+            obj = FriendlyLink.objects.create(name=name, href=href, city_id=city_id, img=img, link_type=link_type, sort_num=sort_num, des=des)
 
             # 更新缓存
             self.get_all_friendly_link(must_update_cache=True)

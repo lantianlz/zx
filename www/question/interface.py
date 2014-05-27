@@ -488,6 +488,9 @@ class AnswerBase(object):
             # 更新用户回答统计总数
             UserCountBase().update_user_count(user_id=answer.from_user_id, code='user_answer_count', operate='minus')
 
+            # 更新timeline
+            FeedBase().remove_feed(answer.from_user_id, answer.id, feed_type=3)
+
             transaction.commit(using=QUESTION_DB)
             return 0, dict_err.get(0)
         except Exception, e:
