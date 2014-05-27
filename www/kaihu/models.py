@@ -89,11 +89,14 @@ class City(models.Model):
 
 
 class CustomerManager(models.Model):
+    pay_type_choices = ((0, u'未付费'), (1, u'付费'))
+
     user_id = models.CharField(max_length=32, unique=True)
     city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True)
     department = models.ForeignKey(Department)
     end_date = models.DateField(verbose_name=u'到期时间', db_index=True)
     vip_info = models.CharField(verbose_name=u'认证信息', max_length=64)
+    pay_type = models.IntegerField(choices=pay_type_choices, db_index=True, default=0)
 
     img = models.CharField(verbose_name=u'个人真实照片', max_length=64, null=True)
     qq = models.CharField(verbose_name=u'qq号码', max_length=32, null=True)
@@ -109,7 +112,7 @@ class CustomerManager(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-sort_num", "id"]
+        ordering = ["-pay_type", "-sort_num", "id"]
 
 
 class FriendlyLink(models.Model):
