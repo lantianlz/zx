@@ -98,7 +98,7 @@
         <script type="text/javascript" src="{{MEDIA_URL}}js/common.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/site.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript">
-            var MEDIA_URL = '{{ MEDIA_URL|default:'' }}',
+            var MEDIA_URL = '{{MEDIA_URL|default:''}}',
             CURRENT_USER_ID = "{{request.user.id|default:''}}";
         </script>
         {% block base_js %}{% endblock %}

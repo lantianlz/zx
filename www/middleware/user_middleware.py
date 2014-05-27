@@ -18,7 +18,7 @@ class UserMiddware(object):
         sub_domain = utils.get_sub_domain_from_http_host(request.META.get('HTTP_HOST', ''))
         path = request.path
 
-        if sub_domain not in ('www', 'wwwinside', 'static') and (path not in ('/', '') and not path.startswith('/static') and not path.startswith('/kaihu')):
+        if sub_domain not in ('www', 'wwwinside', 'static') and (path not in ('/', '/message/get_unread_count_total') and not path.startswith('/static') and not path.startswith('/kaihu')):
             raise Http404
 
         if sub_domain in ('www', 'wwwinside', 'static') and path.startswith('/kaihu'):

@@ -18,7 +18,7 @@ class Question(models.Model):
     is_important = models.BooleanField(default=False)   # 是否是精华帖
     ip = models.CharField(max_length=32, null=True)
     is_hide_user = models.BooleanField(default=False)
-    state = models.BooleanField(default=True)
+    state = models.BooleanField(default=True, db_index=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
@@ -49,7 +49,7 @@ class Answer(models.Model):
     ip = models.CharField(max_length=32, null=True)
     is_bad = models.BooleanField(default=False)  # 是否是无用回复，无用回复需要折叠
     # bad_count = models.IntegerField(default=0)  # 被点击无用回复次数
-    state = models.BooleanField(default=True)
+    state = models.BooleanField(default=True, db_index=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
@@ -90,7 +90,7 @@ class QuestionType(models.Model):
     value = models.CharField(max_length=16, unique=True)
     domain = models.CharField(max_length=16, unique=True)
     sort_num = models.IntegerField(default=0, db_index=True)
-    state = models.BooleanField(default=True)
+    state = models.BooleanField(default=True, db_index=True)
 
     def get_url(self):
         return u'/question/type/%s' % self.domain or self.value
@@ -128,7 +128,7 @@ class Tag(models.Model):
     des = models.CharField(max_length=512, null=True)
     sort_num = models.IntegerField(default=0, db_index=True)
     is_show = models.BooleanField(default=True)  # 过滤的时候是否显示
-    state = models.BooleanField(default=True)
+    state = models.BooleanField(default=True, db_index=True)
     data_body = models.TextField(default='')
 
     class Meta:
