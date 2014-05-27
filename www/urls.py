@@ -35,14 +35,15 @@ urlpatterns = patterns('',
                        url(r'^admin/', include('www.admin.urls')),
 
                        url(r'^sitemap$', 'www.misc.views.sitemap'),
-                       url(r'^8efc199540223825b0fb2026cc9b8e39\.html$', 'www.misc.views.link_view'),
+                       # url(r'^8efc199540223825b0fb2026cc9b8e39\.html$', 'www.misc.views.link_view'),
                        url(r'^(?P<txt_file_name>\w+)\.txt$', 'www.misc.views.txt_view'),
+                       url(r'^s/links$', 'www.misc.views.friendly_links'),
                        url(r'^s/(?P<template_name>.*)$', 'www.misc.views.static_view'),
                        url(r'^500$', 'www.account.views.test500'),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
                        )
 
-# 冗余url，由于减少url层级
+# 冗余url，用于减少url层级
 urlpatterns += patterns('',
                         url(r'^topic/(?P<tag_domain>\w+)$', 'www.question.views.topic_question'),
                         url(r'^topics', 'www.question.views.topics'),

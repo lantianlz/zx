@@ -4,8 +4,8 @@
 
 {% block static_main %}
 <ul class="list-inline">
-	<li><a href="http://www.baidu.com">百度</a></li>
-	<li><a href="http://www.baidu.com">新浪</a></li>
-	<li><a href="http://www.baidu.com">腾讯科技</a></li>
+	{% for flink in flinks %}
+	<li><a href="{{flink.href}}" target="_blank">{{flink.name}}</a></li>
+	{% endfor %}
 </ul>
 {% endblock %}
