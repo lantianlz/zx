@@ -16,10 +16,10 @@
 {% block static_main %}
 <ul class="links list-inline pt-20 pl-20">
 	{% for flink in flinks %}
-	<li class="col-md-3 mb-15 min-h60 bottom-border bdc-eee">
-		<div>
+	<li class="col-md-3 mb-15 min-h70 bottom-border bdc-eee">
+		<div class="pt-5 pl-5 pr-5">
 			<div><a href="{{flink.href}}" target="_blank" class="black-blue1">{{flink.name}}</a></div>
-			<div class="f12 co8">{{flink.des|default:""}}</div>
+			<div class="pt-3 f12 co8">{{flink.des|default:""}}</div>
 		</div>
 	</li>
 	{% endfor %}
