@@ -27,6 +27,7 @@ $(document).ready(function(){
             'isRecommend': false,
             'isAdmin': false,
             'isCustomerManager': false,
+            'lastActive': '',
             'state': true
         }
     });
@@ -49,6 +50,7 @@ $(document).ready(function(){
             'isAdmin': 'is_admin',
             'isManager': 'is_manager',
             'isCustomerManager': 'is_customer_manager',
+            'lastActive': 'last_active',
             'state': 'state'
         },
 
@@ -167,7 +169,7 @@ $(document).ready(function(){
                     <th>推荐用户</th>
                     <th>客户经理</th>
                     <th>管理员</th>
-                    <th>状态</th>
+                    <th>上次活跃时间</th>
                 </tr>
             </thead>
             <tbody>
@@ -225,9 +227,7 @@ $(document).ready(function(){
             <% } %>
         </td>
         <td>
-            <% if (user.state === 0) { %>
-                <span class="glyphicon glyphicon-remove cl_red" title="已删除"></span>
-            <% } %>
+            <%= user.lastActive %>
         </td>
     </tr>
 <% }) %>

@@ -431,6 +431,7 @@ class UserBase(object):
 
     def format_user_full_info(self, user_id):
         '''
+        格式化完整用户信息
         '''
         format_user = self.get_user_by_id(user_id)
         # 判断是否已经是推荐用户了
@@ -455,6 +456,14 @@ class UserBase(object):
             format_user.is_customer_manager = True
         else:
             format_user.is_customer_manager = False
+
+        # 活跃时间
+        la = LastActive.objects.filter(user_id=user_id)
+        if la:
+            la = la[0]
+            format_user.last_active = la.last_active_time
+        else:
+            format_user.last_active = format_user.create_time
 
         return format_user
 
