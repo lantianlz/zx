@@ -3,6 +3,10 @@
 {% load custom_filters %}
 {% block title %}{{question.title|str_display:20}}{% endblock %}
 
+{% block keywords %}{% for tag in question_tags %}{{tag.name}}{% if not forloop.last %},{% endif %}{% endfor %}{% endblock keywords %}
+
+{% block description %}智选用户回答「{{question.title}}」，希望对你有所帮助。欢迎加入智选，投资是一门学问，独立思考，善学善问。{% endblock description %}
+
 {% block javascript %}
 {% if question.is_important %}
 <script type="text/javascript">
