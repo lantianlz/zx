@@ -45,9 +45,9 @@ def init_question_tag():
                 u'期权是交易双方关于未来买卖权利达成的合约。就个股期权来说，期权的买方（权利方）通过向卖方（义务方）支付一定的费用（权利金），获得一种权利，即有权在约定的时间以约定的价格向期权卖方买入或卖出约定数量的特定股票或ETF。当然，买方（权利方）也可以选择放弃行使权利。如果买方决定行使权利，卖方就有义务配合。'],
         ]),
         (u'其他', [
-            [u'股票账户', u'gpzh', True, u'http://img0.zhixuan.com/topic_gpzh.jpg', u''],
-            [u'期货账户', u'qhzh', True, u'http://img0.zhixuan.com/topic_qhzh.jpg', u''],
-            [u'理财咨询', u'lczx', True, u'http://img0.zhixuan.com/topic_lczx.jpg', u''],
+            [u'股票账户', u'gpzh', True, u'http://img0.zhixuan.com/topic_gpzh.jpg', u'本话题包括但不限于股票开户及转户，融资融券开户，交易佣金，行情及交易软件等股票相关的讨论。'],
+            [u'期货账户', u'qhzh', True, u'http://img0.zhixuan.com/topic_qhzh.jpg', u'本话题包括但不限于商品期货开户，金融期货开户（股指期货，国债期货），交易佣金，行情及交易软件等期货相关的讨论。'],
+            [u'理财咨询', u'lczx', True, u'http://img0.zhixuan.com/topic_lczx.jpg', u'本话题包括但不限于银行理财产品，P2P理财产品，信托理财产品，券商资管理财产品，互联网“宝宝”类理财产品等理财相关的讨论。'],
         ]),
     ]
     for data in datas:

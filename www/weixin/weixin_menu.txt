@@ -1,0 +1,24 @@
+{
+	"button": [
+		{
+			"type": "click", 
+			"name": "每日精选", 
+			"key": "today_data"
+		}, 
+		{
+			"name": "关于智选", 
+			"sub_button": [
+				{
+					"type": "view", 
+					"name": "关于我们", 
+					"url": "http://www.zhixuan.com/s/about"
+				},
+				{
+					"type": "view", 
+					"name": "更新日志", 
+					"url": "http://www.zhixuan.com/s/logs"
+				}
+			]
+		}
+	]
+}

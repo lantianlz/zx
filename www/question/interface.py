@@ -232,6 +232,10 @@ class QuestionBase(object):
                 question_type = QuestionTypeBase().get_question_type_by_id_or_domain(question_type_domain)
             ps.update(question_type=question_type)
         questions = Question.objects.filter(**ps)
+
+        # 剔除其他类型的提问
+        if not question_type_domain:
+            questions = questions.exclude(question_type=QuestionTypeBase().get_question_type_by_id_or_domain('qita'))
         return questions
 
     def get_questions_by_tag(self, tag_object_or_domain):
@@ -256,7 +260,6 @@ class QuestionBase(object):
         return self.get_question_by_user_id(user_id).count()
 
     def get_all_important_question(self):
-        # return Question.objects.filter(is_important=True, state=True).order_by('-id')
         questions = []
         important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True)
         for iq in important_questions:

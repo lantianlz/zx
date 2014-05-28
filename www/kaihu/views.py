@@ -36,7 +36,7 @@ def department_list(request, city_abbr, template_name='kaihu/department_list.htm
     departments = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
-    customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_city_id(city.id)[:4])
+    customer_managers = cmb.get_customer_managers_by_city_id(city.id)[:4]
     flinks = flb.get_friendly_link_by_city_id(city.id)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -46,5 +46,20 @@ def department_detail(request, department_id, template_name='kaihu/department_de
     if not department:
         raise Http404
 
-    customer_managers = cmb.format_customer_managers(cmb.get_customer_managers_by_department(department))
+    customer_managers = cmb.format_customer_managers_for_ajax(cmb.get_customer_managers_by_department(department))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+# ===================================================ajax部分=================================================================#
+
+def get_customer_manager(request):
+    '''
+    @note: 获取更多的推荐客户经理
+    '''
+    city_id = request.REQUEST.get('city_id', '')
+    page_num = int(request.REQUEST.get('page', 1))
+    page_count = 4
+
+    customer_managers = cmb.get_customer_managers_by_city_id(city_id)[(page_num - 1) * page_count:page_num * page_count]
+
+    return HttpResponse(json.dumps(customer_managers), mimetype='application/json')
