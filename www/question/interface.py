@@ -144,7 +144,7 @@ class QuestionBase(object):
             UserCountBase().update_user_count(user_id=user_id, code='user_question_count')
 
             # 发送feed
-            if not is_hide_user:
+            if not is_hide_user and question.question_type.domain != 'qita':
                 FeedBase().create_feed(user_id, feed_type=1, obj_id=question.id)
 
             transaction.commit(using=QUESTION_DB)
@@ -416,7 +416,8 @@ class AnswerBase(object):
             question.save()
 
             # 发送feed
-            FeedBase().create_feed(from_user_id, feed_type=3, obj_id=answer.id)
+            if question.question_type.domain != 'qita':
+                FeedBase().create_feed(from_user_id, feed_type=3, obj_id=answer.id)
 
             transaction.commit(using=QUESTION_DB)
             return 0, answer
@@ -602,7 +603,8 @@ class LikeBase(object):
                 transaction.rollback(QUESTION_DB)
                 return 20105, dict_err.get(20105)
 
-            Like.objects.create(answer=answer, question=answer.question, is_anonymous=is_anonymous,
+            question = answer.question
+            Like.objects.create(answer=answer, question=question, is_anonymous=is_anonymous,
                                 from_user_id=from_user_id, to_user_id=to_user_id, ip=ip)
             Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
 
@@ -614,7 +616,8 @@ class LikeBase(object):
             UnreadCountBase().update_unread_count(to_user_id, code='received_like')
 
             # 发送feed
-            FeedBase().create_feed(from_user_id, feed_type=2, obj_id=answer.id)
+            if question.question_type.domain != 'qita':
+                FeedBase().create_feed(from_user_id, feed_type=2, obj_id=answer.id)
 
             transaction.commit(QUESTION_DB)
             return 0, dict_err.get(0)

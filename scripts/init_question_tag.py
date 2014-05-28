@@ -44,6 +44,11 @@ def init_question_tag():
             [u'个股期权', u'ggqq', True, u'http://img0.zhixuan.com/topic_ggqq.jpg',
                 u'期权是交易双方关于未来买卖权利达成的合约。就个股期权来说，期权的买方（权利方）通过向卖方（义务方）支付一定的费用（权利金），获得一种权利，即有权在约定的时间以约定的价格向期权卖方买入或卖出约定数量的特定股票或ETF。当然，买方（权利方）也可以选择放弃行使权利。如果买方决定行使权利，卖方就有义务配合。'],
         ]),
+        (u'其他', [
+            [u'股票账户', u'gpzh', True, u'http://img0.zhixuan.com/topic_gpzh.jpg', u''],
+            [u'期货账户', u'qhzh', True, u'http://img0.zhixuan.com/topic_qhzh.jpg', u''],
+            [u'理财咨询', u'lczx', True, u'http://img0.zhixuan.com/topic_lczx.jpg', u''],
+        ]),
     ]
     for data in datas:
         qt = QuestionType.objects.get(name=data[0])
@@ -55,7 +60,7 @@ def init_question_tag():
                 tag_obj.domain = tag[1]
                 tag_obj.save()
             except Tag.DoesNotExist:
-                Tag.objects.create(name=tag[0], domain=tag[1], question_type=qt, is_show=tag[2])
+                Tag.objects.create(name=tag[0], domain=tag[1], question_type=qt, is_show=tag[2], img=tag[3], des=tag[4])
     print 'ok'
 
 

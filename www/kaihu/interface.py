@@ -92,10 +92,8 @@ class DepartmentBase(object):
 
     def get_departments_by_name(self, department_name):
         departments = []
-
         if department_name:
             departments = self.get_all_departments().filter(name__contains=department_name)
-
         return departments
 
 
@@ -108,8 +106,21 @@ class CustomerManagerBase(object):
         for obj in objs:
             obj.user = UserBase().get_user_by_id(obj.user_id)
             obj.user.user_count_info = UserCountBase().get_user_count_info(obj.user_id)
-            obj.department = DepartmentBase().get_department_by_id(obj.department.id)
+            # obj.department = DepartmentBase().get_department_by_id(obj.department.id)
         return objs
+
+    def format_customer_managers_for_ajax(self, objs):
+        data = []
+        for obj in objs:
+            user = UserBase().get_user_by_id(obj.user_id)
+            user_count_info = UserCountBase().get_user_count_info(obj.user_id)
+            data.append(dict(user_id=user.id, user_nick=user.nick, user_avatar=user.get_avatar_65(),
+                             department_name=obj.department.name, company_short_name=obj.department.company.name, department_id=obj.department.id,
+                             sort_num=obj.sort_num, vip_info=obj.vip_info, qq=obj.qq, mobile=obj.mobile,
+                             user_question_count=user_count_info['user_question_count'], user_answer_count=user_count_info['user_answer_count'],
+                             user_liked_count=user_count_info['user_liked_count'],
+                             ))
+        return data
 
     def add_customer_manager(self, user_id, department_id_or_obj, end_date, vip_info='', sort_num=0, qq=None, entry_time=None, mobile=None,
                              real_name=None, id_card=None, id_cert=None, des=None):
@@ -167,7 +178,7 @@ class CustomerManagerBase(object):
         return 0, dict_err.get(0)
 
     def get_customer_managers_by_city_id(self, city_id):
-        cms = list(CustomerManager.objects.filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True))
+        cms = list(CustomerManager.objects.select_related('department').filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True))
 
         return cms
 
