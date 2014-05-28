@@ -82,6 +82,7 @@ $(document).ready(function(){
 
         events: {
             'click .search-user': 'searchUser',
+            'click .chart': 'showChart'
         },
 
         initialize: function(){
@@ -109,6 +110,30 @@ $(document).ready(function(){
             var userNick = this.$('.key-word').val();
 
             router.navigate('/search/' + userNick + '/1', {trigger: true});
+        },
+
+        showChart: function(){
+            var today = new Date(),
+                month = today.getMonth() + 1,
+                monthDays = new Date(today.getFullYear(), month, 0).getDate();
+
+            $.ZXChart.lineChart({
+                title: month + '月份活跃用户',
+                subtitle: '',
+                categories: _.map(_.range(1, monthDays+1), function(d){return  d}),
+                xAxis: '日期',
+                yAxis: '人数',
+                series: [{
+                    name: '一月份',
+                    data: _.map(_.range(1, monthDays+1), function(d){return Math.random()*300})
+                }, {
+                    name: '二月份',
+                    data: _.map(_.range(1, monthDays+1), function(d){return Math.random()*300})
+                }, {
+                    name: '三月份',
+                    data: _.map(_.range(1, monthDays+1), function(d){return Math.random()*300})
+                }]
+            })
         }
 
     });
@@ -169,7 +194,7 @@ $(document).ready(function(){
                     <th>推荐用户</th>
                     <th>客户经理</th>
                     <th>管理员</th>
-                    <th>上次活跃时间</th>
+                    <th><a class="chart" href="#">上次活跃时间</a></th>
                 </tr>
             </thead>
             <tbody>

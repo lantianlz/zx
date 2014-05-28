@@ -90,3 +90,11 @@ urlpatterns += patterns('www.admin.views_friendly_link',
                         url(r'^friendly_link/search$', 'search'),
                         url(r'^friendly_link$', 'friendly_link'),
                         )
+
+
+# 统计
+urlpatterns += patterns('www.admin.views_statistics',
+                        url(r'^statistics/get_active_user$', 'get_active_user'),
+                        url(r'^statistics/active_user$', 'active_user'),
+                        url(r'^statistics/register_user$', 'register_user'),
+                        )

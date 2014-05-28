@@ -467,6 +467,10 @@ class UserBase(object):
 
         return format_user
 
+    def get_active_users(self, date):
+
+        return LastActive.objects.filter(last_active_time__gte=date)
+
 
 class InvitationBase(object):
 

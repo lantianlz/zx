@@ -1110,8 +1110,8 @@ if (!String.format) {
 
             // 防止超出范围
             temp = this._protectRange(min, max, 1, total);
-            min = temp[0]
-            max = temp[1]
+            min = temp[0];
+            max = temp[1];
 
             // 维持列表在 totalStep-1 这个长度
             var tempCount = max - min + 2;
@@ -1175,7 +1175,7 @@ if (!String.format) {
         version: '1.0.0',
         author: 'stranger',
         description: '文本框组件'
-    }
+    };
     /**/
     $.ZXTextboxList.create = function(selector, options){
         var temp = new $.TextboxList(selector, {
@@ -1210,7 +1210,97 @@ if (!String.format) {
                 return _.map(temp.getValues(), function(v){return v[0]});
             }
         };
-    }
+    };
+
+
+    /* 
+        弹窗插件
+    */
+    $.ZXChart = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '图标插件'
+    };
+    /*
+        通用alert框
+        alertTitle: 弹出框的标题
+        alertMsg: 弹出框的描述
+        delayCloseSeconds: 延迟几秒之后自动关闭
+
+        用例:
+        $.ZXMsg.alert('提示', '操作成功!');
+        $.ZXMsg.alert('提示', '操作成功, 5秒后自动关闭!', 5000);
+    */
+    $.ZXChart.lineChart = function(_options){
+        var options = $.extend(true, {
+                title: '',
+                subtitle: '',
+                categories: [],
+                xAxis: '',
+                yAxis: '',
+                series: []
+            }, _options),
+
+            chartHtml = [
+                '<div class="modal fade" id="chart_modal" tabindex="-1" role="dialog">',
+                    '<div class="modal-dialog" style="width: 1000px;">',
+                        '<div class="modal-content">',
+                            '<div class="modal-header pb-5">',
+                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
+                                '<h4 class="modal-title">'+options.title+'</h4>',
+                            '</div>',
+                            '<div class="modal-body" id="chart_body"  style="width: 1000px;">',
+                                
+                            '</div>',
+                        '</div>',
+                    '</div>',
+                '</div>'
+            ].join('');
+
+        // 将chart框添加进body
+        $('body').append(chartHtml);
+        
+        // 关闭之后清除掉自己
+        $('#chart_modal').on('hidden.bs.modal', function(e){
+            $(this).remove();
+        });
+
+        var _chart = $('#chart_body').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: options.title,
+                x: -20 //center
+            },
+            subtitle: {
+                text: options.subtitle,
+                x: -20
+            },
+            xAxis: {
+                title: {
+                    text: options.xAxis
+                },
+                categories: options.categories
+            },
+            yAxis: {
+                title: {
+                    text: options.yAxis
+                }
+            },
+            // legend: {
+            //     layout: 'vertical',
+            //     align: 'right',
+            //     verticalAlign: 'middle',
+            //     borderWidth: 0
+            // },
+            series: options.series
+        });
+
+        // 显示chart框
+        $('#chart_modal').modal({'show': true, 'backdrop': 'static'});
+        
+    };
 
 
 })(jQuery);
