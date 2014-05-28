@@ -30,6 +30,7 @@ class Department(models.Model):
     name = models.CharField(max_length=128, unique=True)
     unique_id = models.IntegerField(unique=True)
     des = models.TextField(null=True)
+    cm_count = models.IntegerField(verbose_name=u'入驻客户经理数量', default=0, db_index=True)
 
     img = models.CharField(max_length=128)
     img_alt = models.CharField(max_length=256, null=True)
@@ -47,7 +48,7 @@ class Department(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-sort_num", "id"]
+        ordering = ["-sort_num", "-cm_count", "id"]
 
     def get_url(self):
         return '/kaihu/department_detail/%s' % self.id

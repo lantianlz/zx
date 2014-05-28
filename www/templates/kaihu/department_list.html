@@ -29,21 +29,7 @@ $(document).ready(function(){
     });
 
     var CustomerManager = Backbone.Model.extend({
-        defaults: {
-            'userId': '1',
-            'userNick': '',
-            'userAvatar': '',
-            'departmentName': '',
-            'departmentShortName': '',
-            'departmentId': '',
-            'vipInfo': '',
-            'sort': '',
-            'qq': '',
-            'mobile': '',
-            'questionCount': '0',
-            'answerCount': '0',
-            'likeCount': '0'
-        }
+        defaults: {}
     });
 
     var CustomerManagers = Backbone.Collection.extend({
@@ -54,20 +40,17 @@ $(document).ready(function(){
             'userId': 'user_id',
             'userNick': 'user_nick',
             'userAvatar': 'user_avatar',
-            'cityName': 'city_name',
             'cityId': 'city_id',
             'departmentName': 'department_name',
-            'departmentShortName': 'department_short_name',
+            'companyShortName': 'company_short_name',
             'departmentId': 'department_id',
-            'sort': 'sort',
+            'sort': 'sort_num',
             'vipInfo': 'vip_info',
-            'endDate': 'end_date',
             'qq': 'qq',
             'mobile': 'mobile',
-            'state': 'state',
-            'questionCount': 'question_count',
-            'answerCount': 'answer_count',
-            'likeCount': 'like_count'
+            'questionCount': 'user_question_count',
+            'answerCount': 'user_answer_count',
+            'likeCount': 'user_liked_count'
         },
 
         getMore: function(pageIndex){
@@ -75,12 +58,11 @@ $(document).ready(function(){
             
             g_ajax_processing_obj_id = $('.btn-get-more').setUUID().attr('id');
             ajaxSend(
-                "/admin/customer_manager/search", 
-                {'user_nick': '', 'city_name': '', 'page_index': pageIndex||1}, 
+                "/kaihu/get_customer_manager", 
+                {city_id: '{{city.id}}', 'page': pageIndex||1}, 
                 function(data){
                     me.pageIndex = parseInt(pageIndex) + 1;
-
-                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                    me.reset($.ZXUtils.dictMapParse(data, me._modelMaps))
                 }
             );
         }
@@ -102,7 +84,6 @@ $(document).ready(function(){
 
         render: function(){
             var data = this.collection.toJSON();
-            
             if(data.length > 0){
                 this.$('.btn-get-more').data('page_index', this.collection.pageIndex);
                 this.$('.get-more').before(this.template({'customerManagers': data}));
@@ -146,15 +127,15 @@ $(document).ready(function(){
 <ul class="customer-managers list-inline row pl-20 pr-20 pt-5">
     {% for cm in customer_managers %}
     <li class="col-md-6 col-xs-12 bottom-border bdc-eee pb-10 pt-10">
-        <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}"><img class="pa avatar-75 avatar-circle" alt="{{cm.user.nick}}" src="{{cm.user.get_avatar_65}}"></a>
+        <a href="{{MAIN_DOMAIN}}/p/{{cm.user_id}}"><img class="pa avatar-75 avatar-circle" alt="{{cm.user_nick}}" src="{{cm.user_avatar}}"></a>
         <div class="pl-100 row pr-10">
             <div class="pb-5">
-                <a href="{{MAIN_DOMAIN}}{{cm.user.get_url}}">{{cm.user.nick}}</a>
+                <a href="{{MAIN_DOMAIN}}/p/{{cm.user_id}}">{{cm.user_nick}}</a>
             </div>
             <div class="pb-5">
-                <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/questions">{{cm.user.user_count_info.user_question_count}}</a></span>
-                <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/{{cm.user.id}}/answers">{{cm.user.user_count_info.user_answer_count}}</a></span>
-                <span class="pr-10">赞 <a href="javascript:void(0);">{{cm.user.user_count_info.user_liked_count}}</a></span>
+                <span class="pr-10">提问 <a href="{{MAIN_DOMAIN}}/p/{{cm.user_id}}/questions">{{cm.user_question_count}}</a></span>
+                <span class="pr-10">回答 <a href="{{MAIN_DOMAIN}}/p/{{cm.user_id}}/answers">{{cm.user_answer_count}}</a></span>
+                <span class="pr-10">赞 <a href="javascript:void(0);">{{cm.user_liked_count}}</a></span>
             </div>
             <div class="pb-5 co6 f13">
                 <span class="glyphicon glyphicon-fire f18 pr-3 co19"></span>{{cm.vip_info|default:"暂无认证信息"}}
@@ -162,7 +143,7 @@ $(document).ready(function(){
         </div>
         <div class="pt-10">
             <span class="pl-5">
-                {{cm.department.company.get_short_name}}
+                {{cm.company_short_name}}
             </span>
             
             <span class="pl-25">
@@ -204,7 +185,7 @@ $(document).ready(function(){
         </div>
         <div class="pt-10">
             <span class="pl-5">
-                <%= customerManager.departmentShortName %>
+                <%= customerManager.companyShortName %>
             </span>
             
             <span class="pl-25">
@@ -233,7 +214,11 @@ $(document).ready(function(){
         </div>
         <div class="col-md-9 col-xs-12">
             <div>
-                <a class="f16" href="{{department.get_url}}">{{department.get_short_name}}</a><span class="pointer ml-5 badge zx-tooltip" data-toggle="tooltip" data-placement="right" data-original-title="共 4 位成员" data-trigger="hover" title="">42</span>
+                <a class="f16" href="{{department.get_url}}">{{department.get_short_name}}</a>
+                {% if department.cm_count > 0 %}
+                <span class="pointer ml-5 badge zx-tooltip" data-toggle="tooltip" 
+                    data-placement="right" data-original-title="共 {{department.cm_count}} 位成员" data-trigger="hover" title="">{{department.cm_count}}</span>
+                {% endif %}
                 <a href="javascript:void(0);" class="co8 f12 pull-right showMap"><span class="glyphicon glyphicon-map-marker"></span>查看地图</a>
             </div>
             <div class="pt-10">联系电话：{{department.tel}}</div>

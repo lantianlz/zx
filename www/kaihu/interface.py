@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from django.db import transaction
 
 from common import cache, debug
 from www.misc.decorators import cache_required
@@ -16,6 +17,8 @@ dict_err = {
     50103: u'找不到指定友情链接',
 }
 dict_err.update(consts.G_DICT_ERROR)
+
+KAIHU_DB = 'kaihu'
 
 
 class CityBase(object):
@@ -106,7 +109,7 @@ class CustomerManagerBase(object):
         for obj in objs:
             obj.user = UserBase().get_user_by_id(obj.user_id)
             obj.user.user_count_info = UserCountBase().get_user_count_info(obj.user_id)
-            # obj.department = DepartmentBase().get_department_by_id(obj.department.id)
+            obj.department = DepartmentBase().get_department_by_id(obj.department.id)   # 得到city信息
         return objs
 
     def format_customer_managers_for_ajax(self, objs):
@@ -115,35 +118,43 @@ class CustomerManagerBase(object):
             user = UserBase().get_user_by_id(obj.user_id)
             user_count_info = UserCountBase().get_user_count_info(obj.user_id)
             data.append(dict(user_id=user.id, user_nick=user.nick, user_avatar=user.get_avatar_65(),
-                             department_name=obj.department.name, company_short_name=obj.department.company.name, department_id=obj.department.id,
-                             sort_num=obj.sort_num, vip_info=obj.vip_info, qq=obj.qq, mobile=obj.mobile,
+                             department_name=obj.department.get_short_name(), company_short_name=obj.department.company.get_short_name(),
+                             department_id=obj.department.id, city_id=obj.city_id,
+                             sort_num=obj.sort_num, vip_info=obj.vip_info, qq=obj.qq, mobile=obj.mobile, pay_type=obj.pay_type,
                              user_question_count=user_count_info['user_question_count'], user_answer_count=user_count_info['user_answer_count'],
                              user_liked_count=user_count_info['user_liked_count'],
                              ))
         return data
 
+    @transaction.commit_manually(using=KAIHU_DB)
     def add_customer_manager(self, user_id, department_id_or_obj, end_date, vip_info='', sort_num=0, qq=None, entry_time=None, mobile=None,
                              real_name=None, id_card=None, id_cert=None, des=None):
-        if not (user_id and department_id_or_obj and end_date):
-            return 99800, dict_err.get(99800)
-
-        user = UserBase().get_user_by_id(user_id)
-        if not user:
-            return 50100, dict_err.get(50100)
-
-        department = department_id_or_obj if isinstance(department_id_or_obj, Department) else DepartmentBase().get_department_by_id(department_id_or_obj)
-        if not department:
-            return 50101, dict_err.get(50101)
-
         try:
+            if not (user_id and department_id_or_obj and end_date):
+                return 99800, dict_err.get(99800)
+
+            user = UserBase().get_user_by_id(user_id)
+            if not user:
+                return 50100, dict_err.get(50100)
+
+            department = department_id_or_obj if isinstance(department_id_or_obj, Department) else DepartmentBase().get_department_by_id(department_id_or_obj)
+            if not department:
+                return 50101, dict_err.get(50101)
+
             CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id,
                                            qq=qq, entry_time=entry_time, mobile=mobile, vip_info=vip_info,
                                            real_name=real_name, id_card=id_card, id_cert=id_cert, des=des)
+
+            # 更新营业部冗余字段
+            department.cm_count += 1
+            department.save()
+
+            transaction.commit(using=KAIHU_DB)
+            return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
+            transaction.rollback(using=KAIHU_DB)
             return 99900, dict_err.get(99900)
-
-        return 0, dict_err.get(0)
 
     def modify_customer_manager(self, user_id, **kwargs):
         if not user_id:
@@ -179,7 +190,12 @@ class CustomerManagerBase(object):
 
     def get_customer_managers_by_city_id(self, city_id):
         cms = list(CustomerManager.objects.select_related('department').filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True))
+        cms = self.format_customer_managers_for_ajax(cms)
 
+        # 排序方法，按照两个维度，付费类型和赞
+        def _cmp(x, y):
+            return - 1 if (x['pay_type'] > y['pay_type'] or (x['pay_type'] == y['pay_type'] and x['user_liked_count'] > y['user_liked_count'])) else 1
+        cms.sort(cmp=_cmp)
         return cms
 
     def get_customer_managers_by_department(self, department):
@@ -202,13 +218,27 @@ class CustomerManagerBase(object):
 
         return objs
 
+    @transaction.commit_manually(using=KAIHU_DB)
     def remove_customer_manager(self, user_id):
-        obj = self.get_customer_manager_by_user_id(user_id)
-        if obj:
-            obj.delete()
-            return 0, dict_err.get(0)
+        try:
+            obj = self.get_customer_manager_by_user_id(user_id)
+            if obj:
+                obj.delete()
 
-        return 50100, dict_err.get(50100)
+                # 更新营业部冗余字段
+                department = obj.department
+                department.cm_count -= 1
+                department.save()
+
+                transaction.commit(using=KAIHU_DB)
+                return 0, dict_err.get(0)
+            else:
+                transaction.commit(using=KAIHU_DB)
+                return 50100, dict_err.get(50100)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=KAIHU_DB)
+            return 99900, dict_err.get(99900)
 
 
 class FriendlyLinkBase(object):
