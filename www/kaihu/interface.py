@@ -128,7 +128,7 @@ class CustomerManagerBase(object):
 
     @transaction.commit_manually(using=KAIHU_DB)
     def add_customer_manager(self, user_id, department_id_or_obj, end_date, vip_info='', sort_num=0, qq=None, entry_time=None, mobile=None,
-                             real_name=None, id_card=None, id_cert=None, des=None):
+                             real_name=None, id_card=None, id_cert=None, des=None, pay_type=0):
         try:
             if not (user_id and department_id_or_obj and end_date):
                 return 99800, dict_err.get(99800)
@@ -143,7 +143,7 @@ class CustomerManagerBase(object):
 
             CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id,
                                            qq=qq, entry_time=entry_time, mobile=mobile, vip_info=vip_info,
-                                           real_name=real_name, id_card=id_card, id_cert=id_cert, des=des)
+                                           real_name=real_name, id_card=id_card, id_cert=id_cert, des=des, pay_type=pay_type)
 
             # 更新营业部冗余字段
             department.cm_count += 1
