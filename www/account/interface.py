@@ -413,7 +413,7 @@ class UserBase(object):
         '''
         cache_obj = cache.Cache()
         # 一小时更新一次
-        if not cache_obj.get_time_is_locked(key=u'last_active_time', time_out=3600):
+        if not cache_obj.get_time_is_locked(key=u'last_active_time_%s' % user_id, time_out=3600):
             try:
                 la = LastActive.objects.get(user_id=user_id)
                 la.ip = ip
