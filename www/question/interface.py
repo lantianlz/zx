@@ -256,7 +256,6 @@ class QuestionBase(object):
         return self.get_question_by_user_id(user_id).count()
 
     def get_all_important_question(self):
-        # return Question.objects.filter(is_important=True, state=True).order_by('-id')
         questions = []
         important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True)
         for iq in important_questions:
