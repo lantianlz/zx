@@ -153,8 +153,6 @@ $(document).ready(function(){
     });
 
 
-
-
     // backbone 方式定义事件
     // ================== 问题邀请事件绑定开始 ==================
     var QuestionInviteView = Backbone.View.extend({

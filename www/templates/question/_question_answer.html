@@ -20,7 +20,9 @@
             </span>
         </div>
     </div>
+
     <!-- 赞同人列表 -->
+    {% if answer.like_count > 0 %}
     <div class="f12 pl-50 co8 liked-persons pb-5 pr-45">
         {% for like in answer.likes %}
         <a class="gray-gray zx-cardtips" href="{{like.from_user.get_url}}" class="zx-cardtips" data-user_id="{{like.from_user.id}}">{{like.from_user.nick}}</a>{% if not forloop.last %}、{% endif %}
@@ -31,6 +33,10 @@
         <span class="gray-gray">赞同</span>
         {% endif %}
     </div>
+    {% else %}
+   <div class="h15"></div>
+    {% endif %}
+
     <div class="reply-main row">
         <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
     </div>
