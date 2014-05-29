@@ -29,7 +29,8 @@ $(document).ready(function(){
             'endDate': '',
             'qq': '',
             'mobile': '',
-            'state': ''
+            'state': '',
+            'pay_type': ''
         }
 
     });
@@ -52,7 +53,8 @@ $(document).ready(function(){
             'endDate': 'end_date',
             'qq': 'qq',
             'mobile': 'mobile',
-            'state': 'state'
+            'state': 'state',
+            'payType': 'pay_type'
         },
 
         // 查询
@@ -473,10 +475,10 @@ $(document).ready(function(){
 <!-- 客户经理列表 -->
 <script type="text/template" id="customer_manager_template">
     <% _.each(customerManagers, function(customerManager){ %>
-        <tr class="pointer" data-user_id="<%= customerManager.userId %>">
+        <tr>
             <td><%= customerManager.num %></td>
-            <td><img src="<%= customerManager.userAvatar %>" class="avatar-35 avatar-circle" ></td>
-            <td><%= customerManager.userNick %></td>
+            <td><a target="_blank" href="/p/<%= customerManager.userId %>"><img src="<%= customerManager.userAvatar %>" class="avatar-35 avatar-circle" ></a></td>
+            <td class="pointer" data-user_id="<%= customerManager.userId %>"><%= customerManager.userNick %></td>
             <td><%= customerManager.cityName %></td>
             <td><%= customerManager.departmentName %></td>
             <td><%= customerManager.sort %></td>
@@ -514,6 +516,12 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">认证到期时间</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name='end_date' id="end_date_modify" value='<%= endDate %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">QQ</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" name="qq" value='<%= qq %>'>
@@ -526,9 +534,14 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">认证到期时间</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" name='end_date' id="end_date_modify" value='<%= endDate %>'>
+            <label class="col-sm-2 control-label">付费类型</label>
+            <div class="col-sm-9">
+                <label class="checkbox-inline pl-40">
+                    <input type="radio" name="pay_type" value="0" <% if(payType=="0"){ %>checked<% } %> > 未付费
+                </label>
+                <label class="checkbox-inline pl-40">
+                    <input type="radio" name="pay_type" value="1" <% if(payType=="1"){ %>checked<% } %> > 普通付费
+                </label>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -577,6 +590,12 @@ $(document).ready(function(){
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">认证到期时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name='end_date' id="end_date_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-3 control-label">QQ</label>
                         <div class="col-sm-3">
                             <input type="text" class="form-control" name="qq" value=''>
@@ -589,12 +608,16 @@ $(document).ready(function(){
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">认证到期时间</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name='end_date' id="end_date_add" value=''>
+                        <label class="col-sm-2 control-label">付费类型</label>
+                        <div class="col-sm-9">
+                            <label class="checkbox-inline pl-40">
+                                <input type="radio" name="pay_type" value="0" checked> 未付费
+                            </label>
+                            <label class="checkbox-inline pl-40">
+                                <input type="radio" name="pay_type" value="1"> 普通付费
+                            </label>
                         </div>
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer">

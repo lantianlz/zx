@@ -36,13 +36,13 @@ a.list-group-item.active{
     color: white;
     padding-left: 20px;
 }
-.list-group-item:hover>a{
+.list-group-item:hover>span{
     color: #fff;
 }
 .list-group-item.active{
     background-color: #428bca;
 }
-.list-group-item.active>a{
+.list-group-item.active>span{
     color: #fff;
 }
 
@@ -122,15 +122,15 @@ a.list-group-item.active{
         
         <!-- 二级导航样式 -->
         <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/statistics' in request.path %}active{% endif %}">
-            <a class="co2" href="/admin/permission">统计管理
-                <span class="glyphicon glyphicon-chevron-right pull-right f12 mt-3"></span>
-            </a>
+            <span class="co21">统计管理</span><span class="glyphicon glyphicon-chevron-right pull-right f12 mt-3 co21"></span>
+            
             <ul class="sub-admin-nav list-group pa none box-shadow-224">
                 <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/statistics/active_user' in request.path %}active{% endif %}" href="/admin/statistics/active_user">当日活跃用户统计</a>
                 
                 <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/statistics/register_user' in request.path %}active{% endif %}" href="/admin/statistics/register_user">注册用户统计</a>
             </ul>
         </li>
+        
     </ul>
 </div>
 

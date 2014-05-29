@@ -295,6 +295,7 @@ $(document).ready(function(){
             'click .answer-edit': 'editAnswer',
             'click .answer-remove': 'removeAnswer',
             'click .answer-like-border': 'likeAnswer',
+            'click .liked-persons .get-more': 'getMoreLikedPersons',
             'mouseenter': 'showAnswerTools',
             'mouseleave': 'hideAnswerTools',
             'mouseenter .answer-like-border': 'showHeart',
@@ -461,6 +462,33 @@ $(document).ready(function(){
                     );
                 }
             });
+        },
+
+        // 获取所有点赞的人
+        getMoreLikedPersons: function(sender){
+            var target = $(sender.currentTarget),
+                template = '<a class="gray-gray zx-cardtips" href="/p/{0}" class="zx-cardtips" data-user_id="{1}">{2}</a>'
+                answerId = target.data('answer_id');
+
+            // 设置ajax元素id,防止多次点击
+            // g_ajax_processing_obj_id = target.setUUID().attr('id');
+
+            // ajaxSend(
+            //     "/question/remove_answer", 
+            //     {'answer_id': answerId}, 
+            //     function(data){
+                    var data = [{'user_id': '1', 'user_nick': '测试1'}, {'user_id': '2', 'user_nick': '测试2'}];
+                    target.parent().html(
+                        _.map(data, function(p){
+                            return String.format(template, p.user_id, p.user_id, p.user_nick)
+                        }).join('、')
+                    )
+            //     }
+            // );
+
+            // 注册名片事件
+            $.ZXTooltipster.PersonCard();
+
         },
 
         // 显示回答工具条

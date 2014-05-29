@@ -20,6 +20,7 @@ def active_user(request, template_name='admin/statistics_active_user.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+@verify_permission('statistics_active_user')
 def get_active_user(request):
     page_index = int(request.REQUEST.get('page_index', 1))
 

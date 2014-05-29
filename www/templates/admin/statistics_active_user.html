@@ -157,7 +157,7 @@ $(document).ready(function(){
     <% _.each(users, function(user){ %>
     <tr>
         <td><%= user.num %></td>
-        <td><img src="<%= user.userAvatar %>" class="avatar-35 avatar-circle" ></td>
+        <td><a target="_blank" href="/p/<%= user.userId %>"><img src="<%= user.userAvatar %>" class="avatar-35 avatar-circle" ></a></td>
         <td><%= user.userNick %></td>
         <td><%= user.userDesc %></td>
         <td>

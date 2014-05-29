@@ -2,10 +2,10 @@
 {% load custom_filters %}
 <li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-eee" id="answer_{{answer.id}}" data-answer_id="{{answer.id}}">
     <div class="reply-header row">
-        <div class="col-md-9 col-xs-8">
-            <a class="no-hover-unl" href="{{answer.from_user.get_url}}">
-                <img class="avatar-25 avatar-circle" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_25}}" title="{{answer.from_user.nick}}" />
-            </a>
+        <a class="no-hover-unl pa" href="{{answer.from_user.get_url}}">
+            <img class="avatar-45 avatar-circle" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_25}}" title="{{answer.from_user.nick}}" />
+        </a>
+        <div class="pl-50 col-md-9 col-xs-8">
             <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
                 <span class="f12">{{answer.from_user.nick}}</span>
             </a>
@@ -19,6 +19,13 @@
                 <span class="answer-like-count">{{answer.like_count}}</span>
             </span>
         </div>
+    </div>
+    <!-- 赞同人列表 -->
+    <div class="f12 pl-40 co8 liked-persons pb-5">
+        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">呵呵</a>、
+        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">哈哈</a>、
+        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">嘻嘻</a>
+        <a class="gray-gray get-more" data-answer_id="{{answer.id}}" href="javascript:void(0)">等人赞同</a>
     </div>
     <div class="reply-main row">
         <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>

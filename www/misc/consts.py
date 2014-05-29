@@ -55,4 +55,8 @@ PERMISSIONS = [
     {'code': 'query_friendly_link', 'name': u'查询友情链接', 'parent': 'friendly_link_manage'},
     {'code': 'modify_friendly_link', 'name': u'修改友情链接', 'parent': 'friendly_link_manage'},
     {'code': 'remove_friendly_link', 'name': u'删除友情链接', 'parent': 'friendly_link_manage'},
+
+    {'code': 'statistics_manage', 'name': u'统计管理', 'parent': None},
+    {'code': 'statistics_active_user', 'name': u'当日活跃用户统计', 'parent': 'statistics_manage'},
+    {'code': 'statistics_register_user', 'name': u'注册用户统计', 'parent': 'statistics_manage'},
 ]

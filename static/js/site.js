@@ -937,7 +937,7 @@ if (!String.format) {
         需要设置 data-topic_id 属性为话题id
 
         用例:
-        $.ZXTooltipster.PersonCard();
+        $.ZXTooltipster.TopicCard();
     */
     $.ZXTooltipster.TopicCard = function(){
         // 弹出话题名片设置
