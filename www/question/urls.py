@@ -26,4 +26,5 @@ urlpatterns = patterns('www.question.views',
                        url(r'^cancel_important$', 'cancel_important'),
                        url(r'^set_answer_bad$', 'set_answer_bad'),
                        url(r'^cancel_answer_bad$', 'cancel_answer_bad'),
+                       url(r'^get_answer_like$', 'get_answer_like'),
                        )
