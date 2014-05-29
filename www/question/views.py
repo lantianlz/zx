@@ -232,7 +232,6 @@ def get_topic_info_by_id(request):
         if tag:
             infos = dict(domain=tag.domain, name=tag.name, img=tag.get_img(), des=tag.des or u'',
                          tag_question_count=tag.get_tag_question_count())
-
     return HttpResponse(json.dumps(infos), mimetype='application/json')
 
 
@@ -246,5 +245,4 @@ def get_answer_like(request):
     if answer_id:
         likes = lb.format_likes(lb.get_likes_by_answer(answer_id))
         data = [dict(user_id=like.from_user.id, user_nick=like.from_user.nick) for like in likes]
-
     return HttpResponse(json.dumps(data), mimetype='application/json')

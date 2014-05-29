@@ -486,8 +486,6 @@ $(document).ready(function(){
                     $.ZXTooltipster.PersonCard();
                 }
             );
-
-
         },
 
         // 显示回答工具条
