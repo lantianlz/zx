@@ -1,14 +1,15 @@
 {% load custom_tags %}
 {% load custom_filters %}
+
 <li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-transparent pt-0 pr-0" id="answer_{{answer.id}}" data-answer_id="{{answer.id}}">
-    <a class="no-hover-unl pa pinned like" style="left: 0px;" href="javascript:void(0);" title="为Ta亮灯" data-answer_id="{{answer.id}}">
+    <a class="no-hover-unl pa pinned like" style="left:0;" href="javascript:void(0);" title="为Ta亮灯" data-answer_id="{{answer.id}}">
         <span class="pr bdc-999 bgc-999 border-4 inline-block img-circle box-shadow-204 z100 {% if answer.is_request_user_like %}light{% endif %}">
-            <img class="avatar-55 avatar-circle no-avatar-shadow" style="z-index: 3;" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_65}}" />
+            <img class="avatar-55 avatar-circle no-avatar-shadow" style="z-index:3;" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_65}}" />
         </span>
         <span class="pr f12 fb pb-0 pt-3 co3 text-center bgc-999 z99 inline-block w30 box-shadow-113 answer-like-count {% if answer.is_request_user_like %}light{% endif %}" style="left: -50px; top: 39px;  border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">{{answer.like_count}}</span>
     </a>
-    <div class="ml-45 pl-15 bdc-eee top-border pt-10">
-        <div class="">
+    <div class="ml-45-md pl-15-md bdc-eee top-border pt-10">
+        <div class="pl-55-xs">
             <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
                 <span class="f12">{{answer.from_user.nick}}</span>
             </a>
@@ -17,12 +18,21 @@
             </span>
         </div>
         <!-- 赞同人列表 -->
-        <div class="f12 co8 liked-persons pb-5 pr-45">
-            <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">呵呵</a>、
-            <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">哈哈</a>、
-            <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">嘻嘻</a>
-            <a class="gray-gray get-more" data-answer_id="{{answer.id}}" href="javascript:void(0)">等人赞同</a>
+        {% if answer.like_count > 0 %}
+        <div class="f12 co8 liked-persons pl-55-xs pb-5 pr-45">
+            {% for like in answer.likes %}
+            <a class="gray-gray zx-cardtips" href="{{like.from_user.get_url}}" class="zx-cardtips" data-user_id="{{like.from_user.id}}">{{like.from_user.nick}}</a>{% if not forloop.last %}、{% endif %}
+            {% endfor %}
+            {% if answer.like_count > 3 %}
+            <a class="gray-gray get-more" data-answer_id="{{answer.id}}" href="javascript:void(0)">等 {{answer.like_count}} 人为Ta亮灯</a>
+            {% else %}
+            <span class="gray-gray">为Ta亮灯</span>
+            {% endif %}
         </div>
+        {% else %}
+        <div class="h15"></div>
+        {% endif %}
+
         <div class="reply-main row">
             <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
         </div>
@@ -73,4 +83,5 @@
             {% endif %}
         </div>
     </div>
+
 </li>

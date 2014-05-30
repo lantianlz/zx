@@ -3,6 +3,7 @@
 import base64
 import json
 import urllib
+import os
 
 from django.http import HttpResponse, Http404
 from django.template import RequestContext
@@ -18,6 +19,10 @@ def static_view(request, template_name):
     '''
     @note: 静态模板采用通用目录
     '''
+    file_name = os.path.abspath(os.path.join(settings.SITE_ROOT, './templates/static_templates/%s.html' % template_name))
+    if not os.path.exists(file_name):
+        raise Http404
+
     return render_to_response('static_templates/%s.html' % template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -25,7 +30,6 @@ def txt_view(request, txt_file_name):
     '''
     @note: txt文件展示，主要是提供给搜索引擎
     '''
-    import os
     file_name = os.path.abspath(os.path.join(settings.SITE_ROOT, '../static_local/%s.txt' % txt_file_name))
     if not os.path.exists(file_name):
         raise Http404

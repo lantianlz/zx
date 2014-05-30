@@ -11,7 +11,7 @@
 
                 if (options.minWidth && $window.width() <= options.minWidth) {
                     if ($this.parent().is(".pin-wrapper")) { $this.unwrap(); }
-                    $this.css({width: "", left: "", top: "", position: ""});
+                    $this.css({width: "", left: "0", top: "", position: ""});
                     disabled = true;
                     continue;
                 } else {
