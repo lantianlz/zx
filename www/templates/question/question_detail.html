@@ -28,7 +28,7 @@ $(document).ready(function(){
 <span class="jinghua">
     <img alt="精华" src="{{MEDIA_URL}}img/common/jinghua1.png"></span>
 
-<ol class="breadcrumb">
+<ol class="breadcrumb ml-60">
     <li>
         <a href="/question">全部</a>
     </li>
@@ -38,7 +38,7 @@ $(document).ready(function(){
     <li class="active">{{question.title|str_display:8}}</li>
 </ol>
 <div class="question-entry">
-    <div class="topic pl-15 pr-15 pb-10">
+    <div class="topic pl-15 pr-15 pb-10 ml-60 bottom-border bdc-eee">
         <div class="topic-title">
             <h4 class="f22"> <strong>{{question.title}}</strong>
             </h4>
@@ -212,8 +212,8 @@ $(document).ready(function(){
     </div>
 
 <div class="replies w">
-    <ul class="list-group top-border bdc-eee" id="ul_replies">
-        <li class="list-group-item no-l-r-bd bdc-eee">
+    <ul class="list-group" id="ul_replies">
+        <li class="list-group-item no-l-r-bd bdc-eee pl-75">
             <h4 class="mt-0 mb-0">共 {{good_answers_count}} 个回答</h4>
         </li>
         {% for answer in good_answers %}

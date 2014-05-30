@@ -152,7 +152,13 @@ $(document).ready(function(){
         }
     });
 
-
+    if(!$.browser.msie){
+        $(".pinned").pin({
+            containerSelector: ".list-group-item",
+            minWidth: 540
+        });
+    }
+    
 
 
     // backbone 方式定义事件
@@ -296,10 +302,39 @@ $(document).ready(function(){
             'click .answer-remove': 'removeAnswer',
             'click .answer-like-border': 'likeAnswer',
             'click .liked-persons .get-more': 'getMoreLikedPersons',
+            'click .like': 'like',
             'mouseenter': 'showAnswerTools',
             'mouseleave': 'hideAnswerTools',
             'mouseenter .answer-like-border': 'showHeart',
             'mouseleave .answer-like-border': 'hideHeart'
+        },
+
+        like: function(sender){
+            var target = $(sender.currentTarget),
+                me = this;
+
+            ajaxSend(
+                "/question/like_answer", 
+                {'answer_id': $(target).data('answer_id')}, 
+                function(data){
+                    if(data['errcode'] != '0'){
+                        $.ZXMsg.alert('提示', data['errmsg']);
+                        return;
+                    }
+
+                    // 操作成功执行动画
+                    target
+                    .children()
+                    .addClass('light');
+
+                    target.find('img').addClass('light-img');
+
+                    target.find('.answer-like-count')
+                    .text(parseInt(target.find('.answer-like-count').text()) + 1);
+                }
+            );
+
+            
         },
 
         // 赞动画

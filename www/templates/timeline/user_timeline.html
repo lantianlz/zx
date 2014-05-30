@@ -134,7 +134,9 @@
 
         <% if(feed.feedType == 3){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
+            <a style="" class="pa" href="javascript:void(0);">
+                <img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>">
+            </a>
             <div class="pl-55">
                 <div class="co8 f12">
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 回答了该提问

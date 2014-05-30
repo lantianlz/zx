@@ -1,11 +1,14 @@
 {% load custom_tags %}
 {% load custom_filters %}
-<li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-eee" id="answer_{{answer.id}}" data-answer_id="{{answer.id}}">
-    <div class="reply-header row pr">
-        <a class="no-hover-unl pa" style="left: 15px;" href="{{answer.from_user.get_url}}">
-            <img class="avatar-45 avatar-circle" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_25}}" title="{{answer.from_user.nick}}" />
-        </a>
-        <div class="pl-60 col-md-9 col-xs-9">
+<li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-transparent pt-0 pr-0" id="answer_{{answer.id}}" data-answer_id="{{answer.id}}">
+    <a class="no-hover-unl pa pinned like" style="left: 0px;" href="javascript:void(0);" title="为Ta亮灯" data-answer_id="{{answer.id}}">
+        <span class="pr bdc-999 bgc-999 border-4 inline-block img-circle box-shadow-204 z100 {% if answer.is_request_user_like %}light{% endif %}">
+            <img class="avatar-55 avatar-circle no-avatar-shadow" style="z-index: 3;" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_65}}" />
+        </span>
+        <span class="pr f12 fb pb-0 pt-3 co3 text-center bgc-999 z99 inline-block w30 box-shadow-113 answer-like-count {% if answer.is_request_user_like %}light{% endif %}" style="left: -50px; top: 39px;  border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">{{answer.like_count}}</span>
+    </a>
+    <div class="ml-45 pl-15 bdc-eee top-border pt-10">
+        <div class="">
             <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
                 <span class="f12">{{answer.from_user.nick}}</span>
             </a>
@@ -13,68 +16,61 @@
                 {% if answer.from_user.des %}({{answer.from_user.des|str_display:20}}){% endif %}
             </span>
         </div>
-        <div class="col-md-3 col-xs-3 text-right">
-            <span class="answer-like-border flash-border">
-                <span title="赞一下" class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like " ></span>
-                <span class="answer-like-count">{{answer.like_count}}</span>
-            </span>
+        <!-- 赞同人列表 -->
+        <div class="f12 co8 liked-persons pb-5 pr-45">
+            <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">呵呵</a>、
+            <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">哈哈</a>、
+            <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">嘻嘻</a>
+            <a class="gray-gray get-more" data-answer_id="{{answer.id}}" href="javascript:void(0)">等人赞同</a>
+        </div>
+        <div class="reply-main row">
+            <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
+        </div>
+        <div class="reply-tools gray-a">
+            <span class="co8">{{answer.create_time|time_format}}</span>
+            <a class="answer-share" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-share-alt"></span>
+                分享
+            </a>
+            {% if request.user.is_authenticated %}
+            <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}">
+                <span class="glyphicon glyphicon-share"></span>
+                回复
+            </a>
+            {% if answer.is_request_user_bad %}
+            <a class="answer-cancel-no-help auto-hide" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-thumbs-down"></span>
+                撤销没有帮助
+            </a>
+            {% else %}
+            <a class="answer-no-help auto-hide" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-thumbs-down"></span>
+                没有帮助
+            </a>
+            {% endif %}
+            <a class="answer-comments hide" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-comment"></span>
+                88条评论
+            </a>
+            <a class="answer-mark auto-hide hide" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-bookmark"></span>
+                收藏
+            </a>
+            <a class="answer-report auto-hide hide" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-flag"></span>
+                举报
+            </a>
+            {% if answer.from_user.id == request.user.id or request.user.is_staff %}
+            <a class="answer-remove auto-hide pull-right" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-trash"></span>
+                删除
+            </a>
+            <a class="answer-edit auto-hide pull-right" href="javascript: void(0);">
+                <span class="glyphicon glyphicon-pencil"></span>
+                修改
+            </a>
+            {% endif %}
+            {% endif %}
         </div>
     </div>
-    <!-- 赞同人列表 -->
-    <div class="f12 pl-50 co8 liked-persons pb-5 pr-45">
-        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">呵呵</a>、
-        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">哈哈</a>、
-        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">嘻嘻</a>
-        <a class="gray-gray get-more" data-answer_id="{{answer.id}}" href="javascript:void(0)">等人赞同</a>
-    </div>
-    <div class="reply-main row">
-        <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
-    </div>
-    <div class="reply-tools gray-a">
-        <span class="co8">{{answer.create_time|time_format}}</span>
-        <a class="answer-share" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-share-alt"></span>
-            分享
-        </a>
-        {% if request.user.is_authenticated %}
-        <a class="answer-say-to" href="javascript: void(0);" data-user_name="{{answer.from_user.nick}}">
-            <span class="glyphicon glyphicon-share"></span>
-            回复
-        </a>
-        {% if answer.is_request_user_bad %}
-        <a class="answer-cancel-no-help auto-hide" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-thumbs-down"></span>
-            撤销没有帮助
-        </a>
-        {% else %}
-        <a class="answer-no-help auto-hide" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-thumbs-down"></span>
-            没有帮助
-        </a>
-        {% endif %}
-        <a class="answer-comments hide" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-comment"></span>
-            88条评论
-        </a>
-        <a class="answer-mark auto-hide hide" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-bookmark"></span>
-            收藏
-        </a>
-        <a class="answer-report auto-hide hide" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-flag"></span>
-            举报
-        </a>
-        {% if answer.from_user.id == request.user.id or request.user.is_staff %}
-        <a class="answer-remove auto-hide pull-right" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-trash"></span>
-            删除
-        </a>
-        <a class="answer-edit auto-hide pull-right" href="javascript: void(0);">
-            <span class="glyphicon glyphicon-pencil"></span>
-            修改
-        </a>
-        {% endif %}
-        {% endif %}
-    </div>
-
 </li>

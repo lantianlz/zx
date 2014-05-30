@@ -394,7 +394,7 @@
   border: solid 1px #dddddd;
 }
 
-.reply-header .answer-like-count{
+/*.reply-header .answer-like-count{
   background-color: white;
   cursor: pointer;
   position: absolute;
@@ -406,21 +406,17 @@
   height: 100%;
   text-align: center;
   border: solid 1px #dddddd;
-}
+}*/
 
-.reply-header .answer-like-border{
-  /*background-color: white;*/
+/*.reply-header .answer-like-border{
   padding: 22px;
   position: absolute;
   right: 10px;
-  /*top: -10px;*/
   border-radius: 50%;
   cursor: pointer;
-  /*border: solid 1px #dddddd;*/
-  /*box-shadow: 0px 0px 0px 1px #dddddd;*/
-}
+}*/
 
-.reply-header .animate-like{
+/*.reply-header .animate-like{
   position: absolute;
   top: 5px;
   left: 2px;
@@ -429,7 +425,7 @@
   color: red;
   z-index: 99;
   cursor: pointer;
-}
+}*/
 
 .reply-tools{
   font-size: 12px;
@@ -542,3 +538,217 @@
   color: white;
 }
 
+
+.light-img{
+  opacity: 1;
+  -webkit-animation: light-img 3s ease-out;
+     -moz-animation: light-img 3s ease-out;
+      -ms-animation: light-img 3s ease-out;
+          animation: light-img 3s ease-out;
+}
+@-webkit-keyframes light-img{
+    0% {
+      opacity: 1;
+    }
+    6% {
+      opacity: 0;
+    }
+    80%{
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
+@-moz-keyframes light-img{
+    0% {
+      opacity: 1;
+    }
+    6% {
+      opacity: 0;
+    }
+    80%{
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
+@-ms-keyframes light-img{
+    0% {
+      opacity: 1;
+    }
+    6% {
+      opacity: 0;
+    }
+    80%{
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
+@keyframes light-img{
+    0% {
+      opacity: 1;
+    }
+    6% {
+      opacity: 0;
+    }
+    80%{
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
+
+
+.light{
+    background-color: #92D0F3;
+    border-color: #92D0F3;
+    -webkit-animation: light 3s ease-out;
+       -moz-animation: light 3s ease-out;
+        -ms-animation: light 3s ease-out;
+            animation: light 3s ease-out;
+}
+
+@-webkit-keyframes light{
+    0% {
+      background-color: #999;
+      border-color: #999;
+    }
+    15% {
+      background-color: #999;
+      border-color: #999;
+    }
+    25% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    28% {
+      background-color: #999;
+      border-color: #999;
+    }
+    31% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    34% {
+      background-color: #999;
+      border-color: #999;
+    }
+    60% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    100% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+}
+
+@-moz-keyframes light{
+    0% {
+      background-color: #999;
+      border-color: #999;
+    }
+    15% {
+      background-color: #999;
+      border-color: #999;
+    }
+    25% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    28% {
+      background-color: #999;
+      border-color: #999;
+    }
+    31% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    34% {
+      background-color: #999;
+      border-color: #999;
+    }
+    60% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    100% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+}
+
+@-ms-keyframes light{
+    0% {
+      background-color: #999;
+      border-color: #999;
+    }
+    15% {
+      background-color: #999;
+      border-color: #999;
+    }
+    25% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    28% {
+      background-color: #999;
+      border-color: #999;
+    }
+    31% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    34% {
+      background-color: #999;
+      border-color: #999;
+    }
+    60% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    100% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+}
+
+@keyframes light{
+    0% {
+      background-color: #999;
+      border-color: #999;
+    }
+    15% {
+      background-color: #999;
+      border-color: #999;
+    }
+    25% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    28% {
+      background-color: #999;
+      border-color: #999;
+    }
+    31% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    34% {
+      background-color: #999;
+      border-color: #999;
+    }
+    60% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+    100% {
+      background-color: #92D0F3;
+      border-color: #92D0F3;
+    }
+}
