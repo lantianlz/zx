@@ -17,7 +17,6 @@ lb = interface.LikeBase()
 tb = interface.TagBase()
 
 
-# @member_required
 def question_home(request, question_type=None, template_name='question/question_home.html'):
     if question_type:
         question_type = interface.QuestionTypeBase().get_question_type_by_id_or_domain(question_type)
@@ -35,7 +34,6 @@ def question_home(request, question_type=None, template_name='question/question_
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-# @member_required
 def question_detail(request, question_id, template_name='question/question_detail.html',
                     error_msg=None, success_msg=None, answer_content=''):
     question = qb.get_question_by_id(question_id)
@@ -124,7 +122,6 @@ def create_answer(request, question_id):
         return question_detail(request, question_id, error_msg=result, answer_content=answer_content)
 
 
-# @member_required
 def important_question(request, template_name='question/important_question.html'):
     questions = qb.get_all_important_question()
 
@@ -225,16 +222,27 @@ def cancel_answer_bad(request):
 
 def get_topic_info_by_id(request):
     '''
-    @note:根据话题id获取名片信息
+    @note: 根据话题id获取名片信息
     '''
-    topic_id = request.REQUEST.get('topic_id', None)
+    topic_id = request.REQUEST.get('topic_id')
 
     infos = {}
-
     if topic_id:
         tag = tb.get_tag_by_id(topic_id)
         if tag:
             infos = dict(domain=tag.domain, name=tag.name, img=tag.get_img(), des=tag.des or u'',
                          tag_question_count=tag.get_tag_question_count())
-
     return HttpResponse(json.dumps(infos), mimetype='application/json')
+
+
+def get_answer_like(request):
+    '''
+    @note: 获取回答对应的赞
+    '''
+    answer_id = request.REQUEST.get('answer_id')
+
+    data = []
+    if answer_id:
+        likes = lb.format_likes(lb.get_likes_by_answer(answer_id))
+        data = [dict(user_id=like.from_user.id, user_nick=like.from_user.nick) for like in likes]
+    return HttpResponse(json.dumps(data), mimetype='application/json')

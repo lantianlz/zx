@@ -369,12 +369,14 @@ class AnswerBase(object):
             request_user_like_answer_ids = [l.answer_id for l in request_user_likes]    # 用户是否赞了该问题
             request_user_bads = [ab.answer_id for ab in AnswerBad.objects.filter(user_id=request_user.id)]
 
+        lb = LikeBase()
         for answer in answers:
             answer.from_user = answer.get_from_user()
             answer.content = utils.replace_at_html(answer.content)
 
             answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
             answer.is_request_user_bad = (answer.id in request_user_bads)   # 用户是否认为该问题无帮助
+            answer.likes = lb.format_likes(lb.get_likes_by_answer(answer)[:3])    # 赞了该回答的用户
         return answers
 
     @question_required
@@ -580,6 +582,12 @@ class LikeBase(object):
     '''
     @note: “喜欢”模块封装
     '''
+
+    def format_likes(self, likes):
+        for like in likes:
+            like.from_user = UserBase().get_user_by_id(like.from_user_id)
+        return likes
+
     @answer_required
     @transaction.commit_manually(QUESTION_DB)
     def like_it(self, answer, from_user_id, ip):
@@ -643,10 +651,8 @@ class LikeBase(object):
     def get_to_user_likes(self, user_id):
         return Like.objects.select_related('question').filter(to_user_id=user_id, is_anonymous=False)
 
-    def format_likes(self, likes):
-        for like in likes:
-            like.from_user = UserBase().get_user_by_id(like.from_user_id)
-        return likes
+    def get_likes_by_answer(self, answer):
+        return Like.objects.select_related('answer').filter(answer=answer, is_anonymous=False)
 
     def get_user_liked_count(self, user_id):
         return self.get_to_user_likes(user_id).count()

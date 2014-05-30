@@ -189,13 +189,15 @@ class CustomerManagerBase(object):
         return 0, dict_err.get(0)
 
     def get_customer_managers_by_city_id(self, city_id):
-        cms = list(CustomerManager.objects.select_related('department').filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True))
-        cms = self.format_customer_managers_for_ajax(cms)
+        cms = []
+        if city_id:
+            cms = list(CustomerManager.objects.select_related('department').filter(city_id=city_id, end_date__gte=datetime.datetime.now(), state=True))
+            cms = self.format_customer_managers_for_ajax(cms)
 
-        # 排序方法，按照两个维度，付费类型和赞
-        def _cmp(x, y):
-            return - 1 if (x['pay_type'] > y['pay_type'] or (x['pay_type'] == y['pay_type'] and x['user_liked_count'] > y['user_liked_count'])) else 1
-        cms.sort(cmp=_cmp)
+            # 排序方法，按照两个维度，付费类型和赞
+            def _cmp(x, y):
+                return - 1 if (x['pay_type'] > y['pay_type'] or (x['pay_type'] == y['pay_type'] and x['user_liked_count'] > y['user_liked_count'])) else 1
+            cms.sort(cmp=_cmp)
         return cms
 
     def get_customer_managers_by_department(self, department):

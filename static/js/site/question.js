@@ -153,8 +153,6 @@ $(document).ready(function(){
     });
 
 
-
-
     // backbone 方式定义事件
     // ================== 问题邀请事件绑定开始 ==================
     var QuestionInviteView = Backbone.View.extend({
@@ -580,24 +578,21 @@ $(document).ready(function(){
                 answerId = target.data('answer_id');
 
             // 设置ajax元素id,防止多次点击
-            // g_ajax_processing_obj_id = target.setUUID().attr('id');
+            g_ajax_processing_obj_id = target.setUUID().attr('id');
 
-            // ajaxSend(
-            //     "/question/remove_answer", 
-            //     {'answer_id': answerId}, 
-            //     function(data){
-                    var data = [{'user_id': '1', 'user_nick': '测试1'}, {'user_id': '2', 'user_nick': '测试2'}];
+            ajaxSend(
+                "/question/get_answer_like", 
+                {'answer_id': answerId}, 
+                function(data){
                     target.parent().html(
                         _.map(data, function(p){
                             return String.format(template, p.user_id, p.user_id, p.user_nick)
-                        }).join('、')
+                        }).join('、') + '  赞同'
                     )
-            //     }
-            // );
-
-            // 注册名片事件
-            $.ZXTooltipster.PersonCard();
-
+                    // 注册名片事件
+                    $.ZXTooltipster.PersonCard();
+                }
+            );
         },
 
         // 显示回答工具条

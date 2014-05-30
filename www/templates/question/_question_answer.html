@@ -3,7 +3,7 @@
 <li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-eee" id="answer_{{answer.id}}" data-answer_id="{{answer.id}}">
     <div class="reply-header row pr">
         <a class="no-hover-unl pa" style="left: 15px;" href="{{answer.from_user.get_url}}">
-            <img class="avatar-45 avatar-circle" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_25}}" title="{{answer.from_user.nick}}" />
+            <img class="avatar-45 avatar-circle" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_65}}" title="{{answer.from_user.nick}}" />
         </a>
         <div class="pl-60 col-md-9 col-xs-9">
             <a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">
@@ -20,13 +20,23 @@
             </span>
         </div>
     </div>
+
     <!-- 赞同人列表 -->
+    {% if answer.like_count > 0 %}
     <div class="f12 pl-50 co8 liked-persons pb-5 pr-45">
-        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">呵呵</a>、
-        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">哈哈</a>、
-        <a class="gray-gray zx-cardtips" href="#" class="zx-cardtips" data-user_id="1">嘻嘻</a>
-        <a class="gray-gray get-more" data-answer_id="{{answer.id}}" href="javascript:void(0)">等人赞同</a>
+        {% for like in answer.likes %}
+        <a class="gray-gray zx-cardtips" href="{{like.from_user.get_url}}" class="zx-cardtips" data-user_id="{{like.from_user.id}}">{{like.from_user.nick}}</a>{% if not forloop.last %}、{% endif %}
+        {% endfor %}
+        {% if answer.like_count > 3 %}
+        <a class="gray-gray get-more" data-answer_id="{{answer.id}}" href="javascript:void(0)">等 {{answer.like_count}} 人赞同</a>
+        {% else %}
+        <span class="gray-gray">赞同</span>
+        {% endif %}
     </div>
+    {% else %}
+   <div class="h15"></div>
+    {% endif %}
+
     <div class="reply-main row">
         <div class="reply-content col-md-12 line-height-25">{{answer.content|safe}}</div>
     </div>
