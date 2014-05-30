@@ -100,8 +100,7 @@ $(document).ready(function(){
                         删除
                     </a>
                     {% endif %}
-                    
-                    <a class="invite hide" href="javascript: void(0);">
+                    <a class="invite" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-transfer"></span>
                         邀请回答
                     </a>
@@ -113,7 +112,7 @@ $(document).ready(function(){
         <div class="topic-invite panel panel-default auto-hide">
             <span class="arrow-out"></span>
             <span class="arrow-in"></span>
-            <div class="panel-body row">
+            <div class="panel-body row pb-0">
                 <div class="filter-invite col-md-12">
                     <div class="col-md-4">
                         <input type="text" class="form-control input-sm search-input" placeholder="输入你想邀请人的名字" value="">
@@ -121,56 +120,12 @@ $(document).ready(function(){
                     </div>
                 </div>
                 <div class="recommend-invite col-md-12">
-                    <ul class="list-flow">
-                        <li class="invite-item col-md-6 col-xs-12">
-                            <div class="invite-person-info">
-                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user3.jpg">
-                                <div class="name blue-a pl-40">
-                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="12">半夜没事瞎溜达</a>
-                                    <span>
-                                        <button type="button" class="btn btn-primary btn-xs pull-right btn-invite" data-user_id='12'>邀请回答</button>
-                                    </span>
-                                </div>
-                                <div class="des pl-40">漫漫人生路，谁不错几步</div>
-                            </div>
-                        </li>
-                        <li class="invite-item col-md-6 col-xs-12">
-                            <div class="invite-person-info">
-                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user1.jpg">
-                                <div class="name blue-a pl-40">
-                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">章佳杰</a>
-                                    <span>
-                                        <button type="button" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
-                                    </span>
-                                </div>
-                                <div class="des pl-40">我多年攒下的这一屋子的切糕给你了</div>
-                            </div>
-                        </li>
-                        <li class="invite-item col-md-6 col-xs-12">
-                            <div class="invite-person-info">
-                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user2.jpg">
-                                <div class="name blue-a pl-40">
-                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">祁圆圆</a>
-                                    <span>
-                                        <button type="button" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
-                                    </span>
-                                </div>
-                                <div class="des pl-40">一只垂耳兔，正被一只大型犬圈养。</div>
-                            </div>
-                        </li>
-                        <li class="invite-item col-md-6 col-xs-12">
-                           
-                            <div class="invite-person-info">
-                                <img class="pa avatar-35 avatar-circle" src="/static/img/common/user4.png">
-                                <div class="name blue-a pl-40">
-                                    <a href="javascript: void(0);" class="zx-cardtips" data-user_id="1">喵星人</a>
-                                    <span>
-                                        <button type="button" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
-                                    </span>
-                                </div>
-                                <div class="des pl-40">注册会计师,现任职某上市公司</div>
-                            </div>
-                        </li>
+                    <ul class="list-inline invite-persons row pl-15 pr-15">
+                        
+                    </ul>
+                    <ul class="pager mb-10 mt-10">
+                        <li class="mr-15 previous-page"><a href="#">上一页</a></li>
+                        <li class="next-page"><a href="#">下一页</a></li>
                     </ul>
                 </div>
             </div>
@@ -310,4 +265,24 @@ $(document).ready(function(){
 </div>
 </div>
 </div>
+
+<!-- 邀请模板 -->
+<script type="text/template" id="invite_person_template">
+<% _.each(users, function(user){ %>
+    <li class="invite-item col-md-6 col-xs-12 pt-15 pb-15 none">
+        <div class="invite-person-info">
+            <a href="/p/<%= user.user_id %>">
+                <img class="pa avatar-35 avatar-circle" src="<%= user.user_avatar %>">
+            </a>
+            <div class="name blue-a pl-40">
+                <a href="javascript: void(0);" class="zx-cardtips" data-user_id="<%= user.user_id %>"><%= user.user_nick %></a>
+                <span>
+                    <button type="button" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
+                </span>
+            </div>
+            <div class="des pl-40"><%= user.user_desc %></div>
+        </div>
+    </li>
+<% }) %>
+</script>
 {% endblock %}

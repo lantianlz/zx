@@ -160,15 +160,33 @@ $(document).ready(function(){
     var QuestionInviteView = Backbone.View.extend({
         el: '.topic-invite',
 
+        _invitePersons: [],
+
+        _pageCount: 4,
+
+        _pageIndex: 1,
+
+        _totalCount: 0,
+
+        _totalPage: 0,
+        
         events: {
             'click .search': 'search',
-            'click .btn-invite': 'invitePerson'
+            'click .btn-invite': 'invitePerson',
+            'click .previous-page': 'goPage',
+            'click .next-page': 'goPage'
         },
+        
+        template: _.template($('#invite_person_template').html()),
 
         // 显示或隐藏邀请框
         toggleInvite: function(){
             var target = this.$el;
-        
+            
+            // 是否首次加载
+            if(target.find('.invite-persons').children().length == 0){
+                this.getAllInvitePerson();
+            }
             target.css('display') === 'block' ? target.hide() : target.show();
         },
 
@@ -182,6 +200,97 @@ $(document).ready(function(){
         invitePerson: function(){
             // todo
             $.ZXMsg.alert('邀请某人', this.$('.btn-invite').data('user_id'));
+        },
+    
+        // 渲染
+        render: function(){
+            var html = this.template({users: this._invitePersons});
+            this.$el.find('.invite-persons').html(html);
+            
+            this.showPage(1);
+            
+            // 注册名片事件
+            $.ZXTooltipster.PersonCard();
+        },
+        
+        goPage: function(sender){
+            var target = $(sender.currentTarget);
+            this.showPage(parseInt(target.data('page_index')))
+        },
+        
+        // 跳转页码
+        showPage: function(pageIndex){
+            var start = (pageIndex-1) * this._pageCount,
+                end = pageIndex * this._pageCount
+            
+            this.$('.invite-item').hide().filter(
+                function(index){
+                    if(start<=index && index<end){
+                        return $(this);
+                    }
+                }
+            ).show();
+            
+            // 控制翻页按钮
+            if(pageIndex <= 1){
+                this.$('.previous-page').addClass('disabled');
+            } else {
+                this.$('.previous-page').removeClass('disabled').data('page_index', pageIndex - 1);
+            }
+            
+            if(pageIndex >= this._totalPage){
+                this.$('.next-page').addClass('disabled');
+            } else {
+                this.$('.next-page').removeClass('disabled').data('page_index', pageIndex + 1);
+            }
+            
+        },
+
+        // 获取所有能被邀请的人
+        getAllInvitePerson: function(){
+            this._invitePersons = [{
+                'user_id': '1',
+                'user_avatar': '/static/img/common/user1.jpg',
+                'user_nick': '半夜没事瞎溜达1',
+                'user_desc': '漫漫人生路，谁不错几步'
+            }, {
+                'user_id': '2',
+                'user_avatar': '/static/img/common/user1.jpg',
+                'user_nick': '半夜没事瞎溜达2',
+                'user_desc': '漫漫人生路，谁不错几步'
+            }, {
+                'user_id': '3',
+                'user_avatar': '/static/img/common/user1.jpg',
+                'user_nick': '半夜没事瞎溜达3',
+                'user_desc': '漫漫人生路，谁不错几步'
+            }, {
+                'user_id': '4',
+                'user_avatar': '/static/img/common/user1.jpg',
+                'user_nick': '半夜没事瞎溜达4',
+                'user_desc': '漫漫人生路，谁不错几步'
+            }, {
+                'user_id': '5',
+                'user_avatar': '/static/img/common/user1.jpg',
+                'user_nick': '半夜没事瞎溜达5',
+                'user_desc': '漫漫人生路，谁不错几步'
+            }, {
+                'user_id': '6',
+                'user_avatar': '/static/img/common/user1.jpg',
+                'user_nick': '半夜没事瞎溜达6',
+                'user_desc': '漫漫人生路，谁不错几步'
+            }, {
+                'user_id': '7',
+                'user_avatar': '/static/img/common/user1.jpg',
+                'user_nick': '半夜没事瞎溜达7',
+                'user_desc': '漫漫人生路，谁不错几步'
+            }];
+            
+            this._totalCount = this._invitePersons.length;
+            this._totalPage = (this._totalCount % this._pageCount == 0) 
+                ? Math.floor(this._totalCount / this._pageCount)
+                : Math.floor(this._totalCount / this._pageCount) + 1;
+            
+            this.render();
         }
     });
     var questionInviteView = new QuestionInviteView();
