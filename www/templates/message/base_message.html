@@ -34,6 +34,12 @@
     <span class="badge flash-badge">{{unread_count_info.at_answer}}</span>
     {% endif %}
 </a>
+<a class="list-group-item {% if '/message/invite_answer' == request.path %} active {% endif %}" href="/message/invite_answer">
+    邀请回答
+    {% if unread_count_info.invite_answer > 0 %}
+    <span class="badge flash-badge">{{unread_count_info.invite_answer}}</span>
+    {% endif %}
+</a>
 {% endblock %}
 
 {% block split_main %}

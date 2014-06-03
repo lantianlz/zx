@@ -53,8 +53,6 @@
                     <a href="#" class="dropdown-toggle user w140" data-toggle="dropdown" data-target="#" title="{{request.user.nick}}">
                         <img alt="{{request.user.nick}}" class='avatar-25 avatar-circle user mt--2' src="{{request.user.get_avatar_25}}">
                         <span class="pl-0">{{ request.user.nick|str_display:5 }}</span>
-                        <!-- <span class="badge flash-badge none ml--3" id="unread_count_total_nav_1">0</span> -->
-                        <!-- <span class="caret"></span> -->
                     </a>
                     
                     <ul class="dropdown-menu text-left min-w140" role="menu">
@@ -121,6 +119,12 @@
                             <a href="{{MAIN_DOMAIN}}/p/{{request.user.id}}/followers">
                                 我的粉丝
                                 <span class="badge flash-badge none" id="unread_count_total_nav_fans">0</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{MAIN_DOMAIN}}/message/invite_answer">
+                                邀请回答
+                                <span class="badge flash-badge none" id="unread_count_total_nav_invite_answer">0</span>
                             </a>
                         </li>
                     </ul>
