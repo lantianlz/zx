@@ -188,6 +188,9 @@ class QuestionBase(object):
                     except:
                         pass
 
+            # 更新summary
+            self.get_question_summary_by_id(question, must_update_cache=True)
+
             transaction.commit(using=QUESTION_DB)
             return 0, question
         except Exception, e:
@@ -335,11 +338,11 @@ class QuestionBase(object):
             return 99900, dict_err.get(99900)
 
     @cache_required(cache_key='question_summary_%s', expire=3600)
-    def get_question_summary_by_id(self, question_id, must_update_cache=False):
+    def get_question_summary_by_id(self, question_id_or_object, must_update_cache=False):
         '''
         @note: 获取提问摘要信息，用于feed展现
         '''
-        question = self.get_question_by_id(question_id, need_state=False)
+        question = self.get_question_by_id(question_id_or_object, need_state=False) if not isinstance(question_id_or_object, Question) else question_id_or_object
         question_summary = {}
         if question:
             question_summary = dict(question_id=question.id, question_title=question.title,
@@ -424,6 +427,9 @@ class AnswerBase(object):
             if question.question_type.domain != 'qita':
                 FeedBase().create_feed(from_user_id, feed_type=3, obj_id=answer.id)
 
+            # 更新summary
+            QuestionBase().get_question_summary_by_id(question, must_update_cache=True)
+
             transaction.commit(using=QUESTION_DB)
             return 0, answer
         except Exception, e:
@@ -446,6 +452,9 @@ class AnswerBase(object):
 
             answer.content = content
             answer.save()
+
+            # 更新summary
+            self.get_answer_summary_by_id(answer, must_update_cache=True)
 
             return 0, answer
         except Exception, e:
@@ -550,11 +559,11 @@ class AnswerBase(object):
             return None
 
     @cache_required(cache_key='answer_summary_%s', expire=3600)
-    def get_answer_summary_by_id(self, answer_id, must_update_cache=False):
+    def get_answer_summary_by_id(self, answer_id_or_object, must_update_cache=False):
         '''
         @note: 获取回答摘要信息，用于feed展现
         '''
-        answer = self.get_answer_by_id(answer_id, need_state=False)
+        answer = self.get_answer_by_id(answer_id_or_object, need_state=False) if not isinstance(answer_id_or_object, Answer) else answer_id_or_object
         answer_summary = {}
         if answer:
             user = answer.get_from_user()
@@ -617,6 +626,7 @@ class LikeBase(object):
             question = answer.question
             Like.objects.create(answer=answer, question=question, is_anonymous=is_anonymous,
                                 from_user_id=from_user_id, to_user_id=to_user_id, ip=ip)
+            answer.like_count += 1
             Answer.objects.filter(id=answer.id).update(like_count=F('like_count') + 1)
 
             # 更新被赞次数
@@ -629,6 +639,9 @@ class LikeBase(object):
             # 发送feed
             if question.question_type.domain != 'qita':
                 FeedBase().create_feed(from_user_id, feed_type=2, obj_id=answer.id)
+
+            # 更新summary
+            AnswerBase().get_answer_summary_by_id(answer, must_update_cache=True)
 
             transaction.commit(QUESTION_DB)
             return 0, dict_err.get(0)
