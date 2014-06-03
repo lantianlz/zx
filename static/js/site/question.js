@@ -314,6 +314,17 @@ $(document).ready(function(){
             var target = $(sender.currentTarget),
                 me = this;
 
+            // 操作成功执行动画
+            // target
+            // .children()
+            // .addClass('light');
+
+            // target.find('img').addClass('light-img');
+
+            // target.find('.answer-like-count')
+            // .text(parseInt(target.find('.answer-like-count').text()) + 1);
+
+            
             ajaxSend(
                 "/question/like_answer", 
                 {'answer_id': $(target).data('answer_id')}, 
@@ -334,7 +345,7 @@ $(document).ready(function(){
                     .text(parseInt(target.find('.answer-like-count').text()) + 1);
                 }
             );
-
+            
             
         },
 
