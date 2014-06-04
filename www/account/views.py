@@ -368,12 +368,6 @@ def get_user_info_by_nick(request):
     if user_nick:
         user = ub.get_user_by_nick(user_nick)
         if user:
-            infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=user.des or '', gender=user.gender,
-                         is_follow=ufb.check_is_follow(request.user.id, user_id) if request.user.id != user_id else False)
-
-            user_count_info = interface.UserCountBase().get_user_count_info(user_id)
-            user_question_count, user_answer_count, user_liked_count = user_count_info['user_question_count'], \
-                user_count_info['user_answer_count'], user_count_info['user_liked_count']
-            infos.update(dict(user_question_count=user_question_count, user_answer_count=user_answer_count, user_liked_count=user_liked_count))
+            infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=user.des or '', gender=user.gender)
 
     return HttpResponse(json.dumps(infos), mimetype='application/json')

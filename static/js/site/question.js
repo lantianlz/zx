@@ -182,19 +182,34 @@ $(document).ready(function(){
 
             // 建议搜索
             this.$('.search-input').autocomplete({
-                lookup: [
-                    {'value': '1', 'data': '用户1', 'desc': '描述1', 'avatar': '/static/img/common/user1.jpg'},
-                    {'value': '2', 'data': '用户2', 'desc': '描述2', 'avatar': '/static/img/common/user2.jpg'},
-                    {'value': '3', 'data': '用户3', 'desc': '描述3', 'avatar': '/static/img/common/user3.jpg'},
-                    {'value': '4', 'data': '用户4', 'desc': '描述4', 'avatar': '/static/img/common/user4.png'}
-                ],
+                // lookup: [
+                //     {'value': '1', 'data': '用户1', 'desc': '描述1', 'avatar': '/static/img/common/user1.jpg'},
+                //     {'value': '2', 'data': '用户2', 'desc': '描述2', 'avatar': '/static/img/common/user2.jpg'},
+                //     {'value': '3', 'data': '用户3', 'desc': '描述3', 'avatar': '/static/img/common/user3.jpg'},
+                //     {'value': '4', 'data': '用户4', 'desc': '描述4', 'avatar': '/static/img/common/user4.png'}
+                // ],
+                serviceUrl: '/account/get_user_info_by_nick',
+                paramName: 'user_nick',
+                isLocal: false,
                 triggerSelectOnValidInput: false,
+                transformResult: function(response) {
+                    
+                    var data = JSON.parse(response);
+                    return {
+                        suggestions: [{
+                            value: data.nick,
+                            data: data.user_id,
+                            desc: data.des,
+                            avatar: data.avatar
+                        }]
+                    };
+                },
                 onSelect: function(suggestion){
-
+                    console.log(suggestion)
                     me.invite(suggestion.value, function(result){
                         if(result){
                             // 显示已邀请人
-                            me._invitedPersons.unshift({'user_id': suggestion.value, 'user_nick': suggestion.data});
+                            me._invitedPersons.unshift({'user_id': suggestion.data, 'user_nick': suggestion.value});
 
                             me.showInvitedPersons();
 
@@ -205,12 +220,12 @@ $(document).ready(function(){
 
                 },
                 formatResult: function(suggestion, value){
-                    return String.format('<img src="{0}">{1}', suggestion.avatar, suggestion.data);
+                    return String.format('<img class="avatar-35" src="{0}">{1}', suggestion.avatar, suggestion.value);
                 }
             })
         },
 
-        template: _.template($('#invite_person_template').html()),
+        template: $('#invite_person_template').length > 0 ? _.template($('#invite_person_template').html()) : function(){},
 
         // 显示或隐藏邀请框
         toggleInvite: function(){
@@ -232,14 +247,15 @@ $(document).ready(function(){
         invite: function(userId, callback){
             var questionId = $('.topic-invite').data('question_id');
 
-            // 设置ajax元素id,防止多次点击
-            g_ajax_processing_obj_id = $('.invite').setUUID().attr('id');
-
-            ajaxSend("/question/set_important", {}, function(data){
-                if(callback){
-                    callback(data);
+            ajaxSend(
+                "/message/invite_user_answer", 
+                {'to_user_id': userId, 'question_id': questionId}, 
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
                 }
-            });
+            );
             
         },
 
@@ -250,19 +266,20 @@ $(document).ready(function(){
                 userId = target.data('user_id'),
                 userNick = target.prev().html();
 
-            this.invite(userId, function(result){
-                if(result){
+            // 设置ajax元素id,防止多次点击
+            g_ajax_processing_obj_id = target.setUUID().attr('id');
+
+            this.invite(userId, function(data){
+                if(data.errcode === 0){
                     // 修改样式
                     target.removeClass('btn-invite btn-primary').addClass("btn-default").text('已邀请');
                     // 显示已邀请人
                     me._invitedPersons.unshift({'user_id': userId, 'user_nick': userNick});
 
                     me.showInvitedPersons();
-
                 } else {
-                    $.ZXMsg.alert('提示', '邀请失败!');
+                    $.ZXMsg.alert('提示', data.errmsg);
                 }
-                
             });
             
         },
@@ -273,12 +290,13 @@ $(document).ready(function(){
             var temp = this._invitedPersons.slice(0, 2), 
                 count = this._invitedPersons.length;
 
-            this.$('.invited-persons').html(
-                '你已邀请: ' + _.map(temp, function(p){
-                    return String.format('<a class="gray-gray" href="/p/{0}">{1}</a>', p.user_id, p.user_nick);
-                }).join('、') + (count <= 2 ? '' : (' 等' + count + '人'))
-            );
-            
+            if(temp.length > 0){
+                this.$('.invited-persons').html(
+                    '你已邀请: ' + _.map(temp, function(p){
+                        return String.format('<a class="gray-gray" href="/p/{0}">{1}</a>', p.user_id, p.user_nick);
+                    }).join('、') + (count <= 2 ? '' : (' 等' + count + '人'))
+                );
+            }
         },
     
         // 渲染

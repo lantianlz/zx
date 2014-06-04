@@ -561,7 +561,7 @@
                     return;
                 }
             }
-            console.log('222222')
+            
             // Build suggestions inner HTML:
             $.each(that.suggestions, function (i, suggestion) {
                 html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
@@ -575,7 +575,7 @@
                 width = that.el.outerWidth() - 2;
                 container.width(width > 0 ? width : 300);
             }
-            console.log(html)
+            
             container.html(html);
 
             // Select first value by default:
