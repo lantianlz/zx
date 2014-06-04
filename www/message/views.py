@@ -206,3 +206,11 @@ def share_received_like(request):
             os.remove(file_name)
 
     return HttpResponse(json.dumps(result), mimetype='application/json')
+
+
+@member_required
+def show_invite_user(request):
+    from www.account.interface import UserCountBase
+    invite_user = UserCountBase().get_user_order_by_answer_count()
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')

@@ -7,7 +7,7 @@ from django.utils.encoding import smart_unicode
 from django.conf import settings
 
 from common import utils, debug, validators, cache
-# from www.misc.decorators import cache_required
+from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
 from www.account.models import RecommendUser, LastActive
@@ -561,6 +561,10 @@ class UserCountBase(object):
             count -= 1
         setattr(uc, code, count)
         uc.save()
+
+    @cache_required(cache_key='user_order_by_answer_count', expire=3600)
+    def get_user_order_by_answer_count(self):
+        return UserCount.objects.all().order_by('-user_answer_count')
 
 
 class RecommendUserBase(object):

@@ -179,8 +179,8 @@ class InviteAnswerBase(object):
     def get_user_received_invite(self, to_user_id):
         pass
 
-    def get_user_sended_invite(self, from_user_id):
-        pass
+    def get_user_sended_invite_by_question_id(self, from_user_id, question_id):
+        return InviteAnswerIndex.objects.filter(from_user_id=from_user_id, question_id=question_id)
 
     def update_invite_is_read(self, to_user_id):
-        InviteAnswer.objects.filter(to_user_id=to_user_id).update(is_read=True)
+        return InviteAnswer.objects.filter(to_user_id=to_user_id).update(is_read=True)
