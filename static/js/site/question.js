@@ -371,7 +371,8 @@ $(document).ready(function(){
             //     'user_desc': '漫漫人生路，谁不错几步',
             //     'is_invited': true
             // }];
-            var me = this;
+            var me = this,
+                questionId = $('.topic-invite').data('question_id');
 
             // 设置ajax元素id,防止多次点击
             g_ajax_processing_obj_id = $('.invite').setUUID().attr('id');
