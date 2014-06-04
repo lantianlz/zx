@@ -32,7 +32,7 @@ def main():
     # print ucb.update_unread_count(user, code='received_answer', operate="add")
 
     print iab.update_invite_is_read(to_user_id)
-    print iab.create_invite(from_user_id=user_id2, to_user_id=to_user_id, question_id=8)
+    # print iab.create_invite(from_user_id=user_id2, to_user_id=to_user_id, question_id=8)
 
 if __name__ == '__main__':
     main()
