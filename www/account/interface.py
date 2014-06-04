@@ -564,7 +564,7 @@ class UserCountBase(object):
         uc.save()
 
     @cache_required(cache_key='user_order_by_answer_count', expire=3600)
-    def get_user_order_by_answer_count(self, count=21):
+    def get_user_order_by_answer_count(self, must_update_cache=False, count=21):
         ucs = UserCount.objects.all()
         return list(ucs.order_by('-user_answer_count')[:count])
 
