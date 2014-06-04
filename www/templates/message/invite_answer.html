@@ -6,69 +6,29 @@
 {% endblock %}
 
 {% block message_main %}
-{% if answers %}
+{% if user_received_invites %}
 <ul class="message-list list-group">
-	{% for answer in answers %}
-	
-	{% endfor %}
-	<li class="list-group-item no-l-r-bd bdc-eee pl-0 pl-15">
-		<div class="">
-			<div class="">
-				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
-					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/editor_d7fb50aeb04711e3afb7000c290d194c">
-				</a>
-				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
-					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://zimg0.qiniudn.com/avatar_ec931784acfc11e380f400163e003240">
-				</a>
-				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
-					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/newest_avatar_9844339eb3f411e387fb00163e003240">
-				</a>
-				<span class="co8 pull-right">05-06 20:40:23</span>
-			</div>
-			
-            <div class="content f12 pt-10 pr-100"> 
-                <a href="/p/1" class="zx-cardtips" data-user_id='1'>随便弄弄</a>、
-                <a href="/p/1" class="zx-cardtips" data-user_id='1'>半夜没事瞎溜达</a>、
-                <a href="/p/1" class="zx-cardtips" data-user_id='1'>李小砍</a>
-                邀请你回答提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
+    {% for uri in user_received_invites %}
+    <li class="list-group-item no-l-r-bd bdc-eee pl-0 pl-15">
+        <div class="">
+            <div class="">
+                {% for user in uri.from_users %}
+                <a class="pr-10" href="{{user.get_url}}">
+                    <img class="avatar-circle avatar-45" alt="{{user.nick}}" title="{{user.nick}}" src="{{user.get_avatar_65}}">
+                </a>
+                {% endfor %}
+                <span class="co8 pull-right">{{uri.last_invite_time|time_format}}</span>
             </div>
-		</div>
-	</li>
-	<li class="list-group-item no-l-r-bd bdc-eee pl-0 pl-15">
-		<div class="">
-			<div class="">
-				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
-					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/avatar_d97317d6ae4011e3867d00163e003240">
-				</a>
-				
-				<span class="co8 pull-right">05-06 20:40:23</span>
-			</div>
-			
-            <div class="content f12 pt-10 pr-100"> 
-                <a href="/p/1" class="zx-cardtips" data-user_id='1'>李小砍</a>
-                邀请你回答提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
+            
+            <div class="content f12 pt-10 pr-100">
+                {% for user in uri.from_users %}
+                <a href="{{user.get_url}}" class="zx-cardtips" data-user_id='{{user.id}}'>{{user.nick}}</a>{% if not forloop.last %}、{% endif %}
+                {% endfor %}
+                邀请你回答提问 <a href="/question/{{uri.question.question_id}}">{{uri.question.question_title}}</a>
             </div>
-		</div>
-	</li>
-	<li class="list-group-item no-l-r-bd bdc-eee pl-0 pl-15">
-		<div class="">
-			<div class="">
-				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
-					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/newest_avatar_2a8141d4dab511e3b15600163e003240">
-				</a>
-				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
-					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/editor_d7fb50aeb04711e3afb7000c290d194c">
-				</a>
-				<span class="co8 pull-right">05-06 20:40:23</span>
-			</div>
-			
-            <div class="content f12 pt-10 pr-15"> 
-                <a href="/p/1" class="zx-cardtips" data-user_id='1'>半夜没事瞎溜达</a>、
-                <a href="/p/1" class="zx-cardtips" data-user_id='1'>李小砍</a>
-                邀请你回答提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
-            </div>
-		</div>
-	</li>
+        </div>
+    </li>
+    {% endfor %}
 </ul>
 {{page_params|paging:request}}
 {% else %}

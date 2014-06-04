@@ -144,6 +144,17 @@ class InviteAnswerBase(object):
             invited_users_json.append(dict(user_id=iu.to_user_id, user_nick=UserBase().get_user_by_id(iu.to_user_id).nick))
         return show_invite_users_json, invited_users_json
 
+    def format_user_received_invites(self, user_received_invites):
+        from www.question.interface import QuestionBase
+
+        ub = UserBase()
+        for uri in user_received_invites:
+            uri.question = QuestionBase().get_question_summary_by_id(uri.question_id)
+            print uri.question
+            uri.from_users = [ub.get_user_by_id(user_id) for user_id in json.loads(uri.from_user_ids)]
+            uri.from_users.reverse()
+        return user_received_invites
+
     @transaction.commit_manually(using=DEFAULT_DB)
     def create_invite(self, from_user_id, to_user_id, question_id):
         try:
@@ -198,7 +209,7 @@ class InviteAnswerBase(object):
             return 99900, dict_err.get(99900)
 
     def get_user_received_invite(self, to_user_id):
-        pass
+        return InviteAnswer.objects.filter(to_user_id=to_user_id)
 
     def get_invited_user_by_question_id(self, from_user_id, question_id):
         return InviteAnswerIndex.objects.filter(from_user_id=from_user_id, question_id=question_id)

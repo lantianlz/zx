@@ -99,20 +99,22 @@ def at_answer(request, template_name='message/at_answer.html'):
 
 @member_required
 def invite_answer(request, template_name='message/invite_answer.html'):
-    answers = ab.get_at_answers(request.user.id)
+    user_received_invites = iab.get_user_received_invite(to_user_id=request.user.id)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(answers, count=10, page=page_num).info
-    answers = page_objs[0]
+    page_objs = page.Cpt(user_received_invites, count=10, page=page_num).info
+    user_received_invites = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
-    answers = ab.format_answers(answers)
+    user_received_invites = iab.format_user_received_invites(user_received_invites)
 
     # 异步清除未读消息数
-    async_clear_count_info_by_code(request.user.id, code='at_answer')
+    async_clear_count_info_by_code(request.user.id, code='invite_answer')
     unread_count_info = urb.get_unread_count_info(request.user)
 
     # 设置邀请回答未读状态，根据第一条记录来判读
+    if user_received_invites and not user_received_invites[0].is_read:
+        iab.update_invite_is_read(request.user.id)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
