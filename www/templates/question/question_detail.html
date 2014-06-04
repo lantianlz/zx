@@ -109,7 +109,7 @@ $(document).ready(function(){
             </div>
             
         </div>
-        <div class="topic-invite panel panel-default auto-hide">
+        <div class="topic-invite panel panel-default auto-hide" data-question_id="{{question.id}}">
             <span class="arrow-out"></span>
             <span class="arrow-in"></span>
             <div class="panel-body row pb-0">
@@ -118,14 +118,17 @@ $(document).ready(function(){
                         <input type="text" class="form-control input-sm search-input" placeholder="输入你想邀请人的名字" value="">
                         <span class="glyphicon glyphicon-search search"></span>
                     </div>
+                    <div class="col-md-8 pt-5 pl-0">
+                        <span class="invited-persons f12 co8"></span>
+                    </div>
                 </div>
                 <div class="recommend-invite col-md-12">
                     <ul class="list-inline invite-persons row pl-15 pr-15">
                         
                     </ul>
                     <ul class="pager mb-10 mt-10">
-                        <li class="mr-15 previous-page"><a href="#">上一页</a></li>
-                        <li class="next-page"><a href="#">下一页</a></li>
+                        <li class="mr-15 previous-page"><a href="javascript:void(0);">上一页</a></li>
+                        <li class="next-page"><a href="javascript:void(0);">下一页</a></li>
                     </ul>
                 </div>
             </div>
@@ -276,9 +279,11 @@ $(document).ready(function(){
             </a>
             <div class="name blue-a pl-40">
                 <a href="javascript: void(0);" class="zx-cardtips" data-user_id="<%= user.user_id %>"><%= user.user_nick %></a>
-                <span>
-                    <button type="button" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
-                </span>
+                <% if(user.is_invited){ %>
+                <button type="button" class="btn btn-default btn-xs pull-right">已邀请</button>
+                <% } else { %>
+                <button type="button" data-user_id="<%= user.user_id %>" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
+                <% } %>
             </div>
             <div class="des pl-40"><%= user.user_desc %></div>
         </div>

@@ -158,9 +158,11 @@ $(document).ready(function(){
     var QuestionInviteView = Backbone.View.extend({
         el: '.topic-invite',
 
-        _invitePersons: [],
+        _canInvitePersons: [],
 
-        _pageCount: 4,
+        _invitedPersons: [],
+
+        _pageCount: 2,
 
         _pageIndex: 1,
 
@@ -175,6 +177,39 @@ $(document).ready(function(){
             'click .next-page': 'goPage'
         },
         
+        initialize: function(){
+            var me = this;
+
+            // 建议搜索
+            this.$('.search-input').autocomplete({
+                lookup: [
+                    {'value': '1', 'data': '用户1', 'desc': '描述1', 'avatar': '/static/img/common/user1.jpg'},
+                    {'value': '2', 'data': '用户2', 'desc': '描述2', 'avatar': '/static/img/common/user2.jpg'},
+                    {'value': '3', 'data': '用户3', 'desc': '描述3', 'avatar': '/static/img/common/user3.jpg'},
+                    {'value': '4', 'data': '用户4', 'desc': '描述4', 'avatar': '/static/img/common/user4.png'}
+                ],
+                triggerSelectOnValidInput: false,
+                onSelect: function(suggestion){
+
+                    me.invite(suggestion.value, function(result){
+                        if(result){
+                            // 显示已邀请人
+                            me._invitedPersons.unshift({'user_id': suggestion.value, 'user_nick': suggestion.data});
+
+                            me.showInvitedPersons();
+
+                        } else {
+                            $.ZXMsg.alert('提示', '邀请失败!');
+                        }
+                    });
+
+                },
+                formatResult: function(suggestion, value){
+                    return String.format('<img src="{0}">{1}', suggestion.avatar, suggestion.data);
+                }
+            })
+        },
+
         template: _.template($('#invite_person_template').html()),
 
         // 显示或隐藏邀请框
@@ -194,15 +229,61 @@ $(document).ready(function(){
             $.ZXMsg.alert('查询某人', this.$('.search-input').val());
         },
 
+        invite: function(userId, callback){
+            var questionId = $('.topic-invite').data('question_id');
+
+            // 设置ajax元素id,防止多次点击
+            g_ajax_processing_obj_id = $('.invite').setUUID().attr('id');
+
+            ajaxSend("/question/set_important", {}, function(data){
+                if(callback){
+                    callback(data);
+                }
+            });
+            
+        },
+
         // 邀请某人回答问题
-        invitePerson: function(){
-            // todo
-            $.ZXMsg.alert('邀请某人', this.$('.btn-invite').data('user_id'));
+        invitePerson: function(sender){
+            var me = this,
+                target = $(sender.currentTarget),
+                userId = target.data('user_id'),
+                userNick = target.prev().html();
+
+            this.invite(userId, function(result){
+                if(result){
+                    // 修改样式
+                    target.removeClass('btn-invite btn-primary').addClass("btn-default").text('已邀请');
+                    // 显示已邀请人
+                    me._invitedPersons.unshift({'user_id': userId, 'user_nick': userNick});
+
+                    me.showInvitedPersons();
+
+                } else {
+                    $.ZXMsg.alert('提示', '邀请失败!');
+                }
+                
+            });
+            
+        },
+
+        // 显示已经邀请的人
+        showInvitedPersons: function(){
+            // 只显示前2个
+            var temp = this._invitedPersons.slice(0, 2), 
+                count = this._invitedPersons.length;
+
+            this.$('.invited-persons').html(
+                '你已邀请: ' + _.map(temp, function(p){
+                    return String.format('<a class="gray-gray" href="/p/{0}">{1}</a>', p.user_id, p.user_nick);
+                }).join('、') + (count <= 2 ? '' : (' 等' + count + '人'))
+            );
+            
         },
     
         // 渲染
         render: function(){
-            var html = this.template({users: this._invitePersons});
+            var html = this.template({users: this._canInvitePersons});
             this.$el.find('.invite-persons').html(html);
             
             this.showPage(1);
@@ -213,14 +294,15 @@ $(document).ready(function(){
         
         goPage: function(sender){
             var target = $(sender.currentTarget);
-            this.showPage(parseInt(target.data('page_index')))
+            this.showPage(parseInt(target.data('page_index')));
         },
         
         // 跳转页码
         showPage: function(pageIndex){
             var start = (pageIndex-1) * this._pageCount,
-                end = pageIndex * this._pageCount
+                end = pageIndex * this._pageCount;
             
+            // 显示匹配的元素
             this.$('.invite-item').hide().filter(
                 function(index){
                     if(start<=index && index<end){
@@ -246,49 +328,67 @@ $(document).ready(function(){
 
         // 获取所有能被邀请的人
         getAllInvitePerson: function(){
-            this._invitePersons = [{
-                'user_id': '1',
-                'user_avatar': '/static/img/common/user1.jpg',
-                'user_nick': '半夜没事瞎溜达1',
-                'user_desc': '漫漫人生路，谁不错几步'
-            }, {
-                'user_id': '2',
-                'user_avatar': '/static/img/common/user1.jpg',
-                'user_nick': '半夜没事瞎溜达2',
-                'user_desc': '漫漫人生路，谁不错几步'
-            }, {
-                'user_id': '3',
-                'user_avatar': '/static/img/common/user1.jpg',
-                'user_nick': '半夜没事瞎溜达3',
-                'user_desc': '漫漫人生路，谁不错几步'
-            }, {
-                'user_id': '4',
-                'user_avatar': '/static/img/common/user1.jpg',
-                'user_nick': '半夜没事瞎溜达4',
-                'user_desc': '漫漫人生路，谁不错几步'
-            }, {
-                'user_id': '5',
-                'user_avatar': '/static/img/common/user1.jpg',
-                'user_nick': '半夜没事瞎溜达5',
-                'user_desc': '漫漫人生路，谁不错几步'
-            }, {
-                'user_id': '6',
-                'user_avatar': '/static/img/common/user1.jpg',
-                'user_nick': '半夜没事瞎溜达6',
-                'user_desc': '漫漫人生路，谁不错几步'
-            }, {
-                'user_id': '7',
-                'user_avatar': '/static/img/common/user1.jpg',
-                'user_nick': '半夜没事瞎溜达7',
-                'user_desc': '漫漫人生路，谁不错几步'
-            }];
-            
-            this._totalCount = this._invitePersons.length;
-            this._totalPage = (this._totalCount % this._pageCount == 0) 
-                ? Math.floor(this._totalCount / this._pageCount)
-                : Math.floor(this._totalCount / this._pageCount) + 1;
-            
-            this.render();
+            // this._canInvitePersons = [{
+            //     'user_id': '1',
+            //     'user_avatar': '/static/img/common/user1.jpg',
+            //     'user_nick': '半夜没事瞎溜达1',
+            //     'user_desc': '漫漫人生路，谁不错几步',
+            //     'is_invited': true
+            // }, {
+            //     'user_id': '2',
+            //     'user_avatar': '/static/img/common/user1.jpg',
+            //     'user_nick': '半夜没事瞎溜达2',
+            //     'user_desc': '漫漫人生路，谁不错几步',
+            //     'is_invited': false
+            // }, {
+            //     'user_id': '3',
+            //     'user_avatar': '/static/img/common/user1.jpg',
+            //     'user_nick': '半夜没事瞎溜达3',
+            //     'user_desc': '漫漫人生路，谁不错几步',
+            //     'is_invited': false
+            // }, {
+            //     'user_id': '4',
+            //     'user_avatar': '/static/img/common/user1.jpg',
+            //     'user_nick': '半夜没事瞎溜达4',
+            //     'user_desc': '漫漫人生路，谁不错几步',
+            //     'is_invited': false
+            // }, {
+            //     'user_id': '5',
+            //     'user_avatar': '/static/img/common/user1.jpg',
+            //     'user_nick': '半夜没事瞎溜达5',
+            //     'user_desc': '漫漫人生路，谁不错几步',
+            //     'is_invited': false
+            // }, {
+            //     'user_id': '6',
+            //     'user_avatar': '/static/img/common/user1.jpg',
+            //     'user_nick': '半夜没事瞎溜达6',
+            //     'user_desc': '漫漫人生路，谁不错几步',
+            //     'is_invited': false
+            // }, {
+            //     'user_id': '7',
+            //     'user_avatar': '/static/img/common/user1.jpg',
+            //     'user_nick': '半夜没事瞎溜达7',
+            //     'user_desc': '漫漫人生路，谁不错几步',
+            //     'is_invited': true
+            // }];
+            var me = this;
+
+            // 设置ajax元素id,防止多次点击
+            g_ajax_processing_obj_id = $('.invite').setUUID().attr('id');
+
+            ajaxSend("/question/set_important", {}, function(data){
+                me._canInvitePersons = data;
+                me._invitedPersons = data;
+
+                me._totalCount = me._canInvitePersons.length;
+                me._totalPage = (me._totalCount % me._pageCount == 0) 
+                    ? Math.floor(me._totalCount / me._pageCount)
+                    : Math.floor(me._totalCount / me._pageCount) + 1;
+                
+                me.render();
+                me.showInvitedPersons();
+            });
+
         }
     });
     var questionInviteView = new QuestionInviteView();
@@ -574,7 +674,7 @@ $(document).ready(function(){
         // 获取所有点赞的人
         getMoreLikedPersons: function(sender){
             var target = $(sender.currentTarget),
-                template = '<a class="gray-gray zx-cardtips" href="/p/{0}" class="zx-cardtips" data-user_id="{1}">{2}</a>'
+                template = '<a class="gray-gray zx-cardtips" href="/p/{0}" class="zx-cardtips" data-user_id="{1}">{2}</a>',
                 answerId = target.data('answer_id');
 
             // 设置ajax元素id,防止多次点击
@@ -588,7 +688,8 @@ $(document).ready(function(){
                         _.map(data, function(p){
                             return String.format(template, p.user_id, p.user_id, p.user_nick)
                         }).join('、') + '  赞同'
-                    )
+                    );
+
                     // 注册名片事件
                     $.ZXTooltipster.PersonCard();
                 }
