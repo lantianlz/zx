@@ -21,6 +21,7 @@ def init_unread_type():
         ('received_answer', '条', '收到的回答', '/question/received_answer', '', 0),
         ('at_answer', '条', '@我的回答', '/question/at_answer', '', 0),
         ('fans', '个', '粉丝', '/timeline/myfans', '', 0),
+        ('invite_answer', '个', '邀请回答', '/message/invite_answer', '', 0),
     )
 
     for data in datas:

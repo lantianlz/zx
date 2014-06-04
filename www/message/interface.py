@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import json
+from django.db import transaction
 
-from common import utils, cache
+from common import utils, cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
-from www.message.models import UnreadCount, UnreadType, Notice
+from www.message.models import UnreadCount, UnreadType, Notice, InviteAnswer, InviteAnswerIndex
 
 
 dict_err = {
-    40100: u'',
+    40100: u'自己不能邀请自己哦',
 }
 dict_err.update(consts.G_DICT_ERROR)
+
+DEFAULT_DB = 'default'
 
 
 class UnreadCountBase(object):
@@ -117,3 +120,67 @@ class UnreadCountBase(object):
         notice = Notice.objects.create(user_id=user_id, content=content, source=source)
         UnreadCountBase().update_unread_count(user_id, code='system_message')
         return notice
+
+
+class InviteAnswerBase(object):
+
+    def __init__(self):
+        pass
+
+    @transaction.commit_manually(using=DEFAULT_DB)
+    def create_invite(self, from_user_id, to_user_id, question_id):
+        try:
+            from www.account.interface import UserBase
+            from www.question.interface import QuestionBase
+
+            ub = UserBase()
+            try:
+                assert ub.get_user_by_id(from_user_id) and ub.get_user_by_id(to_user_id) and QuestionBase().get_question_by_id(question_id)
+            except:
+                transaction.rollback(using=DEFAULT_DB)
+                return 99800, dict_err.get(99800)
+
+            if from_user_id == to_user_id:
+                transaction.rollback(using=DEFAULT_DB)
+                return 40100, dict_err.get(40100)
+
+            has_indexed = False
+            need_update_unread_count = True
+            try:
+                ia = InviteAnswer.objects.create(from_user_ids=json.dumps([from_user_id, ]), to_user_id=to_user_id, question_id=question_id)
+            except:
+                ia = InviteAnswer.objects.get(to_user_id=to_user_id, question_id=question_id)
+                from_user_ids = json.loads(ia.from_user_ids)
+                print from_user_ids
+                if from_user_id not in from_user_ids:
+                    from_user_ids.append(from_user_id)
+                else:
+                    has_indexed = True
+                ia.from_user_ids = json.dumps(from_user_ids)
+                ia.save()
+
+                need_update_unread_count = True if (ia.is_read and not has_indexed) else False
+
+            # 建立索引
+            if not has_indexed:
+                InviteAnswerIndex.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, question_id=question_id)
+
+            # 更新未读消息，新邀请或者邀请已读才更新未读数
+            if need_update_unread_count:
+                UnreadCountBase().update_unread_count(to_user_id, code='invite_answer')
+
+            transaction.commit(using=DEFAULT_DB)
+            return 0, dict_err.get(0)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=DEFAULT_DB)
+            return 99900, dict_err.get(99900)
+
+    def get_user_received_invite(self, to_user_id):
+        pass
+
+    def get_user_sended_invite(self, from_user_id):
+        pass
+
+    def update_invite_is_read(self, to_user_id):
+        InviteAnswer.objects.filter(to_user_id=to_user_id).update(is_read=True)
