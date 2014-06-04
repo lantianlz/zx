@@ -221,9 +221,9 @@ def user_settings(request, template_name='account/change_profile.html'):
     uptoken = qiniu_client.get_upload_token(img_key)    # 七牛图片上传token
     if request.POST:
         nick = request.POST.get('nick')
-        gender = request.POST.get('gender')
-        birthday = request.POST.get('birthday')
-        des = request.POST.get('des')
+        gender = request.POST.get('gender', '').strip()
+        birthday = request.POST.get('birthday', '').strip()
+        des = request.POST.get('des', '').strip()
 
         errcode, result = ub.change_profile(request.user, nick, gender, birthday, des)
         if errcode != 0:
@@ -324,7 +324,7 @@ def get_user_info_by_id(request):
     if user_id:
         user = ub.get_user_by_id(user_id)
         if user:
-            infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=user.des or '', gender=user.gender,
+            infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=(user.des or '').strip(), gender=user.gender,
                          is_follow=ufb.check_is_follow(request.user.id, user_id) if request.user.id != user_id else False)
 
             user_count_info = interface.UserCountBase().get_user_count_info(user_id)
@@ -347,7 +347,7 @@ def get_recommend_users(request):
     data = []
     for r_user in recommend_users:
         user = ub.get_user_by_id(r_user.user_id)
-        infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=str_display(user.des or '', 17), gender=user.gender)
+        infos = dict(user_id=user.id, nick=user.nick, avatar=user.get_avatar_65(), des=str_display((user.des or '').strip(), 17), gender=user.gender)
 
         user_count_info = interface.UserCountBase().get_user_count_info(user.id)
         user_question_count, user_answer_count, user_liked_count = user_count_info['user_question_count'], \

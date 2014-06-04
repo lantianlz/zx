@@ -213,7 +213,7 @@ def share_received_like(request):
 def show_invite_user(request):
     from www.account.interface import UserCountBase
 
-    question_id = request.REQUEST.get('question_id')
+    question_id = request.REQUEST.get('question_id', '').strip()
 
     show_invite_users = UserCountBase().get_show_invite_users(exclude_user_id=request.user.id)
     invited_users = iab.get_invited_user_by_question_id(request.user.id, question_id)
@@ -226,7 +226,7 @@ def show_invite_user(request):
 @member_required
 @common_ajax_response
 def invite_user_answer(request):
-    to_user_id = request.POST.get('to_user_id', '')
-    question_id = request.POST.get('question_id', '')
+    to_user_id = request.POST.get('to_user_id', '').strip()
+    question_id = request.POST.get('question_id', '').strip()
 
     return iab.create_invite(request.user.id, to_user_id, question_id)
