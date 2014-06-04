@@ -13,6 +13,7 @@ from www.message.models import UnreadCount, UnreadType, Notice, InviteAnswer, In
 dict_err = {
     40100: u'自己不能邀请自己哦',
     40101: u'最多邀请6人',
+    40102: u'已邀请，请勿重复邀请',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -150,7 +151,6 @@ class InviteAnswerBase(object):
         ub = UserBase()
         for uri in user_received_invites:
             uri.question = QuestionBase().get_question_summary_by_id(uri.question_id)
-            print uri.question
             uri.from_users = [ub.get_user_by_id(user_id) for user_id in json.loads(uri.from_user_ids)]
             uri.from_users.reverse()
         return user_received_invites
@@ -176,26 +176,26 @@ class InviteAnswerBase(object):
                 transaction.rollback(using=DEFAULT_DB)
                 return 40101, dict_err.get(40101)
 
-            has_indexed = False
-            need_update_unread_count = True
+            # 重复邀请给出提示
+            if InviteAnswerIndex.objects.filter(from_user_id=from_user_id, to_user_id=to_user_id, question_id=question_id):
+                transaction.rollback(using=DEFAULT_DB)
+                return 40102, dict_err.get(40102)
+
             try:
                 ia = InviteAnswer.objects.create(from_user_ids=json.dumps([from_user_id, ]), to_user_id=to_user_id, question_id=question_id)
+                need_update_unread_count = True
             except:
                 ia = InviteAnswer.objects.get(to_user_id=to_user_id, question_id=question_id)
                 from_user_ids = json.loads(ia.from_user_ids)
-                print from_user_ids
                 if from_user_id not in from_user_ids:
                     from_user_ids.append(from_user_id)
-                else:
-                    has_indexed = True
                 ia.from_user_ids = json.dumps(from_user_ids)
                 ia.save()
 
-                need_update_unread_count = True if (ia.is_read and not has_indexed) else False
+                need_update_unread_count = True if ia.is_read else False
 
             # 建立索引
-            if not has_indexed:
-                InviteAnswerIndex.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, question_id=question_id)
+            InviteAnswerIndex.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, question_id=question_id)
 
             # 更新未读消息，新邀请或者邀请已读才更新未读数
             if need_update_unread_count:
