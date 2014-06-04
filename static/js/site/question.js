@@ -561,7 +561,13 @@ $(document).ready(function(){
         collapseAnswer: function(){
             var target = this.$el.parent().find('li.auto-hide');
 
-            target.eq(0).css('display') === 'none' ? target.show('fast') : target.hide('fast');
+            if(target.eq(0).css('display') === 'none'){
+                target.show('fast', function(){
+                    $(this).css('display', 'block');
+                });
+            } else {
+                target.hide('fast');
+            };
         },
 
         // 回复某人
