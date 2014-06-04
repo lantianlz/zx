@@ -16,6 +16,7 @@ urlpatterns = patterns('www.account.views',
 
                        url(r'^get_user_info_by_id', 'get_user_info_by_id'),
                        url(r'^get_recommend_users', 'get_recommend_users'),
+                       url(r'^get_user_info_by_nick', 'get_user_info_by_nick'),
                        )
 
 # urlpatterns += patterns('www.account.views_oauth',

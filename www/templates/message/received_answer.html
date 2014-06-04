@@ -18,7 +18,7 @@
 				<a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
 				<span class="co8 pull-right">{{answer.create_time|time_format}}</span>
 			</div>
-			<div class="f14 pb-10 pt-5 pr-100">
+			<div class="f14 pb-10 pt-5 pr-15">
 				{{answer.get_summary|safe}}
 				<a href="{{answer.question.get_url}}#to_answer_{{answer.id}}" class="pl-5 f12">
 					<span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细

@@ -9,85 +9,63 @@
 {% if answers %}
 <ul class="message-list list-group">
 	{% for answer in answers %}
-	<li class="list-group-item">
-		<div class="message-item row">
-			<div class="col-md-1 col-xs-3">
-				<a href="{{answer.from_user.get_url}}">
-					<img class="avatar" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar}}">
-				</a>
-			</div>
-			<div class="col-md-9 col-xs-9">
-				<div class="from">
-					<a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
-				</div>
-				<div class="f14 pb-10">{{answer.get_summary|safe}}</div>
-                <div class="content f12"> 
-                    在提问 <a href="{{answer.question.get_url}}">{{answer.question.title|str_display:30}}</a> 中@了我
-                </div>
-			</div>
-			<div class="col-md-2">
-				<div class="date text-right co8">{{answer.create_time|time_format}}</div>
-				<div class="text-right hide">
-					<a href="#" class="delete">删除</a>
-					<input type="checkbox"></div>
-			</div>
-		</div>
-	</li>
+	
 	{% endfor %}
 	<li class="list-group-item no-l-r-bd bdc-eee pl-0 pl-15">
-		<a href="/p/ea851ece9f6e11e39b87000c290d194c">
-			<img class="pa avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/editor_d7fb50aeb04711e3afb7000c290d194c"></a>
-		<div class="pl-55">
+		<div class="">
 			<div class="">
-				<a href="/p/ea851ece9f6e11e39b87000c290d194c" class="zx-cardtips" data-user_id="ea851ece9f6e11e39b87000c290d194c">随便弄弄</a>
+				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
+					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/editor_d7fb50aeb04711e3afb7000c290d194c">
+				</a>
+				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
+					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://zimg0.qiniudn.com/avatar_ec931784acfc11e380f400163e003240">
+				</a>
+				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
+					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/newest_avatar_9844339eb3f411e387fb00163e003240">
+				</a>
 				<span class="co8 pull-right">05-06 20:40:23</span>
 			</div>
-			<div class="f14 pb-10 pt-5">
-				达人们可以推荐一批个股，我也想早早研究一下，然后分享出来。
-				<a href="/question/17#to_answer_38" class="pl-5 f12">
-					<span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
-				</a>
-			</div>
-            <div class="content f12"> 
-                回答了我的提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
+			
+            <div class="content f12 pt-10 pr-100"> 
+                <a href="/p/1" class="zx-cardtips" data-user_id='1'>随便弄弄</a>、
+                <a href="/p/1" class="zx-cardtips" data-user_id='1'>半夜没事瞎溜达</a>、
+                <a href="/p/1" class="zx-cardtips" data-user_id='1'>李小砍</a>
+                邀请你回答提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
             </div>
 		</div>
 	</li>
 	<li class="list-group-item no-l-r-bd bdc-eee pl-0 pl-15">
-		<a href="/p/ea851ece9f6e11e39b87000c290d194c">
-			<img class="pa avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/editor_d7fb50aeb04711e3afb7000c290d194c"></a>
-		<div class="pl-55">
+		<div class="">
 			<div class="">
-				<a href="/p/ea851ece9f6e11e39b87000c290d194c" class="zx-cardtips" data-user_id="ea851ece9f6e11e39b87000c290d194c">随便弄弄</a>
+				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
+					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/avatar_d97317d6ae4011e3867d00163e003240">
+				</a>
+				
 				<span class="co8 pull-right">05-06 20:40:23</span>
 			</div>
-			<div class="f14 pb-10 pt-5">
-				达人们可以推荐一批个股，我也想早早研究一下，然后分享出来。
-				<a href="/question/17#to_answer_38" class="pl-5 f12">
-					<span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
-				</a>
-			</div>
-            <div class="content f12"> 
-                回答了我的提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
+			
+            <div class="content f12 pt-10 pr-100"> 
+                <a href="/p/1" class="zx-cardtips" data-user_id='1'>李小砍</a>
+                邀请你回答提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
             </div>
 		</div>
 	</li>
 	<li class="list-group-item no-l-r-bd bdc-eee pl-0 pl-15">
-		<a href="/p/ea851ece9f6e11e39b87000c290d194c">
-			<img class="pa avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/editor_d7fb50aeb04711e3afb7000c290d194c"></a>
-		<div class="pl-55">
+		<div class="">
 			<div class="">
-				<a href="/p/ea851ece9f6e11e39b87000c290d194c" class="zx-cardtips" data-user_id="ea851ece9f6e11e39b87000c290d194c">随便弄弄</a>
+				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
+					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/newest_avatar_2a8141d4dab511e3b15600163e003240">
+				</a>
+				<a class="pr-10" href="/p/ea851ece9f6e11e39b87000c290d194c">
+					<img class="avatar-circle avatar-45" alt="随便弄弄" src="http://img0.zhixuan.com/editor_d7fb50aeb04711e3afb7000c290d194c">
+				</a>
 				<span class="co8 pull-right">05-06 20:40:23</span>
 			</div>
-			<div class="f14 pb-10 pt-5 pr-100">
-				达人们可以推荐一批个股，我也想早早研究一下，然后分享出来。
-				<a href="/question/17#to_answer_38" class="pl-5 f12">
-					<span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
-				</a>
-			</div>
-            <div class="content f12"> 
-                回答了我的提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
+			
+            <div class="content f12 pt-10 pr-15"> 
+                <a href="/p/1" class="zx-cardtips" data-user_id='1'>半夜没事瞎溜达</a>、
+                <a href="/p/1" class="zx-cardtips" data-user_id='1'>李小砍</a>
+                邀请你回答提问 <a href="/question/17">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</a>
             </div>
 		</div>
 	</li>

@@ -294,7 +294,11 @@ $(document).ready(function(){
         
         goPage: function(sender){
             var target = $(sender.currentTarget);
-            this.showPage(parseInt(target.data('page_index')));
+
+            // 如果可以点
+            if(!target.hasClass('disabled')){
+                this.showPage(parseInt(target.data('page_index')));
+            }
         },
         
         // 跳转页码
@@ -317,7 +321,6 @@ $(document).ready(function(){
             } else {
                 this.$('.previous-page').removeClass('disabled').data('page_index', pageIndex - 1);
             }
-            
             if(pageIndex >= this._totalPage){
                 this.$('.next-page').addClass('disabled');
             } else {
@@ -328,14 +331,7 @@ $(document).ready(function(){
 
         // 获取所有能被邀请的人
         getAllInvitePerson: function(){
-            // this._canInvitePersons = [{
-            //     'user_id': '1',
-            //     'user_avatar': '/static/img/common/user1.jpg',
-            //     'user_nick': '半夜没事瞎溜达1',
-            //     'user_desc': '漫漫人生路，谁不错几步',
-            //     'is_invited': true
-            // }
-            // ];
+            
             var me = this,
                 questionId = $('.topic-invite').data('question_id');
 
