@@ -1,6 +1,7 @@
 {% load custom_tags %}
 {% load custom_filters %}
-<li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-eee" id="answer_{{answer.id}}" data-answer_id="{{answer.id}}">
+<li class="list-group-item {% if answer.is_bad %}auto-hide{% endif %} {% if answer.from_user_id == request.user.id %}my-reply{% endif %} no-l-r-bd bdc-eee" 
+    id="answer_{{answer.id}}" data-answer_id="{{answer.id}}">
     <div class="reply-header row pr">
         <a class="no-hover-unl pa" style="left: 15px;" href="{{answer.from_user.get_url}}">
             <img class="avatar-45 avatar-circle" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar_65}}" title="{{answer.from_user.nick}}" />
@@ -10,7 +11,7 @@
                 <span class="f12">{{answer.from_user.nick}}</span>
             </a>
             <span class="f12">
-                {% if answer.from_user.des %}({{answer.from_user.des|str_display:20}}){% endif %}
+                {% if answer.from_user.des.strip %}({{answer.from_user.des.strip|str_display:20}}){% endif %}
             </span>
         </div>
         <div class="col-md-3 col-xs-3 text-right">
