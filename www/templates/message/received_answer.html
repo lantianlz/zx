@@ -10,32 +10,23 @@
 {% if answers %}
 <ul class="message-list list-group only-top-border">
 	{% for answer in answers %}
-	<li class="list-group-item">
-		<div class="message-item row">
-			<div class="col-md-1 col-xs-3">
-				<a href="{{answer.from_user.get_url}}">
-					<img class="avatar" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar}}"></a>
+	<li class="list-group-item no-l-r-bd bdc-eee pl-10">
+		<a href="{{answer.from_user.get_url}}">
+			<img class="pa avatar-circle avatar-45" alt="{{answer.from_user.nick}}" src="{{answer.from_user.get_avatar}}"></a>
+		<div class="pl-55">
+			<div class="">
+				<a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
+				<span class="co8 pull-right">{{answer.create_time|time_format}}</span>
 			</div>
-			<div class="col-md-9 col-xs-9">
-				<div class="from">
-					<a href="{{answer.from_user.get_url}}" class="zx-cardtips" data-user_id="{{answer.from_user.id}}">{{answer.from_user.nick}}</a>
-				</div>
-				<div class="f14 pb-10">
-					{{answer.get_summary|safe}}
-					<a href="{{answer.question.get_url}}#to_answer_{{answer.id}}" class="pl-5 f12">
-						<span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
-					</a>
-				</div>
-                <div class="content f12"> 
-                    回答了我的提问 <a href="{{answer.question.get_url}}">{{answer.question.title|safe}}</a>
-                </div>
+			<div class="f14 pb-10 pt-5 pr-100">
+				{{answer.get_summary|safe}}
+				<a href="{{answer.question.get_url}}#to_answer_{{answer.id}}" class="pl-5 f12">
+					<span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
+				</a>
 			</div>
-			<div class="col-md-2 col-xs-12">
-				<div class="date text-right co8">{{answer.create_time|time_format}}</div>
-				<div class="text-right hide">
-					<a href="#" class="delete">删除</a>
-					<input type="checkbox"></div>
-			</div>
+            <div class="content f12"> 
+                回答了我的提问 <a href="{{answer.question.get_url}}">{{answer.question.title|safe}}</a>
+            </div>
 		</div>
 	</li>
 	{% endfor %}
