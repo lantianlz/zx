@@ -205,7 +205,7 @@ $(document).ready(function(){
                     };
                 },
                 onSelect: function(suggestion){
-                    console.log(suggestion)
+                    
                     me.invite(suggestion.data, function(result){
                         if(result){
                             // 显示已邀请人
