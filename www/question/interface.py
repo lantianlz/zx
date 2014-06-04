@@ -406,6 +406,7 @@ class AnswerBase(object):
                 for nick in at_usernicks:
                     at_user = UserBase().get_user_by_nick(nick)
                     if at_user:
+                        # 自己@自己的关系不进行存储
                         if at_user.id != from_user_id:
                             AtAnswer.objects.create(answer=answer, user_id=at_user.id)
                             if at_user.id != to_user_id:
