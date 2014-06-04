@@ -13,14 +13,14 @@
         <div class="">
             <div class="">
                 {% for user in uri.from_users %}
-                <a class="pr-10" href="{{user.get_url}}">
+                <a class="pr-10 no-hover-unl" href="{{user.get_url}}">
                     <img class="avatar-circle avatar-45" alt="{{user.nick}}" title="{{user.nick}}" src="{{user.get_avatar_65}}">
                 </a>
                 {% endfor %}
                 <span class="co8 pull-right">{{uri.last_invite_time|time_format}}</span>
             </div>
             
-            <div class="content f12 pt-10 pr-100">
+            <div class="content f12 pt-10 pr-15">
                 {% for user in uri.from_users %}
                 <a href="{{user.get_url}}" class="zx-cardtips" data-user_id='{{user.id}}'>{{user.nick}}</a>{% if not forloop.last %}、{% endif %}
                 {% endfor %}

@@ -182,31 +182,31 @@ $(document).ready(function(){
 
             // 建议搜索
             this.$('.search-input').autocomplete({
-                // lookup: [
-                //     {'value': '1', 'data': '用户1', 'desc': '描述1', 'avatar': '/static/img/common/user1.jpg'},
-                //     {'value': '2', 'data': '用户2', 'desc': '描述2', 'avatar': '/static/img/common/user2.jpg'},
-                //     {'value': '3', 'data': '用户3', 'desc': '描述3', 'avatar': '/static/img/common/user3.jpg'},
-                //     {'value': '4', 'data': '用户4', 'desc': '描述4', 'avatar': '/static/img/common/user4.png'}
-                // ],
+                
                 serviceUrl: '/account/get_user_info_by_nick',
                 paramName: 'user_nick',
                 isLocal: false,
                 triggerSelectOnValidInput: false,
                 transformResult: function(response) {
                     
-                    var data = JSON.parse(response);
-                    return {
-                        suggestions: [{
+                    var data = JSON.parse(response),
+                        result = [];
+
+                    if(data){
+                        result = [{
                             value: data.nick,
                             data: data.user_id,
                             desc: data.des,
                             avatar: data.avatar
-                        }]
+                        }];
+                    }
+                    return {
+                        suggestions: result
                     };
                 },
                 onSelect: function(suggestion){
                     console.log(suggestion)
-                    me.invite(suggestion.value, function(result){
+                    me.invite(suggestion.data, function(result){
                         if(result){
                             // 显示已邀请人
                             me._invitedPersons.unshift({'user_id': suggestion.data, 'user_nick': suggestion.value});
@@ -220,7 +220,7 @@ $(document).ready(function(){
 
                 },
                 formatResult: function(suggestion, value){
-                    return String.format('<img class="avatar-35" src="{0}">{1}', suggestion.avatar, suggestion.value);
+                    return String.format('<div class="pointer"><img class="avatar-35" src="{0}">{1}</div>', suggestion.avatar, suggestion.value);
                 }
             })
         },
