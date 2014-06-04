@@ -255,7 +255,7 @@
             offset = that.el.offset();
 
             styles = {
-                top: (offset.top + that.el.outerHeight()) + 'px',
+                top: (offset.top + that.el.outerHeight() + ($.browser.msie ? document.documentElement.scrollTop : 0)) + 'px', 
                 left: offset.left + 'px'
             };
 

@@ -206,21 +206,22 @@ $(document).ready(function(){
                 },
                 onSelect: function(suggestion){
                     
-                    me.invite(suggestion.data, function(result){
-                        if(result){
+                    me.invite(suggestion.data, function(data){
+                        if(data.errcode === 0){
                             // 显示已邀请人
                             me._invitedPersons.unshift({'user_id': suggestion.data, 'user_nick': suggestion.value});
 
                             me.showInvitedPersons();
 
                         } else {
-                            $.ZXMsg.alert('提示', '邀请失败!');
+                            $.ZXMsg.alert('提示', data.errmsg);
                         }
+
                     });
 
                 },
                 formatResult: function(suggestion, value){
-                    return String.format('<div class="pointer"><img class="avatar-35" src="{0}">{1}</div>', suggestion.avatar, suggestion.value);
+                    return String.format('<div class="pointer"><img class="avatar-35 avatar-circle" src="{0}"><span class="pl-5">{1}</span></div>', suggestion.avatar, suggestion.value);
                 }
             })
         },
