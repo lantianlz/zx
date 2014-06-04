@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response
 
 from common import utils, page, debug, user_agent_parser
 from www.misc import qiniu_client
-from www.misc.decorators import member_required
+from www.misc.decorators import member_required, common_ajax_response
 from www.tasks import async_clear_count_info_by_code
 from www.account import interface as interface_account
 from www.question import interface as interface_question
@@ -19,6 +19,7 @@ urb = interface.UnreadCountBase()
 lb = interface_question.LikeBase()
 ab = interface_question.AnswerBase()
 ub = interface_account.UserBase()
+iab = interface.InviteAnswerBase()
 
 
 @member_required
@@ -131,7 +132,7 @@ def show_received_like(request, template_name='message/show_received_like.html')
     '''
     显示指定用户收到的赞列表 用于分享  无需登录
     '''
-    user_id = request.REQUEST.get('user_id', None)
+    user_id = request.REQUEST.get('user_id')
     if not user_id:
         return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -211,6 +212,21 @@ def share_received_like(request):
 @member_required
 def show_invite_user(request):
     from www.account.interface import UserCountBase
-    invite_user = UserCountBase().get_user_order_by_answer_count()
 
+    question_id = request.REQUEST.get('question_id')
+
+    show_invite_users = UserCountBase().get_show_invite_users(exclude_user_id=request.user.id)
+    invited_users = iab.get_invited_user_by_question_id(request.user.id, question_id)
+    show_invite_users, invited_users = iab.format_invite_user(show_invite_users, invited_users)
+
+    data = dict(invited_users=invited_users, show_invite_users=show_invite_users)
     return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+@member_required
+@common_ajax_response
+def invite_user_answer(request):
+    to_user_id = request.POST.get('to_user_id', '')
+    question_id = request.POST.get('question_id', '')
+
+    return iab.create_invite(request.user.id, to_user_id, question_id)

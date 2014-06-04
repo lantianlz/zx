@@ -162,7 +162,7 @@ $(document).ready(function(){
 
         _invitedPersons: [],
 
-        _pageCount: 2,
+        _pageCount: 4,
 
         _pageIndex: 1,
 
@@ -334,52 +334,17 @@ $(document).ready(function(){
             //     'user_nick': '半夜没事瞎溜达1',
             //     'user_desc': '漫漫人生路，谁不错几步',
             //     'is_invited': true
-            // }, {
-            //     'user_id': '2',
-            //     'user_avatar': '/static/img/common/user1.jpg',
-            //     'user_nick': '半夜没事瞎溜达2',
-            //     'user_desc': '漫漫人生路，谁不错几步',
-            //     'is_invited': false
-            // }, {
-            //     'user_id': '3',
-            //     'user_avatar': '/static/img/common/user1.jpg',
-            //     'user_nick': '半夜没事瞎溜达3',
-            //     'user_desc': '漫漫人生路，谁不错几步',
-            //     'is_invited': false
-            // }, {
-            //     'user_id': '4',
-            //     'user_avatar': '/static/img/common/user1.jpg',
-            //     'user_nick': '半夜没事瞎溜达4',
-            //     'user_desc': '漫漫人生路，谁不错几步',
-            //     'is_invited': false
-            // }, {
-            //     'user_id': '5',
-            //     'user_avatar': '/static/img/common/user1.jpg',
-            //     'user_nick': '半夜没事瞎溜达5',
-            //     'user_desc': '漫漫人生路，谁不错几步',
-            //     'is_invited': false
-            // }, {
-            //     'user_id': '6',
-            //     'user_avatar': '/static/img/common/user1.jpg',
-            //     'user_nick': '半夜没事瞎溜达6',
-            //     'user_desc': '漫漫人生路，谁不错几步',
-            //     'is_invited': false
-            // }, {
-            //     'user_id': '7',
-            //     'user_avatar': '/static/img/common/user1.jpg',
-            //     'user_nick': '半夜没事瞎溜达7',
-            //     'user_desc': '漫漫人生路，谁不错几步',
-            //     'is_invited': true
-            // }];
+            // }
+            // ];
             var me = this,
                 questionId = $('.topic-invite').data('question_id');
 
             // 设置ajax元素id,防止多次点击
             g_ajax_processing_obj_id = $('.invite').setUUID().attr('id');
 
-            ajaxSend("/question/set_important", {}, function(data){
-                me._canInvitePersons = data;
-                me._invitedPersons = data;
+            ajaxSend("/message/show_invite_user", {'question_id': questionId}, function(data){
+                me._canInvitePersons = data['show_invite_users'];
+                me._invitedPersons = data['invited_users'];
 
                 me._totalCount = me._canInvitePersons.length;
                 me._totalPage = (me._totalCount % me._pageCount == 0) 

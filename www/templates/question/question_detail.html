@@ -285,7 +285,7 @@ $(document).ready(function(){
                 <button type="button" data-user_id="<%= user.user_id %>" class="btn btn-primary btn-xs pull-right btn-invite">邀请回答</button>
                 <% } %>
             </div>
-            <div class="des pl-40"><%= user.user_desc %></div>
+            <div class="des pl-40"><%= user.user_des || '暂无简介' %></div>
         </div>
     </li>
 <% }) %>

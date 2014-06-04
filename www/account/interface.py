@@ -11,7 +11,6 @@ from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
 from www.account.models import RecommendUser, LastActive
-from www.message.interface import UnreadCountBase
 
 dict_err = {
     10100: u'邮箱重复',
@@ -135,6 +134,8 @@ class UserBase(object):
         @note: 注册
         '''
         try:
+            from www.message.interface import UnreadCountBase
+
             if not (email and nick and password):
                 transaction.rollback(using=ACCOUNT_DB)
                 return 99800, dict_err.get(99800)
@@ -563,8 +564,17 @@ class UserCountBase(object):
         uc.save()
 
     @cache_required(cache_key='user_order_by_answer_count', expire=3600)
-    def get_user_order_by_answer_count(self):
-        return UserCount.objects.all().order_by('-user_answer_count')
+    def get_user_order_by_answer_count(self, count=21):
+        ucs = UserCount.objects.all()
+        return list(ucs.order_by('-user_answer_count')[:count])
+
+    def get_show_invite_users(self, exclude_user_id, count=20):
+        '''
+        @note: 获取邀请用户展示
+        '''
+        ucs = self.get_user_order_by_answer_count()
+        data = [uc for uc in ucs if uc.user_id != exclude_user_id]
+        return data[:count]
 
 
 class RecommendUserBase(object):

@@ -6,11 +6,13 @@ from django.db import transaction
 from common import utils, cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
+from www.account.interface import UserBase
 from www.message.models import UnreadCount, UnreadType, Notice, InviteAnswer, InviteAnswerIndex
 
 
 dict_err = {
     40100: u'自己不能邀请自己哦',
+    40101: u'最多邀请6人',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -127,10 +129,24 @@ class InviteAnswerBase(object):
     def __init__(self):
         pass
 
+    def format_invite_user(self, show_invite_users, invited_users):
+        from www.custom_tags.templatetags.custom_filters import str_display
+
+        show_invite_users_json = []
+        invited_users_json = []
+        invited_user_ids = [iu.to_user_id for iu in invited_users]
+
+        for siu in show_invite_users:
+            user = UserBase().get_user_by_id(siu.user_id)
+            show_invite_users_json.append(dict(user_id=user.id, user_nick=user.nick, user_avatar=user.get_avatar_65(),
+                                               user_des=str_display(user.des or '', 17), is_invited=siu.user_id in invited_user_ids))
+        for iu in invited_users:
+            invited_users_json.append(dict(user_id=iu.to_user_id, user_nick=UserBase().get_user_by_id(iu.to_user_id).nick))
+        return show_invite_users_json, invited_users_json
+
     @transaction.commit_manually(using=DEFAULT_DB)
     def create_invite(self, from_user_id, to_user_id, question_id):
         try:
-            from www.account.interface import UserBase
             from www.question.interface import QuestionBase
 
             ub = UserBase()
@@ -143,6 +159,11 @@ class InviteAnswerBase(object):
             if from_user_id == to_user_id:
                 transaction.rollback(using=DEFAULT_DB)
                 return 40100, dict_err.get(40100)
+
+            # 同一个问题最多邀请6个人
+            if InviteAnswerIndex.objects.filter(from_user_id=from_user_id, question_id=question_id).count() >= 6:
+                transaction.rollback(using=DEFAULT_DB)
+                return 40101, dict_err.get(40101)
 
             has_indexed = False
             need_update_unread_count = True
@@ -179,7 +200,7 @@ class InviteAnswerBase(object):
     def get_user_received_invite(self, to_user_id):
         pass
 
-    def get_user_sended_invite_by_question_id(self, from_user_id, question_id):
+    def get_invited_user_by_question_id(self, from_user_id, question_id):
         return InviteAnswerIndex.objects.filter(from_user_id=from_user_id, question_id=question_id)
 
     def update_invite_is_read(self, to_user_id):
