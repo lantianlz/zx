@@ -406,10 +406,11 @@ class AnswerBase(object):
                 for nick in at_usernicks:
                     at_user = UserBase().get_user_by_nick(nick)
                     if at_user:
-                        AtAnswer.objects.create(answer=answer, user_id=at_user.id)
-                        if at_user.id != from_user_id and at_user.id != to_user_id:
-                            # 发送未读消息数通知
-                            UnreadCountBase().update_unread_count(at_user.id, code='at_answer')
+                        if at_user.id != from_user_id:
+                            AtAnswer.objects.create(answer=answer, user_id=at_user.id)
+                            if at_user.id != to_user_id:
+                                # 更新@未读消息数
+                                UnreadCountBase().update_unread_count(at_user.id, code='at_answer')
 
             # 更新未读消息
             if from_user_id != to_user_id:
