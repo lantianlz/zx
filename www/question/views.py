@@ -174,49 +174,49 @@ def topic_question(request, tag_domain, template_name='question/topic_question.h
 @member_required
 @common_ajax_response
 def like_answer(request):
-    answer_id = request.POST.get('answer_id', '')
+    answer_id = request.POST.get('answer_id', '').strip()
     return lb.like_it(answer_id, request.user.id, ip=utils.get_clientip(request))
 
 
 @member_required
 @common_ajax_response
 def remove_answer(request):
-    answer_id = request.POST.get('answer_id', '')
+    answer_id = request.POST.get('answer_id', '').strip()
     return ab.remove_answer(answer_id, request.user)
 
 
 @member_required
 @common_ajax_response
 def remove_question(request):
-    question_id = request.POST.get('question_id', '')
+    question_id = request.POST.get('question_id', '').strip()
     return qb.remove_question(question_id, request.user)
 
 
 @staff_required
 @common_ajax_response
 def set_important(request):
-    question_id = request.POST.get('question_id', '')
+    question_id = request.POST.get('question_id', '').strip()
     return qb.set_important(question_id, request.user)
 
 
 @staff_required
 @common_ajax_response
 def cancel_important(request):
-    question_id = request.POST.get('question_id', '')
+    question_id = request.POST.get('question_id', '').strip()
     return qb.cancel_important(question_id, request.user)
 
 
 @member_required
 @common_ajax_response
 def set_answer_bad(request):
-    answer_id = request.POST.get('answer_id', '')
+    answer_id = request.POST.get('answer_id', '').strip()
     return ab.set_answer_bad(answer_id, request.user)
 
 
 @member_required
 @common_ajax_response
 def cancel_answer_bad(request):
-    answer_id = request.POST.get('answer_id', '')
+    answer_id = request.POST.get('answer_id', '').strip()
     return ab.cancel_answer_bad(answer_id, request.user)
 
 
@@ -224,7 +224,7 @@ def get_topic_info_by_id(request):
     '''
     @note: 根据话题id获取名片信息
     '''
-    topic_id = request.REQUEST.get('topic_id')
+    topic_id = request.REQUEST.get('topic_id', '').strip()
 
     infos = {}
     if topic_id:
@@ -239,7 +239,7 @@ def get_answer_like(request):
     '''
     @note: 获取回答对应的赞
     '''
-    answer_id = request.REQUEST.get('answer_id')
+    answer_id = request.REQUEST.get('answer_id', '').strip()
 
     data = []
     if answer_id:

@@ -22,7 +22,7 @@ def show_user_timeline(request):
 
 @member_required
 def get_user_timeline(request):
-    last_feed_id = request.REQUEST.get('last_feed_id', '')
+    last_feed_id = request.REQUEST.get('last_feed_id', '').strip()
     feeds = fb.get_user_timeline(request.user.id, last_feed_id)
     need_get_recommended_user = True if len(feeds) < 5 and not last_feed_id else False
     return HttpResponse(json.dumps(dict(feeds=feeds, need_get_recommended_user=need_get_recommended_user)), mimetype='application/json')
