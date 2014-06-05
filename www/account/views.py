@@ -363,7 +363,7 @@ def get_user_info_by_nick(request):
     '''
     @note: 根据用户昵称获取名片信息
     '''
-    user_nick = request.REQUEST.get('user_nick', '').strip(
+    user_nick = request.REQUEST.get('user_nick', '').strip()
     infos = ''
     if user_nick:
         user = ub.get_user_by_nick(user_nick)
