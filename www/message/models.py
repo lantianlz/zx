@@ -79,28 +79,21 @@ class InviteAnswerIndex(models.Model):
         unique_together = [("from_user_id", "to_user_id", 'question_id'), ]
 
 
-'''
 class GlobalNotice(models.Model):
 
     """
     @note: 全站通告
     """
-    content = models.TextField()
-    effective_time = models.DateTimeField()
-    dead_time = models.DateTimeField()
+    level_choices = ((0, u'普通'), (1, u'必看'))
+    platform_choices = ((0, u'web端'), (1, u'手机端'))
 
-    def __unicode__(self):
-        return str(self.id)
-
-
-class GlobalNoticeDisable(models.Model):
-
-    """
-    @note: 全站通告对于个人是否显示
-    """
-    global_notice = models.ForeignKey('GlobalNotice')
     user_id = models.CharField(max_length=32, db_index=True)
+    content = models.TextField()
+    start_time = models.DateTimeField(db_index=True)
+    end_time = models.DateTimeField(db_index=True)
+    level = models.IntegerField(default=0, choices=level_choices)
+    platform = models.IntegerField(default=0, choices=platform_choices, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = [("global_notice", "user_id")]
-'''
+        ordering = ["-id"]

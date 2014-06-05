@@ -48,6 +48,8 @@ def init_question_tag():
             [u'股票账户', u'gpzh', True, u'http://img0.zhixuan.com/topic_gpzh.jpg', u'本话题包括但不限于股票开户及转户，融资融券开户，交易佣金，行情及交易软件等股票相关的讨论。'],
             [u'期货账户', u'qhzh', True, u'http://img0.zhixuan.com/topic_qhzh.jpg', u'本话题包括但不限于商品期货开户，金融期货开户（股指期货，国债期货），交易佣金，行情及交易软件等期货相关的讨论。'],
             [u'理财咨询', u'lczx', True, u'http://img0.zhixuan.com/topic_lczx.jpg', u'本话题包括但不限于银行理财产品，P2P理财产品，信托理财产品，券商资管理财产品，互联网“宝宝”类理财产品等理财相关的讨论。'],
+            [u'套利', u'tl', True, u'http://img0.zhixuan.com/topic_tl.jpg',
+                u'套利( arbitrage): ，在金融学中的定义为：在两个不同的市场中，以有利的价格同时买进或卖出同种或本质相同的证券的行为。投资组合中的金融工具可以是同种类的也可以是不同种类的。 在市场实践中，套利一词有着与定义不同的含义。实际中，套利意味着有风险的头寸，它是一个也许会带损失，但是有更大的可能性会带来收益的头寸。'],
         ]),
     ]
     for data in datas:
@@ -61,6 +63,11 @@ def init_question_tag():
                 tag_obj.save()
             except Tag.DoesNotExist:
                 Tag.objects.create(name=tag[0], domain=tag[1], question_type=qt, is_show=tag[2], img=tag[3], des=tag[4])
+
+    # 更新缓存
+    from www.question.interface import TagBase
+    TagBase().get_all_tags(must_update_cache=True)
+
     print 'ok'
 
 
