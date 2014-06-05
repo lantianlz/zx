@@ -403,3 +403,10 @@ a.border-block-blue.active{
     color: #428bca;
     border-bottom: 2px solid #428bca;
 }
+
+.gradient1{
+  background: #ace;
+  background: -webkit-linear-gradient(left,#ace,#f96);
+  background:    -moz-linear-gradient(left,#ace,#f96);
+  background:     -ms-linear-gradient(left,#ace,#f96);
+}

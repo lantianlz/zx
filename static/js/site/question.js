@@ -242,7 +242,7 @@ $(document).ready(function(){
         // 查询邀请人
         search: function(){
             // todo
-            $.ZXMsg.alert('查询某人', this.$('.search-input').val());
+            // $.ZXMsg.alert('查询某人', this.$('.search-input').val());
         },
 
         invite: function(userId, callback){

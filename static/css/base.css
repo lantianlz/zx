@@ -23,6 +23,7 @@
 .vm{vertical-align:middle}
 .pr{position:relative}
 .pa{position:absolute}
+.pf{position:fixed}
 .abs-right{position:absolute;right:0}
 .zoom{zoom:1}
 
@@ -224,14 +225,6 @@
 .co20{color: #eee;}
 .co21{color: #555;}
 
-.bgc-0{background-color: transparent;}
-.bgc-333{background-color: #333;}
-.bgc-zx{background-color: #428bca;}
-.bgc-e9e9e9{background-color: #e9e9e9;}
-.bgc-f1f1f1{background-color: #f1f1f1;}
-.bgc-fff{background-color: #ffffff;}
-.bgc-86C1D6{background-color: #86C1D6;}
-
 .textindent2{text-indent:32px;}
 .textindent0{text-indent: 0;}
 
@@ -262,6 +255,15 @@ a:hover{color: #259;}
     animation-play-state: running;
 }
 
+.bgc-0{background-color: transparent;}
+.bgc-000{background-color: #000;}
+.bgc-333{background-color: #333;}
+.bgc-zx{background-color: #428bca;}
+.bgc-e9e9e9{background-color: #e9e9e9;}
+.bgc-f1f1f1{background-color: #f1f1f1;}
+.bgc-fff{background-color: #ffffff;}
+.bgc-86C1D6{background-color: #86C1D6;}
+.bgc-CA7842{background-color: #CA7842}
 
 .box-shadow-224{box-shadow: 2px 2px 4px #666;}
 .box-shadow-024{box-shadow: 0px 2px 4px #666;}

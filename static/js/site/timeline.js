@@ -1,4 +1,16 @@
 $(document).ready(function(){
+    // 从 cookie 中读取是否显示新功能提示
+    if($.cookie('not-show-new-feature-notice')){
+
+    }
+
+    $.ZXNotice.InlineNotice('新增功能：邀请回答功能上线，提问从此不再孤独！', $('.new-notices'), false, function(){
+        console.log('111');
+    });
+    $.ZXNotice.InlineNotice('维护公告：2014-06-06日 到 2014-06-08日智选网将停机维护！', $('.new-notices'), true, function(){
+        console.log('222');
+    });
+
 
     var Feed = Backbone.Model.extend({
         defaults: {

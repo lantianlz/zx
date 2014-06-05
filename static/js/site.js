@@ -1214,22 +1214,18 @@ if (!String.format) {
 
 
     /* 
-        弹窗插件
+        图表插件
     */
     $.ZXChart = {
         version: '1.0.0',
         author: 'stranger',
-        description: '图标插件'
+        description: '图表插件'
     };
     /*
-        通用alert框
-        alertTitle: 弹出框的标题
-        alertMsg: 弹出框的描述
-        delayCloseSeconds: 延迟几秒之后自动关闭
+        通用图表插件
 
         用例:
-        $.ZXMsg.alert('提示', '操作成功!');
-        $.ZXMsg.alert('提示', '操作成功, 5秒后自动关闭!', 5000);
+        
     */
     $.ZXChart.lineChart = function(_options){
         var options = $.extend(true, {
@@ -1300,6 +1296,86 @@ if (!String.format) {
         // 显示chart框
         $('#chart_modal').modal({'show': true, 'backdrop': 'static'});
         
+    };
+
+
+    /* 
+        网站提示插件
+    */
+    $.ZXNotice = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '网站提示插件'
+    };
+    $.ZXNotice.FixNotice = function(){
+        var noticeHtml = [
+            '<div id="zx_fix_notice" class="none pf co8 box-shadow-224 bgc-000 border-radius-2 pr-15 pb-15 pt-15" style="bottom:3px;right:5px;opacity:1;">',
+                '<ul>',
+                    '<li>',
+                        '上线功能点：',
+                    '</li>',
+                    '<li>',
+                        '1.邀请回答功能上线，提问从此不再孤独',
+                    '</li>',
+                    '<li>',
+                        '2.一句话简介等信息拒绝用户输入纯空格这样的不可见字符',
+                    '</li>',
+                    '<li>',
+                        '3.回答中自己@自己的回答，在@提到我的回答中不进行展示',
+                    '</li>',
+                    '<li>',
+                        '4.本地开发环境中的请求不再往百度统计发送信息，避免干扰统计数据',
+                    '</li>',
+                '</ul>',
+                '<span class="pa glyphicon glyphicon-remove-circle f18 pointer z99" style="top:5px;right:5px;"></span>',
+            '</div>'
+        ].join('');
+
+        $('body').append(noticeHtml);
+
+        $('#zx_fix_notice').show('fast');
+
+        // 绑定关闭事件
+        $('#zx_fix_notice .glyphicon-remove-circle')
+        .bind('click', function(){
+
+            // 关闭之后删除整个提醒框
+            $('#zx_fix_notice').hide('fast', function(){
+                $(this).remove();
+            })
+        });
+    };
+    /*
+        行内通知
+        content: 通知内容
+        important: 是否重要通知
+
+        用例:
+        $.ZXNotice.InlineNotice('这是通知', '', false, function(){})
+    */
+    $.ZXNotice.InlineNotice = function(content, toElement, important, closeCallback){
+        var noticeHtml = [
+                '<div class="alert alert-dismissable mb-10 {1} box-shadow-224 border-radius-2 co3 zx-inline-notice none">',
+                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">',
+                        '<span class="glyphicon glyphicon-remove-circle co3 f18 pointer remove-inline-notice"></span>',
+                    '</button>',
+                    '<span class="glyphicon glyphicon-bullhorn pr-10"></span>',
+                    '<span class="notice-content">{0}</span>',
+                '</div>'
+            ].join('');
+
+        var target = $(String.format(noticeHtml, content, important?'bgc-CA7842':'bgc-zx')).appendTo(toElement);
+
+        // 显示
+        target.show('fast');
+        
+        // 绑定回调函数
+        target.find('.remove-inline-notice')
+        .bind('click', function(){
+            if(closeCallback){
+                closeCallback();
+            }
+        });
     };
 
 
@@ -1375,6 +1451,7 @@ jQuery.extend(jQuery.validator.messages, {
 
 
 $(document).ready(function(){
+    
     // 回到顶部动画效果
     var userClickTop = false;
 
