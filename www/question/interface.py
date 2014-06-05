@@ -131,7 +131,7 @@ class QuestionBase(object):
             question = Question.objects.create(user_id=user_id, question_type_id=question_type,
                                                title=question_title, content=question_content,
                                                last_answer_time=datetime.datetime.now(), ip=ip,
-                                               is_hide_user=is_hide_user)
+                                               is_hide_user=is_hide_user, is_silence=self.get_question_is_silence_by_tags(tags))
 
             # 创建话题和tags关系
             for tag in tags:
@@ -144,7 +144,7 @@ class QuestionBase(object):
             UserCountBase().update_user_count(user_id=user_id, code='user_question_count')
 
             # 发送feed
-            if not is_hide_user and question.question_type.domain != 'qita':
+            if not is_hide_user and not question.is_silence:
                 FeedBase().create_feed(user_id, feed_type=1, obj_id=question.id)
 
             transaction.commit(using=QUESTION_DB)
@@ -174,6 +174,7 @@ class QuestionBase(object):
             question.ip = ip
             if is_hide_user:
                 question.is_hide_user = True
+            question.is_silence = self.get_question_is_silence_by_tags(tags)
             question.save()
 
             # 创建话题和tags关系
@@ -203,6 +204,18 @@ class QuestionBase(object):
         @note: 更新浏览次数
         '''
         Question.objects.filter(id=question_id).update(views_count=F('views_count') + 1)
+
+    def get_question_is_silence_by_tags(self, tag_ids):
+        '''
+        @note: 获取提问是否为静默状态
+        '''
+        tb = TagBase()
+        tags = [tb.get_tag_by_id(tag_id) for tag_id in tag_ids]
+        for tag in tags:
+            # 三类话题静默，之后改成在话题增加属性进行控制
+            if tag and tag.domain in ('gpzh', 'qhzh', 'lczx'):
+                return True
+        return False
 
     @question_admin_required
     @transaction.commit_manually(using=QUESTION_DB)
@@ -238,7 +251,7 @@ class QuestionBase(object):
 
         # 剔除其他类型的提问
         if not question_type_domain:
-            questions = questions.exclude(question_type=QuestionTypeBase().get_question_type_by_id_or_domain('qita'))
+            questions = questions.filter(is_silence=False)
         return questions
 
     def get_questions_by_tag(self, tag_object_or_domain):
@@ -426,7 +439,7 @@ class AnswerBase(object):
             question.save()
 
             # 发送feed
-            if question.question_type.domain != 'qita':
+            if not question.is_silence:
                 FeedBase().create_feed(from_user_id, feed_type=3, obj_id=answer.id)
 
             # 更新summary
@@ -639,7 +652,7 @@ class LikeBase(object):
             UnreadCountBase().update_unread_count(to_user_id, code='received_like')
 
             # 发送feed
-            if question.question_type.domain != 'qita':
+            if not question.is_silence:
                 FeedBase().create_feed(from_user_id, feed_type=2, obj_id=answer.id)
 
             # 更新summary
