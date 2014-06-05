@@ -16,6 +16,7 @@ class Question(models.Model):
     sort_num = models.IntegerField(default=0, db_index=True)
     like_count = models.IntegerField(default=0)
     is_important = models.BooleanField(default=False)   # 是否是精华帖
+    is_silence = models.BooleanField(default=False, db_index=True)   # 是否静默，部分话题下的提问采取静默模式，不发feed，不在全部信息中展示
     ip = models.CharField(max_length=32, null=True)
     is_hide_user = models.BooleanField(default=False)
     state = models.BooleanField(default=True, db_index=True)
