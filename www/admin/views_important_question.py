@@ -95,8 +95,9 @@ def modify_important(request):
     # 如果有上传图片
     if img:
         flag, img_name = qiniu_client.upload_img(img, img_type='important')
+        img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
-    code, msg = qb.set_important(question, request.user, '%s/%s' % (settings.IMG0_DOMAIN, img_name), img_alt, sort_num)
+    code, msg = qb.set_important(question, request.user, img_name, img_alt, sort_num)
 
     url = '/admin/important_question#modify/%s' % iq.question.id
 

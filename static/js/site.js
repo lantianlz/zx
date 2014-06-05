@@ -1351,9 +1351,9 @@ if (!String.format) {
         important: 是否重要通知
 
         用例:
-        $.ZXNotice.InlineNotice('这是通知', '', false, function(){})
+        $.ZXNotice.InlineNotice(11, '这是通知', '', false, function(){})
     */
-    $.ZXNotice.InlineNotice = function(content, toElement, important, closeCallback){
+    $.ZXNotice.InlineNotice = function(noticeId, content, toElement, important, closeCallback){
         var noticeHtml = [
                 '<div class="alert alert-dismissable mb-10 {1} box-shadow-224 border-radius-2 co3 zx-inline-notice none">',
                     '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">',
@@ -1373,7 +1373,7 @@ if (!String.format) {
         target.find('.remove-inline-notice')
         .bind('click', function(){
             if(closeCallback){
-                closeCallback();
+                closeCallback(noticeId);
             }
         });
     };

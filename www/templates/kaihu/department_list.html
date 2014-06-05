@@ -142,11 +142,11 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="pt-10">
-            <span class="pl-5">
+            <span class="pl-5 min-w100 inline-block">
                 {{cm.company_short_name}}
             </span>
             
-            <span class="pl-25">
+            <span class="pl-0">
                 <span class="glyphicon glyphicon-earphone co-zx"></span>{{cm.mobile|default:"暂无"}}
             </span> 
             <span class="pr-5">
@@ -184,11 +184,11 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="pt-10">
-            <span class="pl-5">
+            <span class="pl-5 min-w100 inline-block">
                 <%= customerManager.companyShortName %>
             </span>
             
-            <span class="pl-25">
+            <span class="pl-0">
                 <span class="glyphicon glyphicon-earphone co-zx"></span><%= customerManager.mobile?customerManager.mobile:'暂无' %>
             </span>
             <span class="pr-5">

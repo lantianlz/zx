@@ -93,6 +93,7 @@
     }
 }
 .min-w140{min-width: 140px;}
+.min-w100{min-width: 100px;}
 
 /*边距*/
 .m0{margin:0}
