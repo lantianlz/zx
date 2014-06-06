@@ -23,6 +23,7 @@ $(document).ready(function(){
                         $('.new-notices'), 
                         d.important > 0 ? true : false,
                         function(noticeId){
+
                             // 关闭之后，更新cookie
                             var tempLocalStatus = JSON.parse($.cookie('notices') || '{}');
                             tempLocalStatus[noticeId] = true;
