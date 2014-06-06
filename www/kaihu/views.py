@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import page
+from www.timeline.interface import FeedBase
 from www.kaihu import interface
 
 cb = interface.CityBase()
@@ -36,8 +37,15 @@ def department_list(request, city_abbr, template_name='kaihu/department_list.htm
     departments = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
-    customer_managers = cmb.get_customer_managers_by_city_id(city.id)[:4]
+    customer_managers = cmb.get_customer_managers_by_city_id(city.id)
+    customer_manager_user_ids = [cm['user_id'] for cm in customer_managers]
+    customer_managers = customer_managers[:4]
+
     flinks = flb.get_friendly_link_by_city_id(city.id)
+
+    fb = FeedBase()
+    feeds = fb.format_feeds_by_id(fb.get_feed_ids_by_feed_type(feed_type=3, user_ids=customer_manager_user_ids)[:5])
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -47,6 +55,10 @@ def department_detail(request, department_id, template_name='kaihu/department_de
         raise Http404
 
     customer_managers = cmb.format_customer_managers_for_ajax(cmb.get_customer_managers_by_department(department))
+
+    customer_manager_user_ids = [cm['user_id'] for cm in customer_managers]
+    fb = FeedBase()
+    feeds = fb.format_feeds_by_id(fb.get_feed_ids_by_feed_type(feed_type=3, user_ids=customer_manager_user_ids)[:20])
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

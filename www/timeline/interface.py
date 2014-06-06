@@ -251,3 +251,6 @@ class FeedBase(object):
         feed.delete()
 
         return 0, dict_err.get(0)
+
+    def get_feed_ids_by_feed_type(self, feed_type, user_ids):
+        return [feed.id for feed in Feed.objects.filter(feed_type=feed_type, user_id__in=user_ids)]
