@@ -1356,7 +1356,7 @@ if (!String.format) {
     $.ZXNotice.InlineNotice = function(noticeId, content, toElement, important, closeCallback){
         var noticeHtml = [
                 '<div class="alert alert-dismissable mb-10 {1} box-shadow-224 border-radius-2 co3 zx-inline-notice none">',
-                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">',
+                    '<button type="button" class="close" aria-hidden="true">',
                         '<span class="glyphicon glyphicon-remove-circle co3 f18 pointer remove-inline-notice"></span>',
                     '</button>',
                     '<span class="glyphicon glyphicon-bullhorn pr-10"></span>',
@@ -1368,10 +1368,14 @@ if (!String.format) {
 
         // 显示
         target.show('fast');
-        
+       
         // 绑定回调函数
-        target.find('.remove-inline-notice')
+        target
+        .find('.close')
         .bind('click', function(){
+            // 关闭之后删除自己
+            target.hide('fast', function(){target.remove()});
+
             if(closeCallback){
                 closeCallback(noticeId);
             }
