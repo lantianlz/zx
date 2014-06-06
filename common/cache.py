@@ -15,10 +15,10 @@ CONNECTIONS = {}
 # admin后台渲染用
 CACHE_INDEX = {
     'CACHE_TMP': [u'临时库', CACHE_TMP],
-    'CACHE_STATIC': [u'无过期时间库', CACHE_TMP],
-    'CACHE_USER': [u'user库', CACHE_TMP],
-    'CACHE_SESSION': [u'session库', CACHE_TMP],
-    'CACHE_TIMELINE': [u'timeline库', CACHE_TMP],
+    'CACHE_STATIC': [u'无过期时间库', CACHE_STATIC],
+    'CACHE_USER': [u'user库', CACHE_USER],
+    'CACHE_SESSION': [u'session库', CACHE_SESSION],
+    'CACHE_TIMELINE': [u'timeline库', CACHE_TIMELINE],
 }
 CACHE_KEYS_DESC = {'media_version': u'静态文件版本号'}
 

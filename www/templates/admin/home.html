@@ -117,10 +117,10 @@ a.list-group-item.active{
         <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">城市友情链接管理</a>
         <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/customer_manager' in request.path %}active{% endif %}" href="/admin/customer_manager">客户经理管理</a>
         <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">用户反馈管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/friendly_link' in request.path %}active{% endif %}" href="friendly_link">友情链接管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/friendly_link' in request.path %}active{% endif %}" href="/admin/friendly_link">友情链接管理</a>
         <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/permission' in request.path %}active{% endif %}" href="/admin/permission">权限管理</a>
         
-        <!-- 二级导航样式 -->
+        <!-- 统计管理 -->
         <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/statistics' in request.path %}active{% endif %}">
             <span class="co21">统计管理</span><span class="glyphicon glyphicon-chevron-right pull-right f12 mt-3 co21"></span>
             
@@ -130,11 +130,21 @@ a.list-group-item.active{
                 <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/statistics/register_user' in request.path %}active{% endif %}" href="/admin/statistics/register_user">注册用户统计</a>
             </ul>
         </li>
+
+        <!-- 常用工具 -->
+        <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/tools' in request.path %}active{% endif %}">
+            <span class="co21">常用工具</span><span class="glyphicon glyphicon-chevron-right pull-right f12 mt-3 co21"></span>
+            
+            <ul class="sub-admin-nav list-group pa none box-shadow-224">
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/tools/cache' in request.path %}active{% endif %}" href="/admin/tools/caches">缓存管理</a>
+                
+            </ul>
+        </li>
         
     </ul>
 </div>
 
-<div class="col-md-offset-2 col-md-10 box-shadow-224 bgc-fff mt-25 admin-right">
+<div class="col-md-offset-2 col-md-10 box-shadow-224 bgc-fff mt-25 admin-right min-h400">
     {% block admin-right %}{% endblock admin-right %}
 </div>
 {% endblock container %}

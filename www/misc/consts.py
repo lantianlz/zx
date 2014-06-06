@@ -59,4 +59,8 @@ PERMISSIONS = [
     {'code': 'statistics_manage', 'name': u'统计管理', 'parent': None},
     {'code': 'statistics_active_user', 'name': u'当日活跃用户统计', 'parent': 'statistics_manage'},
     {'code': 'statistics_register_user', 'name': u'注册用户统计', 'parent': 'statistics_manage'},
+
+    {'code': 'tools', 'name': u'常用工具', 'parent': None},
+    {'code': 'remove_cache', 'name': u'删除缓存', 'parent': 'tools'},
+    {'code': 'modify_cache', 'name': u'修改缓存', 'parent': 'tools'},
 ]

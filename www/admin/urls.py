@@ -98,3 +98,11 @@ urlpatterns += patterns('www.admin.views_statistics',
                         url(r'^statistics/active_user$', 'active_user'),
                         url(r'^statistics/register_user$', 'register_user'),
                         )
+
+
+# 常用工具
+urlpatterns += patterns('www.admin.views_tools',
+                        url(r'^tools/remove_cache$', 'remove_cache'),
+                        url(r'^tools/modify_cache$', 'modify_cache'),
+                        url(r'^tools/caches$', 'caches'),
+                        )
