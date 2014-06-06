@@ -52,6 +52,7 @@ class Cache(object):
 
     def set(self, key, value, time_out=0, original=False):
         s_value = dumps(value) if not original else value
+        time_out = int(time_out)
         if time_out:
             if self.conn.exists(key):
                 self.conn.setex(key, s_value, time_out)
