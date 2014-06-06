@@ -6,17 +6,18 @@
 @date: 2011-11-28
 """
 
-from django.conf import settings
-
 
 def config(request):
     """
     @attention: Adds settings-related context variables to the context.
     """
+    from django.conf import settings
+    from common import cache
+
     return {
         'DEBUG': settings.DEBUG,
         'LOCAL_FLAG': settings.LOCAL_FLAG,
-        'MEDIA_VERSION': '007',
+        'MEDIA_VERSION': cache.Cache(cache.CACHE_STATIC).get('media_version') or '000',  # 从缓存中取版本号
         'SERVER_DOMAIN': settings.SERVER_DOMAIN,
         'MAIN_DOMAIN': settings.MAIN_DOMAIN,
     }

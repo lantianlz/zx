@@ -9,8 +9,18 @@ CACHE_STATIC = ('127.0.0.1', 6379, 6, 'static')
 CACHE_USER = ('127.0.0.1', 6379, 7, 'user')
 CACHE_SESSION = ('127.0.0.1', 6379, 8, 'session')
 CACHE_TIMELINE = ('127.0.0.1', 6379, 9, 'timeline')
-
 CONNECTIONS = {}
+
+
+# admin后台渲染用
+CACHE_INDEX = {
+    'CACHE_TMP': [U'临时库', CACHE_TMP],
+    'CACHE_STATIC': [U'无过期时间库', CACHE_TMP],
+    'CACHE_USER': [U'user库', CACHE_TMP],
+    'CACHE_SESSION': [U'session库', CACHE_TMP],
+    'CACHE_TIMELINE': [U'timeline库', CACHE_TMP],
+}
+CACHE_KEYS_DESC = {'media_version': u'静态文件版本号'}
 
 
 def get_connection(config):
