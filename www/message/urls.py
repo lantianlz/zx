@@ -14,4 +14,5 @@ urlpatterns = patterns('www.message.views',
                        url(r'^get_unread_count_total/?$', 'get_unread_count_total'),
                        url(r'^show_invite_user$', 'show_invite_user'),
                        url(r'^invite_user_answer$', 'invite_user_answer'),
+                       url(r'^get_all_valid_global_notice$', 'get_all_valid_global_notice'),
                        )

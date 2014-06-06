@@ -1,33 +1,37 @@
 $(document).ready(function(){
 
-    var data = [{
-        'content': '新增功能：邀请回答功能上线，提问从此不再孤独！',
-        'important': false,
-        'noticeId': 11
-    }];
-    data = [];
+    ajaxSend(
+        "/message/get_all_valid_global_notice", '', 
+        function(data){
+            // var data = [{
+            //     'content': '新增功能：邀请回答功能上线，提问从此不再孤独！',
+            //     'important': false,
+            //     'noticeId': 11
+            // }];
 
-    // 获取cookie里面的通知状态
-    var localStatus = JSON.parse($.cookie('notices') || '{}');
-    
-    $.map(data, function(d){
-        // 如果没有关闭过，则创建提示
-        if(!localStatus[d.noticeId]){
-            $.ZXNotice.InlineNotice(
-                d.noticeId,
-                d.content, 
-                $('.new-notices'), 
-                d.important,
-                function(noticeId){
-                    // 关闭之后，更新cookie
-                    var tempLocalStatus = JSON.parse($.cookie('notices') || '{}');
-                    tempLocalStatus[noticeId] = true;
+            // 获取cookie里面的通知状态
+            var localStatus = JSON.parse($.cookie('notices') || '{}');
+            
+            $.map(data, function(d){
+                // 如果没有关闭过，则创建提示
+                if(!localStatus[d.noticeId]){
+                    $.ZXNotice.InlineNotice(
+                        d.noticeId,
+                        d.content, 
+                        $('.new-notices'), 
+                        d.important,
+                        function(noticeId){
+                            // 关闭之后，更新cookie
+                            var tempLocalStatus = JSON.parse($.cookie('notices') || '{}');
+                            tempLocalStatus[noticeId] = true;
 
-                    $.cookie('notices', JSON.stringify(tempLocalStatus), {expires: 30});
+                            $.cookie('notices', JSON.stringify(tempLocalStatus), {expires: 30});
+                        }
+                    );
                 }
-            );
-        }
-    });
+            });
+        }, 'GET'
+    );
 
 
     var Feed = Backbone.Model.extend({

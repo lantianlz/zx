@@ -7,7 +7,7 @@ from common import utils, cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase
-from www.message.models import UnreadCount, UnreadType, Notice, InviteAnswer, InviteAnswerIndex
+from www.message.models import UnreadCount, UnreadType, Notice, InviteAnswer, InviteAnswerIndex, GlobalNotice
 
 
 dict_err = {
@@ -216,3 +216,37 @@ class InviteAnswerBase(object):
 
     def update_invite_is_read(self, to_user_id):
         return InviteAnswer.objects.filter(to_user_id=to_user_id).update(is_read=True)
+
+
+class GlobalNoticeBase(object):
+
+    def __init__(self):
+        pass
+
+    def format_global_notice(self, objs):
+        data = []
+        for obj in objs:
+            data.append(dict(notice_id=obj.id, content=obj.content, level=obj.level))
+        return data
+
+    def create_global_notice(self, content, start_time, end_time, user_id, level=0, platform=0):
+        try:
+            assert content and start_time and end_time
+            assert end_time > start_time
+        except:
+            transaction.rollback(using=DEFAULT_DB)
+            return 99800, dict_err.get(99800)
+
+        GlobalNotice.objects.create(content=content, start_time=start_time, end_time=end_time,
+                                    user_id=user_id, level=level, platform=platform)
+
+        self.get_all_valid_global_notice(must_update_cache=True)
+        return 0, dict_err.get(0)
+
+    @cache_required(cache_key='get_all_valid_global_notice', expire=3600)
+    def get_all_valid_global_notice(self, must_update_cache=False):
+        import datetime
+        return GlobalNotice.objects.filter(end_time__gt=datetime.datetime.now())
+
+    def get_all_global_notice(self):
+        return GlobalNotice.objects.all()
