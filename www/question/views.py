@@ -34,8 +34,7 @@ def question_home(request, question_type=None, template_name='question/question_
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def question_detail(request, question_id, template_name='question/question_detail.html',
-                    error_msg=None, success_msg=None, answer_content=''):
+def question_detail(request, question_id, template_name='question/question_detail.html'):
     question = qb.get_question_by_id(question_id)
     if not question:
         raise Http404
@@ -45,6 +44,17 @@ def question_detail(request, question_id, template_name='question/question_detai
     bad_answers = ab.format_answers(ab.get_bad_answers_by_question_id(question_id), request.user)
     good_answers_count = len(good_answers)
     bad_answers_count = len(bad_answers)
+
+    # 从session中获取提示信息
+    if request.session.has_key('error_msg'):
+        error_msg = request.session['error_msg']
+        del request.session['error_msg']
+    if request.session.has_key('success_msg'):
+        success_msg = request.session['success_msg']
+        del request.session['success_msg']
+    if request.session.has_key('answer_content'):
+        answer_content = request.session['answer_content']
+        del request.session['answer_content']
 
     # 异步更新浏览次数
     from www.tasks import async_add_question_view_count
@@ -89,12 +99,11 @@ def modify_question(request, question_id):
         errcode, result = qb.modify_question(question_id, request.user, question_type, question_title, question_content,
                                              ip=utils.get_clientip(request), is_hide_user=is_hide_user, tags=tags)
         if errcode == 0:
-            return question_detail(request, question_id, success_msg=u'修改成功')
-            # return HttpResponseRedirect(result.get_url())
+            request.session['success_msg'] = u'修改成功'
+            return HttpResponseRedirect(result.get_url())
         else:
-            return question_detail(request, question_id, error_msg=result)
-    else:
-        return question_detail(request, question_id)
+            request.session['error_msg'] = result
+            return HttpResponseRedirect(qb.get_question_by_id(question_id).get_url())
 
 
 @member_required
@@ -106,9 +115,11 @@ def modify_answer(request):
 
         errcode, result = ab.modify_answer(answer_id, request.user, edit_answer_content)
         if errcode == 0:
-            return question_detail(request, question_id, success_msg=u'修改成功')
+            request.session['success_msg'] = u'修改成功'
+            return HttpResponseRedirect(result.question.get_url())
         else:
-            return question_detail(request, question_id, error_msg=result)
+            request.session['error_msg'] = result
+            return HttpResponseRedirect(qb.get_question_by_id(question_id).get_url())
 
 
 @member_required
@@ -119,7 +130,9 @@ def create_answer(request, question_id):
     if errcode == 0:
         return HttpResponseRedirect(result.question.get_url())
     else:
-        return question_detail(request, question_id, error_msg=result, answer_content=answer_content)
+        request.session['error_msg'] = result
+        request.session['answer_content'] = answer_content
+        return HttpResponseRedirect(qb.get_question_by_id(question_id).get_url())
 
 
 def important_question(request, template_name='question/important_question.html'):
