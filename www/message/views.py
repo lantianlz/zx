@@ -230,7 +230,6 @@ def show_invite_user(request):
 def invite_user_answer(request):
     to_user_id = request.POST.get('to_user_id', '').strip()
     question_id = request.POST.get('question_id', '').strip()
-
     return iab.create_invite(request.user.id, to_user_id, question_id)
 
 
