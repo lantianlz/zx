@@ -87,7 +87,7 @@ class GlobalNotice(models.Model):
     level_choices = ((0, u'普通'), (1, u'必看'))
     platform_choices = ((0, u'web端'), (1, u'手机端'))
 
-    user_id = models.CharField(max_length=32, db_index=True)
+    user_id = models.CharField(max_length=32, null=True)
     content = models.TextField()
     start_time = models.DateTimeField(db_index=True)
     end_time = models.DateTimeField(db_index=True)

@@ -232,3 +232,10 @@ def invite_user_answer(request):
     question_id = request.POST.get('question_id', '').strip()
 
     return iab.create_invite(request.user.id, to_user_id, question_id)
+
+
+@member_required
+def get_all_valid_global_notice(request):
+    gnb = interface.GlobalNoticeBase()
+    global_notice = gnb.format_global_notice(gnb.get_all_valid_global_notice())
+    return HttpResponse(json.dumps(global_notice), mimetype='application/json')
