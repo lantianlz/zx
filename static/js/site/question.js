@@ -152,22 +152,31 @@ $(document).ready(function(){
         }
     });
 
-    // 给回复中的图片添加单击事件
-    $('.reply-content img')
-    .filter(
-        function(){
-            // 只匹配包含 img0.zhixuan.com 的
-            return $(this).attr('src').indexOf('img0.zhixuan.com') > -1;
-        }
-    )
-    .addClass('pointer')
-    .bind('click', function(){
-        var originUrl = $(this).attr('src'),
-            index = originUrl.indexOf('!'),
-            newUrl = (index >= 0) ? originUrl.substring(0, index) : originUrl;
 
-        $.ZXImage.FullImage(originUrl, newUrl);
-    });
+    // 全屏图片
+    var fullImage = function(selector) {
+        
+        $(selector)
+        .filter(
+            function(){
+                // 只匹配包含 img0.zhixuan.com 的
+                return $(this).attr('src').indexOf('img0.zhixuan.com') > -1;
+            }
+        )
+        .addClass('pointer')
+        .bind('click', function(){
+            var originUrl = $(this).attr('src'),
+                index = originUrl.indexOf('!'),
+                newUrl = (index >= 0) ? originUrl.substring(0, index) : originUrl;
+
+            $.ZXImage.FullImage(originUrl, newUrl);
+        });
+    };
+    // 回复中的图片绑定全屏图片事件 
+    fullImage('.reply-content img');
+    // 提问中的图片绑定全屏图片事件 
+    fullImage('.question-entry .topic img');
+    
 
 
     // backbone 方式定义事件

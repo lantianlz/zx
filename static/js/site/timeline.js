@@ -2,12 +2,14 @@ $(document).ready(function(){
 
     ajaxSend(
         "/message/get_all_valid_global_notice", '', 
-        function(data){
-            // var data = [{
-            //     'content': '新增功能：邀请回答功能上线，提问从此不再孤独！',
-            //     'important': false,
-            //     'noticeId': 11
-            // }];
+        function(result){
+
+            // 解析数据
+            var data = $.ZXUtils.dictMapParse(result, {
+                'content': 'content',
+                'important': 'level',
+                'noticeId': 'notice_id'
+            });
 
             // 获取cookie里面的通知状态
             var localStatus = JSON.parse($.cookie('notices') || '{}');
@@ -19,7 +21,7 @@ $(document).ready(function(){
                         d.noticeId,
                         d.content, 
                         $('.new-notices'), 
-                        d.important,
+                        d.important > 0 ? true : false,
                         function(noticeId){
                             // 关闭之后，更新cookie
                             var tempLocalStatus = JSON.parse($.cookie('notices') || '{}');
