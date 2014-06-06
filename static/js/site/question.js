@@ -152,6 +152,23 @@ $(document).ready(function(){
         }
     });
 
+    // 给回复中的图片添加单击事件
+    $('.reply-content img')
+    .filter(
+        function(){
+            // 只匹配包含 img0.zhixuan.com 的
+            return $(this).attr('src').indexOf('img0.zhixuan.com') > -1;
+        }
+    )
+    .addClass('pointer')
+    .bind('click', function(){
+        var originUrl = $(this).attr('src'),
+            index = originUrl.indexOf('!'),
+            newUrl = originUrl.substring(0, index);
+
+        $.ZXImage.FullImage(originUrl, newUrl);
+    });
+
 
     // backbone 方式定义事件
     // ================== 问题邀请事件绑定开始 ==================
@@ -221,7 +238,11 @@ $(document).ready(function(){
 
                 },
                 formatResult: function(suggestion, value){
-                    return String.format('<div class="pointer"><img class="avatar-35 avatar-circle" src="{0}"><span class="pl-5">{1}</span></div>', suggestion.avatar, suggestion.value);
+                    return String.format(
+                        '<div class="pointer"><img class="avatar-35 avatar-circle" src="{0}"><span class="pl-5">{1}</span></div>', 
+                        suggestion.avatar, 
+                        suggestion.value
+                    );
                 }
             })
         },

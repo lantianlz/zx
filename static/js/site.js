@@ -1379,6 +1379,67 @@ if (!String.format) {
     };
 
 
+    /*
+        图片显示插件
+    */
+    $.ZXImage = {
+        version: '1.0.0',
+        author: 'stranger',
+        description: '图片显示插件'
+    };
+    /*
+        全屏图片显示插件
+        originUrl: 原始图片地址
+        newUrl：完整图片地址
+
+        用例：
+        $.ZXImage.FullImage('XXX.png!600m0', 'XXX.png');
+    */
+    $.ZXImage.FullImage = function(originUrl, newUrl){
+
+        $('#full_image_modal').remove();
+
+        var html = [
+                '<div class="modal fade text-center" id="full_image_modal">',
+                    '<image src="'+originUrl+'" />',
+                    '<div class="loading-img co3">正在加载原始图片...</div>',
+                    '<span class="pa glyphicon glyphicon-remove-circle co3 f30 pointer" style="right: 5px; top: 5px;"></span>',
+                '</div>'
+            ].join('');
+
+        var img = new Image();
+        img.style.display = "none";
+        img.onload = function(){
+            var marginTop = $(window).height() - img.height;
+                marginTop = marginTop > 0 ? marginTop / 2 : 0;
+
+            // 隐藏loading
+            $('#full_image_modal .loading-img').hide();
+
+            // 动态计算图片位置和大小
+            $('#full_image_modal img').animate({
+                height: img.height,
+                width: img.width,
+                marginTop: marginTop
+            }, 300, function(){
+                $(this).attr('src', newUrl);
+                $(img).remove();
+            });
+        }
+        $('body').append(img);
+        img.src = newUrl;
+
+        $('body').append(html);
+
+        // 关闭图片事件
+        $('#full_image_modal .glyphicon-remove-circle')
+        .bind('click', function(){
+            $('#full_image_modal').modal('hide');
+        })
+
+        $('#full_image_modal').modal('show');
+    };
+
 })(jQuery);
 
 
