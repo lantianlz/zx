@@ -85,7 +85,7 @@ class GlobalNotice(models.Model):
     @note: 全站通告
     """
     level_choices = ((0, u'普通'), (1, u'必看'))
-    platform_choices = ((0, u'web端'), (1, u'手机端'))
+    platform_choices = ((0, u'全局'), (1, u'web端'), (2, u'手机端'))
 
     user_id = models.CharField(max_length=32, null=True)
     content = models.TextField()
