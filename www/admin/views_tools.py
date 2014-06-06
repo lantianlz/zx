@@ -46,3 +46,18 @@ def remove_cache(request):
     except Exception, e:
         print e
         return 1, u'系统错误!'
+
+
+@verify_permission('get_cache')
+@common_ajax_response
+def get_cache(request):
+    index = request.REQUEST.get('index')
+    key = request.REQUEST.get('key_name')
+
+    try:
+        c = cache.Cache(cache.CACHE_INDEX[index][1])
+        print c.get(key)
+        return 0, c.get(key) or ''
+    except Exception, e:
+        print e
+        return 1, u'系统错误!'

@@ -61,6 +61,7 @@ PERMISSIONS = [
     {'code': 'statistics_register_user', 'name': u'注册用户统计', 'parent': 'statistics_manage'},
 
     {'code': 'tools', 'name': u'常用工具', 'parent': None},
+    {'code': 'get_cache', 'name': u'查询缓存', 'parent': 'tools'},
     {'code': 'remove_cache', 'name': u'删除缓存', 'parent': 'tools'},
     {'code': 'modify_cache', 'name': u'修改缓存', 'parent': 'tools'},
 ]

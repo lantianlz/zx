@@ -11,6 +11,22 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
+
+    $('.key-name').bind('blur', function(){
+        
+        ajaxSend(
+            "/admin/tools/get_cache?" + $('form').serialize(), 
+            {},
+            function(data){
+                if(data.errcode == 0){
+                    $('.key-value').val(data.errmsg)
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            }
+        );
+    });
+
     $('.save').bind('click', function(){
         ajaxSend(
             "/admin/tools/modify_cache?" + $('form').serialize(), 
@@ -23,13 +39,17 @@ $(document).ready(function(){
     });
 
     $('.remove').bind('click', function(){
-        ajaxSend(
-            "/admin/tools/remove_cache?" + $('form').serialize(), 
-            {},
-            function(data){
-                $.ZXMsg.alert('提示', data.errmsg);
-            }
-        );
+        $.ZXMsg.confirm('提示', '确认要删除此缓存?', function(result){
+            if(result){
+                ajaxSend( 
+                    "/admin/tools/remove_cache?" + $('form').serialize(), 
+                    {},
+                    function(data){
+                        $.ZXMsg.alert('提示', data.errmsg);
+                    }
+                );
+            };
+        });
 
     });
 });
@@ -64,13 +84,13 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">缓存key</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" name="key_name" value=''>
+                <input type="text" class="form-control key-name" name="key_name" value=''>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">缓存值</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" name="key_value" value=''>
+                <input type="text" class="form-control key-value" name="key_value" value=''>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

@@ -102,6 +102,7 @@ urlpatterns += patterns('www.admin.views_statistics',
 
 # 常用工具
 urlpatterns += patterns('www.admin.views_tools',
+                        url(r'^tools/get_cache$', 'get_cache'),
                         url(r'^tools/remove_cache$', 'remove_cache'),
                         url(r'^tools/modify_cache$', 'modify_cache'),
                         url(r'^tools/caches$', 'caches'),

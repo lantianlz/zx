@@ -164,7 +164,7 @@ $(document).ready(function(){
     .bind('click', function(){
         var originUrl = $(this).attr('src'),
             index = originUrl.indexOf('!'),
-            newUrl = originUrl.substring(0, index);
+            newUrl = (index >= 0) ? originUrl.substring(0, index) : originUrl;
 
         $.ZXImage.FullImage(originUrl, newUrl);
     });

@@ -1396,7 +1396,7 @@ if (!String.format) {
         $.ZXImage.FullImage('XXX.png!600m0', 'XXX.png');
     */
     $.ZXImage.FullImage = function(originUrl, newUrl){
-
+        
         $('#full_image_modal').remove();
 
         var html = [
