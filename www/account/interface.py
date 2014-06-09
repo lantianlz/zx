@@ -103,7 +103,7 @@ class UserBase(object):
             validators.vnick(nick)
             validators.vpassword(password)
         except Exception, e:
-            return False, smart_unicode(e)
+            return 99900, smart_unicode(e)
 
         if self.get_user_by_email(email):
             return 10100, dict_err.get(10100)
@@ -149,8 +149,7 @@ class UserBase(object):
             now = datetime.datetime.now()
 
             user = User.objects.create(id=id, email=email, mobilenumber=mobilenumber, last_login=now,
-                                       password=self.set_password(password)
-                                       )
+                                       password=self.set_password(password))
             profile = Profile.objects.create(id=id, nick=nick, ip=ip, source=source, gender=gender)
             self.set_profile_login_att(profile, user)
 
