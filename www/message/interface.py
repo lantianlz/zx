@@ -246,7 +246,8 @@ class GlobalNoticeBase(object):
     @cache_required(cache_key='get_all_valid_global_notice', expire=3600)
     def get_all_valid_global_notice(self, must_update_cache=False):
         import datetime
-        return GlobalNotice.objects.filter(end_time__gt=datetime.datetime.now())
+        now = datetime.datetime.now()
+        return GlobalNotice.objects.filter(end_time__gt=now, start_time__lt=now)
 
     def get_all_global_notice(self):
         return GlobalNotice.objects.all()

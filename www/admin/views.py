@@ -13,7 +13,7 @@ from common import utils, page
 
 @verify_permission('')
 def home(request):
-    return HttpResponseRedirect('/admin/important_question')
+    return HttpResponseRedirect('/admin/question/important_question')
 
 
 # def question(request, template_name='admin/question.html'):
