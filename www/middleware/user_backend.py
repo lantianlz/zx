@@ -23,6 +23,8 @@ class AuthBackend(object):
             user_login.save()
 
             user.save = _save
+            # 更新缓存
+            ub.get_user_by_id(user.id, must_update_cache=True)
             return user
 
     def get_user(self, user_id):

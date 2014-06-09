@@ -65,6 +65,8 @@ def qiniu_img_return(request):
     '''
     @note: 七牛设置图片回调url
     '''
+    from www.account.interface import UserBase
+
     upload_ret = base64.b64decode(request.GET.get('upload_ret', ''))
     try:
         ur = json.loads(upload_ret)
@@ -76,6 +78,9 @@ def qiniu_img_return(request):
         user = request.user
         user.avatar = '%s/%s' % (settings.IMG0_DOMAIN, img_key)
         user.save()
+
+        # 更新缓存
+        UserBase().get_user_by_id(user.id, must_update_cache=True)
 
         # 上传完头像之后 跳转到设置页面时带上 需要裁剪参数
         return HttpResponseRedirect('/account/user_settings?crop_avatar=true')
@@ -101,6 +106,7 @@ def crop_img(request):
     这里使用的是七牛的裁剪接口,具体参见 http://docs.qiniutek.com/v3/api/foimg/#imageMogr
     将剪裁坐标传递给七牛，七牛会返回按此参数剪裁后的图片回来，然后再将此图片作为用户头像上传给七牛
     '''
+    from www.account.interface import UserBase
 
     def _verfiy_int(target, r):
         '''
@@ -134,6 +140,9 @@ def crop_img(request):
                 user = request.user
                 user.avatar = url
                 user.save()
+
+                # 更新缓存
+                UserBase().get_user_by_id(user.id, must_update_cache=True)
                 result = dict(flag='0', result=u'ok')
 
                 # 删除多余的两张图片节省空间

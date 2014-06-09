@@ -135,13 +135,8 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     # 'django.contrib.auth',
-    # 'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    # 'django.contrib.sites',
-    # 'django.contrib.messages',
-    # 'django.contrib.staticfiles',
+    # 'django.contrib.sessions',
     # 'django.contrib.admin',
-    # 'django.contrib.admindocs',
     'www.custom_tags',
     'www.account',
     'www.question',
@@ -152,7 +147,7 @@ INSTALLED_APPS = (
 )
 
 AUTHENTICATION_BACKENDS = ('www.middleware.user_backend.AuthBackend',)
-
+SESSION_ENGINE = 'common.session'
 
 LOGGING = {
     'version': 1,

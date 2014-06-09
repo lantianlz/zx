@@ -377,7 +377,7 @@ class QuestionBase(object):
 
 class AnswerBase(object):
 
-    def format_answers(self, answers, request_user=None):
+    def format_answers(self, answers, request_user=None, need_answer_likes=False):
         request_user_like_answer_ids = []
         request_user_bads = []
         if request_user and answers:
@@ -392,7 +392,8 @@ class AnswerBase(object):
 
             answer.is_request_user_like = (answer.id in request_user_like_answer_ids)   # 当前登录用户是否喜欢了改问题
             answer.is_request_user_bad = (answer.id in request_user_bads)   # 用户是否认为该问题无帮助
-            answer.likes = lb.format_likes(lb.get_likes_by_answer(answer)[:3])    # 赞了该回答的用户
+            if need_answer_likes:
+                answer.likes = lb.format_likes(lb.get_likes_by_answer(answer)[:3])    # 赞了该回答的用户
         return answers
 
     @question_required
@@ -457,12 +458,10 @@ class AnswerBase(object):
         try:
             content = utils.filter_script(content)
             if not content:
-                transaction.rollback(using=QUESTION_DB)
                 return 99800, dict_err.get(99800)
 
             errcode, errmsg = QuestionBase().validate_content(content)
             if not errcode == 0:
-                transaction.rollback(using=QUESTION_DB)
                 return errcode, errmsg
 
             answer.content = content
@@ -493,7 +492,7 @@ class AnswerBase(object):
         return Answer.objects.select_related('question').filter(from_user_id=user_id, state=True).order_by('-id')
 
     def get_at_answers(self, user_id):
-        return [aa.answer for aa in AtAnswer.objects.select_related('answer').filter(user_id=user_id)]
+        return [aa.answer for aa in AtAnswer.objects.select_related('answer', 'answer__question').filter(user_id=user_id)]
 
     def get_user_sended_answers_count(self, user_id):
         return self.get_user_sended_answer(user_id).count()
