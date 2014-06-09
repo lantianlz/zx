@@ -32,8 +32,7 @@
                 {% if request.is_me %}
                 <div class="col-md-3 text-center pt-20">
                     {% if not uf.is_two_way %}
-                    <button class="btn btn-primary btn-xs follow" id="right_follow_button_id_{{uf.user.id}}"
-                        data-user_id='{{uf.user.id}}'>添加关注</button>
+                    <button class="btn btn-primary btn-xs follow" data-user_id='{{uf.user.id}}'>添加关注</button>
                     {% endif %}
                 </div>
                 {% endif %}

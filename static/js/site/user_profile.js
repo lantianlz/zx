@@ -44,26 +44,80 @@ $(document).ready(function(){
 
 
     // 用户空间左侧关注用户
-    $('.user-profile-left .follow').bind('click', function(){
-    	g_ajax_processing_obj_id = 'left_follow_button_id';
-    	$.ZXOperation.followPeople($(this).data('user_id'), common_callback);
+    $('.user-profile-left .follow').live('click', function(){
+        var me = $(this);
+
+    	g_ajax_processing_obj_id = me.setUUID().attr('id');
+
+        $.ZXOperation.followPeople(me.data('user_id'), function(data){
+            
+            if(data.errcode == 0){
+                me.removeClass('follow btn-primary')
+                .addClass('unfollow btn-default')
+                .text('取消关注');
+            } else {
+                $.ZXMsg.alert('提示', data.errmsg);
+            }
+            
+        });
     });
 
     // 用户空间左侧取消关注用户
-    $('.user-profile-left .unfollow').bind('click', function(){
-    	g_ajax_processing_obj_id = 'left_unfollow_button_id';
-    	$.ZXOperation.unfollowPeople($(this).data('user_id'), common_callback);
+    $('.user-profile-left .unfollow').live('click', function(){
+    	var me = $(this);
+        g_ajax_processing_obj_id = me.setUUID().attr('id');
+
+        $.ZXOperation.unfollowPeople(me.data('user_id'), function(data){
+            if(data.errcode == 0){
+                me.removeClass('unfollow btn-default')
+                .addClass('follow btn-primary')
+                .text('添加关注');
+            } else {
+                $.ZXMsg.alert('提示', data.errmsg);
+            }
+        });
     });
 
     // 用户空间右侧关注用户
-    $('.user-profile-right .follow').bind('click', function(){
-    	g_ajax_processing_obj_id = 'right_follow_button_id_' + $(this).data('user_id');
-    	$.ZXOperation.followPeople($(this).data('user_id'), common_callback);
+    $('.user-profile-right .follow').live('click', function(){
+        var me = $(this);
+    	g_ajax_processing_obj_id = me.setUUID().attr('id');
+
+    	$.ZXOperation.followPeople(me.data('user_id'), function(data){
+            
+            if(data.errcode == 0){
+                me.removeClass('follow btn-primary')
+                .addClass('unfollow btn-default')
+                .text('取消关注');
+
+                // 添加互相关注状态
+                me.before('<span class="glyphicon glyphicon-transfer"></span><span class="f12">互相关注</span>');
+
+            } else {
+                $.ZXMsg.alert('提示', data.errmsg);
+            }
+            
+        });
     });
 
     // 用户空间右侧取消关注用户
-    $('.user-profile-right .unfollow').bind('click', function(){
-    	g_ajax_processing_obj_id = 'right_unfollow_button_id_' + $(this).data('user_id');
-    	$.ZXOperation.unfollowPeople($(this).data('user_id'), common_callback);
+    $('.user-profile-right .unfollow').live('click', function(){
+        var me = $(this);
+    	g_ajax_processing_obj_id = me.setUUID().attr('id');
+
+    	$.ZXOperation.unfollowPeople(me.data('user_id'), function(data){
+            if(data.errcode == 0){
+                me.removeClass('unfollow btn-default')
+                .addClass('follow btn-primary')
+                .text('添加关注');
+
+                // 删除互相关注状态
+                me.prev().remove();
+                me.prev().remove();
+
+            } else {
+                $.ZXMsg.alert('提示', data.errmsg);
+            }
+        });
     });
 });
