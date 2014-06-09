@@ -92,7 +92,7 @@ a.list-group-item.active{
                 'left': width, 
                 'top': '0', 
                 'width': width, 
-                'z-index': 1
+                'z-index': 99
             }).show('fast');
         })
         .bind('mouseleave', function(){
@@ -108,17 +108,31 @@ a.list-group-item.active{
 {% block container %}
 <div class="pa col-md-2">
     <ul class="list-group admin-nav pt-25">
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/question' in request.path %}active{% endif %}" href="/admin/question">提问管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/important_question' in request.path %}active{% endif %}" href="/admin/important_question">每日精选管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/recommend_user' in request.path %}active{% endif %}" href="/admin/recommend_user">推荐用户管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none {% if '/admin/topic' in request.path %}active{% endif %}" href="/admin/topic">话题管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">专栏管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/user' in request.path %}active{% endif %}" href="/admin/user">用户管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">城市友情链接管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/customer_manager' in request.path %}active{% endif %}" href="/admin/customer_manager">客户经理管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">用户反馈管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/friendly_link' in request.path %}active{% endif %}" href="/admin/friendly_link">友情链接管理</a>
-        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/permission' in request.path %}active{% endif %}" href="/admin/permission">权限管理</a>
+        <!-- 提问管理 -->
+        <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/question' in request.path %}active{% endif %}">
+            <span class="co21">提问管理</span><span class="glyphicon glyphicon-chevron-right pull-right f12 mt-3 co21"></span>
+            
+            <ul class="sub-admin-nav list-group pa none box-shadow-224">
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/question/question' in request.path %}active{% endif %}" href="/admin/question/question">问题管理</a>
+
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/question/important_question' in request.path %}active{% endif %}" href="/admin/question/important_question">每日精选管理</a>
+                
+            </ul>
+        </li>
+
+        <!-- 用户管理 -->
+        <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/user' in request.path %}active{% endif %}">
+            <span class="co21">用户管理</span><span class="glyphicon glyphicon-chevron-right pull-right f12 mt-3 co21"></span>
+            
+            <ul class="sub-admin-nav list-group pa none box-shadow-224">
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/user/user' in request.path %}active{% endif %}" href="/admin/user/user">注册用户管理</a>
+
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/user/recommend_user' in request.path %}active{% endif %}" href="/admin/user/recommend_user">推荐用户管理</a>
+
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/user/customer_manager' in request.path %}active{% endif %}" href="/admin/user/customer_manager">客户经理管理</a>
+                
+            </ul>
+        </li>
         
         <!-- 统计管理 -->
         <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/statistics' in request.path %}active{% endif %}">
@@ -137,9 +151,18 @@ a.list-group-item.active{
             
             <ul class="sub-admin-nav list-group pa none box-shadow-224">
                 <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/tools/cache' in request.path %}active{% endif %}" href="/admin/tools/caches">缓存管理</a>
+
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/tools/notice' in request.path %}active{% endif %}" href="/admin/tools/notice">全站通告管理</a>
                 
             </ul>
         </li>
+
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none {% if '/admin/topic' in request.path %}active{% endif %}" href="/admin/topic">话题管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">专栏管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">城市友情链接管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none" href="#">用户反馈管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/friendly_link' in request.path %}active{% endif %}" href="/admin/friendly_link">友情链接管理</a>
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/permission' in request.path %}active{% endif %}" href="/admin/permission">权限管理</a>
         
     </ul>
 </div>

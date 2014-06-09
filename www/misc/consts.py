@@ -64,4 +64,8 @@ PERMISSIONS = [
     {'code': 'get_cache', 'name': u'查询缓存', 'parent': 'tools'},
     {'code': 'remove_cache', 'name': u'删除缓存', 'parent': 'tools'},
     {'code': 'modify_cache', 'name': u'修改缓存', 'parent': 'tools'},
+    {'code': 'query_notice', 'name': u'查询全站通告', 'parent': 'tools'},
+    {'code': 'add_notice', 'name': u'添加全站通告', 'parent': 'tools'},
+    {'code': 'modify_notice', 'name': u'修改全站通告', 'parent': 'tools'},
+    {'code': 'remove_notice', 'name': u'删除全站通告', 'parent': 'tools'},
 ]

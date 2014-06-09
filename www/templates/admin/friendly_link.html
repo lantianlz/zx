@@ -195,7 +195,7 @@ $(document).ready(function(){
             this.cityTextBox = $.ZXTextboxList.create('#belong_city_modify', {
                 max: 1,
                 placeholder: '选择所属城市',
-                url: 'customer_manager/get_citys_by_name',
+                url: '/admin/user/customer_manager/get_citys_by_name',
                 param: 'city_name',
                 loadPlaceholder: '正在加载...'
             });
@@ -281,7 +281,7 @@ $(document).ready(function(){
             this.cityTextBox = $.ZXTextboxList.create('#belong_city_add', {
                 max: 1,
                 placeholder: '选择所属城市',
-                url: 'customer_manager/get_citys_by_name',
+                url: '/admin/user/customer_manager/get_citys_by_name',
                 param: 'city_name',
                 loadPlaceholder: '正在加载...'
             });

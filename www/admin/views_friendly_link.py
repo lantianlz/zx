@@ -83,7 +83,7 @@ def search(request):
     page_objs = page.Cpt(fls, count=10, page=page_index).info
 
     # 格式化json
-    num = 10 * (page_index - 1) + 0
+    num = 10 * (page_index - 1)
     data = format_friendly_link(flb.format_friendly_links(page_objs[0]), num)
 
     return HttpResponse(

@@ -55,7 +55,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/recommend_user/get_user_by_nick", 
+                "/admin/user/recommend_user/get_user_by_nick", 
                 {'nick_name': userNick}, 
                 function(data){
                     me.pageIndex = pageIndex;
@@ -71,7 +71,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/recommend_user/set_recommend_user", 
+                "/admin/user/recommend_user/set_recommend_user", 
                 {'user_id': userId}, 
                 function(data){
                     callback(data);
@@ -101,7 +101,7 @@ $(document).ready(function(){
         search: function(){
             var me = this;
 
-            ajaxSend("/admin/recommend_user/get_all_recommend_users", {}, function(data){
+            ajaxSend("/admin/user/recommend_user/get_all_recommend_users", {}, function(data){
                 me.reset($.ZXUtils.dictMapParse(data, me._modelMaps));
             });
 
@@ -110,7 +110,7 @@ $(document).ready(function(){
         // 保存排序
         saveSort: function(userId, sort, callback){
             ajaxSend(
-                "/admin/recommend_user/set_recommend_user_sort", 
+                "/admin/user/recommend_user/set_recommend_user_sort", 
                 {'user_id': userId, 'sort_num': sort}, 
                 function(data){
                     callback(data); 
@@ -121,7 +121,7 @@ $(document).ready(function(){
         // 取消推荐
         unRecommend: function(userId, callback){
             ajaxSend(
-                "/admin/recommend_user/un_recommend_user", 
+                "/admin/user/recommend_user/un_recommend_user", 
                 {'user_id': userId}, 
                 function(data){
                     callback(data);

@@ -15,7 +15,7 @@ $(document).ready(function(){
     $('.key-name').bind('blur', function(){
         
         ajaxSend(
-            "/admin/tools/get_cache?" + $('form').serialize(), 
+            "/admin/tools/caches/get_cache?" + $('form').serialize(), 
             {},
             function(data){
                 if(data.errcode == 0){
@@ -29,7 +29,7 @@ $(document).ready(function(){
 
     $('.save').bind('click', function(){
         ajaxSend(
-            "/admin/tools/modify_cache?" + $('form').serialize(), 
+            "/admin/tools/caches/modify_cache?" + $('form').serialize(), 
             {},
             function(data){
                 $.ZXMsg.alert('提示', data.errmsg);
@@ -42,7 +42,7 @@ $(document).ready(function(){
         $.ZXMsg.confirm('提示', '确认要删除此缓存?', function(result){
             if(result){
                 ajaxSend( 
-                    "/admin/tools/remove_cache?" + $('form').serialize(), 
+                    "/admin/tools/caches/remove_cache?" + $('form').serialize(), 
                     {},
                     function(data){
                         $.ZXMsg.alert('提示', data.errmsg);
