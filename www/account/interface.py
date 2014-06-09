@@ -60,14 +60,15 @@ class UserBase(object):
         except User.DoesNotExist:
             return None
 
-    def get_user_by_id(self, id, state=[1, 2]):
+    @cache_required(cache_key='user_%s', expire=3600, cache_config=cache.CACHE_USER)
+    def get_user_by_id(self, id, state=[1, 2], must_update_cache=False):
         try:
             profile = Profile.objects.get(id=id)
             user = User.objects.get(id=profile.id, state__in=state)
             self.set_profile_login_att(profile, user)
             return profile
         except (Profile.DoesNotExist, User.DoesNotExist):
-            return None
+            return ''
 
     def get_user_by_nick(self, nick, state=[1, 2]):
         try:
@@ -261,7 +262,8 @@ class UserBase(object):
             user.des = utils.filter_script(des)[:128]
         user.save()
 
-        # todo:触发事件，比如清除缓存等
+        # 更新缓存
+        self.get_user_by_id(user.id, must_update_cache=True)
         return 0, user
 
     def change_pwd(self, user, old_password, new_password_1, new_password_2):
@@ -285,6 +287,9 @@ class UserBase(object):
         user_login = self.get_user_login_by_id(user.id)
         user_login.password = self.set_password(new_password_1)
         user_login.save()
+
+        # 更新缓存
+        self.get_user_by_id(user.id, must_update_cache=True)
         return 0, dict_err.get(0)
 
     def change_email(self, user, email, password):
@@ -311,6 +316,9 @@ class UserBase(object):
         user_login = self.get_user_login_by_id(user.id)
         user_login.email = email
         user_login.save()
+
+        # 更新缓存
+        self.get_user_by_id(user.id, must_update_cache=True)
 
         # todo发送验证邮件
         return 0, dict_err.get(0)
@@ -350,6 +358,9 @@ class UserBase(object):
 
         user.email_verified = True
         user.save()
+
+        # 更新缓存
+        self.get_user_by_id(user.id, must_update_cache=True)
         return 0, user
 
     def send_forget_password_email(self, email):
@@ -400,6 +411,9 @@ class UserBase(object):
         user_login = self.get_user_login_by_id(user.id)
         user_login.password = self.set_password(new_password_1)
         user_login.save()
+
+        # 更新缓存
+        self.get_user_by_id(user.id, must_update_cache=True)
 
         cache_obj = cache.Cache()
         key = u'forget_password_email_code_%s' % user.email
