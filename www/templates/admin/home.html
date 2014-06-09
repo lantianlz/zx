@@ -88,17 +88,22 @@ a.list-group-item.active{
             var nav = $(this),
                 width = nav.width() + 30;
             
-            nav.find('.sub-admin-nav').css({
+            nav.find('.sub-admin-nav')
+            .css({
                 'left': width, 
                 'top': '0', 
                 'width': width, 
                 'z-index': 99
-            }).show('fast');
+            })
+            .stop(true, true)
+            .show('fast')
         })
         .bind('mouseleave', function(){
             var nav = $(this);
             
-            nav.find('.sub-admin-nav').hide('fast');
+            nav.find('.sub-admin-nav')
+            .stop(true, true)
+            .hide('fast');
         });
     });
 </script>
