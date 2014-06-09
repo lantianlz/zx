@@ -66,7 +66,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/question/search", 
+                "/admin/question/question/search", 
                 {'title': title||'', 'page_index': pageIndex||1}, 
                 function(data){
                     
@@ -83,7 +83,7 @@ $(document).ready(function(){
         // 获取一个提问的model
         getOne: function(questionId, callback){
             ajaxSend(
-                "/admin/question/get_question_by_id", 
+                "/admin/question/question/get_question_by_id", 
                 {'question_id': questionId}, 
                 function(data){
                     if(callback){
@@ -182,7 +182,7 @@ $(document).ready(function(){
                         highlight: false,
                         onlyFromValues: true, // 是否默认选中第一个结果
                         remote: {
-                            url: '/question/get_topic_info_by_name', 
+                            url: '/question/question/get_topic_info_by_name', 
                             param: 'topic_name',
                             loadPlaceholder: '正在加载...',
                         }
@@ -333,7 +333,7 @@ $(document).ready(function(){
                 <% if (question.isImportant) { %>
                     <span class="glyphicon glyphicon-ok co-zx"></span>
                 <% } else if(!question.isImportant && question.state) { %>
-                    <a href="/admin/important_question#add/<%= question.questionId %>" title="设置精华"><span class="glyphicon glyphicon-ok co20 pointer set-important"></span></a>
+                    <a href="/admin/question/important_question#add/<%= question.questionId %>" title="设置精华"><span class="glyphicon glyphicon-ok co20 pointer set-important"></span></a>
                 <% } %>
             </td>
             <td><%= question.title %></td>

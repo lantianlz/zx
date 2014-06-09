@@ -7,16 +7,6 @@ urlpatterns = patterns('www.admin.views',
                        url(r'^$', 'home'),
                        )
 
-# 推荐用户
-urlpatterns += patterns('www.admin.views_recommend_user',
-
-                        url(r'^recommend_user/get_user_by_nick$', 'get_user_by_nick'),
-                        url(r'^recommend_user/set_recommend_user$', 'set_recommend_user'),
-                        url(r'^recommend_user/un_recommend_user$', 'un_recommend_user'),
-                        url(r'^recommend_user/set_recommend_user_sort$', 'set_recommend_user_sort'),
-                        url(r'^recommend_user/get_all_recommend_users$', 'get_all_recommend_users'),
-                        url(r'^recommend_user$', 'recommend_user'),
-                        )
 
 # 话题
 urlpatterns += patterns('www.admin.views_topic',
@@ -25,24 +15,22 @@ urlpatterns += patterns('www.admin.views_topic',
                         )
 
 
-# 每日精选
-urlpatterns += patterns('www.admin.views_important_question',
-
-                        url(r'^important_question/get_important_question_by_question_id$', 'get_important_question_by_question_id'),
-                        url(r'^important_question/get_important_question_by_title$', 'get_important_question_by_title'),
-                        url(r'^important_question/add_important$', 'add_important'),
-                        url(r'^important_question/modify_important$', 'modify_important'),
-                        url(r'^important_question/cancel_important$', 'cancel_important'),
-                        url(r'^important_question$', 'important_question'),
-                        )
-
-
 # 提问
 urlpatterns += patterns('www.admin.views_question',
 
-                        url(r'^question/get_question_by_id$', 'get_question_by_id'),
-                        url(r'^question/search$', 'search'),
-                        url(r'^question$', 'question'),
+                        url(r'^question/question/get_question_by_id$', 'get_question_by_id'),
+                        url(r'^question/question/search$', 'search'),
+                        url(r'^question/question$', 'question'),
+                        )
+# 每日精选
+urlpatterns += patterns('www.admin.views_important_question',
+
+                        url(r'^question/important_question/get_important_question_by_question_id$', 'get_important_question_by_question_id'),
+                        url(r'^question/important_question/get_important_question_by_title$', 'get_important_question_by_title'),
+                        url(r'^question/important_question/add_important$', 'add_important'),
+                        url(r'^question/important_question/modify_important$', 'modify_important'),
+                        url(r'^question/important_question/cancel_important$', 'cancel_important'),
+                        url(r'^question/important_question$', 'important_question'),
                         )
 
 
@@ -60,23 +48,31 @@ urlpatterns += patterns('www.admin.views_permission',
 # 用户
 urlpatterns += patterns('www.admin.views_user',
 
-                        url(r'^user/get_user_by_id$', 'get_user_by_id'),
-                        url(r'^user/search$', 'search'),
-                        url(r'^user$', 'user'),
+                        url(r'^user/user/get_user_by_id$', 'get_user_by_id'),
+                        url(r'^user/user/search$', 'search'),
+                        url(r'^user/user$', 'user'),
                         )
+# 推荐用户
+urlpatterns += patterns('www.admin.views_recommend_user',
 
-
+                        url(r'^user/recommend_user/get_user_by_nick$', 'get_user_by_nick'),
+                        url(r'^user/recommend_user/set_recommend_user$', 'set_recommend_user'),
+                        url(r'^user/recommend_user/un_recommend_user$', 'un_recommend_user'),
+                        url(r'^user/recommend_user/set_recommend_user_sort$', 'set_recommend_user_sort'),
+                        url(r'^user/recommend_user/get_all_recommend_users$', 'get_all_recommend_users'),
+                        url(r'^user/recommend_user$', 'recommend_user'),
+                        )
 # 客户经理
 urlpatterns += patterns('www.admin.views_customer_manager',
 
-                        url(r'^customer_manager/get_customer_manager_by_user_id$', 'get_customer_manager_by_user_id'),
-                        url(r'^customer_manager/delete_customer_manager$', 'delete_customer_manager'),
-                        url(r'^customer_manager/modify_customer_manager$', 'modify_customer_manager'),
-                        url(r'^customer_manager/add_customer_manager$', 'add_customer_manager'),
-                        url(r'^customer_manager/search$', 'search'),
-                        url(r'^customer_manager/get_departments_by_name$', 'get_departments_by_name'),
-                        url(r'^customer_manager/get_citys_by_name$', 'get_citys_by_name'),
-                        url(r'^customer_manager$', 'customer_manager'),
+                        url(r'^user/customer_manager/get_customer_manager_by_user_id$', 'get_customer_manager_by_user_id'),
+                        url(r'^user/customer_manager/delete_customer_manager$', 'delete_customer_manager'),
+                        url(r'^user/customer_manager/modify_customer_manager$', 'modify_customer_manager'),
+                        url(r'^user/customer_manager/add_customer_manager$', 'add_customer_manager'),
+                        url(r'^user/customer_manager/search$', 'search'),
+                        url(r'^user/customer_manager/get_departments_by_name$', 'get_departments_by_name'),
+                        url(r'^user/customer_manager/get_citys_by_name$', 'get_citys_by_name'),
+                        url(r'^user/customer_manager$', 'customer_manager'),
                         )
 
 
@@ -102,8 +98,17 @@ urlpatterns += patterns('www.admin.views_statistics',
 
 # 常用工具
 urlpatterns += patterns('www.admin.views_tools',
-                        url(r'^tools/get_cache$', 'get_cache'),
-                        url(r'^tools/remove_cache$', 'remove_cache'),
-                        url(r'^tools/modify_cache$', 'modify_cache'),
+                        # 通知管理
+                        url(r'^tools/notice/remove_notice$', 'remove_notice'),
+                        url(r'^tools/notice/modify_notice$', 'modify_notice'),
+                        url(r'^tools/notice/get_notice_by_id$', 'get_notice_by_id'),
+                        url(r'^tools/notice/add_notice$', 'add_notice'),
+                        url(r'^tools/notice/search_notice$', 'search_notice'),
+                        url(r'^tools/notice$', 'notice'),
+
+                        # 缓存管理
+                        url(r'^tools/caches/get_cache$', 'get_cache'),
+                        url(r'^tools/caches/remove_cache$', 'remove_cache'),
+                        url(r'^tools/caches/modify_cache$', 'modify_cache'),
                         url(r'^tools/caches$', 'caches'),
                         )

@@ -1,0 +1,539 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}全站通告管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var Notice = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': '',
+            'noticeId': '',
+            'content': '',
+            'start': '',
+            'end': '',
+            'level': '',
+            'state': ''
+        }
+
+    });
+
+    // collections
+    var Notices = Backbone.Collection.extend({
+        model: Notice,
+
+        _modelMaps: {
+            'num': 'num',
+            'noticeId': 'notice_id',
+            'content': 'content',
+            'startDate': 'start_time',
+            'endDate': 'end_time',
+            'level': 'level',
+            'state': 'state'
+        },
+
+        // 查询
+        search: function(pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/tools/notice/search_notice", 
+                {'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+        },
+
+        addNotice: function(data, callback){
+            ajaxSend(
+                "/admin/tools/notice/add_notice?" + data, 
+                {},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        // 获取一个提问的model
+        getOne: function(noticeId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/tools/notice/get_notice_by_id", 
+                {'notice_id': noticeId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        // 删除
+        removeNotice: function(noticeId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/tools/notice/remove_notice", 
+                {'notice_id': noticeId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        //
+        modifyNotice: function(data, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/tools/notice/modify_notice?" + data, 
+                {},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#notice_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#notice_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .pointer': 'modifyNotice'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+            this.$('tbody').html(this.template({'notices': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search'
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#notice_list"]').tab('show');
+        },
+
+        searchFriendlyLink: function(){
+            var name = this.$('.key-word-name').val(),
+                city = this.$('.key-word-city').val();
+
+            router.navigate(String.format('/search/{0}/{1}/1', name, city), {trigger: true});
+        },
+
+        modifyNotice: function(sender){
+            var target = $(sender.currentTarget),
+                noticeId = target.data('notice_id');
+
+            router.navigate('/modify/' + noticeId, {trigger: true});
+        }
+
+    });
+
+    // modifyView
+    var ModifyView = Backbone.View.extend({
+        
+        el: '#modify_notice',
+
+        template: _.template($('#modify_notice_template').html()),
+
+        events: {
+            'click .save': 'save',
+            'click .remove': 'remove'
+        },
+        
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_notice"]').tab('show');
+        },
+
+        initDate: function(){
+            $('#start_date_modify').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+            $('#end_date_modify').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        // 渲染
+        render: function(data){
+            
+            this.$el.html(this.template(data));
+
+            this.initDate();
+        },
+
+        // 显示提问信息
+        modifyNotice: function(noticeId){
+            var me = this;
+
+            this.collection.getOne(noticeId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的通知!');
+                }
+            });
+        },
+
+        // 保存
+        save: function(){
+            var noticeId = this.$('form').data('notice_id'),
+                me = this;
+
+            me.collection.modifyNotice(this.$('form').serialize(), function(data){
+                if(data.errcode === 0){
+                    $.ZXMsg.alert('提示', '操作成功');
+                    router.navigate('modify/' + noticeId, {'trigger': true});
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            })
+        },
+
+        // 删除
+        remove: function(){
+            var noticeId = this.$('form').data('notice_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要删除此全站公告?', function(result){
+                
+                if(result){
+                    me.collection.removeNotice(noticeId, function(data){
+                        if(data.errcode === 0){
+                            router.navigate('search/1', {trigger: true});
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                }
+                
+            });
+        }
+
+    });
+
+    
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_notice_template').html()),
+
+
+        showPanel: function(){
+            var me = this;
+
+            me.render();
+
+        },
+
+        initDate: function(){
+            $('#start_date_add').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+            $('#end_date_add').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        render: function(){
+            var me = this;
+
+            $('#add_notice_modal').remove();
+            
+            $('body').append(this.template());
+
+            // 绑定事件
+            $('#add_notice_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_notice_modal .ok').bind('click', function(){
+                me.addNotice();
+            });
+
+            this.initDate();
+            
+            $('#add_notice_modal').modal({'show': true, 'backdrop': 'static'});
+
+        },
+
+        addNotice: function(){
+            var me = this;
+
+            notices.addNotice(me.$('form').serialize(), function(data){
+                if(data.errcode === 0){
+                    router.navigate('modify/' + data.errmsg, {trigger: true});
+                    $('#add_notice_modal').modal('hide');
+                    $.ZXMsg.alert('提示', '添加成功!');
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            })
+        }
+
+    });
+
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                     "search",
+            "modify/:noticeId":     "modify",
+            "search/:pageIndex":    "search",
+            "add":                  "add"
+        },
+
+        // 查询
+        search: function(pageIndex){
+            notices.search(pageIndex||1);
+        },
+
+        // 显示修改界面
+        modify: function(noticeId){
+            modifyView.modifyNotice(noticeId);
+        },
+
+        add: function(){
+            addView.showPanel();
+        }
+
+    });
+    
+    // 初始化
+    var notices = new Notices(),
+        listView = new ListView({'collection': notices}),
+        modifyView = new ModifyView({'collection': notices}),
+        addView = new AddView(),
+        router = new Router();
+ 
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#notice_list" class="black-blue" data-toggle="pill">全站通知列表</a>
+    </li>
+    <li>
+        <a href="#modify_notice" class="black-blue" data-toggle="pill">修改全站通知</a>
+    </li>
+    <li class="pull-right">
+        <a href="#add" class="black-blue">添加全站通知</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 全站通知列表 -->
+    <div class="tab-pane fade pt-15 in active" id="notice_list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>通知内容</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>等级</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改客户经理信息 -->
+    <div class="tab-pane fade" id="modify_notice">
+        
+    </div>
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="notice_template">
+    <% _.each(notices, function(notice){ %>
+        <tr class="pointer" data-notice_id="<%= notice.noticeId %>">
+            <td><%= notice.num %></td>
+            <td><%= notice.content %></td>
+            <td><%= notice.startDate %></td>
+            <td><%= notice.endDate %></td>
+            <td>
+            <% if(notice.level == 0){ %>
+                普通
+            <% } else { %>
+                重要
+            <% } %>
+            </td>
+            <td>
+            <% if(!notice.state){ %>
+                <span class="glyphicon glyphicon-remove cl_red" title="已失效"></span>
+            <% } %>
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="modify_notice_template">
+    <form class="form-horizontal" data-notice_id='<%= noticeId %>' role="form" method="post" action="">
+        <input type="hidden" name="notice_id" value="<%= noticeId %>" />
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">通知内容</label>
+            <div class="col-sm-7">
+                <textarea type="text" rows="6" class="form-control" name="content"><%= content %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">开始时间</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name='start_time' id="start_date_modify" value='<%= startDate %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">结束时间</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name='end_time' id="end_date_modify" value='<%= endDate %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">等级</label>
+            <div class="col-sm-6">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="level" value="0" <% if(level==0){ %>checked<% } %> >
+                        普通通知
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="level" value="1" <% if(level==1){ %>checked<% } %> >
+                        重要通知
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove">删除此友情链接</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!-- 添加问题模板 -->
+<script type="text/template" id="add_notice_template">
+<div class="modal fade" id="add_notice_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <h4 class="modal-title">添加全站通知</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" method="post" action="">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">通知内容</label>
+                        <div class="col-sm-7">
+                            <textarea type="text" rows="6" class="form-control" name="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">开始时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name='start_time' id="start_date_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">结束时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name='end_time' id="end_date_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">等级</label>
+                        <div class="col-sm-6">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="level" value="0" checked>
+                                    普通通知
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="level" value="1">
+                                    重要通知
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock admin-right %}

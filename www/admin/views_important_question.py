@@ -71,7 +71,7 @@ def add_important(request):
     url = ''
     if code == 0:
         iq = qb.get_important_question_by_question_id(question_id)
-        url = '/admin/important_question#modify/%s' % iq.question.id
+        url = '/admin/question/important_question#modify/%s' % iq.question.id
     else:
         url = request.META['HTTP_REFERER']
     return HttpResponseRedirect(url)
@@ -99,7 +99,7 @@ def modify_important(request):
 
     code, msg = qb.set_important(question, request.user, img_name, img_alt, sort_num)
 
-    url = '/admin/important_question#modify/%s' % iq.question.id
+    url = '/admin/question/important_question#modify/%s' % iq.question.id
 
     return HttpResponseRedirect(url)
 

@@ -54,7 +54,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/important_question/get_important_question_by_title", 
+                "/admin/question/important_question/get_important_question_by_title", 
                 {'title': title||'', 'page_index': pageIndex}, 
                 function(data){
                     me.pageIndex = pageIndex;
@@ -71,7 +71,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/important_question/get_important_question_by_question_id", 
+                "/admin/question/important_question/get_important_question_by_question_id", 
                 {'question_id': questionId},
                 function(data){
                     if(callback){
@@ -83,7 +83,7 @@ $(document).ready(function(){
 
         cancelImportant: function(questionId, callback){
             ajaxSend(
-                "/admin/important_question/cancel_important", 
+                "/admin/question/important_question/cancel_important", 
                 {'question_id': questionId},
                 function(data){
                     if(callback){
@@ -310,7 +310,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/question/get_question_by_id", 
+                "/admin/question/question/get_question_by_id", 
                 {'question_id': questionId}, 
                 function(data){
                     
@@ -437,7 +437,7 @@ $(document).ready(function(){
 
 <!-- 修改问题模板 -->
 <script type="text/template" id="modify_important_template">
-    <form class="form-horizontal modify-important-form" data-question_id="<%= questionId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/modify_important">
+    <form class="form-horizontal modify-important-form" data-question_id="<%= questionId %>" role="form" method="post" enctype="multipart/form-data" action="/admin/question/important_question/modify_important">
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">提问标题</label>
             <div class="col-sm-6">
@@ -475,7 +475,7 @@ $(document).ready(function(){
 
 <!-- 添加问题模板 -->
 <script type="text/template" id="add_important_template">
-    <form class="form-horizontal add-important-form" data-question_id="<%= question_id %>" role="form" method="post" enctype="multipart/form-data" action="/admin/important_question/add_important">
+    <form class="form-horizontal add-important-form" data-question_id="<%= question_id %>" role="form" method="post" enctype="multipart/form-data" action="/admin/question/important_question/add_important">
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">提问标题</label>
             <div class="col-sm-6">

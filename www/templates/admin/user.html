@@ -58,7 +58,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/user/search", 
+                "/admin/user/user/search", 
                 {'user_nick': userNick||'', 'page_index': pageIndex||1}, 
                 function(data){
                     
@@ -235,11 +235,11 @@ $(document).ready(function(){
         </td>
         <td>
             <% if (user.isCustomerManager) { %>
-                <a href="/admin/customer_manager#modify/<%= user.userId %>" title="修改客户经理信息">
+                <a href="/admin/user/customer_manager#modify/<%= user.userId %>" title="修改客户经理信息">
                     <span class="glyphicon glyphicon-ok co-zx"></span>
                 </a>
             <% } else if(!user.isCustomerManager && user.state) { %>
-                <a href="/admin/customer_manager#add/<%= user.userId %>" title="设置客户经理"><span class="glyphicon glyphicon-ok co20 pointer"></span></a>
+                <a href="/admin/user/customer_manager#add/<%= user.userId %>" title="设置客户经理"><span class="glyphicon glyphicon-ok co20 pointer"></span></a>
             <% } %>
         </td>
         <td>

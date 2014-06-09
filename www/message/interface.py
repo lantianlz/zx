@@ -14,6 +14,7 @@ dict_err = {
     40100: u'自己不能邀请自己哦',
     40101: u'最多邀请6人',
     40102: u'已邀请，请勿重复邀请',
+    40103: u'没有找到对应的通知'
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -234,14 +235,13 @@ class GlobalNoticeBase(object):
             assert content and start_time and end_time
             assert end_time > start_time
         except:
-            transaction.rollback(using=DEFAULT_DB)
             return 99800, dict_err.get(99800)
 
-        GlobalNotice.objects.create(content=content, start_time=start_time, end_time=end_time,
-                                    user_id=user_id, level=level, platform=platform)
+        obj = GlobalNotice.objects.create(content=content, start_time=start_time, end_time=end_time,
+                                          user_id=user_id, level=level, platform=platform)
 
         self.get_all_valid_global_notice(must_update_cache=True)
-        return 0, dict_err.get(0)
+        return 0, obj.id
 
     @cache_required(cache_key='get_all_valid_global_notice', expire=3600)
     def get_all_valid_global_notice(self, must_update_cache=False):
@@ -250,3 +250,55 @@ class GlobalNoticeBase(object):
 
     def get_all_global_notice(self):
         return GlobalNotice.objects.all()
+
+    def get_notice_by_id(self, notice_id):
+        if not notice_id:
+            return None
+
+        obj = GlobalNotice.objects.filter(id=notice_id)
+        if not obj:
+            return None
+
+        return obj[0]
+
+    def modify_global_notice(self, notice_id, **kwargs):
+        try:
+            assert kwargs.get('content') and kwargs.get('start_time') and kwargs.get('end_time')
+            assert kwargs.get('end_time') > kwargs.get('start_time')
+        except:
+            return 99800, dict_err.get(99800)
+
+        if not notice_id:
+            return 40103, dict_err.get(40103)
+
+        obj = GlobalNotice.objects.filter(id=notice_id)
+        if not obj:
+            return 40103, dict_err.get(40103)
+
+        obj = obj[0]
+        try:
+            for k, v in kwargs.items():
+                setattr(obj, k, v)
+
+            obj.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        # 更新缓存
+        self.get_all_valid_global_notice(must_update_cache=True)
+        return 0, dict_err.get(0)
+
+    def remove_global_notice(self, notice_id):
+        if not notice_id:
+            return 40103, dict_err.get(40103)
+
+        obj = GlobalNotice.objects.filter(id=notice_id)
+        if not obj:
+            return 40103, dict_err.get(40103)
+
+        obj.delete()
+
+        # 更新缓存
+        self.get_all_valid_global_notice(must_update_cache=True)
+        return 0, dict_err.get(0)
