@@ -126,7 +126,7 @@ def get_user_by_nick(request, nick):
         return HttpResponseRedirect(user.get_url())
     else:
         err_msg = u'用户不存在'
-        return HttpResponse(err_msg)
+        return render_to_response('error.html', locals(), context_instance=RequestContext(request))
 
 
 @member_required

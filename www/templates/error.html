@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
     <head>
         <meta charset="utf-8" />
-        <title>500 - 智选</title>
+        <title>错误提示 - 智选</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <!-- 兼容 双核浏览器 -->
         <meta name="renderer" content="webkit" />
@@ -29,7 +29,7 @@
         }
 
         .text1{
-            font-size: 25px;
+            font-size: 18px;
             font-weight: bold;
         }
 
@@ -62,9 +62,9 @@
         <div class="container pr">
             <img class="bg" src="/static/img/common/500.png">
             <div class="text-container">
-                <div class="text1">出错了</div>
-                <div class="text2">错误信息1</div>
-                <div class="text3">错误信息2</div>
+                <div class="text1">温馨提示</div>
+                <div class="text2">{{err_msg}}</div>
+                <div class="text3"></div>
                 <div class="back">
                     <a class="link" href="javascript:history.go(-1);">返回上一页</a>
                     <a class="link" href="/">返回智选首页</a>

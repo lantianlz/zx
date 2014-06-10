@@ -524,7 +524,8 @@ def user_profile_required(func):
     '''
     def _decorator(request, user_id, *args, **kwargs):
         from www.timeline.interface import UserFollowBase
-        from django.http import HttpResponse
+        from django.shortcuts import render_to_response
+        from django.template import RequestContext
 
         ufb = UserFollowBase()
         ub = UserBase()
@@ -534,7 +535,7 @@ def user_profile_required(func):
             user = ub.get_user_by_id(user_id)
             if not user:
                 err_msg = u'用户不存在'
-                return HttpResponse(err_msg)
+                return render_to_response('error.html', locals(), context_instance=RequestContext(request))
         request.is_me = (request.user == user)
         if not request.is_me:
             request.is_follow = ufb.check_is_follow(request.user.id, user.id)
