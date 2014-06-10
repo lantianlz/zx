@@ -287,7 +287,7 @@ $(document).ready(function(){
             });
 
             if(value){
-                this.cityTextBox.add(name, value)
+                this.cityTextBox.add(name, value);
             }
         },
 
@@ -295,7 +295,6 @@ $(document).ready(function(){
             var me = this;
 
             me.render();
-
         },
 
         render: function(){
@@ -443,9 +442,9 @@ $(document).ready(function(){
             <td><%= friendlyLink.cityName %></td>
             <td><%= friendlyLink.sort %></td>
             <td>
-                <% if(friendlyLink.type == '0'){ %> 城市链接 <% } %>
-                <% if(friendlyLink.type == '1'){ %> 开户首页链接 <% } %>
-                <% if(friendlyLink.type == '2'){ %> 智选链接 <% } %>
+                {% for i in link_types %}
+                    <% if(friendlyLink.type=='{{i.value}}'){ %> {{i.name}} <% } %>
+                {% endfor %}
             </td>
         </tr>
     <% }) %>
@@ -458,24 +457,16 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">链接类型</label>
             <div class="col-sm-9">
+            {% for i in link_types %}
                 <div class="radio">
                     <label>
-                        <input type="radio" name="link_type" id="city_link" value="0" <% if(type=='0'){ %> checked <% } %> >
-                        开户子站单个城市的链接
+                        <input type="radio" name="link_type" value="{{i.value}}" <% if(type=='{{i.value}}'){ %> checked <% } %> >
+                        {{i.name}}
                     </label>
                 </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="link_type" id="kaihu_link" value="1" <% if(type=='1'){ %> checked <% } %>>
-                        开户主页链接
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="link_type" id="global_link" value="2" <% if(type=='2'){ %> checked <% } %>>
-                        网站全局内页链接
-                    </label>
-                </div>
+            {% endfor %}
+
+                
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -531,24 +522,14 @@ $(document).ready(function(){
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-3 control-label">链接类型</label>
                         <div class="col-sm-9">
+                        {% for i in link_types %}
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="link_type" id="city_link" value="0" checked>
-                                    开户子站单个城市的链接
+                                    <input type="radio" name="link_type" value="{{i.value}}" checked>
+                                    {{i.name}}
                                 </label>
                             </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="link_type" id="kaihu_link" value="1">
-                                    开户主页链接
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="link_type" id="global_link" value="2">
-                                    网站全局内页链接
-                                </label>
-                            </div>
+                        {% endfor %}
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

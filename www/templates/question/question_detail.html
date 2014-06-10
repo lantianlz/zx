@@ -133,6 +133,15 @@ $(document).ready(function(){
                 </div>
             </div>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body row pb-0 co8 f12 pr-35 pl-35 pb-20">
+                <div class="fb co18 f14">欢迎在知乎写下你的疑问，你的问题已经成功提交。</div>
+                <div class="pt-10">在知乎，一个表意清晰、说明完整的问题得到首个回答的平均时间是 12 分钟。为让问题更快获得精彩的回答，你可以：</div>
+                <div class="pt-5">邀请作答：用「邀请回答」功能邀请可能对这个问题感兴趣的其他用户来回答。</div>
+                <div class="pt-5">改进问题：具体地描述问题背景和提问原因，分享你在试图解决这个问题的过程中已经收集到的信息，都有助于其他用户更准更快了解你的疑惑、写下他们的回答。</div>
+            </div>
+        </div>
         {% if request.user.id == question.user.id or request.user.is_staff %}
         <!-- 弹出层 -->
         <div class="modal fade" id="edit_question_modal">

@@ -16,6 +16,8 @@ from www.account.interface import UserBase
 
 @verify_permission('')
 def friendly_link(request, template_name='admin/friendly_link.html'):
+    from www.kaihu.models import FriendlyLink
+    link_types = [{'value': x[0], 'name': x[1]} for x in FriendlyLink.link_type_choices]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
