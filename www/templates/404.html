@@ -50,9 +50,13 @@
         	font-size: 16px;
         	color: #259;
             text-decoration: none;
+            padding-right: 10px;
         }
         .link:hover{
             text-decoration: underline;
+        }
+        .or{
+            padding-right: 10px;
         }
         </style>
     </head>
@@ -62,7 +66,11 @@
     		<div class="text-container">
     			<div class="text1">404</div>
     			<div class="text2">抱歉，没有找到你要访问的网页</div>
-    			<div class="back"><a class="link" href="/">返回智选首页</a></div>
+                <div class="back">
+                    <a class="link" href="javascript:history.go(-1);">返回上一页</a>
+                    <span class="or">或者</span>
+                    <a class="link" href="/">返回智选首页</a>
+                </div>
     		</div>
     	</div>
     </body>
