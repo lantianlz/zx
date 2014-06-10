@@ -55,6 +55,9 @@ def question_detail(request, question_id, template_name='question/question_detai
     if request.session.has_key('answer_content'):
         answer_content = request.session['answer_content']
         del request.session['answer_content']
+    if request.session.has_key('guide'):
+        guide = request.session['guide']
+        del request.session['guide']
 
     # 异步更新浏览次数
     from www.tasks import async_add_question_view_count
@@ -78,6 +81,7 @@ def ask_question(request, template_name='question/ask_question.html'):
         errcode, result = qb.create_question(request.user.id, question_type, question_title, question_content,
                                              ip=utils.get_clientip(request), is_hide_user=is_hide_user, tags=tags)
         if errcode == 0:
+            request.session['guide'] = True
             return HttpResponseRedirect(result.get_url())
         else:
             error_msg = result
