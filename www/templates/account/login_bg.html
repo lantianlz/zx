@@ -1,6 +1,8 @@
 {% extends "base/base_welcome.html" %}
 
-{% block title %}登录{% endblock %}
+
+{% block title %}{% if 'login' in request.path %}登录 - 智选{% endif %}{% endblock %}
+{% block title_tail %}{% if 'login' not in request.path %}智选{% endif %}{% endblock title_tail %}
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/login.css?v={{MEDIA_VERSION}}" />
