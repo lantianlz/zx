@@ -27,7 +27,7 @@
     {% endif %}
 {% endblock %}
 
-{% block question_main%}
+{% block question_main %}
 <!--问题列表开始-->
 <div class="question-list">
     <!--选项卡开始-->
@@ -63,3 +63,12 @@
 </div>
 <!--问题列表结束-->
 {% endblock %}
+
+
+{% block footer %}
+{% if 'page' not in request.get_full_path %}
+{% include "include/_footer_notlogin.html" %}
+{% else %}
+{% include "include/_footer.html" %}
+{% endif %}
+{% endblock footer %}

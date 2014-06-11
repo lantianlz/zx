@@ -30,8 +30,6 @@ def show_index(request):
 
 
 def login(request, template_name='account/login_bg.html'):
-    from www.kaihu.interface import FriendlyLinkBase
-
     email = request.POST.get('email', '').strip()
     password = request.POST.get('password', '').strip()
 
@@ -54,8 +52,6 @@ def login(request, template_name='account/login_bg.html'):
     # 手机客户端换模板
     if user_agent_dict['device']['family'] != 'Other':
         template_name = 'account/login.html'
-
-    flinks = FriendlyLinkBase().get_friendly_link_by_link_type(link_type=3)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 

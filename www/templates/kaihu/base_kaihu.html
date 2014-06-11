@@ -35,5 +35,10 @@
 {% endblock %}
 
 {% block footer %}
-{% include 'include/_footer_kaihu.html' %}
+{% if 'page' not in request.get_full_path %}
+{% include "include/_footer_kaihu.html" %}
+{% else %}
+{% include "include/_footer.html" %}
+{% endif %}
 {% endblock footer %}
+
