@@ -28,7 +28,8 @@ $(document).ready(function(){
             'isAdmin': false,
             'isCustomerManager': false,
             'lastActive': '',
-            'state': true
+            'state': true,
+            'ip': ''
         }
     });
 
@@ -51,7 +52,8 @@ $(document).ready(function(){
             'isManager': 'is_manager',
             'isCustomerManager': 'is_customer_manager',
             'lastActive': 'last_active',
-            'state': 'state'
+            'state': 'state',
+            'ip': 'ip'
         },
 
         search: function(userNick, order, pageIndex){
@@ -206,6 +208,7 @@ $(document).ready(function(){
                     <th>客户经理</th>
                     <th>管理员</th>
                     <th><a class="chart" href="#">上次活跃时间</a></th>
+                    <th>注册ip</th>
                 </tr>
             </thead>
             <tbody>
@@ -264,6 +267,9 @@ $(document).ready(function(){
         </td>
         <td>
             <%= user.lastActive %>
+        </td>
+        <td>
+            <%= user.ip %>
         </td>
     </tr>
 <% }) %>

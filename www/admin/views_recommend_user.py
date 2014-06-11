@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from misc.decorators import staff_required, common_ajax_response, verify_permission
-
+from www.custom_tags.templatetags.custom_filters import str_display
 from www.account.interface import RecommendUserBase
 
 
@@ -31,7 +31,7 @@ def get_all_recommend_users(request):
             'user_id': x.user.id,
             'user_avatar': x.user.get_avatar_25(),
             'user_nick': x.user.nick,
-            'user_des': x.user.des,
+            'user_des': str_display(x.user.des, 17),
             'question_count': x.user_count['user_question_count'],
             'answer_count': x.user_count['user_answer_count'],
             'liked_count': x.user_count['user_liked_count'],

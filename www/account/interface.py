@@ -448,6 +448,7 @@ class UserBase(object):
         格式化完整用户信息
         '''
         format_user = self.get_user_by_id(user_id)
+
         # 判断是否已经是推荐用户了
         if RecommendUser.objects.filter(user_id=user_id).count() > 0:
             format_user.is_recommend = True
@@ -476,8 +477,10 @@ class UserBase(object):
         if la:
             la = la[0]
             format_user.last_active = la.last_active_time
+            format_user.last_active_ip = la.ip
         else:
             format_user.last_active = format_user.create_time
+            format_user.last_active_ip = format_user.ip
 
         return format_user
 

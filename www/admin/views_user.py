@@ -66,7 +66,8 @@ def search(request):
             'is_admin': user.is_admin,
             'is_customer_manager': user.is_customer_manager,
             'last_active': str(user.last_active),
-            'state': user.state
+            'state': user.state,
+            'ip': user.ip
         })
 
     return HttpResponse(
