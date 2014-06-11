@@ -21,10 +21,15 @@ def search(request):
     '''
     分页查询提问，可以根据标题过滤
     '''
-    title = request.POST.get('title')
-    page_index = int(request.POST.get('page_index', 1))
+    title = request.REQUEST.get('title')
+    page_index = int(request.REQUEST.get('page_index', 1))
+    order = request.REQUEST.get('order', 'create_time')
 
-    questions = QuestionBase().get_question_by_title(title)
+    if title:
+        questions = QuestionBase().get_question_by_title(title)
+    else:
+        questions = QuestionBase().get_all_questions_by_order_count(order)
+
     page_objs = page.Cpt(questions, count=10, page=page_index).info
 
     data = []

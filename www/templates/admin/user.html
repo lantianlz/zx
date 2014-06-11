@@ -54,17 +54,18 @@ $(document).ready(function(){
             'state': 'state'
         },
 
-        search: function(userNick, pageIndex){
+        search: function(userNick, order, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/user/user/search", 
-                {'user_nick': userNick||'', 'page_index': pageIndex||1}, 
+                {'user_nick': userNick||'', 'order': order, 'page_index': pageIndex||1}, 
                 function(data){
                     
                     me.pageIndex = pageIndex;
                     me.pageCount = data.page_count;
                     me.userNick = userNick||'';
+                    me.order = order||'register_date';
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
@@ -97,7 +98,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.userNick
+                'search/' + this.collection.userNick + '/' + this.collection.order
             );
         },
 
@@ -107,9 +108,10 @@ $(document).ready(function(){
         },
 
         searchUser: function(){
-            var userNick = this.$('.key-word').val();
+            var userNick = this.$('.key-word').val(),
+                order = this.$('.order').val();
 
-            router.navigate('/search/' + userNick + '/1', {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/1', userNick, order), {trigger: true});
         },
 
         showChart: function(){
@@ -143,12 +145,12 @@ $(document).ready(function(){
     var Router = Backbone.Router.extend({
         routes: {
             "":                                 "search",
-            "search/(:userNick)/:pageIndex":    "search"
+            "search/(:userNick)/:order/:pageIndex":    "search"
         },
 
         // 获取推荐用户
-        search: function(userNick, pageIndex){
-            users.search(userNick||'', pageIndex||1);
+        search: function(userNick, order, pageIndex){
+            users.search(userNick||'', order||'register_date', pageIndex||1);
         }
 
     });
@@ -176,6 +178,15 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 用户列表 -->
     <div class="tab-pane fade pt-15 in active" id="user_list">
+        <div class="pl-0 pb-10 col-md-2">
+            <select class="form-control input-sm order">
+                <option value="register_date">按 注册时间 排序</option>
+                <option value="user_question_count">按 提问次数 排序</option>
+                <option value="user_answer_count">按 回答次数 排序</option>
+                <option value="user_liked_count">按 获赞个数 排序</option>
+                <option value="follower_count">按 粉丝个数 排序</option>
+            </select>
+        </div>
         <div class="pl-0 pb-10 col-md-3">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入用户呢称..." />

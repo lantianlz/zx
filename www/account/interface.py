@@ -590,6 +590,11 @@ class UserCountBase(object):
         data = [uc for uc in ucs if uc.user_id != exclude_user_id]
         return data[:count]
 
+    def get_all_users_by_order_count(self, sort):
+        '''
+        '''
+        return UserCount.objects.all().order_by("-" + sort)
+
 
 class RecommendUserBase(object):
 

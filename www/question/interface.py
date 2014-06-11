@@ -369,10 +369,14 @@ class QuestionBase(object):
         questions = []
         if title:
             questions = Question.objects.filter(title=title)
-        else:
-            questions = Question.objects.all()
 
-        return self.format_quesitons(questions.order_by('-create_time'))
+        return self.format_quesitons(questions)
+
+    def get_all_questions_by_order_count(self, order):
+        '''
+        根据统计数据排序
+        '''
+        return self.format_quesitons(Question.objects.all().order_by('-' + order))
 
 
 class AnswerBase(object):

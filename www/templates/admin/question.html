@@ -61,18 +61,19 @@ $(document).ready(function(){
             'createdTime': 'created_time'
         },
         // 查询方法
-        search: function(title, pageIndex){
+        search: function(title, order, pageIndex){
 
             var me = this;
 
             ajaxSend(
                 "/admin/question/question/search", 
-                {'title': title||'', 'page_index': pageIndex||1}, 
+                {'title': title||'', 'order': order||'create_time', 'page_index': pageIndex||1}, 
                 function(data){
                     
                     me.pageIndex = pageIndex;
                     me.pageCount = data.page_count;
                     me.title = title||'';
+                    me.order = order;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
@@ -124,7 +125,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.title
+                'search/' + this.collection.title + '/' + this.collection.order
             );
         },
 
@@ -134,9 +135,10 @@ $(document).ready(function(){
         },
 
         searchQuestion: function(){
-            var title = this.$('.key-word').val();
+            var title = this.$('.key-word').val(),
+                order = this.$('.order').val();
 
-            router.navigate('/search/' + title + '/1', {trigger: true});
+            router.navigate(String.format('search/{0}/{1}/1', title, order), {trigger: true});
         },
 
         modifyQuestion: function(sender){
@@ -245,13 +247,13 @@ $(document).ready(function(){
         routes: {
             "":                     "search",
             "modify/:questionId":   "modify",
-            "search/(:title)/:pageIndex":   "search"
+            "search/(:title)/:order/:pageIndex":   "search"
         },
 
         // 分页显示
-        search: function(title, pageIndex){
+        search: function(title, order, pageIndex){
             
-            questions.search(title, pageIndex);
+            questions.search(title, order, pageIndex);
         },
 
         // 显示修改界面
@@ -287,6 +289,13 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 提问列表 -->
     <div class="tab-pane fade pt-15 in active" id="question_list">
+        <div class="pl-0 pb-10 col-md-2">
+            <select class="form-control input-sm order">
+                <option value="create_time">按 提问时间 排序</option>
+                <option value="views_count">按 浏览次数 排序</option>
+                <option value="answer_count">按 回答个数 排序</option>
+            </select>
+        </div>
         <div class="pl-0 pb-10 col-md-3">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入提问标题..." />
@@ -301,6 +310,7 @@ $(document).ready(function(){
                     <th>#</th>
                     <th>精选</th>
                     <th>标题</th>
+                    <th>统计</th>
                     <th>提问者</th>
                     <th>提问时间</th>
                     <th>状态</th>
@@ -337,10 +347,13 @@ $(document).ready(function(){
                 <% } %>
             </td>
             <td><%= question.title %></td>
-
+            <td>
+                <span class="fb fi f12"><%= question.viewCount %></span>次浏览, 
+                <span class="fb fi f12"><%= question.answerCount %></span>个回答
+            </td>
             <td><%= question.userNick %></td>
             <td><%= question.createdTime %></td>
-            <!-- <td><span class="fb fi f12"><%= question.viewCount %></span>次浏览, <span class="fb fi f12"><%= question.answerCount %></span>个回答</td> -->
+            
             
             <td>
                 <% if (!question.state) { %>

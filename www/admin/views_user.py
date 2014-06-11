@@ -20,22 +20,30 @@ def user(request, template_name='admin/user.html'):
 
 @verify_permission('query_user')
 def search(request):
-    user_nick = request.POST.get('user_nick')
-    page_index = int(request.POST.get('page_index', 1))
+    user_nick = request.REQUEST.get('user_nick')
+    page_index = int(request.REQUEST.get('page_index', 1))
+    order = request.REQUEST.get('order', 'register_date')
+
     data = []
     users = []
     ub = UserBase()
 
+    # 精确匹配
     if user_nick:
         users = ub.get_user_by_nick(user_nick)
         users = [users] if users else []
     else:
-        users = ub.get_all_users()
+        # 默认排序
+        if order == "register_date":
+            users = ub.get_all_users()
+        # 根据各种数量排序
+        else:
+            users = UserCountBase().get_all_users_by_order_count(order)
 
     page_objs = page.Cpt(users, count=10, page=page_index).info
 
     # 格式化
-    format_users = [ub.format_user_full_info(x.id) for x in page_objs[0]]
+    format_users = [ub.format_user_full_info(x.id if not isinstance(x.id, long) else x.user_id) for x in page_objs[0]]
 
     data = []
     num = 10 * (page_index - 1) + 0
