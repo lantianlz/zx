@@ -281,6 +281,7 @@ a:hover{color: #259;}
 
 .top-border{border-top: solid 1px;}
 .bottom-border{border-bottom: solid 1px;}
+.bottom-border-3{border-bottom: solid 3px;}
 .left-border{border-left: solid 1px;}
 .right-border{border-right: solid 1px;}
 .no-border{border: 0px;}

@@ -10,26 +10,17 @@
 {% if likes %}
 <ul class="message-list list-group only-top-border">
 	{% for like in likes %}
-	<li class="list-group-item">
-		<div class="message-item row">
-			<div class="col-md-1 col-xs-3">
-				<a href="{{like.from_user.get_url}}">
-					<img class="avatar" alt="{{like.from_user.nick}}" src="{{like.from_user.get_avatar}}"></a>
+	<li class="list-group-item no-l-r-bd bdc-eee pl-10">
+		<a href="{{like.from_user.get_url}}">
+			<img class="pa avatar-circle avatar-45" alt="{{like.from_user.nick}}" src="{{like.from_user.get_avatar}}"></a>
+		<div class="pl-55">
+			<div class="">
+				<a href="{{like.from_user.get_url}}" class="zx-cardtips" data-user_id="{{like.from_user.id}}">{{like.from_user.nick}}</a>
+				<span class="co8 pull-right">{{like.create_time|time_format}}</span>
 			</div>
-			<div class="col-md-9 col-xs-9">
-				<div class="from">
-					<a href="{{like.from_user.get_url}}">{{like.from_user.nick}}</a>
-				</div>
-                <div class="content f12"> 
-                    赞了我的回答 <a href="{{like.question.get_url}}">{{like.question.title|safe}}</a>
-                </div>
-			</div>
-			<div class="col-md-2 col-xs-12">
-				<div class="date text-right co8">{{like.create_time|time_format}}</div>
-				<div class="text-right hide">
-					<a href="#" class="delete">删除</a>
-					<input type="checkbox"></div>
-			</div>
+            <div class="content f12 pt-10"> 
+                赞了我的回答 <a href="{{like.question.get_url}}">{{like.question.title|safe}}</a>
+            </div>
 		</div>
 	</li>
 	{% endfor %}
