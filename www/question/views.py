@@ -18,6 +18,8 @@ tb = interface.TagBase()
 
 
 def question_home(request, question_type=None, template_name='question/question_home.html'):
+    from www.kaihu.interface import FriendlyLinkBase
+
     if question_type:
         question_type = interface.QuestionTypeBase().get_question_type_by_id_or_domain(question_type)
         if not question_type:
@@ -31,6 +33,8 @@ def question_home(request, question_type=None, template_name='question/question_
     page_params = (page_objs[1], page_objs[4])
 
     questions = qb.format_quesitons(questions)
+
+    flinks = FriendlyLinkBase().get_friendly_link_by_link_type(link_type=3)  # 首页友链
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

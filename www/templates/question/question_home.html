@@ -1,7 +1,9 @@
 {% extends "question/base_question.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}{% if question_type %}{{question_type.name}} - 热门问答{% else %}最新问答{% endif %}{% endblock %}
+
+{% block title %}{% if '/' != request.path %}{% if question_type %}{{question_type.name}} - 热门问答{% else %}最新问答{% endif %} - 智选{% endif %}{% endblock %}
+{% block title_tail %}{% if '/' == request.path %}智选{% endif %}{% endblock title_tail %}
 
 {% block css %}{% endblock %}
 
@@ -25,7 +27,7 @@
     {% endif %}
 {% endblock %}
 
-{% block question_main%}
+{% block question_main %}
 <!--问题列表开始-->
 <div class="question-list">
     <!--选项卡开始-->
@@ -61,3 +63,12 @@
 </div>
 <!--问题列表结束-->
 {% endblock %}
+
+
+{% block footer %}
+{% if 'page' not in request.get_full_path and not question_type %}
+{% include "include/_footer_notlogin.html" %}
+{% else %}
+{% include "include/_footer.html" %}
+{% endif %}
+{% endblock footer %}
