@@ -184,3 +184,20 @@ class ImportantQuestion(models.Model):
 
     class Meta:
         ordering = ['-sort_num', '-id']
+
+
+class Topic(models.Model):
+    state_choices = ((0, u'普通话题'), (1, u'静默话题'))
+
+    name = models.CharField(max_length=16, unique=True)
+    domain = models.CharField(max_length=16, unique=True)  # 自定义域名支持
+    parent_topic = models.ForeignKey('Topic')
+    child_count = models.IntegerField(default=0, db_index=True)
+    follower_count = models.IntegerField(default=0, db_index=True)
+
+    img = models.CharField(max_length=128, default='')  # 子分类可能有图片
+    des = models.CharField(max_length=512, null=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    is_show = models.BooleanField(default=True)  # 过滤的时候是否显示
+    state = models.IntegerField(default=0, db_index=True, choices=state_choices)
+    create_time = models.DateTimeField(auto_now_add=True)
