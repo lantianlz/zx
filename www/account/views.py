@@ -25,7 +25,8 @@ def show_index(request):
         from www.timeline.views import show_user_timeline
         return show_user_timeline(request)
     else:
-        return login(request)
+        from www.question.views import question_home
+        return question_home(request)
 
 
 def login(request, template_name='account/login_bg.html'):
