@@ -27,7 +27,7 @@
         <div class="collapse navbar-collapse zx-navbar-collapse">
             <ul class="nav navbar-nav">
                 <li {% if '/' == request.path and request.user.is_authenticated or '/home' == request.path %} class="active" {% endif %}>
-                    <a {% if '/' == request.path and request.user.is_authenticated or '/home' == request.path %} class=""{% else %} class="bottom-border-3 bdc-transparent" href="{{MAIN_DOMAIN}}" {% endif %}>首页</a>
+                    <a {% if '/' == request.path and request.user.is_authenticated or '/home' == request.path %} class=""{% else %} class="bottom-border-3 bdc-transparent" {% endif %} href="{{MAIN_DOMAIN}}">首页</a>
                 </li>
                 <li {% if '/question/' == request.path %} class="active" {% endif %}>
                     <a href="{{MAIN_DOMAIN}}/question">问答</a>
