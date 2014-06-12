@@ -194,6 +194,7 @@ class Topic(models.Model):
     parent_topic = models.ForeignKey('Topic')
     child_count = models.IntegerField(default=0, db_index=True)
     follower_count = models.IntegerField(default=0, db_index=True)
+    question_count = models.IntegerField(default=0, db_index=True)
 
     img = models.CharField(max_length=128, default='')  # 子分类可能有图片
     des = models.CharField(max_length=512, null=True)

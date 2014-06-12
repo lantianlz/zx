@@ -117,7 +117,7 @@ class CustomerManager(models.Model):
 
 
 class FriendlyLink(models.Model):
-    link_type_choices = ((0, u'开户子站单个城市的链接'), (1, u'开户子站home页链接'), (2, u'主站全局链接'), (3, u'主站未登录首页链接'))
+    link_type_choices = ((0, u'开户子站单个城市的链接'), (1, u'开户子站home页链接'), (2, u'主站内页链接'), (3, u'主站首页链接'))
 
     name = models.CharField(max_length=32)
     href = models.CharField(max_length=128)
