@@ -93,6 +93,9 @@ class QuestionType(models.Model):
     sort_num = models.IntegerField(default=0, db_index=True)
     state = models.BooleanField(default=True, db_index=True)
 
+    class Meta:
+        ordering = ["id"]
+
     def get_url(self):
         return u'/question/type/%s' % self.domain or self.value
 
@@ -191,7 +194,7 @@ class Topic(models.Model):
 
     name = models.CharField(max_length=16, unique=True)
     domain = models.CharField(max_length=16, unique=True)  # 自定义域名支持
-    parent_topic = models.ForeignKey('Topic')
+    parent_topic = models.ForeignKey('Topic', null=True)
     child_count = models.IntegerField(default=0, db_index=True)
     follower_count = models.IntegerField(default=0, db_index=True)
     question_count = models.IntegerField(default=0, db_index=True)
@@ -199,6 +202,39 @@ class Topic(models.Model):
     img = models.CharField(max_length=128, default='')  # 子分类可能有图片
     des = models.CharField(max_length=512, null=True)
     sort_num = models.IntegerField(default=0, db_index=True)
-    is_show = models.BooleanField(default=True)  # 过滤的时候是否显示
+    is_show = models.BooleanField(default=True)
     state = models.IntegerField(default=0, db_index=True, choices=state_choices)
     create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-sort_num', 'id']
+
+    def __unicode__(self):
+        return '%s' % self.domain or self.id
+
+    def get_url(self):
+        return u'/topic/%s' % self.domain
+
+    def get_img(self):
+        return self.img or '%s/img/common/default-topic.png' % settings.MEDIA_URL
+
+    def get_summary(self):
+        """
+        @note: 通过内容获取摘要
+        """
+        from common import utils
+        return utils.get_summary_from_html_by_sub(self.des, max_num=35)
+
+
+class TopicQuestion(models.Model):
+    topic = models.ForeignKey('Topic')
+    question = models.ForeignKey('Question')
+    is_important = models.BooleanField(default=False, db_index=True)    # 是否设置了精华
+    sort_num = models.IntegerField(default=0, db_index=True)
+
+    class Meta:
+        unique_together = [("topic", "question")]
+        ordering = ['-sort_num', '-id']
+
+    def __unicode__(self):
+        return '%s, %s' % (self.topic_id, self.question_id)

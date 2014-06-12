@@ -722,3 +722,12 @@ class TagBase(object):
                 else:
                     ftags[str(tag.question_type_id)].append((tag.id, tag.name),)
         return ftags
+
+
+class TopicBase(object):
+
+    def get_topic_all_parent(topic_id_or_domain):
+        '''
+        @note: 获取话题所有的父话题
+        '''
+        pass
