@@ -48,6 +48,7 @@ urlpatterns += patterns('www.admin.views_permission',
 # 用户
 urlpatterns += patterns('www.admin.views_user',
 
+                        url(r'^user/user/modify_user$', 'modify_user'),
                         url(r'^user/user/get_user_by_id$', 'get_user_by_id'),
                         url(r'^user/user/search$', 'search'),
                         url(r'^user/user$', 'user'),

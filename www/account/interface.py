@@ -230,7 +230,7 @@ class UserBase(object):
                     et.save()
         return et
 
-    def change_profile(self, user, nick, gender, birthday, des=None):
+    def change_profile(self, user, nick, gender, birthday, des=None, state=None):
         '''
         @note: 资料修改
         '''
@@ -260,6 +260,12 @@ class UserBase(object):
         user.birthday = birthday
         if des:
             user.des = utils.filter_script(des)[:128]
+
+        if state is not None:
+            user_login = self.get_user_login_by_id(user.id)
+            user_login.state = state
+            user_login.save()
+
         user.save()
 
         # 更新缓存

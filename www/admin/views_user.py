@@ -15,6 +15,9 @@ from www.account.interface import UserBase, UserCountBase
 
 @verify_permission('')
 def user(request, template_name='admin/user.html'):
+    from www.account.models import User
+    states = [{'name': x[1], 'value': x[0]} for x in User.state_choices]
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -57,6 +60,7 @@ def search(request):
             'user_avatar': user.get_avatar_25(),
             'user_nick': user.nick,
             'user_des': user.des,
+            'user_email': user.email,
             'question_count': user.user_count['user_question_count'],
             'answer_count': user.user_count['user_answer_count'],
             'liked_count': user.user_count['user_liked_count'],
@@ -83,9 +87,45 @@ def get_user_by_id(request):
 
     user = UserBase().get_user_by_id(user_id)
     if user:
+        user = UserBase().format_user_full_info(user.id)
+
         data = {
             'user_id': user.id,
-            'user_nick': user.nick
+            'user_avatar': user.get_avatar_25(),
+            'user_avatar_300': user.get_avatar_300(),
+            'user_nick': user.nick,
+            'user_des': user.des,
+            'user_email': user.email,
+            'user_gender': user.gender,
+            'birthday': str(user.birthday),
+            'question_count': user.user_count['user_question_count'],
+            'answer_count': user.user_count['user_answer_count'],
+            'liked_count': user.user_count['user_liked_count'],
+            'follower_count': user.user_count['follower_count'],
+            'following_count': user.user_count['following_count'],
+            'is_recommend': user.is_recommend,
+            'is_admin': user.is_admin,
+            'is_customer_manager': user.is_customer_manager,
+            'last_active': str(user.last_active),
+            'state': user.state,
+            'ip': user.ip,
+            'register_date': str(user.create_time)
         }
 
     return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+@verify_permission('modify_user')
+@common_ajax_response
+def modify_user(request):
+
+    user_id = request.REQUEST.get('user_id')
+    nick = request.REQUEST.get('nick')
+    gender = request.REQUEST.get('gender')
+    birthday = request.REQUEST.get('birthday')
+    des = request.REQUEST.get('des')
+    state = int(request.REQUEST.get('state'))
+
+    user = UserBase().get_user_by_id(user_id)
+
+    return UserBase().change_profile(user, nick, gender, birthday, des, state)

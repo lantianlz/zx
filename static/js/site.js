@@ -239,6 +239,11 @@ if (!String.format) {
     */
     $.ZXUtils.dictMap = function(originDict, maps){
         var newDict = {};
+        
+        if(!originDict){
+            return null;
+        }
+        
         for(var m in maps){
             newDict[m] = originDict[maps[m]]
         }

@@ -17,8 +17,10 @@ $(document).ready(function(){
             'num': 1,
             'userId': '',
             'userAvatar': '',
+            'userAvatar300': '',
             'userNick': '',
             'userDesc': '',
+            'userEmail': '',
             'questionCount': 0,
             'answerCount': 0,
             'likeCount': 0,
@@ -40,8 +42,12 @@ $(document).ready(function(){
             'num': 'num',
             'userId': 'user_id',
             'userAvatar': 'user_avatar',
+            'userAvatar300': 'user_avatar_300',
             'userNick': 'user_nick',
             'userDesc': 'user_des',
+            'userEmail': 'user_email',
+            'userGender': 'user_gender',
+            'birthday': 'birthday',
             'questionCount': 'question_count',
             'answerCount': 'answer_count',
             'likeCount': 'liked_count',
@@ -53,7 +59,8 @@ $(document).ready(function(){
             'isCustomerManager': 'is_customer_manager',
             'lastActive': 'last_active',
             'state': 'state',
-            'ip': 'ip'
+            'ip': 'ip',
+            'registerDate': 'register_date'
         },
 
         search: function(userNick, order, pageIndex){
@@ -72,6 +79,50 @@ $(document).ready(function(){
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
             );
+        },
+
+        getOne: function(userId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/user/user/get_user_by_id", 
+                {'user_id': userId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        // 删除
+        removeUser: function(userId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/user/user/remove_user", 
+                {'user_id': userId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        //
+        modifyUser: function(data, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/user/user/modify_user?" + data, 
+                {},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
         }
         
     });
@@ -85,7 +136,8 @@ $(document).ready(function(){
 
         events: {
             'click .search-user': 'searchUser',
-            'click .chart': 'showChart'
+            'click .chart': 'showChart',
+            'click .pointer': 'modifyUser'
         },
 
         initialize: function(){
@@ -116,6 +168,13 @@ $(document).ready(function(){
             router.navigate(String.format('/search/{0}/{1}/1', userNick, order), {trigger: true});
         },
 
+        modifyUser: function(sender){
+            var target = $(sender.currentTarget),
+                userId = target.data('user_id');
+
+            router.navigate('/modify/' + userId, {trigger: true});
+        },
+
         showChart: function(){
             var today = new Date(),
                 month = today.getMonth() + 1,
@@ -142,23 +201,115 @@ $(document).ready(function(){
 
     });
     
-    
+
+    var ModifyView = Backbone.View.extend({
+        
+        el: '#modify_user',
+
+        template: _.template($('#modify_user_template').html()),
+
+        events: {
+            'click .save': 'save',
+            'click .remove': 'remove'
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_user"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+
+            this.initDate();
+        },
+
+        initDate: function(){
+            $('#birthday_modify').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        // 显示提问信息
+        modifyUser: function(userId){
+            var me = this;
+
+            this.collection.getOne(userId, function(data){
+
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的链接!');
+                }
+            });
+        },
+
+        // 保存
+        save: function(){
+            var userId = this.$('form').data('user_id'),
+                me = this;
+
+            me.collection.modifyUser(this.$('form').serialize(), function(data){
+                if(data.errcode === 0){
+                    $.ZXMsg.alert('提示', '操作成功');
+                    router.navigate('modify/' + userId, {'trigger': true});
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            })
+        },
+
+        // 删除
+        remove: function(){
+            var userId = this.$('form').data('user_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要删除此用户吗?', function(result){
+                
+                if(result){
+                    me.collection.removeUser(userId, function(data){
+                        if(data.errcode === 0){
+                            listView.searchUser();
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                }
+                
+            });
+        }
+
+
+    });
+
 
     var Router = Backbone.Router.extend({
         routes: {
-            "":                                 "search",
-            "search/(:userNick)/:order/:pageIndex":    "search"
+            "":                                     "search",
+            "search/(:userNick)/:order/:pageIndex": "search",
+            "modify/:userId":                        "modify"
         },
 
         // 获取推荐用户
         search: function(userNick, order, pageIndex){
             users.search(userNick||'', order||'register_date', pageIndex||1);
+        },
+
+        modify: function(userId){
+            modifyView.modifyUser(userId);
         }
 
     });
 
     var users = new Users(),
         listView = new ListView({collection: users}),
+        modifyView = new ModifyView({collection: users}),
         router = new Router();
 
     Backbone.history.start();
@@ -233,10 +384,14 @@ $(document).ready(function(){
 <% _.each(users, function(user){ %>
     <tr>
         <td><%= user.num %></td>
-        <td><a target="_blank" href="/p/<%= user.userId %>"><img src="<%= user.userAvatar %>" class="avatar-35 avatar-circle" ></a></td>
-        <td><%= user.userNick %></td>
         <td>
-            <span class="fb fi pr-3"><%= user.questionCount %></span>提问 | 
+            <a target="_blank" href="/p/<%= user.userId %>">
+                <img src="<%= user.userAvatar %>" class="avatar-35 avatar-circle" >
+            </a>
+        </td>
+        <td class="pointer" data-user_id="<%= user.userId %>"><%= user.userNick %></td>
+        <td>
+            <span class="fb fi pr-3"><%= user.questionCount %></span>提问 |
             <span class="fb fi pr-3"><%= user.answerCount %></span>回答 |
             <span class="fb fi pr-3"><%= user.likeCount %></span>获赞 |
             <span class="fb fi pr-3"><%= user.followers %></span>粉丝 |
@@ -268,11 +423,86 @@ $(document).ready(function(){
         <td>
             <%= user.lastActive %>
         </td>
-        <td>
-            <%= user.ip %>
-        </td>
     </tr>
 <% }) %>
 </script>
 
+<script type="text/template" id="modify_user_template">
+<form class="form-horizontal" data-user_id='<%= userId %>' role="form" method="post" action="">
+    <input type="hidden" name="user_id" value="<%= userId %>" />
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">用户头像</label>
+        <div class="col-sm-5">
+            <img class="avatar-circle" src="<%= userAvatar300 %>">
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">用户呢称</label>
+        <div class="col-sm-5">
+            <input type="text" class="form-control" name='nick' value='<%= userNick %>'>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">用户邮箱</label>
+        <div class="col-sm-5">
+            <p class="form-control-static"><%= userEmail %></p>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">用户性别</label>
+        <div class="col-sm-2">
+            <select name="gender" class="form-control valid">
+                <option value="0" <% if(userGender == 0){ %> selected <% } %> >未设置</option>
+                <option value="1" <% if(userGender == 1){ %> selected <% } %> >男</option>
+                <option value="2" <% if(userGender == 2){ %> selected <% } %> >女</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">出生日期</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" readonly name='birthday' id="birthday_modify" value='<%= birthday %>'>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">个人简介</label>
+        <div class="col-sm-6">
+            <textarea name="des" rows="6" class="form-control" placeholder=""><%= userDesc %></textarea>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">上次活跃时间</label>
+        <div class="col-sm-6">
+            <p class="form-control-static"><%= lastActive %></p>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">注册ip</label>
+        <div class="col-sm-6">
+            <p class="form-control-static"><%= ip %></p>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">注册日期</label>
+        <div class="col-sm-6">
+            <p class="form-control-static"><%= registerDate %></p>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-2 control-label">用户状态</label>
+        <div class="col-sm-2">
+            <select name="state" class="form-control valid">
+                {% for state in states %}
+                <option value="{{state.value}}" <% if(state == {{state.value}}){ %> selected <% } %> >{{state.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-primary save">提交你的修改</button>
+        </div>
+    </div>
+</form>
+</script>
 {% endblock admin-right %}

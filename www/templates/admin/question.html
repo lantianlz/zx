@@ -73,7 +73,7 @@ $(document).ready(function(){
                     me.pageIndex = pageIndex;
                     me.pageCount = data.page_count;
                     me.title = title||'';
-                    me.order = order;
+                    me.order = order||'create_time';
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
