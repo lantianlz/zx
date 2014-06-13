@@ -141,7 +141,7 @@ class InviteAnswerBase(object):
         for siu in show_invite_users:
             user = UserBase().get_user_by_id(siu.user_id)
             show_invite_users_json.append(dict(user_id=user.id, user_nick=user.nick, user_avatar=user.get_avatar_65(), gender=user.gender,
-                                               user_des=str_display(user.des or '', 17), is_invited=siu.user_id in invited_user_ids))
+                                               user_des=str_display((user.des or '').strip(), 17), is_invited=siu.user_id in invited_user_ids))
         for iu in invited_users:
             invited_users_json.append(dict(user_id=iu.to_user_id, user_nick=UserBase().get_user_by_id(iu.to_user_id).nick))
         return show_invite_users_json, invited_users_json
