@@ -64,18 +64,8 @@ a.list-group-item.active{
 
         // clock
         window.setInterval(function(){
-            var d = new Date();
-
             $('.current-time').html(
-                String.format(
-                    '{0}-{1}-{2} {3}:{4}:{5}',
-                    $.ZXUtils.addZero(d.getFullYear()), 
-                    $.ZXUtils.addZero(d.getMonth()+1), 
-                    $.ZXUtils.addZero(d.getDate()),
-                    $.ZXUtils.addZero(d.getHours()),
-                    $.ZXUtils.addZero(d.getMinutes()),
-                    $.ZXUtils.addZero(d.getSeconds())
-                )
+                $.ZXUtils.formatDate(new Date(), 'y-m-d h:m:s')
             );
         }, 1000);
 

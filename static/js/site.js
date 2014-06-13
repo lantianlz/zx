@@ -283,7 +283,41 @@ if (!String.format) {
         } else{
             return data;
         }
-    }
+    };
+
+
+    /*
+        格式化日期
+        返回字符串  可带格式 y-m-d、h:m:s、y-m-d h:m:s
+
+        用例:
+        $.ZXUtils.formatDate(new Date());
+        $.ZXUtils.formatDate(new Date(), 'y-m-d');
+    */
+    $.ZXUtils.formatDate = function(date, format){
+
+        var str = "",
+            year = $.ZXUtils.addZero(date.getFullYear()),
+            month = $.ZXUtils.addZero(date.getMonth()+1), 
+            day = $.ZXUtils.addZero(date.getDate()),
+            hours = $.ZXUtils.addZero(date.getHours()),
+            minutes = $.ZXUtils.addZero(date.getMinutes()),
+            seconds = $.ZXUtils.addZero(date.getSeconds());
+
+        switch(format){
+            case 'y-m-d': 
+                str = String.format('{0}-{1}-{2}', year, month, day);
+                break;
+            case 'h:m:s':
+                str = String.format('{0}:{1}:{2}', hours. minutes, seconds);
+                break;
+            default:
+                str = String.format('{0}-{1}-{2} {3}:{4}:{5}', year, month, day, hours, minutes, seconds);
+                break;
+        }
+        return str;
+
+    };
 
 
 
@@ -1244,13 +1278,13 @@ if (!String.format) {
 
             chartHtml = [
                 '<div class="modal fade" id="chart_modal" tabindex="-1" role="dialog">',
-                    '<div class="modal-dialog" style="width: 1000px;">',
+                    '<div class="modal-dialog" style="width: 1200px;">',
                         '<div class="modal-content">',
                             '<div class="modal-header pb-5">',
                                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>',
                                 '<h4 class="modal-title">'+options.title+'</h4>',
                             '</div>',
-                            '<div class="modal-body" id="chart_body"  style="width: 1000px;">',
+                            '<div class="modal-body container" id="chart_body" >',
                                 
                             '</div>',
                         '</div>',

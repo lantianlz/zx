@@ -494,6 +494,9 @@ class UserBase(object):
 
         return LastActive.objects.filter(last_active_time__gte=date)
 
+    def get_users_by_range_date(self, start_date, end_date):
+        return User.objects.filter(create_time__range=(start_date, end_date))
+
 
 class InvitationBase(object):
 
