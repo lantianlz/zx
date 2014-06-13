@@ -35,33 +35,23 @@ $(document).ready(function(){
 
     $('.select').bind('click', function(){
         // 验证时间间隔是否小于30天
-        var startDate = $.ZXUtils.formatDate(new Date($('.start-date').val()), 'y-m-d'),
-            endDate = $.ZXUtils.formatDate(new Date($('.end-date').val()), 'y-m-d'),
+        var startDate = new Date($('.start-date').val()),
+            startDateStr = $.ZXUtils.formatDate(new Date($('.start-date').val()), 'y-m-d'),
+            endDate = new Date($('.end-date').val()),
+            endDateStr = $.ZXUtils.formatDate(new Date($('.end-date').val()), 'y-m-d'),
             offset = (endDate - startDate)/1000/60/60/24;
 
         if(offset > 31){
             $.ZXMsg.alert('提示', '时间间隔不能超过31天');
+            return;
         }
-
-        // var data = [
-        //     {'date': '5-13', 'value': 7},
-        //     {'date': '5-14', 'value': 6},
-        //     {'date': '5-15', 'value': 9},
-        //     {'date': '5-16', 'value': 4},
-        //     {'date': '5-17', 'value': 23},
-        //     {'date': '5-18', 'value': 32},
-        //     {'date': '5-19', 'value': 15},
-        //     {'date': '5-20', 'value': 16},
-        //     {'date': '5-21', 'value': 22},
-        //     {'date': '5-22', 'value': 23},
-        // ];
 
         ajaxSend(
             "/admin/statistics/statistic_register_user", 
-            {'start_date': startDate, 'end_date': endDate}, 
+            {'start_date': startDateStr, 'end_date': endDateStr}, 
             function(data){
                 $.ZXChart.lineChart({
-                    title: String.format("{0} 至 {1}期间注册用户统计", startDate, endDate),
+                    title: String.format("{0} 至 {1}期间注册用户统计", startDateStr, endDateStr),
                     subtitle: '',
                     categories: _.map(data, function(d){return d.date}),
                     xAxis: '日期',
