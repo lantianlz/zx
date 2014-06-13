@@ -149,6 +149,36 @@ $(document).ready(function(){
             } else {
                 error.appendTo(element.parent());
             }
+        },
+
+        submitHandler: function(form){
+            
+            // 去掉空格 去掉html标签之后的文本
+            var content = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(askEditor.html()));
+
+            // 大于2个字才提交
+            if($.trim(content).length >= 2){
+                form.submit();
+            } else {
+                $(askEditor.srcElement[0]).after('<label class="error">至少需要输入2个字</label>');
+            }
+            
+        }
+    });
+
+    $('.answer-form').validate({
+        submitHandler: function(form){
+            
+            // 去掉空格 去掉html标签之后的文本
+            var content = $.ZXUtils.clearEscapeCharacters($.ZXUtils.clearHtmlTags(answerEditor.html()));
+
+            // 大于2个字才提交
+            if($.trim(content).length >= 10){
+                form.submit();
+            } else {
+                $(answerEditor.srcElement[0]).after('<label class="error">至少需要输入10个字</label>');
+            }
+            
         }
     });
 

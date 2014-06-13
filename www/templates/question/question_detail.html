@@ -249,8 +249,8 @@ $(document).ready(function(){
     <h4>可以在下面添加你的回答</h4>
 
     <div class="answer-main">
-        {% if request.user.is_authenticated %}
-        <form role="form" method="post" action="/question/create_answer/{{question.id}}">
+    {% if request.user.is_authenticated %}
+        <form class="answer-form" role="form" method="post" action="/question/create_answer/{{question.id}}">
             <div class="form-group mb-0">
                 <textarea id="answer_editor" name="answer_content" class="form-control zx-textarea" style="height: 200px;"></textarea>
             </div>
