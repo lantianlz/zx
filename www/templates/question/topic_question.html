@@ -1,7 +1,7 @@
 {% extends "question/base_topic.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}{{tag.name}} - 话题{% endblock %}
+{% block title %}{{topic.name}} - 话题{% endblock %}
 
 {% block css %}{% endblock %}
 
@@ -9,11 +9,11 @@
 
 {% block topic_main %}
 <div class="bottom-border bdc-bbb pl-10 mb-10">
-    <img class="pa avatar-65 avatar-circle" alt="{{tag.name}}" src="{{tag.get_img}}">
+    <img class="pa avatar-65 avatar-circle" alt="{{topic.name}}" src="{{topic.get_img}}">
     <div class="pl-80 pb-10 pt-5">
-        <h4>{{tag.name}}</h4>
+        <h4>{{topic.name}}</h4>
         <div class="co8 f12">
-            <span>共 {{tag.get_tag_question_count}} 个问题</span>
+            <span>共 {{topic.question_count}} 个问题</span>
         </div>
     </div>
 </div>
@@ -39,14 +39,14 @@
 {% block topic_right %}
 <div class="bottom-border bdc-eee mb-25">
     <div class="f16 pb-10 fb">话题介绍</div>
-    <div class="">{{tag.des|default:'暂无话题介绍'|safe}}</div>
+    <div class="">{{topic.des|default:'暂无话题介绍'|safe}}</div>
     <div class="blank10"></div>
 </div>
 
 <div class="bottom-border bdc-eee mb-25">
     <div class="f16 fb pb-10">父话题</div>
     <ul class="list-inline pb-10">
-        <li><a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="{{tag.question_type.get_url}}">{{tag.question_type.name}}</a></li>
+        <li><a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="{{topic.parent_topic.get_url}}">{{topic.parent_topic.name}}</a></li>
     </ul>
 </div>
 

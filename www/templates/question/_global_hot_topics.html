@@ -4,12 +4,12 @@
         <a href="{{MAIN_DOMAIN}}/topics" class="f12 co8 pull-right more-topics">更多话题 »</a>
     </div>
     <ul class="list-group">
-        {% for tag in global_hotest_tags %}
+        {% for topic in global_hotest_topics %}
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="{{MAIN_DOMAIN}}{{tag.get_url}}"><img class="pa avatar-45 avatar-circle" src="{{tag.get_img}}" alt="{{tag.name}}"></a>
+            <a href="{{MAIN_DOMAIN}}{{topic.get_url}}"><img class="pa avatar-45 avatar-circle" src="{{topic.get_img}}" alt="{{topic.name}}"></a>
             <div class="pl-55 pt-5">
-                <div><a href="{{MAIN_DOMAIN}}{{tag.get_url}}" class="zx-topictips" data-topic_id='{{tag.id}}'>{{tag.name}}</a></div>
-                <div class="f12 co8 pt-3">共 {{tag.get_tag_question_count}} 个问题</div>
+                <div><a href="{{MAIN_DOMAIN}}{{topic.get_url}}" class="zx-topictips" data-topic_id='{{topic.id}}'>{{topic.name}}</a></div>
+                <div class="f12 co8 pt-3">共 {{topic.question_count}} 个问题</div>
             </div>
         </li>
         {% endfor %}

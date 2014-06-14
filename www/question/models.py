@@ -2,14 +2,13 @@
 
 from django.db import models
 from django.conf import settings
-from www.misc.decorators import cache_required
 
 
 class Question(models.Model):
     user_id = models.CharField(max_length=32, db_index=True)
     title = models.CharField(max_length=128)
     content = models.TextField()
-    question_type = models.ForeignKey('QuestionType')
+    # question_type = models.ForeignKey('QuestionType')
     views_count = models.IntegerField(default=0)
     answer_count = models.IntegerField(default=0)
     last_answer_time = models.DateTimeField(db_index=True)
@@ -86,20 +85,6 @@ class AtAnswer(models.Model):
         ordering = ["-id"]
 
 
-class QuestionType(models.Model):
-    name = models.CharField(max_length=32, unique=True)
-    value = models.CharField(max_length=16, unique=True)
-    domain = models.CharField(max_length=16, unique=True)
-    sort_num = models.IntegerField(default=0, db_index=True)
-    state = models.BooleanField(default=True, db_index=True)
-
-    class Meta:
-        ordering = ["id"]
-
-    def get_url(self):
-        return u'/question/type/%s' % self.domain or self.value
-
-
 class Like(models.Model):
 
     """
@@ -118,6 +103,32 @@ class Like(models.Model):
 
     def __unicode__(self):
         return '%s, %s' % (self.from_user_id, self.to_user_id)
+
+
+class ImportantQuestion(models.Model):
+    question = models.ForeignKey(Question, unique=True)
+    img = models.CharField(max_length=128, default='')
+    img_alt = models.CharField(max_length=256, null=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    operate_user_id = models.CharField(verbose_name=u'设置精选的人', max_length=32, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-sort_num', '-id']
+
+
+class QuestionType(models.Model):
+    name = models.CharField(max_length=32, unique=True)
+    value = models.CharField(max_length=16, unique=True)
+    domain = models.CharField(max_length=16, unique=True)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    state = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        ordering = ["id"]
+
+    def get_url(self):
+        return u'/question/type/%s' % self.domain or self.value
 
 
 class Tag(models.Model):
@@ -141,24 +152,6 @@ class Tag(models.Model):
     def __unicode__(self):
         return '%s' % self.id
 
-    def get_url(self):
-        # 标签
-        return u'/topic/%s' % self.domain
-
-    def get_img(self):
-        return self.img or '%s/img/common/default-topic.png' % settings.MEDIA_URL
-
-    @cache_required(cache_key='tag_question_count_%s', cache_key_type=2, expire=600)
-    def get_tag_question_count(self):
-        return TagQuestion.objects.filter(tag=self).count()
-
-    def get_summary(self):
-        """
-        @attention: 通过内容获取摘要
-        """
-        from common import utils
-        return utils.get_summary_from_html_by_sub(self.des, max_num=35)
-
 
 class TagQuestion(models.Model):
 
@@ -177,20 +170,9 @@ class TagQuestion(models.Model):
         return '%s, %s' % (self.tag_id, self.question_id)
 
 
-class ImportantQuestion(models.Model):
-    question = models.ForeignKey(Question, unique=True)
-    img = models.CharField(max_length=128, default='')
-    img_alt = models.CharField(max_length=256, null=True)
-    sort_num = models.IntegerField(default=0, db_index=True)
-    operate_user_id = models.CharField(verbose_name=u'设置精选的人', max_length=32, db_index=True)
-    create_time = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-sort_num', '-id']
-
-
 class Topic(models.Model):
-    state_choices = ((0, u'普通话题'), (1, u'静默话题'))
+    state_choices = ((1, u'普通话题'), (2, u'静默话题'))
+    level_choices = ((0, u'根话题'), (1, u'一级话题，用于分类'))
 
     name = models.CharField(max_length=16, unique=True)
     domain = models.CharField(max_length=16, unique=True)  # 自定义域名支持
@@ -198,21 +180,24 @@ class Topic(models.Model):
     child_count = models.IntegerField(default=0, db_index=True)
     follower_count = models.IntegerField(default=0, db_index=True)
     question_count = models.IntegerField(default=0, db_index=True)
+    level = models.IntegerField(db_index=True, choices=level_choices)
 
     img = models.CharField(max_length=128, default='')  # 子分类可能有图片
     des = models.CharField(max_length=512, null=True)
     sort_num = models.IntegerField(default=0, db_index=True)
     is_show = models.BooleanField(default=True)
-    state = models.IntegerField(default=0, db_index=True, choices=state_choices)
+    state = models.IntegerField(default=1, db_index=True, choices=state_choices)
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-sort_num', 'id']
+        ordering = ['-sort_num', '-question_count']
 
     def __unicode__(self):
         return '%s' % self.domain or self.id
 
     def get_url(self):
+        if self.level == 1:
+            return u'/question/type/%s' % self.domain
         return u'/topic/%s' % self.domain
 
     def get_img(self):
@@ -230,6 +215,7 @@ class TopicQuestion(models.Model):
     topic = models.ForeignKey('Topic')
     question = models.ForeignKey('Question')
     is_important = models.BooleanField(default=False, db_index=True)    # 是否设置了精华
+    is_directly = models.BooleanField(db_index=True)    # 是否是直接产生的话题，和父及话题进行区分
     sort_num = models.IntegerField(default=0, db_index=True)
 
     class Meta:

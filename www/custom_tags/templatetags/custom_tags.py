@@ -31,16 +31,16 @@ def import_variable(context, name, value, json_flag=False):
     return ''
 
 
-@register.simple_tag(takes_context=True)
-def question_type_option_display(context):
-    """
-    @note: 问答类型option方式展现
-    """
-    from www.question.interface import QuestionTypeBase
-    aqts = QuestionTypeBase().get_all_question_type()
+# @register.simple_tag(takes_context=True)
+# def question_type_option_display(context):
+#     """
+#     @note: 问答类型option方式展现
+#     """
+#     from www.question.interface import TopicBase
+#     aqts = TopicBase().get_all_question_type()
 
-    return render_to_response('question/_question_type_option_display.html', locals(),
-                              context_instance=context).content
+#     return render_to_response('question/_question_type_option_display.html', locals(),
+#                               context_instance=context).content
 
 
 @register.simple_tag(takes_context=True)
@@ -48,8 +48,8 @@ def question_type_radio_display(context):
     """
     @note: 问答类型radio方式展现
     """
-    from www.question.interface import QuestionTypeBase
-    aqts = QuestionTypeBase().get_all_question_type()
+    from www.question.interface import TopicBase
+    aqts = TopicBase().get_all_question_type()
 
     return render_to_response('question/_question_type_radio_display.html', locals(),
                               context_instance=context).content
@@ -60,8 +60,8 @@ def question_type_nav_display(context):
     """
     @note: 问题类型导航方式展现
     """
-    from www.question.interface import QuestionTypeBase
-    aqts = QuestionTypeBase().get_all_question_type()
+    from www.question.interface import TopicBase
+    aqts = TopicBase().get_all_question_type()
     return render_to_response('question/_question_type_nav_display.html', locals(),
                               context_instance=context).content
 
@@ -109,8 +109,8 @@ def global_hot_topics(context):
     """
     @note: 热门话题
     """
-    from www.question.interface import TagBase
-    global_hotest_tags = TagBase().get_all_tags()[:5]
+    from www.question.interface import TopicBase
+    global_hotest_topics = TopicBase().get_all_topics_for_show()[:5]
     return render_to_response('question/_global_hot_topics.html', locals(), context_instance=context).content
 
 

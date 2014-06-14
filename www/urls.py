@@ -46,7 +46,7 @@ urlpatterns = patterns('',
 
 # 冗余url，用于减少url层级
 urlpatterns += patterns('',
-                        url(r'^topic/(?P<tag_domain>\w+)$', 'www.question.views.topic_question'),
+                        url(r'^topic/(?P<topic_domain>\w+)$', 'www.question.views.topic_question'),
                         url(r'^topics', 'www.question.views.topics'),
                         url(r'^important/?$', 'www.question.views.important_question'),
                         )
