@@ -249,8 +249,8 @@ $(document).ready(function(){
     <h4>可以在下面添加你的回答</h4>
 
     <div class="answer-main">
-        {% if request.user.is_authenticated %}
-        <form role="form" method="post" action="/question/create_answer/{{question.id}}">
+    {% if request.user.is_authenticated %}
+        <form class="answer-form" role="form" method="post" action="/question/create_answer/{{question.id}}">
             <div class="form-group mb-0">
                 <textarea id="answer_editor" name="answer_content" class="form-control zx-textarea" style="height: 200px;"></textarea>
             </div>
@@ -290,12 +290,12 @@ $(document).ready(function(){
                 <img class="pa avatar-35 avatar-circle" src="<%= user.user_avatar %>">
             </a>
             <div class="name blue-a pl-40">
-                <a href="javascript: void(0);" class="zx-cardtips" data-user_id="<%= user.user_id %>"><%= user.user_nick %></a>
+                <a href="/p/<%= user.user_id %>" class="zx-cardtips" data-user_id="<%= user.user_id %>"><%= user.user_nick %></a>
                 <% if(user.gender == 1){ %>
-                <img class="w15 mt--2 ml-5" src="/static/img/common/male.png" title="男">
+                <img class="w15 mt--2 ml-5" src="{{MEDIA_URL}}img/common/male.png" title="男">
                 <% } %>
                 <% if(user.gender == 2){ %>
-                <img class="w15 mt--2 ml-5" src="/static/img/common/female.png" title="女">
+                <img class="w15 mt--2 ml-5" src="{{MEDIA_URL}}img/common/female.png" title="女">
                 <% } %>
                 <% if(user.is_invited){ %>
                 <button type="button" class="btn btn-default btn-xs pull-right">已邀请</button>

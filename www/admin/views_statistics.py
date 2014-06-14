@@ -70,3 +70,37 @@ def get_active_user(request):
 @verify_permission('')
 def register_user(request, template_name='admin/statistics_register_user.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@verify_permission('statistics_register_user')
+def statistic_register_user(request):
+    data = {}
+    start_date = request.REQUEST.get('start_date')
+    end_date = request.REQUEST.get('end_date')
+
+    # 数据库数据
+    for x in UserBase().get_users_by_range_date(start_date, end_date):
+        date = str(x.create_time)[5:10]
+        if not data.has_key(date):
+            data[date] = 0
+        data[date] += 1
+
+    temp = {}
+    next_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+
+    # 构建区间日期字典
+    while next_date <= end_date:
+        temp[str(next_date)[5:10]] = 0
+        next_date += datetime.timedelta(days=1)
+
+    # 合并两块数据
+    temp.update(data)
+
+    sort_data = [{'date': k, 'value': temp[k]} for k in temp.keys()]
+    sort_data.sort(key=lambda x: x['date'])
+
+    return HttpResponse(
+        json.dumps(sort_data),
+        mimetype='application/json'
+    )
