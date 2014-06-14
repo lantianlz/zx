@@ -36,20 +36,20 @@
     </ul>
 </div>
 
-{% if tags %}
+{% if topics %}
 <div class="row topics">
     <ul class="list-inline pl-10">
-        {% for tag in tags %}
+        {% for topic in topics %}
         <li class="topic-item pt-15 col-md-6 col-xs-12">
-            <a href="{{tag.get_url}}"><img class="pa avatar-65 avatar-circle" alt="{{tag.name}}" src="{{tag.get_img}}"></a>
+            <a href="{{topic.get_url}}"><img class="pa avatar-65 avatar-circle" alt="{{topic.name}}" src="{{topic.get_img}}"></a>
             <div class="pl-75 row pr-10">
                 <div class="col-md-6 col-xs-6">
-                    <a href="{{tag.get_url}}" class="zx-topictips" data-topic_id='{{tag.id}}'>{{tag.name}}</a>
+                    <a href="{{topic.get_url}}" class="zx-topictips" data-topic_id='{{topic.id}}'>{{topic.name}}</a>
                 </div>
                 <div class="col-md-6 col-xs-6 text-right">
                     <button type="button" class="btn btn-primary btn-xs pull-right btn-follow hide">关注话题</button>
                 </div>
-                <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h50">{{tag.get_summary|default:'暂无话题介绍'}}</div>
+                <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h50">{{topic.get_summary|default:'暂无话题介绍'}}</div>
             </div>
         </li>
         {% endfor %}

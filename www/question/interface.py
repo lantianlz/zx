@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import logging
 from django.db import transaction
 from django.db.models import F
 
@@ -12,7 +11,8 @@ from www.account.interface import UserBase
 from www.message.interface import UnreadCountBase
 from www.account.interface import UserCountBase
 from www.timeline.interface import FeedBase
-from www.question.models import Question, QuestionType, Answer, Like, Tag, TagQuestion, AtAnswer, AnswerBad, ImportantQuestion
+from www.question.models import Question, Answer, Like, AtAnswer, AnswerBad
+from www.question.models import ImportantQuestion, Topic, TopicQuestion
 
 
 dict_err = {
@@ -80,10 +80,12 @@ class QuestionBase(object):
     def __init__(self):
         pass
 
-    def format_quesitons(self, questions):
+    def format_quesitons(self, questions, need_question_type=False):
         for question in questions:
             question.user = question.get_user()
             question.content = utils.filter_script(question.content)
+            if need_question_type:
+                question.question_type = TopicBase().get_topic_level1_by_question(question)
         return questions
 
     def validate_title(self, title):
@@ -100,7 +102,7 @@ class QuestionBase(object):
             return 20103, dict_err.get(20103)
         return 0, dict_err.get(0)
 
-    def validata_question_element(self, question_type, question_title, question_content):
+    def validata_question_element(self, question_title, question_content):
         errcode, errmsg = self.validate_title(question_title)
         if not errcode == 0:
             return errcode, errmsg
@@ -109,36 +111,31 @@ class QuestionBase(object):
         if not errcode == 0:
             return errcode, errmsg
 
-        if not all((int(question_type), question_title, question_content)):
+        if not all((question_title, question_content)):
             return 99800, dict_err.get(99800)
 
         return 0, dict_err.get(0)
 
     @transaction.commit_manually(using=QUESTION_DB)
-    def create_question(self, user_id, question_type, question_title, question_content,
-                        ip='127.0.0.1', is_hide_user=None, tags=[]):
+    def create_question(self, user_id, question_title, question_content,
+                        ip='127.0.0.1', is_hide_user=None, topic_ids=[]):
         try:
             # 防止xss漏洞
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            errcode, errmsg = self.validata_question_element(question_type, question_title, question_content)
+            errcode, errmsg = self.validata_question_element(question_title, question_content)
             if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
                 return errcode, errmsg
 
             is_hide_user = True if is_hide_user else False
-            question = Question.objects.create(user_id=user_id, question_type_id=question_type,
-                                               title=question_title, content=question_content,
+            question = Question.objects.create(user_id=user_id, title=question_title, content=question_content,
                                                last_answer_time=datetime.datetime.now(), ip=ip,
-                                               is_hide_user=is_hide_user, is_silence=self.get_question_is_silence_by_tags(tags))
+                                               is_hide_user=is_hide_user, is_silence=self.get_question_is_silence_by_tags(topic_ids))
 
-            # 创建话题和tags关系
-            for tag in tags:
-                try:
-                    TagQuestion.objects.create(tag_id=tag, question=question)
-                except:
-                    pass
+            # 创建话题和topics关系
+            TopicBase().create_topic_question_relation(question, topic_ids)
 
             # 更新用户话题数信息
             UserCountBase().update_user_count(user_id=user_id, code='user_question_count')
@@ -156,38 +153,28 @@ class QuestionBase(object):
 
     @question_admin_required
     @transaction.commit_manually(using=QUESTION_DB)
-    def modify_question(self, question, user, question_type, question_title, question_content,
-                        ip='127.0.0.1', is_hide_user=None, tags=[]):
+    def modify_question(self, question, user, question_title, question_content,
+                        ip='127.0.0.1', is_hide_user=None, topic_ids=[]):
         try:
             # 防止xss漏洞
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            errcode, errmsg = self.validata_question_element(question_type, question_title, question_content)
+            errcode, errmsg = self.validata_question_element(question_title, question_content)
             if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
                 return errcode, errmsg
 
-            question.question_type_id = question_type
             question.title = question_title
             question.content = question_content
             question.ip = ip
             if is_hide_user:
                 question.is_hide_user = True
-            question.is_silence = self.get_question_is_silence_by_tags(tags)
+            question.is_silence = self.get_question_is_silence_by_tags(topic_ids)
             question.save()
 
-            # 创建话题和tags关系
-            new_tags = [str(tag_id) for tag_id in [tq.tag_id for tq in TagQuestion.objects.filter(question=question)]]
-            new_tags.sort()
-            tags.sort()
-            if tags != new_tags:
-                TagQuestion.objects.filter(question=question).delete()
-                for tag in tags:
-                    try:
-                        TagQuestion.objects.create(tag_id=tag, question=question)
-                    except:
-                        pass
+            # 创建话题和topics关系
+            TopicBase().create_topic_question_relation(question, topic_ids)
 
             # 更新summary
             self.get_question_summary_by_id(question, must_update_cache=True)
@@ -205,15 +192,15 @@ class QuestionBase(object):
         '''
         Question.objects.filter(id=question_id).update(views_count=F('views_count') + 1)
 
-    def get_question_is_silence_by_tags(self, tag_ids):
+    def get_question_is_silence_by_tags(self, topic_ids):
         '''
         @note: 获取提问是否为静默状态
         '''
-        tb = TagBase()
-        tags = [tb.get_tag_by_id(tag_id) for tag_id in tag_ids]
-        for tag in tags:
+        tb = TopicBase()
+        topics = [tb.get_topic_by_id_or_domain(topic_id) for topic_id in topic_ids]
+        for topic in topics:
             # 三类话题静默，之后改成在话题增加属性进行控制
-            if tag and tag.domain in ('gpzh', 'qhzh', 'lczx'):
+            if topic and topic.state == 2:
                 return True
         return False
 
@@ -223,6 +210,9 @@ class QuestionBase(object):
         try:
             question.state = False
             question.save()
+
+            # 更新话题的提问数
+            TopicBase().update_topic_question_count(question, operate='minus')
 
             # 更新用户话题数信息
             UserCountBase().update_user_count(user_id=question.user_id, code='user_question_count', operate='minus')
@@ -237,43 +227,29 @@ class QuestionBase(object):
             transaction.rollback(using=QUESTION_DB)
             return 99900, dict_err.get(99900)
 
-    def get_question_by_user_id(self, user_id):
-        return Question.objects.filter(user_id=user_id, state=True)
-
-    def get_questions_by_type(self, question_type_domain=None):
-        ps = dict(state=True)
-        if question_type_domain:
-            question_type = question_type_domain
-            if not isinstance(question_type_domain, QuestionType):
-                question_type = QuestionTypeBase().get_question_type_by_id_or_domain(question_type_domain)
-            ps.update(question_type=question_type)
-        questions = Question.objects.filter(**ps)
-
-        # 剔除其他类型的提问
-        if not question_type_domain:
-            questions = questions.filter(is_silence=False)
-        return questions
-
-    def get_questions_by_tag(self, tag_object_or_domain):
-        tag = TagBase().get_tag_by_domain(tag_object_or_domain) if not isinstance(tag_object_or_domain, Tag)\
-            else tag_object_or_domain
-        if tag:
-            return [tq.question for tq in TagQuestion.objects.select_related('question')
-                    .filter(tag=tag, question__state=True).order_by("-question__sort_num", '-question__like_count', "-question__last_answer_time")]
-        else:
-            return []
-
     def get_question_by_id(self, id, need_state=True):
         try:
             ps = dict(id=id)
             if need_state:
                 ps.update(dict(state=True))
-            return Question.objects.select_related('question_type').get(**ps)
+            return Question.objects.get(**ps)
         except Question.DoesNotExist:
             return None
 
+    def get_questions_by_user_id(self, user_id):
+        return Question.objects.filter(user_id=user_id, state=True)
+
     def get_user_question_count(self, user_id):
-        return self.get_question_by_user_id(user_id).count()
+        return self.get_questions_by_user_id(user_id).count()
+
+    def get_all_questions_for_home_page(self):
+        return Question.objects.filter(is_silence=False, state=True)
+
+    def get_questions_by_topic(self, topic_id_or_domain):
+        question_type = topic_id_or_domain if isinstance(topic_id_or_domain, Topic) else \
+            TopicBase().get_topic_by_id_or_domain(topic_id_or_domain)
+        return [tq.question for tq in TopicQuestion.objects.select_related('question')
+                .filter(topic=question_type, question__state=True).order_by("-question__sort_num", '-question__like_count', "-question__last_answer_time")]
 
     def get_all_important_question(self):
         questions = []
@@ -591,19 +567,6 @@ class AnswerBase(object):
         return answer_summary
 
 
-class QuestionTypeBase(object):
-
-    @cache_required(cache_key='all_question_type', expire=0, cache_config=cache.CACHE_STATIC)
-    def get_all_question_type(self, must_update_cache=False):
-        return QuestionType.objects.filter(state=True).order_by('-sort_num', 'id')
-
-    def get_question_type_by_id_or_domain(self, id_or_domain):
-        aqts = self.get_all_question_type()
-        for aqt in aqts:
-            if str(aqt.id) == str(id_or_domain) or str(aqt.domain) == str(id_or_domain):
-                return aqt
-
-
 class LikeBase(object):
 
     '''
@@ -689,45 +652,159 @@ class LikeBase(object):
         return self.get_to_user_likes(user_id).count()
 
 
-class TagBase(object):
+# class QuestionTypeBase(object):
 
-    @cache_required(cache_key='all_question_tag', expire=0, cache_config=cache.CACHE_STATIC)
-    def get_all_tags(self, must_update_cache=False):
-        return Tag.objects.select_related('question_type').filter(state=True)
+#     @cache_required(cache_key='all_question_type', expire=0, cache_config=cache.CACHE_STATIC)
+#     def get_all_question_type(self, must_update_cache=False):
+#         return QuestionType.objects.filter(state=True).order_by('-sort_num', 'id')
 
-    def get_tag_by_domain(self, domain):
-        tags = self.get_all_tags()
-        for tag in tags:
-            if tag.domain == domain:
-                return tag
+#     def get_question_type_by_id_or_domain(self, id_or_domain):
+#         aqts = self.get_all_question_type()
+#         for aqt in aqts:
+#             if str(aqt.id) == str(id_or_domain) or str(aqt.domain) == str(id_or_domain):
+#                 return aqt
 
-    def get_tag_by_id(self, tag_id):
-        tags = self.get_all_tags()
-        for tag in tags:
-            if str(tag.id) == str(tag_id):
-                return tag
 
-    def get_tags_by_question_type(self, question_type):
-        return self.get_all_tags().filter(question_type=question_type)
+# class TagBase(object):
 
-    def get_tags_by_question(self, question):
-        return [tq.tag for tq in TagQuestion.objects.select_related('tag').filter(question=question)]
+#     @cache_required(cache_key='all_question_tag', expire=0, cache_config=cache.CACHE_STATIC)
+#     def get_all_tags(self, must_update_cache=False):
+#         return Tag.objects.select_related('question_type').filter(state=True)
 
-    def format_tags_for_ask_page(self, tags):
-        ftags = {}
-        for tag in tags:
-            if tag.is_show:
-                if str(tag.question_type_id) not in ftags:
-                    ftags[str(tag.question_type_id)] = [(tag.id, tag.name), ]
-                else:
-                    ftags[str(tag.question_type_id)].append((tag.id, tag.name),)
-        return ftags
+#     def get_tag_by_domain(self, domain):
+#         tags = self.get_all_tags()
+#         for tag in tags:
+#             if tag.domain == domain:
+#                 return tag
+
+#     def get_tag_by_id(self, tag_id):
+#         tags = self.get_all_tags()
+#         for tag in tags:
+#             if str(tag.id) == str(tag_id):
+#                 return tag
+
+#     def get_tags_by_question_type(self, question_type):
+#         return self.get_all_tags().filter(question_type=question_type)
+
+#     def get_tags_by_question(self, question):
+#         return [tq.tag for tq in TagQuestion.objects.select_related('tag').filter(question=question)]
+
+#     def format_tags_for_ask_page(self, tags):
+#         ftags = {}
+#         for tag in tags:
+#             if tag.is_show:
+#                 if str(tag.question_type_id) not in ftags:
+#                     ftags[str(tag.question_type_id)] = [(tag.id, tag.name), ]
+#                 else:
+#                     ftags[str(tag.question_type_id)].append((tag.id, tag.name),)
+#         return ftags
 
 
 class TopicBase(object):
 
-    def get_topic_all_parent(topic_id_or_domain):
+    @cache_required(cache_key='all_topic', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_all_topics(self, must_update_cache=False):
+        return Topic.objects.all()
+
+    def get_topic_by_id_or_domain(self, topic_id_or_domain):
+        topic_id_or_domain = str(topic_id_or_domain)
+        for topic in self.get_all_topics():
+            if topic.domain == topic_id_or_domain or str(topic.id) == topic_id_or_domain:
+                return topic
+
+    def get_topics_by_level(self, level):
+        return [t for t in self.get_all_topics() if t.level == int(level)]
+
+    def get_all_question_type(self):
+        '''
+        @note: 获取所有一级话题，别名「话题类型」
+        '''
+        return self.get_topics_by_level(level=1)
+
+    def get_all_topics_for_show(self):
+        '''
+        @note: 展示所有话题，目前展示二级话题
+        '''
+        return self.get_topics_by_level(level=2)
+
+    def get_topics_by_parent(self, topic):
+        '''
+        @note: 获取所有子话题
+        '''
+        topic = topic if isinstance(topic, Topic) else self.get_topic_by_id_or_domain(topic)
+        return [t for t in self.get_all_topics() if t.parent_topic_id == topic.id]
+
+    def get_topic_all_parent(self, topic_id_or_object):
         '''
         @note: 获取话题所有的父话题
         '''
-        pass
+        topic = topic_id_or_object if isinstance(topic_id_or_object, Topic) else self.get_topic_by_id_or_domain(topic_id_or_object)
+        parents = []
+        topic.is_directly = True    # 直接的对应关系
+        while topic.domain != 'root':
+            parents.append(topic)
+            topic = topic.parent_topic
+        return parents
+
+    def get_topic_level_by_parent(self, parent_topic):
+        '''
+        @note: 根据父话题获取提问等级
+        '''
+        parent_topic = parent_topic if isinstance(parent_topic, Topic) else self.get_topic_by_id_or_domain(parent_topic)
+        return parent_topic.level + 1
+
+    def get_topic_by_question(self, question):
+        return [tq.topic for tq in TopicQuestion.objects.select_related('topic').filter(question=question) if tq.is_directly]
+
+    @cache_required(cache_key='quesiton_type_%s', expire=3600 * 24)
+    def get_topic_level1_by_question(self, question, must_update_cache=False):
+        '''
+        @note: 获取提问的类型，一级话题
+        '''
+        topics = [tq.topic for tq in TopicQuestion.objects.select_related('topic').filter(question=question) if tq.topic.level == 1]
+        return topics[0] if topics else None
+
+    def create_topic_question_relation(self, question, topic_ids):
+        '''
+        @note: 创建提问和话题的对应关系
+        '''
+        topics = []
+        for topic_id in topic_ids:
+            topics.extend(self.get_topic_all_parent(topic_id))
+        topics = list(set(topics))
+        topics_exist = self.get_topic_by_question(question)
+
+        # 删除后重建对应关系
+        if set(topics) != set(topics_exist):
+            TopicQuestion.objects.filter(question=question).delete()
+            for topic in topics:
+                TopicQuestion.objects.create(topic=topic, question=question, is_directly=getattr(topic, 'is_directly', False))
+                topic.question_count += 1
+                topic.save()
+            self.get_topic_level1_by_question(question, must_update_cache=True)
+        return True
+
+    def update_topic_question_count(self, question, operate='minus'):
+        '''
+        @note: 更新话题提问数
+        '''
+        topics = self.get_topic_by_question(question)
+        topics_with_parent = []
+        for topic in topics:
+            topics_with_parent.extend(self.get_topic_all_parent(topic))
+        topics_with_parent = list(set(topics))
+        for topic in topics_with_parent:
+            if operate == 'minus':
+                topic.question_count -= 1
+            elif operate == 'add':
+                topic.question_count += 1
+            topic.save()
+
+    def format_topics_for_ask_page(self, topics):
+        ftopics = {}
+        for topic in topics:
+            if str(topic.parent_topic_id) not in ftopics:
+                ftopics[str(topic.parent_topic_id)] = [(topic.id, topic.name), ]
+            else:
+                ftopics[str(topic.parent_topic_id)].append((topic.id, topic.name),)
+        return ftopics

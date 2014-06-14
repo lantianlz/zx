@@ -140,7 +140,7 @@ def user_questions(request, user_id, template_name='account/user_questions.html'
 
     from www.question.interface import QuestionBase
     qb = QuestionBase()
-    questions = qb.get_question_by_user_id(user.id)
+    questions = qb.get_questions_by_user_id(user.id)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))

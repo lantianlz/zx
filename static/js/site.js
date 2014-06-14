@@ -1043,7 +1043,7 @@ if (!String.format) {
                                     data.img,
                                     data.name, 
                                     data.follow_count,
-                                    data.tag_question_count,
+                                    data.question_count,
                                     data.des || '暂无话题介绍',
                                     data.is_follow?'none':'', // 关注按钮
                                     data.is_follow?'':'none', //取消关注按钮
