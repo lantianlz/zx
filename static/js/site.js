@@ -1650,7 +1650,10 @@ $(document).ready(function(){
     if($.ZXUtils.isDesktop()){
         $('.user-menu .dropdown-toggle')
         .bind('mouseenter', function(){showDropdown('.user-menu')})
-        .bind('mouseleave', function(){hideDropdown('.user-menu')});
+        .bind('mouseleave', function(){hideDropdown('.user-menu')})
+        .bind('click', function(e){
+            window.location.href = $(this).attr('href');
+        });
 
         $('.user-menu .dropdown-menu')
         .bind('mouseenter', function(){showDropdown('.user-menu')})
