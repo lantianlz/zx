@@ -11,6 +11,8 @@ urlpatterns = patterns('www.admin.views',
 # 话题
 urlpatterns += patterns('www.admin.views_topic',
 
+                        url(r'^topic/get_topic_by_id$', 'get_topic_by_id'),
+                        url(r'^topic/modify_topic$', 'modify_topic'),
                         url(r'^topic/search$', 'search'),
                         url(r'^topic/get_topics_by_name$', 'get_topics_by_name'),
                         url(r'^topic$', 'topic'),

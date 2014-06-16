@@ -171,7 +171,7 @@ class TagQuestion(models.Model):
 
 
 class Topic(models.Model):
-    state_choices = ((1, u'普通话题'), (2, u'静默话题'))
+    state_choices = ((0, u'无效话题'), (1, u'普通话题'), (2, u'静默话题'))
     level_choices = ((0, u'根话题'), (1, u'一级话题，用于分类'))
 
     name = models.CharField(max_length=16, unique=True)

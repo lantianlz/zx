@@ -795,10 +795,12 @@ class TopicBase(object):
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
 
-    def modify_topic(self, topic_id, name, domain, img, des, state, parent_topic_id=None):
+    def modify_topic(self, topic_id, name, domain, img, des, state, sort=0, parent_topic_id=None):
         try:
             topic = self.get_topic_by_id_or_domain(topic_id)
-            assert topic_id and name and domain and des
+            if not (topic_id and name and domain and des):
+                return 99800, dict_err.get(99800)
+
             if parent_topic_id:
                 parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
                 assert parent_topic.level > topic.level
@@ -814,6 +816,7 @@ class TopicBase(object):
             topic.domain = domain
             topic.img = img
             topic.des = des
+            topic.sort = sort
             topic.state = state
             if parent_topic_id:
                 topic.parent_topic = parent_topic

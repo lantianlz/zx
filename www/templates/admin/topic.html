@@ -71,10 +71,19 @@ $(document).ready(function(){
 
         },
 
-        getOne: function(topicId){
-            return this.find(function(topic){
-                return topic.get('topicId') == topicId
-            });
+        getOne: function(topicId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/topic/get_topic_by_id", 
+                {'topic_id': topicId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+
         }
     });
 
@@ -171,14 +180,28 @@ $(document).ready(function(){
 
         // 修改话题
         modifyTopic: function(topicId){
-            this.showPanel();
+            var me = this;
 
-            this.render(this.collection.getOne(topicId).toJSON());
+            this.collection.getOne(topicId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                    
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000)
+                    $.ZXMsg.alert('提示', '没有找到对应的话题');
+                }
+            });
+
+
         },
 
         saveTopic: function(){
             
-            console.log('保存修改');
+            var questionId = this.$('form').data('question_id'),
+                me = this;
+
+            me.$('form').submit();
         },
 
         removeTopic: function(sender){
@@ -274,10 +297,10 @@ $(document).ready(function(){
 
 <script type="text/template" id="topic-list-template">
 <% _.each(topics, function(topic){ %>
-    <tr class="pointer" data-topic_id="<%= topic.topicId %>">
+    <tr>
         <td><%= topic.num %></td>
-        <td><img src="<%= topic.img %>" class="avatar-35 avatar-circle" ></td>
-        <td><%= topic.name %></td>
+        <td><a href="/topic/<%= topic.domain %>" target="_blank"><img src="<%= topic.img %>" class="avatar-35 avatar-circle" ></a></td>
+        <td class="pointer" data-topic_id="<%= topic.topicId %>"><%= topic.name %></td>
         <td><%= topic.followerCount %></td>
         <td><%= topic.questionCount %></td>
         <td><%= topic.parentName %></td>
@@ -294,7 +317,7 @@ $(document).ready(function(){
 </script>
 
 <script type="text/template" id="modify-topic-template">
-    <form class="form-horizontal modify-topic-form" data-topic_id="<%= topicId %>" role="form" method="post" action="." enctype="multipart/form-data">
+    <form class="form-horizontal modify-topic-form" data-topic_id="<%= topicId %>" role="form" method="post" action="/admin/topic/modify_topic" enctype="multipart/form-data">
         <input type="hidden" name="topic_id" value="<%= topicId %>" />
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">话题图片</label>
@@ -313,6 +336,12 @@ $(document).ready(function(){
             <label class="col-sm-2 control-label">所属父话题</label>
             <div class="col-sm-3">
                 <input type="text" name='parent_id' class="form-control" id="parent_topic_modify">
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题站内域名</label>
+            <div class="col-sm-2">
+                <input type="text" name="domain" class="form-control" value='<%= domain %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -364,7 +393,7 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <div class="col-sm-12">
                 <button type="button" class="btn btn-primary save-topic">提交你的修改</button>
-                <button type="button" class="btn btn-danger ml-15 remove-topic">删除此话题</button>
+                <button type="button" class="btn btn-danger ml-15 remove-topic none">删除此话题</button>
             </div>
         </div>
     </form>
