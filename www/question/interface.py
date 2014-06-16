@@ -783,6 +783,7 @@ class TopicBase(object):
         try:
             parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
             assert name and domain and parent_topic and des
+
             level = self.get_topic_level_by_parent(parent_topic)
 
             if self.get_topic_by_id_or_domain(domain, need_state=False) or self.get_topic_by_name(name, need_state=False):
@@ -790,6 +791,8 @@ class TopicBase(object):
 
             topic = Topic.objects.create(name=name, domain=domain, parent_topic=parent_topic, level=level,
                                          img=img, des=des, state=state)
+            parent_topic.child_count += 1
+            parent_topic.save()
 
             # 更新缓存
             self.get_all_topics(must_update_cache=True)
@@ -806,23 +809,27 @@ class TopicBase(object):
             assert topic and name and domain and des
             if parent_topic_id:
                 new_parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
-                if not new_parent_topic.level < topic.level:
+                if new_parent_topic.level >= topic.level:
                     return 20108, dict_err.get(20108)
 
                 parent_topic = topic.parent_topic
                 if parent_topic != new_parent_topic:
+                    # 子话题数量更新
+                    parent_topic.child_count -= 1
+                    new_parent_topic.child_count += 1
+                    parent_topic.save()
+                    new_parent_topic.save()
+
                     for question in QuestionBase().get_questions_by_topic(topic):
                         # 删除旧的对应关系
                         for old_parent_topic_parent in self.get_topic_all_parent(parent_topic):
                             TopicQuestion.objects.filter(topic=old_parent_topic_parent, question=question).delete()
                             old_parent_topic_parent.question_count -= 1
-                            old_parent_topic_parent.child_count -= 1
                             old_parent_topic_parent.save()
                         # 建立新的对应关系
                         for new_parent_topic_parent in self.get_topic_all_parent(new_parent_topic):
                             TopicQuestion.objects.create(topic=new_parent_topic_parent, question=question)
                             new_parent_topic_parent.question_count += 1
-                            new_parent_topic_parent.child_count += 1
                             new_parent_topic_parent.save()
 
                         # 更新缓存
@@ -840,11 +847,21 @@ class TopicBase(object):
             topic.domain = domain
             topic.img = img
             topic.des = des
-            topic.state = state
             topic.sort_num = sort_num
             if parent_topic_id:
                 topic.parent_topic = new_parent_topic
                 topic.level = self.get_topic_level_by_parent(new_parent_topic)
+
+            state = int(state)
+            if topic.state != state:
+                # 修改状态的时候更新父话题的子话题数
+                if state == 0:
+                    parent_topic.child_count -= 1
+                elif state in (1, 2) and topic.state == 0:
+                    parent_topic.child_count += 1
+                parent_topic.save()
+
+            topic.state = state
             topic.save()
 
             # 更新缓存
@@ -856,7 +873,11 @@ class TopicBase(object):
             transaction.rollback(using=QUESTION_DB)
             return 99900, dict_err.get(99900)
 
-    def remove_topic(self, topic_id):
-        topic = self.get_topic_by_id_or_domain(topic_id)
-        topic.state = 0
-        topic.save()
+    # def remove_topic(self, topic_id):
+    #     topic = self.get_topic_by_id_or_domain(topic_id)
+    #     topic.state = 0
+    #     topic.save()
+
+    #     parent_topic = topic.parent_topic
+    #     parent_topic.child_count -= 1
+    #     parent_topic.save()

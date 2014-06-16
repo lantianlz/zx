@@ -37,8 +37,8 @@ def main():
     <p>上证综指和深证成指是运用统计学中的指数方法编制而成的，反映沪深股市总体价格变动和走势的指标。</p>
     <p>大盘走势可理解为沪深股市走势。</p>
     """
-    # print tb.create_topic(name=u"大盘走势1", domain="dpzs1", parent_topic_id=1, des=des, img="http://img0.zhixuan.com/topic_dpzs.jpg", state=1)
-    print tb.modify_topic(topic_id=25, name=u"测试话题", domain="dpzs1", parent_topic_id=5, des=u'测试话题', img="", state=1)
+    # print tb.create_topic(name=u"测试话题", domain="dpzs1", parent_topic_id=1, des=des, img="", state=1)
+    print tb.modify_topic(topic_id=26, name=u"测试话题", domain="dpzs1", parent_topic_id=1, des=u'测试话题', img="", state=2)
 
 
 if __name__ == '__main__':
