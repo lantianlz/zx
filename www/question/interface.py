@@ -674,7 +674,7 @@ class TopicBase(object):
                     return topic
 
     def get_topics_by_level(self, level):
-        return [t for t in self.get_all_topics() if t.level == int(level)]
+        return [t for t in self.get_all_topics() if t.level == int(level) if t.state != 0]
 
     def get_all_question_type(self):
         '''
@@ -743,7 +743,10 @@ class TopicBase(object):
 
         # 删除后重建对应关系
         if set(topics) != set(topics_exist) or must_update:
+            # 先更新话题数
+            self.update_topic_question_count(question, operate="minus")
             TopicQuestion.objects.filter(question=question).delete()
+
             for topic in topics_with_parent:
                 TopicQuestion.objects.create(topic=topic, question=question, is_directly=getattr(topic, 'is_directly', False))
                 topic.question_count += 1
