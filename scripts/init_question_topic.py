@@ -44,6 +44,8 @@ def init_question_type():
         topic.child_count = Topic.objects.filter(parent_topic=topic).count()
         topic.save()
 
+    tb.get_all_topics(must_update_cache=True)
+
     print 'ok'
 
 
