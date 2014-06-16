@@ -24,7 +24,7 @@ dict_err = {
     20105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
     20106: u'不要重复给没有帮助的选项哦',
     20107: u'话题的domain或name重复',
-    20108: u'父话题的level必须大于子话题level',
+    20108: u'父话题的level必须大于等于当前话题level',
 
     20800: u'问题不存在或者已删除',
     20801: u'回答不存在或者已删除',
@@ -809,7 +809,7 @@ class TopicBase(object):
             assert topic and name and domain and des
             if parent_topic_id:
                 new_parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
-                if new_parent_topic.level >= topic.level:
+                if new_parent_topic.level > topic.level:
                     return 20108, dict_err.get(20108)
 
                 parent_topic = topic.parent_topic
