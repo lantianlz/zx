@@ -10,7 +10,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponseRedirect
 from django.conf import settings
 
-from common import utils
+from common import utils, debug
 from www.misc.decorators import member_required
 from www.misc import qiniu_client
 
@@ -90,11 +90,17 @@ def qiniu_img_return(request):
 @member_required
 def save_img(request):
     imgFile = request.FILES.get('imgFile')
-    flag, img_name = qiniu_client.upload_img(imgFile, img_type='editor')
+    flag = False
+
+    try:
+        flag, img_name = qiniu_client.upload_img(imgFile, img_type='editor')
+    except Exception, e:
+        debug.get_debug_detail(e)
+
     if flag:
         result = dict(error=0, url='%s/%s' % (settings.IMG0_DOMAIN, img_name))
     else:
-        result = dict(error=-1, url='')
+        result = dict(error=1, message='系统错误，请确认上传的文件格式为图片')
 
     return HttpResponse(json.dumps(result))
 

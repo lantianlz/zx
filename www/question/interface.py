@@ -808,3 +808,6 @@ class TopicBase(object):
             else:
                 ftopics[str(topic.parent_topic_id)].append((topic.id, topic.name),)
         return ftopics
+
+    def get_topics_by_name(self, topic_name):
+        return Topic.objects.filter(name__contains=topic_name)

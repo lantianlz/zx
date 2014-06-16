@@ -71,7 +71,7 @@ def search(request):
     if name:
         fls = FriendlyLinkBase().get_friendly_link_by_name(name)
     else:
-        # 获取所有正常于不正常的客户经理
+        # 获取所有正常与不正常的客户经理
         fls = flb.get_all_friendly_link(state=None)
 
         # 城市

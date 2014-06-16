@@ -215,7 +215,12 @@ KindEditor.plugin('image', function(K) {
 			}
 		});
 		uploadbutton.fileBox.change(function(e) {
-			localUrlBox.val(uploadbutton.fileBox.val());
+			if(/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(uploadbutton.fileBox.val())){
+				localUrlBox.val(uploadbutton.fileBox.val());
+			} else {
+				alert("图片类型必须是.gif,jpeg,jpg,png");
+			}
+			
 		});
 		if (allowFileManager) {
 			viewServerBtn.click(function(e) {

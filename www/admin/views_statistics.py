@@ -79,7 +79,7 @@ def statistic_register_user(request):
     end_date = request.REQUEST.get('end_date')
 
     # 数据库数据
-    for x in UserBase().get_users_by_range_date(start_date, end_date):
+    for x in UserBase().get_users_by_range_date(start_date + ' 00:00:00', end_date + ' 23:59:59'):
         date = str(x.create_time)[5:10]
         if not data.has_key(date):
             data[date] = 0

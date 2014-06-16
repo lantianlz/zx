@@ -56,8 +56,9 @@ def received_like(request, template_name='message/received_like.html'):
     unread_count_info = urb.get_unread_count_info(request.user)
 
     user_agent_dict = user_agent_parser.Parse(request.META.get('HTTP_USER_AGENT'))
+
     # 手机客户端换模板
-    if user_agent_dict['device']['family'] != 'Other':
+    if user_agent_dict['os']['family'] in ('Android', 'iOS'):
         template_name = 'message/received_like_m.html'
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))

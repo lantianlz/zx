@@ -15,29 +15,60 @@ $(document).ready(function(){
     var Topic = Backbone.Model.extend({
         defaults: {
             'topicId': 0,
-            'topicImg': '',
-            'topicName': '',
-            'topicDesc': '',
-            'topicDomain': '',
-            'topicSort': '',
+            'name': '',
+            'domain': '',
             'parentId': '',
-            'parentName': ''
+            'parentName': '',
+            'childrenCount': '',
+            'followerCount': '',
+            'questionCount': '',
+            'level': '',
+            'img': '',
+            'des': '',
+            'sort': '',
+            'isShow': '',
+            'state': '',
+            'createDate': ''
         }
     });
 
     var Topics = Backbone.Collection.extend({
         model: Topic,
 
-        search: function(topicName, pageIndex){
-            this.pageIndex = pageIndex;
-            this.pageCount = 2;
-            this.topicName = topicName||'';
+        _modelMaps: {
+            'num': 'num',
+            'topicId': 'topic_id',
+            'name': 'name',
+            'domain': 'domain',
+            'parentId': 'parent_id',
+            'parentName': 'parent_name',
+            'childrenCount': 'child_count',
+            'followerCount': 'follower_count',
+            'questionCount': 'question_count',
+            'level': 'level',
+            'img': 'img',
+            'des': 'des',
+            'sort': 'sort',
+            'isShow': 'is_show',
+            'state': 'state',
+            'createDate': 'create_time'
+        },
 
-            this.reset([
-                {'topicId': 1, 'topicImg': '/static/img/common/topic1.jpg', 'topicName': '大盘', 'topicDesc': '大盘大盘', 'topicDomain': 'dp', 'topicSort': 2, 'parentId': 1, 'parentName': '父话题1'},
-                {'topicId': 2, 'topicImg': '/static/img/common/topic2.jpg', 'topicName': '个股', 'topicDesc': '个股个股', 'topicDomain': 'gg', 'topicSort': 4, 'parentId': 2, 'parentName': '父话题2'},
-                {'topicId': 3, 'topicImg': '/static/img/common/topic3.jpg', 'topicName': '其他', 'topicDesc': '其他其他', 'topicDomain': 'qt', 'topicSort': 9, 'parentId': 3, 'parentName': '父话题3'}
-            ]);
+        search: function(topicName, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/topic/search", 
+                {'topic_name': topicName||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+                    me.topicName = topicName||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
+                }
+            );
+
         },
 
         getOne: function(topicId){
@@ -56,7 +87,7 @@ $(document).ready(function(){
 
         events:{
             'click .pointer': 'modifyTopic',
-            'click .search-topic': 'searchTopic'
+            'click .search': 'search'
         },
 
         initialize: function(){
@@ -81,7 +112,7 @@ $(document).ready(function(){
             $('.zx-nav-pills a[href="#topic_list"]').tab('show');
         },
 
-        searchTopic: function(){
+        search: function(){
             var topicName = this.$('.key-word').val();
 
             topicRouter.navigate('/search/' + topicName + '/1', {trigger: true});
@@ -115,17 +146,22 @@ $(document).ready(function(){
         render: function(data){
             this.$el.html(this.template(data));
 
-            this.topicParentTextbox = $.ZXTextboxList.create('#topic_parent', {
+            this.initTopicTextBox(data.parentName, data.parentId);
+        },
+
+        topicTextBox: null,
+        initTopicTextBox: function(name, value){
+            this.topicTextBox = $.ZXTextboxList.create('#parent_topic_modify', {
                 max: 1,
-                placeholder: '设置父话题',
-                url: '/',
+                placeholder: '选择所属父话题',
+                url: '/admin/topic/get_topics_by_name',
                 param: 'topic_name',
-                postName: 'topic_id',
                 loadPlaceholder: '正在加载...'
             });
-            
-            this.topicParentTextbox.add(data.topicName, data.topicId);
-            
+
+            if(value){
+                this.topicTextBox.add(name, value);
+            }
         },
 
         // 显示面板
@@ -137,7 +173,7 @@ $(document).ready(function(){
         modifyTopic: function(topicId){
             this.showPanel();
 
-            this.render(this.collection.getOne(topicId).toJSON())
+            this.render(this.collection.getOne(topicId).toJSON());
         },
 
         saveTopic: function(){
@@ -201,7 +237,7 @@ $(document).ready(function(){
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入话题名称..." />
                 <span class="input-group-btn">
-                    <button class="btn btn-default search-topic" type="button">查询</button>
+                    <button class="btn btn-default search" type="button">查询</button>
                 </span>
             </div>
         </div>
@@ -211,9 +247,11 @@ $(document).ready(function(){
                     <th>#</th>
                     <th>图像</th>
                     <th>名称</th>
-                    <th>域名</th>
-                    <th>排序</th>
+                    <th>关注数</th>
+                    <th>提问数</th>
                     <th>所属父话题</th>
+                    <th>排序</th>
+                    <th>话题类型</th>
                 </tr>
             </thead>
             <tbody>
@@ -237,55 +275,90 @@ $(document).ready(function(){
 <script type="text/template" id="topic-list-template">
 <% _.each(topics, function(topic){ %>
     <tr class="pointer" data-topic_id="<%= topic.topicId %>">
-        <td>1</td>
-        <td><img src="<%= topic.topicImg %>" class="avatar-35 avatar-circle" ></td>
-        <td><%= topic.topicName %></td>
-        <td><%= topic.topicDomain %></td>
-        <td><%= topic.topicSort %></td>
+        <td><%= topic.num %></td>
+        <td><img src="<%= topic.img %>" class="avatar-35 avatar-circle" ></td>
+        <td><%= topic.name %></td>
+        <td><%= topic.followerCount %></td>
+        <td><%= topic.questionCount %></td>
         <td><%= topic.parentName %></td>
+        <td><%= topic.sort %></td>
+        <td>
+            <% if(topic.state == 1){ %>
+                普通话题
+            <% } else { %>
+                静默话题
+            <% } %>
+        </td>
     </tr>
 <% }) %>
 </script>
 
 <script type="text/template" id="modify-topic-template">
     <form class="form-horizontal modify-topic-form" data-topic_id="<%= topicId %>" role="form" method="post" action="." enctype="multipart/form-data">
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">话题ID</label>
-            <div class="col-sm-6">
-                <p class="form-control-static"><%= topicId %></p>
-                <input type="hidden" name="topicId" value="<%= topicId %>" />
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">所属父话题</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" id="topic_parent">
-
-            </div>
-        </div>
+        <input type="hidden" name="topic_id" value="<%= topicId %>" />
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">话题图片</label>
             <div class="col-sm-6">
-                <img class="avatar-65 avatar-circle mb-10" src="<%= topicImg %>" />
+                <img class="avatar-65 avatar-circle mb-10" src="<%= img %>" />
                 <input name="img" type="file" />
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">话题名称</label>
             <div class="col-sm-6">
-                <input type="text" name="name" class="form-control" value='<%= topicName %>'>
+                <input type="text" name="name" class="form-control" value='<%= name %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">话题描述</label>
-            <div class="col-sm-6">
-                <textarea name="des" rows="6" class="form-control"><%= topicDesc %></textarea>
+            <label class="col-sm-2 control-label">所属父话题</label>
+            <div class="col-sm-3">
+                <input type="text" name='parent_id' class="form-control" id="parent_topic_modify">
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">话题排序</label>
             <div class="col-sm-2">
-                <input type="text" name="sort" class="form-control" value='<%= topicSort %>'>
+                <input type="text" name="sort" class="form-control" value='<%= sort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题类型</label>
+            <div class="col-sm-10">
+                {% for state in states %}
+                <label class="radio-inline">
+                  <input type="radio" name="state" value="{{state.value}}" <% if(state=='{{state.value}}'){ %>checked<% } %> > {{state.name}}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">话题描述</label>
+            <div class="col-sm-6">
+                <textarea name="des" rows="6" class="form-control"><%= des %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">提问数</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= questionCount %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">关注数</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= followerCount %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">子话题数</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= childrenCount %></p>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">创建时间</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= createDate %></p>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
