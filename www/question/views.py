@@ -83,6 +83,8 @@ def ask_question(request, template_name='question/ask_question.html'):
         question_content = request.POST.get('question_content', '').strip()
         is_hide_user = request.POST.get('is_hide_user')
         topic_ids = request.POST.getlist('tag')
+        question_type = request.POST.get('question_type', '')
+        topic_ids = topic_ids or [question_type, ]
 
         errcode, result = qb.create_question(request.user.id, question_title, question_content,
                                              ip=utils.get_clientip(request), is_hide_user=is_hide_user, topic_ids=topic_ids)
@@ -104,6 +106,8 @@ def modify_question(request, question_id):
         question_content = request.POST.get('question_content', '').strip()
         is_hide_user = request.POST.get('is_hide_user')
         topic_ids = request.POST.getlist('tag')
+        question_type = request.POST.get('question_type', '')
+        topic_ids = topic_ids or [question_type, ]
 
         errcode, result = qb.modify_question(question_id, request.user, question_title, question_content,
                                              ip=utils.get_clientip(request), is_hide_user=is_hide_user, topic_ids=topic_ids)
@@ -164,7 +168,10 @@ def topics(request, template_name="question/topics.html"):
     aqts = tb.get_all_question_type()
     question_type = int(request.REQUEST.get('question_type', 0))
     if question_type:
-        topics = tb.get_topics_by_parent(question_type)
+        topic = tb.get_topic_by_id_or_domain(question_type)
+        if not topic:
+            raise Http404
+        topics = tb.get_topics_by_parent(topic)
     else:
         topics = tb.get_all_topics_for_show()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))

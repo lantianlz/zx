@@ -38,7 +38,7 @@ def main():
     <p>大盘走势可理解为沪深股市走势。</p>
     """
     # print tb.create_topic(name=u"测试话题", domain="dpzs1", parent_topic_id=1, des=des, img="", state=1)
-    print tb.modify_topic(topic_id=26, name=u"测试话题", domain="dpzs1", parent_topic_id=1, des=u'测试话题', img="", state=2)
+    print tb.modify_topic(topic_id=26, name=u"测试话题", domain="csht", parent_topic_id=1, des=u'测试话题', img="", state=1)
 
 
 if __name__ == '__main__':
