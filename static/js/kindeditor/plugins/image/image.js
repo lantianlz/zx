@@ -215,7 +215,7 @@ KindEditor.plugin('image', function(K) {
 			}
 		});
 		uploadbutton.fileBox.change(function(e) {
-			if(/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(uploadbutton.fileBox.val())){
+			if(new RegExp('.+\\.(BMP|JPG|JPEG|PNG|GIF)$', "i").test(uploadbutton.fileBox.val())){
 				localUrlBox.val(uploadbutton.fileBox.val());
 			} else {
 				alert("图片类型必须是.gif,jpeg,jpg,png");
