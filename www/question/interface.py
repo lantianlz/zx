@@ -23,6 +23,7 @@ dict_err = {
     20104: u'喜欢一次足矣',
     20105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
     20106: u'不要重复给没有帮助的选项哦',
+    20107: u'话题的domain或name重复',
 
     20800: u'问题不存在或者已删除',
     20801: u'回答不存在或者已删除',
@@ -652,65 +653,24 @@ class LikeBase(object):
         return self.get_to_user_likes(user_id).count()
 
 
-# class QuestionTypeBase(object):
-
-#     @cache_required(cache_key='all_question_type', expire=0, cache_config=cache.CACHE_STATIC)
-#     def get_all_question_type(self, must_update_cache=False):
-#         return QuestionType.objects.filter(state=True).order_by('-sort_num', 'id')
-
-#     def get_question_type_by_id_or_domain(self, id_or_domain):
-#         aqts = self.get_all_question_type()
-#         for aqt in aqts:
-#             if str(aqt.id) == str(id_or_domain) or str(aqt.domain) == str(id_or_domain):
-#                 return aqt
-
-
-# class TagBase(object):
-
-#     @cache_required(cache_key='all_question_tag', expire=0, cache_config=cache.CACHE_STATIC)
-#     def get_all_tags(self, must_update_cache=False):
-#         return Tag.objects.select_related('question_type').filter(state=True)
-
-#     def get_tag_by_domain(self, domain):
-#         tags = self.get_all_tags()
-#         for tag in tags:
-#             if tag.domain == domain:
-#                 return tag
-
-#     def get_tag_by_id(self, tag_id):
-#         tags = self.get_all_tags()
-#         for tag in tags:
-#             if str(tag.id) == str(tag_id):
-#                 return tag
-
-#     def get_tags_by_question_type(self, question_type):
-#         return self.get_all_tags().filter(question_type=question_type)
-
-#     def get_tags_by_question(self, question):
-#         return [tq.tag for tq in TagQuestion.objects.select_related('tag').filter(question=question)]
-
-#     def format_tags_for_ask_page(self, tags):
-#         ftags = {}
-#         for tag in tags:
-#             if tag.is_show:
-#                 if str(tag.question_type_id) not in ftags:
-#                     ftags[str(tag.question_type_id)] = [(tag.id, tag.name), ]
-#                 else:
-#                     ftags[str(tag.question_type_id)].append((tag.id, tag.name),)
-#         return ftags
-
-
 class TopicBase(object):
 
     @cache_required(cache_key='all_topic', expire=0, cache_config=cache.CACHE_STATIC)
     def get_all_topics(self, must_update_cache=False):
         return Topic.objects.all()
 
-    def get_topic_by_id_or_domain(self, topic_id_or_domain):
+    def get_topic_by_id_or_domain(self, topic_id_or_domain, need_state=True):
         topic_id_or_domain = str(topic_id_or_domain)
         for topic in self.get_all_topics():
             if topic.domain == topic_id_or_domain or str(topic.id) == topic_id_or_domain:
-                return topic
+                if not(need_state and topic.state == 0):
+                    return topic
+
+    def get_topic_by_name(self, name, need_state=True):
+        for topic in self.get_all_topics():
+            if topic.name == name:
+                if not(need_state and topic.state == 0):
+                    return topic
 
     def get_topics_by_level(self, level):
         return [t for t in self.get_all_topics() if t.level == int(level)]
@@ -727,12 +687,12 @@ class TopicBase(object):
         '''
         return self.get_topics_by_level(level=2)
 
-    def get_topics_by_parent(self, topic):
+    def get_topics_by_parent(self, topic, need_state=True):
         '''
         @note: 获取所有子话题
         '''
         topic = topic if isinstance(topic, Topic) else self.get_topic_by_id_or_domain(topic)
-        return [t for t in self.get_all_topics() if t.parent_topic_id == topic.id]
+        return [t for t in self.get_all_topics() if t.parent_topic_id == topic.id and not(need_state and topic.state == 0)]
 
     def get_topic_all_parent(self, topic_id_or_object):
         '''
@@ -781,7 +741,10 @@ class TopicBase(object):
                 TopicQuestion.objects.create(topic=topic, question=question, is_directly=getattr(topic, 'is_directly', False))
                 topic.question_count += 1
                 topic.save()
+
+            # 更新缓存
             self.get_topic_level1_by_question(question, must_update_cache=True)
+            self.get_all_topics(must_update_cache=True)
         return True
 
     def update_topic_question_count(self, question, operate='minus'):
@@ -808,3 +771,59 @@ class TopicBase(object):
             else:
                 ftopics[str(topic.parent_topic_id)].append((topic.id, topic.name),)
         return ftopics
+
+    def create_topic(self, name, domain, parent_topic_id, img, des, is_show=True, state=1):
+        try:
+            parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
+            assert name and domain and parent_topic and des
+            level = self.get_topic_level_by_parent(parent_topic)
+
+            if self.get_topic_by_id_or_domain(domain, need_state=False) or self.get_topic_by_name(name, need_state=False):
+                return 20107, dict_err.get(20107)
+
+            topic = Topic.objects.create(name=name, domain=domain, parent_topic=parent_topic, level=level,
+                                         img=img, des=des, state=state)
+
+            # 更新缓存
+            self.get_all_topics(must_update_cache=True)
+
+            return 0, topic.id
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+    def modify_topic(self, topic_id, name, domain, img, des, state, parent_topic_id=None):
+        try:
+            topic = self.get_topic_by_id_or_domain(topic_id)
+            assert topic_id and name and domain and des
+            if parent_topic_id:
+                parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
+                assert parent_topic.level > topic.level
+                if topic.parent_topic != parent_topic:
+                    pass
+                    # 修改话题归属
+
+            if topic != self.get_topic_by_id_or_domain(domain, need_state=False) \
+                or topic != self.get_topic_by_name(name, need_state=False):
+                return 20107, dict_err.get(20107)
+
+            topic.name = name
+            topic.domain = domain
+            topic.img = img
+            topic.des = des
+            topic.state = state
+            if parent_topic_id:
+                topic.parent_topic = parent_topic
+            topic.save()
+
+            # 更新缓存
+            self.get_all_topics(must_update_cache=True)
+            return 0, dict_err.get(0)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+    def remove_topic(self, topic_id):
+        topic = self.get_topic_by_id_or_domain(topic_id)
+        topic.state = 0
+        topic.save()
