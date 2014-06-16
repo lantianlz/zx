@@ -296,6 +296,10 @@ $(document).ready(function(){
         topicRouter = new TopicRouter();
 
     Backbone.history.start();
+
+    if(window.location.href.indexOf('?') > -1){
+        $.ZXMsg.alert('提示', decodeURI(window.location.search).substring(1));
+    }
 });
 
 </script>
@@ -333,6 +337,7 @@ $(document).ready(function(){
                     <th>名称</th>
                     <th>关注数</th>
                     <th>提问数</th>
+                    <th>子话题数</th>
                     <th>所属父话题</th>
                     <th>排序</th>
                     <th>话题类型</th>
@@ -364,6 +369,7 @@ $(document).ready(function(){
         <td class="pointer" data-topic_id="<%= topic.topicId %>"><%= topic.name %></td>
         <td><%= topic.followerCount %></td>
         <td><%= topic.questionCount %></td>
+        <td><%= topic.childrenCount %></td>
         <td><%= topic.parentName %></td>
         <td><%= topic.sort %></td>
         <td>

@@ -805,7 +805,6 @@ class TopicBase(object):
     @transaction.commit_manually(using=QUESTION_DB)
     def modify_topic(self, topic_id, name, domain, des, img='', state=1, parent_topic_id=None, sort_num=0):
         try:
-            print topic_id, name, domain, des, '*************////////////////'
             topic = self.get_topic_by_id_or_domain(topic_id, need_state=False)
             if not (topic_id and name and domain and des):
                 return 99800, dict_err.get(99800)

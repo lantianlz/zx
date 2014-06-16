@@ -56,7 +56,13 @@ def search(request):
 
     data = []
 
-    page_objs = page.Cpt(TopicBase().get_all_topics(), count=10, page=page_index).info
+    if topic_name:
+        objs = TopicBase().get_topic_by_name(topic_name)
+        objs = [objs] if objs else []
+    else:
+        objs = TopicBase().get_all_topics()
+
+    page_objs = page.Cpt(objs, count=10, page=page_index).info
 
     num = 10 * (page_index - 1)
     data = format_topic(page_objs[0], num)
@@ -115,9 +121,12 @@ def modify_topic(request):
         flag, img_name = qiniu_client.upload_img(img, img_type='topic')
         img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
-    flag, code = tb.modify_topic(topic_id, name, domain, des, img_name, state, parent_topic_id, sort)
+    code, msg = tb.modify_topic(topic_id, name, domain, des, img_name, state, parent_topic_id, sort)
 
-    url = "/admin/topic#modify/%s" % topic_id
+    if code == 0:
+        url = "/admin/topic?#modify/%s" % (topic_id)
+    else:
+        url = "/admin/topic?%s#modify/%s" % (msg, topic_id)
 
     return HttpResponseRedirect(url)
 
@@ -139,8 +148,11 @@ def add_topic(request):
         flag, img_name = qiniu_client.upload_img(img, img_type='topic')
         img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
-    flag, topic_id = tb.create_topic(name, domain, parent_topic_id, img_name, des)
+    flag, msg = tb.create_topic(name, domain, parent_topic_id, img_name, des)
 
-    url = "/admin/topic#modify/%s" % topic_id
+    if flag == 0:
+        url = "/admin/topic?#modify/%s" % (msg)
+    else:
+        url = "/admin/topic?%s" % (msg)
 
     return HttpResponseRedirect(url)

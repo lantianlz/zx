@@ -36,6 +36,15 @@
     </head>
 
     <body>
+        <div class="zx-alert">
+            {% if error_msg %}
+                <div class="alert alert-danger alert-dismissable container zx-container box-shadow-224 border-radius-0">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{error_msg}}
+                </div>
+            {% endif %}
+        </div>
+
         <div class="scroll-top"></div>
         <div class="header bgc-333 box-shadow-224">
             <div class="container pt-20 pb-20">
