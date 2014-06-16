@@ -692,7 +692,7 @@ class TopicBase(object):
         @note: 获取所有子话题
         '''
         topic = topic if isinstance(topic, Topic) else self.get_topic_by_id_or_domain(topic)
-        return [t for t in self.get_all_topics() if t.parent_topic_id == topic.id and not(need_state and topic.state == 0)]
+        return [t for t in self.get_all_topics() if t.parent_topic_id == topic.id and not(need_state and t.state == 0)]
 
     def get_topic_all_parent(self, topic_id_or_object):
         '''
@@ -792,10 +792,10 @@ class TopicBase(object):
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
 
-    def modify_topic(self, topic_id, name, domain, img, des, state, parent_topic_id=None):
+    def modify_topic(self, topic_id, name, domain, des, img='', state=1, parent_topic_id=None):
         try:
-            topic = self.get_topic_by_id_or_domain(topic_id)
-            assert topic_id and name and domain and des
+            topic = self.get_topic_by_id_or_domain(topic_id, need_state=False)
+            assert topic and name and domain and des
             if parent_topic_id:
                 parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
                 assert parent_topic.level > topic.level
@@ -803,8 +803,12 @@ class TopicBase(object):
                     pass
                     # 修改话题归属
 
-            if topic != self.get_topic_by_id_or_domain(domain, need_state=False) \
-                or topic != self.get_topic_by_name(name, need_state=False):
+            # 判断名称和domain是否重复
+            exist_topic = self.get_topic_by_id_or_domain(domain, need_state=False)
+            if exist_topic and topic != exist_topic:
+                return 20107, dict_err.get(20107)
+            exist_topic = self.get_topic_by_name(name, need_state=False)
+            if exist_topic and topic != exist_topic:
                 return 20107, dict_err.get(20107)
 
             topic.name = name

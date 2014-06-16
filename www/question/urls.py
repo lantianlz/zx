@@ -20,7 +20,7 @@ urlpatterns = patterns('www.question.views',
 
                        # url(r'^question_detail/(?P<question_id>\w+)$', 'question_detail'),
                        # url(r'^topic/(?P<topic_domain>\w+)$', 'topic_question'),
-                       # url(r'^topics', 'topics'),
+                       # url(r'^topics$', 'topics'),
                        # url(r'^important$', 'important_question'),
                        url(r'^set_important$', 'set_important'),
                        url(r'^cancel_important$', 'cancel_important'),

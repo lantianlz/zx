@@ -46,7 +46,11 @@
 <div class="bottom-border bdc-eee mb-25">
     <div class="f16 fb pb-10">父话题</div>
     <ul class="list-inline pb-10">
+        {% if topic.parent_topic %}
         <li><a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="{{topic.parent_topic.get_url}}">{{topic.parent_topic.name}}</a></li>
+        {% else %}
+        <li>暂无</li>
+        {% endif %}
     </ul>
 </div>
 
