@@ -214,11 +214,64 @@ $(document).ready(function(){
         }
     });
 
+
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_topic_template').html()),
+
+        topicTextBox: null,
+        initTopicTextBox: function(){
+            this.topicTextBox = $.ZXTextboxList.create('#parent_topic_add', {
+                max: 1,
+                placeholder: '选择所属父话题',
+                url: '/admin/topic/get_topics_by_name',
+                param: 'topic_name',
+                loadPlaceholder: '正在加载...'
+            });
+        },
+
+        showPanel: function(){
+            var me = this;
+
+            me.render();
+        },
+
+        render: function(){
+            var me = this;
+
+            $('#add_topic_modal').remove();
+            
+            $('body').append(this.template());
+
+            // 绑定事件
+            $('#add_topic_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_topic_modal .ok').bind('click', function(){
+                me.addTopic();
+            });
+            
+            $('#add_topic_modal').modal({'show': true, 'backdrop': 'static'});
+
+            this.initTopicTextBox();
+        },
+
+        addTopic: function(){
+            var topicId = this.$('form').data('topic_id'),
+                me = this;
+
+            me.$('form').submit();
+        }
+
+    });
+
     var TopicRouter = Backbone.Router.extend({
         routes: {
             "":                                 "search",
             "search/(:topicName)/:pageIndex":   "search",
-            "modify/:topicId":                  "modify"
+            "modify/:topicId":                  "modify",
+            "add":                              "add"
         },
 
         // 查询方法
@@ -229,12 +282,17 @@ $(document).ready(function(){
         // 修改话题
         modify: function(topicId){
             modifyView.modifyTopic(topicId);
+        },
+
+        add: function(){
+            addView.showPanel();
         }
     });
 
     var topics = new Topics(),
         listView = new ListView({'collection': topics}),
         modifyView = new ModifyView({'collection': topics}),
+        addView = new AddView(),
         topicRouter = new TopicRouter();
 
     Backbone.history.start();
@@ -250,6 +308,9 @@ $(document).ready(function(){
     </li>
     <li>
         <a href="#modify_topic" class="black-blue" data-toggle="pill">修改话题信息</a>
+    </li>
+    <li class="pull-right">
+        <a href="#add" class="black-blue" >添加话题</a>
     </li>
 </ul>
 
@@ -306,11 +367,9 @@ $(document).ready(function(){
         <td><%= topic.parentName %></td>
         <td><%= topic.sort %></td>
         <td>
-            <% if(topic.state == 1){ %>
-                普通话题
-            <% } else { %>
-                静默话题
-            <% } %>
+            {% for state in states %}
+            <% if(topic.state == {{state.value}}){ %>{{state.name}}<% } %>
+            {% endfor %}
         </td>
     </tr>
 <% }) %>
@@ -397,5 +456,73 @@ $(document).ready(function(){
             </div>
         </div>
     </form>
+</script>
+
+
+<script type="text/template" id="add_topic_template">
+<div class="modal fade" id="add_topic_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <h4 class="modal-title">添加话题</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" method="post" action="/admin/topic/add_topic" enctype="multipart/form-data">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">话题图片</label>
+                        <div class="col-sm-6">
+                            <img class="avatar-65 avatar-circle mb-10" src="" />
+                            <input name="img" type="file" />
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">话题名称</label>
+                        <div class="col-sm-7">
+                            <input type="text" name="name" class="form-control" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">所属父话题</label>
+                        <div class="col-sm-7">
+                            <input type="text" name='parent_id' class="form-control" id="parent_topic_add">
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">话题站内域名</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="domain" class="form-control" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">话题排序</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="sort" class="form-control" value='0'>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">话题类型</label>
+                        <div class="col-sm-9">
+                            {% for state in states %}
+                            <label class="radio-inline">
+                              <input type="radio" name="state" value="{{state.value}}" {% if state.value == 1 %}checked{% endif %} > {{state.name}}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">话题描述</label>
+                        <div class="col-sm-7">
+                            <textarea name="des" rows="6" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 </script>
 {% endblock admin-right %}

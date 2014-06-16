@@ -68,4 +68,10 @@ PERMISSIONS = [
     {'code': 'add_notice', 'name': u'添加全站通告', 'parent': 'tools'},
     {'code': 'modify_notice', 'name': u'修改全站通告', 'parent': 'tools'},
     {'code': 'remove_notice', 'name': u'删除全站通告', 'parent': 'tools'},
+
+    {'code': 'topic_manage', 'name': u'话题管理', 'parent': None},
+    {'code': 'add_topic', 'name': u'添加话题', 'parent': 'topic_manage'},
+    {'code': 'query_topic', 'name': u'查询话题', 'parent': 'topic_manage'},
+    {'code': 'modify_topic', 'name': u'修改话题', 'parent': 'topic_manage'},
+    #{'code': 'remove_topic', 'name': u'查询全站通告', 'parent': 'topic_manage'},
 ]

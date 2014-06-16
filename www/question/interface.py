@@ -24,6 +24,7 @@ dict_err = {
     20105: u'自己赞自己的回答是自恋的表现哦，暂不支持',
     20106: u'不要重复给没有帮助的选项哦',
     20107: u'话题的domain或name重复',
+    20108: u'父话题的level必须大于子话题level',
 
     20800: u'问题不存在或者已删除',
     20801: u'回答不存在或者已删除',
@@ -246,9 +247,9 @@ class QuestionBase(object):
     def get_all_questions_for_home_page(self):
         return Question.objects.filter(is_silence=False, state=True)
 
-    def get_questions_by_topic(self, topic_id_or_domain):
-        question_type = topic_id_or_domain if isinstance(topic_id_or_domain, Topic) else \
-            TopicBase().get_topic_by_id_or_domain(topic_id_or_domain)
+    def get_questions_by_topic(self, topic_id_or_object):
+        question_type = topic_id_or_object if isinstance(topic_id_or_object, Topic) else \
+            TopicBase().get_topic_by_id_or_domain(topic_id_or_object)
         return [tq.question for tq in TopicQuestion.objects.select_related('question')
                 .filter(topic=question_type, question__state=True).order_by("-question__sort_num", '-question__like_count', "-question__last_answer_time")]
 
@@ -692,18 +693,21 @@ class TopicBase(object):
         @note: 获取所有子话题
         '''
         topic = topic if isinstance(topic, Topic) else self.get_topic_by_id_or_domain(topic)
-        return [t for t in self.get_all_topics() if t.parent_topic_id == topic.id and not(need_state and topic.state == 0)]
+        return [t for t in self.get_all_topics() if t.parent_topic_id == topic.id and not(need_state and t.state == 0)]
 
-    def get_topic_all_parent(self, topic_id_or_object):
+    def get_topic_all_parent(self, topic_id_or_object, include_self=True):
         '''
         @note: 获取话题所有的父话题
         '''
         topic = topic_id_or_object if isinstance(topic_id_or_object, Topic) else self.get_topic_by_id_or_domain(topic_id_or_object)
         parents = []
-        topic.is_directly = True    # 直接的对应关系
+        topic.is_directly = True    # 提问和话题直接的对应关系
+        i = 0
         while topic.domain != 'root':
-            parents.append(topic)
+            if not(i == 0 and include_self == False):
+                parents.append(topic)
             topic = topic.parent_topic
+            i += 1
         return parents
 
     def get_topic_level_by_parent(self, parent_topic):
@@ -713,8 +717,8 @@ class TopicBase(object):
         parent_topic = parent_topic if isinstance(parent_topic, Topic) else self.get_topic_by_id_or_domain(parent_topic)
         return parent_topic.level + 1
 
-    def get_topic_by_question(self, question):
-        return [tq.topic for tq in TopicQuestion.objects.select_related('topic').filter(question=question) if tq.is_directly]
+    def get_topic_by_question(self, question, is_directly=True):
+        return [tq.topic for tq in TopicQuestion.objects.select_related('topic').filter(question=question) if not(is_directly and not tq.is_directly)]
 
     @cache_required(cache_key='quesiton_type_%s', expire=3600 * 24)
     def get_topic_level1_by_question(self, question, must_update_cache=False):
@@ -724,20 +728,23 @@ class TopicBase(object):
         topics = [tq.topic for tq in TopicQuestion.objects.select_related('topic').filter(question=question) if tq.topic.level == 1]
         return topics[0] if topics else None
 
-    def create_topic_question_relation(self, question, topic_ids):
+    def create_topic_question_relation(self, question, topic_ids, must_update=True):
         '''
         @note: 创建提问和话题的对应关系
         '''
-        topics = []
-        for topic_id in topic_ids:
-            topics.extend(self.get_topic_all_parent(topic_id))
+        topics = [self.get_topic_by_id_or_domain(topic_id) for topic_id in topic_ids]
         topics = list(set(topics))
+
+        topics_with_parent = []
+        for topic_id in topic_ids:
+            topics_with_parent.extend(self.get_topic_all_parent(topic_id))
+        topics_with_parent = list(set(topics_with_parent))
         topics_exist = self.get_topic_by_question(question)
 
         # 删除后重建对应关系
-        if set(topics) != set(topics_exist):
+        if set(topics) != set(topics_exist) or must_update:
             TopicQuestion.objects.filter(question=question).delete()
-            for topic in topics:
+            for topic in topics_with_parent:
                 TopicQuestion.objects.create(topic=topic, question=question, is_directly=getattr(topic, 'is_directly', False))
                 topic.question_count += 1
                 topic.save()
@@ -795,38 +802,53 @@ class TopicBase(object):
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
 
-    def modify_topic(self, topic_id, name, domain, img, des, state, sort=0, parent_topic_id=None):
+    @transaction.commit_manually(using=QUESTION_DB)
+    def modify_topic(self, topic_id, name, domain, des, img='', state=1, parent_topic_id=None, sort_num=0):
         try:
-            topic = self.get_topic_by_id_or_domain(topic_id)
+            print topic_id, name, domain, des, '*************////////////////'
+            topic = self.get_topic_by_id_or_domain(topic_id, need_state=False)
             if not (topic_id and name and domain and des):
                 return 99800, dict_err.get(99800)
 
             if parent_topic_id:
-                parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
-                assert parent_topic.level > topic.level
-                if topic.parent_topic != parent_topic:
-                    pass
-                    # 修改话题归属
+                new_parent_topic = self.get_topic_by_id_or_domain(parent_topic_id)
+                if not new_parent_topic.level < topic.level:
+                    return 20108, dict_err.get(20108)
 
-            if topic != self.get_topic_by_id_or_domain(domain, need_state=False) \
-                or topic != self.get_topic_by_name(name, need_state=False):
+                parent_topic = topic.parent_topic
+                if parent_topic != new_parent_topic:
+                    pass
+                    # 修改父话题归属
+                    # for question in QuestionBase().get_questions_by_topic(topic):
+                    #     for new_topic_parent in self.get_topic_all_parent(topic, include_self=False):
+                    #         TopicQuestion.objects.filter(topic=topic_parent, question=question).update(top)
+
+            # 判断名称和domain是否重复
+            exist_topic = self.get_topic_by_id_or_domain(domain, need_state=False)
+            if exist_topic and topic != exist_topic:
+                return 20107, dict_err.get(20107)
+            exist_topic = self.get_topic_by_name(name, need_state=False)
+            if exist_topic and topic != exist_topic:
                 return 20107, dict_err.get(20107)
 
             topic.name = name
             topic.domain = domain
             topic.img = img
             topic.des = des
-            topic.sort = sort
             topic.state = state
+            topic.sort_num = sort_num
             if parent_topic_id:
-                topic.parent_topic = parent_topic
+                topic.parent_topic = new_parent_topic
+                topic.level = self.get_topic_level_by_parent(new_parent_topic)
             topic.save()
 
             # 更新缓存
             self.get_all_topics(must_update_cache=True)
+            transaction.commit(using=QUESTION_DB)
             return 0, dict_err.get(0)
         except Exception, e:
             debug.get_debug_detail(e)
+            transaction.rollback(using=QUESTION_DB)
             return 99900, dict_err.get(99900)
 
     def remove_topic(self, topic_id):

@@ -2,6 +2,9 @@
 {% load custom_tags %}
 {% load custom_filters %}
 
+{% block keywords %}{{department.get_short_name}}{% endblock %}
+{% block description %}{{department.get_short_name}}为您服务，营业部位于{{department.addr}}。{% endblock %}
+
 {% block title %}{{department.get_short_name}}{% endblock %}
 
 {% block css %}

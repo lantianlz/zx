@@ -129,7 +129,11 @@ a.list-group-item.active{
             </ul>
         </li>
 
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none {% if '/admin/department' in request.path %}active{% endif %}" href="/admin/department">专栏管理</a>
+
         <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/topic' in request.path %}active{% endif %}" href="/admin/topic">话题管理</a>
+
+        <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff none {% if '/admin/department' in request.path %}active{% endif %}" href="/admin/department">营业部管理</a>
         
         <!-- 统计管理 -->
         <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/statistics' in request.path %}active{% endif %}">

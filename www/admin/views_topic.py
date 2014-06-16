@@ -6,6 +6,7 @@ from django.contrib import auth
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.conf import settings
 
 from common import utils, page
 from www.misc import qiniu_client
@@ -48,7 +49,7 @@ def format_topic(objs, num):
     return data
 
 
-@verify_permission('')
+@verify_permission('query_topic')
 def search(request):
     topic_name = request.POST.get('topic_name')
     page_index = int(request.POST.get('page_index', 1))
@@ -66,7 +67,7 @@ def search(request):
     )
 
 
-@verify_permission('')
+@verify_permission('query_topic')
 def get_topics_by_name(request):
     topic_name = request.REQUEST.get('topic_name')
 
@@ -81,13 +82,13 @@ def get_topics_by_name(request):
     return HttpResponse(json.dumps(result), mimetype='application/json')
 
 
-@verify_permission('')
+@verify_permission('query_topic')
 def get_topic_by_id(request):
     data = ""
 
     topic_id = request.REQUEST.get('topic_id')
 
-    obj = TopicBase().get_topic_by_id_or_domain(topic_id)
+    obj = TopicBase().get_topic_by_id_or_domain(topic_id, False)
 
     if obj:
         data = format_topic([obj], 1)[0]
@@ -95,7 +96,7 @@ def get_topic_by_id(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@verify_permission('')
+@verify_permission('modify_topic')
 def modify_topic(request):
     topic_id = request.REQUEST.get('topic_id')
     name = request.REQUEST.get('name')
@@ -106,7 +107,7 @@ def modify_topic(request):
     parent_topic_id = request.REQUEST.get('parent_id')
 
     tb = TopicBase()
-    obj = tb.get_topic_by_id_or_domain(topic_id)
+    obj = tb.get_topic_by_id_or_domain(topic_id, False)
     img_name = obj.img
 
     img = request.FILES.get('img')
@@ -114,8 +115,32 @@ def modify_topic(request):
         flag, img_name = qiniu_client.upload_img(img, img_type='topic')
         img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
-    flag, code = tb.modify_topic(topic_id, name, domain, img_name, des, state, parent_topic_id)
-    print flag, code, '********************'
+    flag, code = tb.modify_topic(topic_id, name, domain, des, img_name, state, parent_topic_id, sort)
+
+    url = "/admin/topic#modify/%s" % topic_id
+
+    return HttpResponseRedirect(url)
+
+
+@verify_permission('add_topic')
+def add_topic(request):
+    name = request.REQUEST.get('name')
+    domain = request.REQUEST.get('domain')
+    des = request.REQUEST.get('des')
+    state = request.REQUEST.get('state')
+    sort = request.REQUEST.get('sort')
+    parent_topic_id = request.REQUEST.get('parent_id')
+
+    tb = TopicBase()
+    img_name = ''
+
+    img = request.FILES.get('img')
+    if img:
+        flag, img_name = qiniu_client.upload_img(img, img_type='topic')
+        img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
+
+    flag, topic_id = tb.create_topic(name, domain, parent_topic_id, img_name, des)
+
     url = "/admin/topic#modify/%s" % topic_id
 
     return HttpResponseRedirect(url)
