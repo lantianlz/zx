@@ -816,11 +816,13 @@ class TopicBase(object):
                         for old_parent_topic_parent in self.get_topic_all_parent(parent_topic):
                             TopicQuestion.objects.filter(topic=old_parent_topic_parent, question=question).delete()
                             old_parent_topic_parent.question_count -= 1
+                            old_parent_topic_parent.child_count -= 1
                             old_parent_topic_parent.save()
                         # 建立新的对应关系
                         for new_parent_topic_parent in self.get_topic_all_parent(new_parent_topic):
                             TopicQuestion.objects.create(topic=new_parent_topic_parent, question=question)
                             new_parent_topic_parent.question_count += 1
+                            new_parent_topic_parent.child_count += 1
                             new_parent_topic_parent.save()
 
                         # 更新缓存
