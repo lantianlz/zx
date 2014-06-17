@@ -37,18 +37,16 @@ $(document).ready(function(){
 
     // collections
     var Departments = Backbone.Collection.extend({
-        model: FriendlyLink,
+        model: Department,
 
         _modelMaps: {
-            'num': '',
+            'num': 'num',
             'departmentId': 'department_id',
             'companyId': 'company_id',
             'companyName': 'company_name',
             'name': 'name',
             'des': 'des',
             'customMangerCount': 'custom_manager_count',
-            'img': 'img',
-            'imgAlt': 'img_alt',
             'address': 'address',
             'tel': 'tel',
             'cityId': 'city_id',
@@ -57,42 +55,29 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, city, pageIndex){
+        search: function(name, pageIndex){
             var me = this;
 
             ajaxSend(
-                "/admin/friendly_link/search", 
-                {'name': name||'', 'city_name': city||'', 'page_index': pageIndex||1}, 
+                "/admin/department/search", 
+                {'name': name||'', 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
                     me.name = name||'';
-                    me.city = city||'';
 
-                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
-                }
-            );
-        },
-
-        addFriendlyLink: function(data, callback){
-            ajaxSend(
-                "/admin/friendly_link/add_friendly_link?" + data, 
-                {},
-                function(data){
-                    if(callback){
-                        callback(data);
-                    }
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
                 }
             );
         },
 
         // 获取一个提问的model
-        getOne: function(linkId, callback){
+        getOne: function(departmentId, callback){
             var me = this;
 
             ajaxSend(
-                "/admin/friendly_link/get_friendly_link_by_id", 
-                {'link_id': linkId},
+                "/admin/department/get_department_by_id", 
+                {'department_id': departmentId},
                 function(data){
                     if(callback){
                         callback($.ZXUtils.dictMap(data, me._modelMaps));
@@ -101,27 +86,12 @@ $(document).ready(function(){
             );
         },
 
-        // 删除
-        removeFriendlyLink: function(linkId, callback){
-            var me = this;
-
-            ajaxSend(
-                "/admin/friendly_link/remove_friendly_link", 
-                {'link_id': linkId},
-                function(data){
-                    if(callback){
-                        callback(data);
-                    }
-                }
-            );
-        },
-
         //
-        modifyFriendlyLink: function(data, callback){
+        modifyDepartment: function(data, callback){
             var me = this;
 
             ajaxSend(
-                "/admin/friendly_link/modify_friendly_link?" + data, 
+                "/admin/department/modify_department?" + data, 
                 {},
                 function(data){
                     if(callback){
@@ -135,19 +105,19 @@ $(document).ready(function(){
 
     // listView
     var ListView = Backbone.View.extend({
-        el: '#friendly_link_list',
+        el: '#department_list',
 
         pagination: new $.ZXPagination.PaginationView(),
 
-        template: _.template($('#friendly_link_template').html()),
+        template: _.template($('#department_template').html()),
 
         initialize: function(){
             this.listenTo(this.collection, 'reset', this.render);
         },
 
         events: {
-            'click .search': 'searchFriendlyLink',
-            'click .pointer': 'modifyFriendlyLink'
+            'click .search': 'search',
+            'click .pointer': 'modifyDepartment'
         },
 
         // 渲染函数
@@ -155,31 +125,30 @@ $(document).ready(function(){
             var data = this.collection.toJSON();
 
             this.showPanel();
-            this.$('tbody').html(this.template({'friendlyLinks': data}));
+            this.$('tbody').html(this.template({'departments': data}));
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name + '/' + this.collection.city
+                'search/' + this.collection.name
             );
         },
 
         // 显示面板
         showPanel: function(){
-            $('.zx-nav-pills a[href="#friendly_link_list"]').tab('show');
+            $('.zx-nav-pills a[href="#department_list"]').tab('show');
         },
 
-        searchFriendlyLink: function(){
-            var name = this.$('.key-word-name').val(),
-                city = this.$('.key-word-city').val();
+        search: function(){
+            var name = this.$('.key-word').val();
 
-            router.navigate(String.format('/search/{0}/{1}/1', name, city), {trigger: true});
+            router.navigate(String.format('/search/{0}/1', name), {trigger: true});
         },
 
-        modifyFriendlyLink: function(sender){
+        modifyDepartment: function(sender){
             var target = $(sender.currentTarget),
-                linkId = target.data('link_id');
+                departmentId = target.data('department_id');
 
-            router.navigate('/modify/' + linkId, {trigger: true});
+            router.navigate('/modify/' + departmentId, {trigger: true});
         }
 
     });
@@ -187,13 +156,12 @@ $(document).ready(function(){
     // modifyView
     var ModifyView = Backbone.View.extend({
         
-        el: '#modify_friendly_link',
+        el: '#modify_department',
 
-        template: _.template($('#modify_friendly_link_template').html()),
+        template: _.template($('#modify_department_template').html()),
 
         events: {
-            'click .save': 'save',
-            'click .remove': 'remove'
+            'click .save': 'save'
         },
 
         cityTextBox: null,
@@ -207,13 +175,28 @@ $(document).ready(function(){
             });
 
             if(value){
-                this.cityTextBox.add(name, value)
+                this.cityTextBox.add(name, value);
+            }
+        },
+
+        companyTextBox: null,
+        initCompanyTextBox: function(name, value){
+            this.companyTextBox = $.ZXTextboxList.create('#belong_company_modify', {
+                max: 1,
+                placeholder: '选择所属公司',
+                url: '/admin/department/get_company_by_name',
+                param: 'company_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.companyTextBox.add(name, value);
             }
         },
 
         // 显示面板
         showPanel: function(){
-            $('.zx-nav-pills a[href="#modify_friendly_link"]').tab('show');
+            $('.zx-nav-pills a[href="#modify_department"]').tab('show');
         },
 
         // 渲染
@@ -221,156 +204,68 @@ $(document).ready(function(){
             this.$el.html(this.template(data));
 
             this.initCityTextBox(data.cityName, data.cityId);
+            this.initCompanyTextBox(data.companyName, data.companyId);
         },
 
         // 显示提问信息
-        modifyCustomerManager: function(linkId){
+        modifyDepartment: function(departmentId){
             var me = this;
 
-            this.collection.getOne(linkId, function(data){
+            this.collection.getOne(departmentId, function(data){
                 if(data){
                     me.render(data);
                     me.showPanel();
                 } else {
                     setTimeout(function(){history.go(-1);}, 3000);
-                    $.ZXMsg.alert('提示', '没有找到对应的链接!');
+                    $.ZXMsg.alert('提示', '没有找到对应的营业部!');
                 }
             });
         },
 
         // 保存
         save: function(){
-            var linkId = this.$('form').data('link_id'),
+            var departmentId = this.$('form').data('department_id'),
                 me = this;
 
-            me.collection.modifyFriendlyLink(this.$('form').serialize(), function(data){
+            me.collection.modifyDepartmentId(this.$('form').serialize(), function(data){
                 if(data.errcode === 0){
                     $.ZXMsg.alert('提示', '操作成功');
-                    router.navigate('modify/' + linkId, {'trigger': true});
+                    router.navigate('modify/' + departmentId, {'trigger': true});
                 } else {
                     $.ZXMsg.alert('提示', data.errmsg);
                 }
             })
-        },
-
-        // 删除
-        remove: function(){
-            var linkId = this.$('form').data('link_id'),
-                me = this;
-
-            $.ZXMsg.confirm('提示', '确认要删除此友情链接吗?', function(result){
-                
-                if(result){
-                    me.collection.removeFriendlyLink(linkId, function(data){
-                        if(data.errcode === 0){
-                            listView.searchFriendlyLink();
-                        } else {
-                            $.ZXMsg.alert('提示', data.errmsg);
-                        }
-                    });
-                }
-                
-            });
         }
 
 
     });
 
     
-    var AddView = Backbone.View.extend({
-        el: 'body',
-
-        template: _.template($('#add_friendly_link_template').html()),
-
-        cityTextBox: null,
-        initCityTextBox: function(name, value){
-            this.cityTextBox = $.ZXTextboxList.create('#belong_city_add', {
-                max: 1,
-                placeholder: '选择所属城市',
-                url: '/admin/user/customer_manager/get_citys_by_name',
-                param: 'city_name',
-                loadPlaceholder: '正在加载...'
-            });
-
-            if(value){
-                this.cityTextBox.add(name, value);
-            }
-        },
-
-        showPanel: function(){
-            var me = this;
-
-            me.render();
-        },
-
-        render: function(){
-            var me = this;
-
-            $('#add_friendly_link_modal').remove();
-            
-            $('body').append(this.template());
-
-            // 绑定事件
-            $('#add_friendly_link_modal .cancel').bind('click', function(){
-                history.go(-1);
-            });
-            $('#add_friendly_link_modal .ok').bind('click', function(){
-                me.addFriendlyLink();
-            });
-            
-            $('#add_friendly_link_modal').modal({'show': true, 'backdrop': 'static'});
-
-            this.initCityTextBox();
-        },
-
-        addFriendlyLink: function(){
-            var linkId = this.$('form').data('link_id'),
-                me = this;
-
-            friendlyLinks.addFriendlyLink(me.$('form').serialize(), function(data){
-                if(data.errcode === 0){
-                    router.navigate('modify/' + data.errmsg, {trigger: true});
-                    $('#add_friendly_link_modal').modal('hide');
-                    $.ZXMsg.alert('提示', '添加成功!');
-                } else {
-                    $.ZXMsg.alert('提示', data.errmsg);
-                }
-            })
-        }
-
-    });
-
     // router
     var Router = Backbone.Router.extend({
 
         routes: {
-            "":                                     "search",
-            "modify/:linkId":                       "modify",
-            "search/(:name)/(:city)/:pageIndex":    "search",
-            "add":                                  "add"
+            "":                             "search",
+            "modify/:departmentId":         "modify",
+            "search/(:name)/:pageIndex":    "search",
         },
 
         // 查询
-        search: function(name, city, pageIndex){
-            friendlyLinks.search(name||'', city||'', pageIndex||1);
+        search: function(name, pageIndex){
+            departments.search(name||'', pageIndex||1);
         },
 
         // 显示修改界面
-        modify: function(linkId){
-            modifyView.modifyCustomerManager(linkId);
-        },
-
-        add: function(){
-            addView.showPanel();
+        modify: function(departmentId){
+            modifyView.modifyDepartment(departmentId);
         }
 
     });
     
     // 初始化
-    var friendlyLinks = new FriendlyLinks(),
-        listView = new ListView({'collection': friendlyLinks}),
-        modifyView = new ModifyView({'collection': friendlyLinks}),
-        addView = new AddView(),
+    var departments = new Departments(),
+        listView = new ListView({'collection': departments}),
+        modifyView = new ModifyView({'collection': departments}),
         router = new Router();
  
     Backbone.history.start();
@@ -383,27 +278,19 @@ $(document).ready(function(){
 {% block admin-right %}
 <ul class="nav nav-pills pt-15 zx-nav-pills">
     <li class="active">
-        <a href="#friendly_link_list" class="black-blue" data-toggle="pill">友情链接列表</a>
+        <a href="#department_list" class="black-blue" data-toggle="pill">营业部列表</a>
     </li>
     <li>
-        <a href="#modify_friendly_link" class="black-blue" data-toggle="pill">修改友情链接信息</a>
-    </li>
-    <li class="pull-right">
-        <a href="#add" class="black-blue" >添加友情链接</a>
+        <a href="#modify_department" class="black-blue" data-toggle="pill">修改营业部信息</a>
     </li>
 </ul>
 
 <div class="tab-content">
     <!-- 客户经理列表 -->
-    <div class="tab-pane fade pt-15 in active" id="friendly_link_list">
-        <div class="pl-0 pr-0 pb-10 col-md-2">
+    <div class="tab-pane fade pt-15 in active" id="department_list">
+        <div class="pl-0 pb-10 col-md-3">
             <div class="input-group input-group-sm">
-                <input type="text" class="form-control key-word-name" placeholder="输入链接名称..." />
-            </div>
-        </div>
-        <div class="pl-0 pr-0 pb-10 col-md-2">
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control border-radius-0 key-word-city" placeholder="输入城市名称..." />
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入营业部名称..." />
                 <span class="input-group-btn">
                     <button class="btn btn-default search" type="button">查询</button>
                 </span>
@@ -413,11 +300,11 @@ $(document).ready(function(){
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>链接名称</th>
-                    <th>链接地址</th>
+                    <th>营业部名称</th>
+                    <th>客户经理数</th>
                     <th>所属城市</th>
+                    <th>所属公司</th>
                     <th>排序</th>
-                    <th>类型</th>
                 </tr>
             </thead>
             <tbody>
@@ -433,46 +320,46 @@ $(document).ready(function(){
     </div>
 
     <!-- 修改客户经理信息 -->
-    <div class="tab-pane fade" id="modify_friendly_link">
+    <div class="tab-pane fade" id="modify_department">
         
     </div>
 </div>
 
 <!-- 客户经理列表 -->
-<script type="text/template" id="friendly_link_template">
-    <% _.each(friendlyLinks, function(friendlyLink){ %>
-        <tr class="pointer" data-link_id="<%= friendlyLink.linkId %>">
-            <td><%= friendlyLink.num %></td>
-            <td><%= friendlyLink.name %></td>
-            <td><%= friendlyLink.href %></td>
-            <td><%= friendlyLink.cityName %></td>
-            <td><%= friendlyLink.sort %></td>
-            <td>
-                {% for i in link_types %}
-                    <% if(friendlyLink.type=='{{i.value}}'){ %> {{i.name}} <% } %>
-                {% endfor %}
-            </td>
+<script type="text/template" id="department_template">
+    <% _.each(departments, function(department){ %>
+        <tr class="pointer" data-department_id="<%= department.departmentId %>">
+            <td><%= department.num %></td>
+            <td><%= department.name %></td>
+            <td><%= department.customMangerCount %></td>
+            <td><%= department.cityName %></td>
+            <td><%= department.companyName %></td>
+            <td><%= department.sort %></td>
         </tr>
     <% }) %>
 </script>
 
 <!-- 修改问题模板 -->
-<script type="text/template" id="modify_friendly_link_template">
-    <form class="form-horizontal" data-link_id="<%= linkId %>" role="form" method="post" action="">
-        <input type="hidden" name="link_id" value="<%= linkId %>" />
+<script type="text/template" id="modify_department_template">
+    <form class="form-horizontal" data-department_id="<%= departmentId %>" role="form" method="post" action="">
+        <input type="hidden" name="department_id" value="<%= departmentId %>" />
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接类型</label>
-            <div class="col-sm-9">
-            {% for i in link_types %}
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="link_type" value="{{i.value}}" <% if(type=='{{i.value}}'){ %> checked <% } %> >
-                        {{i.name}}
-                    </label>
-                </div>
-            {% endfor %}
-
-                
+            <label class="col-sm-2 control-label">营业部名称</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="name" value='<%= name %>'>
+            </div>
+        </div>
+        
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">排序</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="sort" value='<%= sort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">电话</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="tel" value='<%= tel %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -482,100 +369,36 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接名称</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" name="name" value='<%= name %>'>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接地址</label>
+            <label class="col-sm-2 control-label">所属公司</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" placeholder="http://www.site.com" name="href" value='<%= href %>'>
+                <input type="text" class="form-control" name="belong_company" id="belong_company_modify" value=''>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接描述</label>
+            <label class="col-sm-2 control-label">地址</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" placeholder="" name="des" value='<%= des %>'>
+                <input type="text" class="form-control" name="addr" value='<%= address %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">排序</label>
-            <div class="col-sm-1">
-                <input type="text" name="sort" class="form-control" value='<%= sort %>'>
+            <label class="col-sm-2 control-label">营业部描述</label>
+            <div class="col-sm-6">
+                <textarea name="des" rows="6" class="form-control"><%= des %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">客户经理数</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><%= customMangerCount %></p>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <div class="col-sm-12">
                 <button type="button" class="btn btn-primary save">提交你的修改</button>
-                <button type="button" class="btn btn-danger ml-15 remove">删除此友情链接</button>
+                <button type="button" class="btn btn-danger ml-15 remove none">删除此友情链接</button>
             </div>
         </div>
     </form>
 </script>
 
-<!-- 添加问题模板 -->
-<script type="text/template" id="add_friendly_link_template">
-<div class="modal fade" id="add_friendly_link_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header pb-5">
-                <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
-                <h4 class="modal-title">添加友情链接</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" role="form" method="post" action="">
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接类型</label>
-                        <div class="col-sm-9">
-                        {% for i in link_types %}
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="link_type" value="{{i.value}}" checked>
-                                    {{i.name}}
-                                </label>
-                            </div>
-                        {% endfor %}
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">所属城市</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name="belong_city" id="belong_city_add" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接名称</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" name="name" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接地址</label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="http://www.site.com" class="form-control" name="href" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接描述</label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="" class="form-control" name="des" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">排序</label>
-                        <div class="col-sm-2">
-                            <input type="text" name="sort" class="form-control" value='0'>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary ok">确定</button>
-            </div>
-        </div>
-    </div>
-</div>
-</script>
 {% endblock admin-right %}
