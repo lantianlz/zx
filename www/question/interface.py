@@ -82,12 +82,14 @@ class QuestionBase(object):
     def __init__(self):
         pass
 
-    def format_quesitons(self, questions, need_question_type=False):
+    def format_quesitons(self, questions, need_question_type=False, need_question_topics=False):
         for question in questions:
             question.user = question.get_user()
             question.content = utils.filter_script(question.content)
             if need_question_type:
                 question.question_type = TopicBase().get_topic_level1_by_question(question)
+            if need_question_topics:
+                question.question_topics = TopicBase().get_topics_by_question(question)
         return questions
 
     def validate_title(self, title):
@@ -717,7 +719,7 @@ class TopicBase(object):
         parent_topic = parent_topic if isinstance(parent_topic, Topic) else self.get_topic_by_id_or_domain(parent_topic)
         return parent_topic.level + 1
 
-    def get_topic_by_question(self, question, is_directly=True):
+    def get_topics_by_question(self, question, is_directly=True):
         return [tq.topic for tq in TopicQuestion.objects.select_related('topic').filter(question=question) if not(is_directly and not tq.is_directly)]
 
     @cache_required(cache_key='quesiton_type_%s', expire=3600 * 24)
@@ -739,7 +741,7 @@ class TopicBase(object):
         for topic_id in topic_ids:
             topics_with_parent.extend(self.get_topic_all_parent(topic_id))
         topics_with_parent = list(set(topics_with_parent))
-        topics_exist = self.get_topic_by_question(question)
+        topics_exist = self.get_topics_by_question(question)
 
         # 删除后重建对应关系
         if set(topics) != set(topics_exist) or must_update:
@@ -761,7 +763,7 @@ class TopicBase(object):
         '''
         @note: 更新话题提问数
         '''
-        topics = self.get_topic_by_question(question)
+        topics = self.get_topics_by_question(question)
         topics_with_parent = []
         for topic in topics:
             topics_with_parent.extend(self.get_topic_all_parent(topic))

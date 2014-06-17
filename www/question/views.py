@@ -44,7 +44,7 @@ def question_detail(request, question_id, template_name='question/question_detai
     question = qb.get_question_by_id(question_id)
     if not question:
         raise Http404
-    question = qb.format_quesitons([question, ], need_question_type=True)[0]
+    question = qb.format_quesitons([question, ], need_question_type=True, need_question_topics=True)[0]
 
     good_answers = ab.format_answers(ab.get_good_answers_by_question_id(question_id), request.user, need_answer_likes=True)
     bad_answers = ab.format_answers(ab.get_bad_answers_by_question_id(question_id), request.user, need_answer_likes=True)
@@ -69,7 +69,7 @@ def question_detail(request, question_id, template_name='question/question_detai
     from www.tasks import async_add_question_view_count
     async_add_question_view_count(question.id)
 
-    question_topics = tb.get_topic_by_question(question)
+    # question_topics = tb.get_topics_by_question(question)
 
     # 所有话题
     topics = json.dumps(tb.format_topics_for_ask_page(tb.get_all_topics_for_show()))
@@ -157,7 +157,7 @@ def important_question(request, template_name='question/important_question.html'
     questions = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
-    questions = qb.format_quesitons(questions)
+    questions = qb.format_quesitons(questions, need_question_topics=True)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
