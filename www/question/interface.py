@@ -298,16 +298,28 @@ class QuestionBase(object):
 
     @question_required
     @transaction.commit_manually(using=QUESTION_DB)
-    def set_important(self, question, user, img='', img_alt=None, sort_num=0):
+    def set_important(self, question, user, title, summary, author_user_id=None, img='', img_alt=None, sort_num=0):
         try:
+            if author_user_id and not UserBase().get_user_by_id(author_user_id):
+                transaction.rollback(using=QUESTION_DB)
+                return 99600, dict_err.get(99600)
+
+            try:
+                assert question and user and title and summary
+            except:
+                transaction.rollback(using=QUESTION_DB)
+                return 99800, dict_err.get(99800)
+
             question.is_important = True
             question.save()
 
-            if img:
-                if not ImportantQuestion.objects.filter(question=question):
-                    ImportantQuestion.objects.create(question=question, operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num)
-                else:
-                    ImportantQuestion.objects.filter(question=question).update(operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num)
+            ps = dict(operate_user_id=user.id, img=img, img_alt=img_alt, sort_num=sort_num, title=title,
+                      summary=summary, author_user_id=author_user_id)
+
+            if not ImportantQuestion.objects.filter(question=question):
+                ImportantQuestion.objects.create(question=question, **ps)
+            else:
+                ImportantQuestion.objects.filter(question=question).update(**ps)
             transaction.commit(using=QUESTION_DB)
             return 0, dict_err.get(0)
         except Exception, e:
@@ -882,12 +894,3 @@ class TopicBase(object):
             debug.get_debug_detail(e)
             transaction.rollback(using=QUESTION_DB)
             return 99900, dict_err.get(99900)
-
-    # def remove_topic(self, topic_id):
-    #     topic = self.get_topic_by_id_or_domain(topic_id)
-    #     topic.state = 0
-    #     topic.save()
-
-    #     parent_topic = topic.parent_topic
-    #     parent_topic.child_count -= 1
-    #     parent_topic.save()

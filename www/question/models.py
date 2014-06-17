@@ -107,6 +107,10 @@ class Like(models.Model):
 
 class ImportantQuestion(models.Model):
     question = models.ForeignKey(Question, unique=True)
+    title = models.CharField(max_length=128)
+    summary = models.TextField()
+    author_user_id = models.CharField(verbose_name=u'作者', max_length=32, null=True)
+
     img = models.CharField(max_length=128, default='')
     img_alt = models.CharField(max_length=256, null=True)
     sort_num = models.IntegerField(default=0, db_index=True)
@@ -115,6 +119,9 @@ class ImportantQuestion(models.Model):
 
     class Meta:
         ordering = ['-sort_num', '-id']
+
+    def get_author(self):
+        pass
 
 
 class QuestionType(models.Model):
