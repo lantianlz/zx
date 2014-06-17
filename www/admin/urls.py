@@ -94,6 +94,16 @@ urlpatterns += patterns('www.admin.views_friendly_link',
                         )
 
 
+# 营业部
+urlpatterns += patterns('www.admin.views_department',
+
+                        url(r'^department/get_company_by_name$', 'get_company_by_name'),
+                        url(r'^department/get_department_by_id$', 'get_department_by_id'),
+                        url(r'^department/search$', 'search'),
+                        url(r'^department$', 'department'),
+                        )
+
+
 # 统计
 urlpatterns += patterns('www.admin.views_statistics',
 

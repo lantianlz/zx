@@ -75,4 +75,10 @@ PERMISSIONS = [
     {'code': 'query_topic', 'name': u'查询话题', 'parent': 'topic_manage'},
     {'code': 'modify_topic', 'name': u'修改话题', 'parent': 'topic_manage'},
     #{'code': 'remove_topic', 'name': u'查询全站通告', 'parent': 'topic_manage'},
+
+    {'code': 'department_manage', 'name': u'营业部管理', 'parent': None},
+    #{'code': 'add_department', 'name': u'添加营业部', 'parent': 'department_manage'},
+    {'code': 'query_department', 'name': u'查询营业部', 'parent': 'department_manage'},
+    {'code': 'modify_department', 'name': u'修改营业部', 'parent': 'department_manage'},
+    #{'code': 'remove_department', 'name': u'查询全站通告', 'parent': 'department_manage'},
 ]

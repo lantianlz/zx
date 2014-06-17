@@ -99,6 +99,25 @@ class DepartmentBase(object):
             departments = self.get_all_departments().filter(name__contains=department_name)
         return departments
 
+    def modify_department(self, department_id, **kwargs):
+        if not department_id:
+            return 99800, dict_err.get(99800)
+
+        department = self.get_department_by_id(department_id)
+        if not department:
+            return 50101, dict_err.get(50101)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(department, k, v)
+
+            department.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
 
 class CustomerManagerBase(object):
 
@@ -338,3 +357,15 @@ class FriendlyLinkBase(object):
 
         self.get_all_friendly_link(must_update_cache=True)
         return 0, dict_err.get(0)
+
+
+class CompanyBase(object):
+
+    """docstring for CompanyBase"""
+
+    def get_companys_by_name(self, company_name):
+
+        companys = []
+        if company_name:
+            companys = Company.objects.filter(name__contains=company_name)
+        return companys
