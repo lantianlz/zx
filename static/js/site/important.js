@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	// 每日精华盖章效果
+    /*
     var jinghua = $('.jinghua img');
     for (var i = jinghua.length - 1; i >= 0; i--) {
 
@@ -14,4 +15,5 @@ $(document).ready(function(){
 
         })(i);
     };
+    */
 });

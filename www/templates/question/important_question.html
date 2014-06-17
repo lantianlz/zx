@@ -17,7 +17,39 @@
 {% if questions %}
 <ul class="list-group daily-main">
     {% for question in questions %}
-    <li class="list-group-item no-l-r-bd bdc-eee">
+    <li class="list-group-item no-l-r-bd bdc-eee row pb-25 {% if not forloop.first %} pt-25 {% endif %} ">
+
+        <div class="col-md-4 col-ms-12">
+            <a href="{{question.get_url}}"><img class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee" src="{{question.img}}" alt="{{question.img_alt}}"></a>
+        </div>
+        <div class="col-md-8 col-ms-12">
+            <div>
+                <a class="black-blue" href="{{question.get_url}}"><h4 class="mt-5"><strong>{{question.title|str_display:20}}</strong></h4></a>
+            </div>
+            <div class='line-height-22 min-h70'>{{question.get_summary|str_display:75|safe}}</div>
+            <ul class="list-inline pt-5 f12">
+                {% for topic in question_topics %}
+                <li>
+                    <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="#">{{topic.name}}</a>
+                </li>
+                {% endfor %}
+                <li class="pl-0">
+                    <a class="border-block-blue pl-5 pr-5 pt-3 pb-3" href="#">投资策略</a>
+                </li>
+                <li class="pl-0">
+                    <a class="border-block-blue pl-5 pr-5 pt-3 pb-3" href="#">个股</a>
+                </li>
+            </ul>
+            <div class="f12 co8 pt-10">
+                <a class="zx-cardtips gray-gray" data-user_id="{{question.user.id}}" href="{{question.user.get_url}}">{{question.user.nick}}</a>
+                <span class="pl-10">{{question.answer_count}} 个回答 • </span>
+                <span class="none">{{question.views_count}} 次浏览 • </span>
+                <span class="">{{question.create_time|time_format}}</span>
+            </div>
+        </div>
+
+
+        <!--
         <div class='daily-item'>
             <span class="jinghua">
                 <img alt="精华" src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
@@ -39,6 +71,8 @@
                 </div>
             </div>
         </div>
+        -->
+
     </li>
     {% endfor %}
 </ul>
