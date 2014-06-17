@@ -227,7 +227,7 @@ $(document).ready(function(){
             var departmentId = this.$('form').data('department_id'),
                 me = this;
 
-            me.collection.modifyDepartmentId(this.$('form').serialize(), function(data){
+            me.collection.modifyDepartment(this.$('form').serialize(), function(data){
                 if(data.errcode === 0){
                     $.ZXMsg.alert('提示', '操作成功');
                     router.navigate('modify/' + departmentId, {'trigger': true});

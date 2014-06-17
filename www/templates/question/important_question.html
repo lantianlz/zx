@@ -26,21 +26,20 @@
             <div>
                 <a class="black-blue" href="{{question.get_url}}"><h4 class="mt-5"><strong>{{question.title|str_display:20}}</strong></h4></a>
             </div>
-            <div class='line-height-22 min-h70'>{{question.get_summary|str_display:75|safe}}</div>
+            <div class="f12 co8">
+                <a class="zx-cardtips gray-gray" data-user_id="{{question.user.id}}" href="{{question.user.get_url}}">{{question.user.nick}}</a>
+                <span class="pl-5">{{question.create_time|date:"m-d H:i"}}</span>
+            </div>
+            <div class='line-height-25 pt-5 f13 min-h80'>{{question.get_summary|str_display:85|safe}}</div>
             <ul class="list-inline pt-5 f12 min-h22">
                 {% for topic in question.question_topics %}
                 <li class="pl-0">
-                    <a class="border-block-blue pl-5 pr-5 pt-3 pb-3" href="{{topic.get_url}}">{{topic.name}}</a>
+                    <a class="" href="{{topic.get_url}}">{{topic.name}}</a>
                 </li>
                 {% endfor %}
+                <span class="f12 co8 pull-right">{{question.answer_count}} 个回答</span>
             </ul>
-            <div class="f12 co8 pt-10">
-                <a class="zx-cardtips gray-gray" data-user_id="{{question.user.id}}" href="{{question.user.get_url}}">{{question.user.nick}}</a>
-                <span class="pull-right pl-5">{{question.create_time|date:"Y-m-d H:i"}}</span>
-                <span class="pull-right">{{question.answer_count}} 个回答 •</span>
-                <span class="none">{{question.views_count}} 次浏览 • </span>
-                
-            </div>
+           
         </div>
 
 
