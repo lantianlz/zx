@@ -31,7 +31,7 @@ def main():
     # content_api = commands.getoutput(cmd_api)
 
     t2 = time.time()
-    content = u'www.log info is:\n%s \ \n\n' % (content_www,)
+    content = u'www.log info is:\n%s \n\n' % (content_www,)
     time_content = u'shell run time:%.1f second' % (t2 - t1, )
     if check_content(content_www):
         file_name = '%s/../scripts/last_analyze_log.txt' % settings.SITE_ROOT
@@ -43,7 +43,7 @@ def main():
             file_content = ''
 
         if content != file_content:
-            send_email(emails=['webteam@zhixuan.com'],
+            send_email(emails=settings.NOTIFICATION_EMAIL,
                        title=u'frequent ip of nginx log from %s' % settings.SERVER_NAME,
                        content=content + time_content, type="text")
             f = open(file_name, 'w')
