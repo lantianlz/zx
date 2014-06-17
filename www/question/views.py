@@ -36,7 +36,9 @@ def question_home(request, question_type=None, template_name='question/question_
 
     questions = qb.format_quesitons(questions)
 
-    flinks = FriendlyLinkBase().get_friendly_link_by_link_type(link_type=3)  # 首页友链
+    if not request.REQUEST.has_key('page') and not question_type:
+        flinks = FriendlyLinkBase().get_friendly_link_by_link_type(link_type=3)  # 首页友链
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

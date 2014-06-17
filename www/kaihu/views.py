@@ -41,7 +41,8 @@ def department_list(request, city_abbr, template_name='kaihu/department_list.htm
     customer_manager_user_ids = [cm['user_id'] for cm in customer_managers]
     customer_managers = customer_managers[:4]
 
-    flinks = flb.get_friendly_link_by_city_id(city.id)
+    if not request.REQUEST.has_key('page'):
+        flinks = flb.get_friendly_link_by_city_id(city.id)
 
     fb = FeedBase()
     feeds = fb.format_feeds_by_id(fb.get_feed_ids_by_feed_type(feed_type=3, user_ids=customer_manager_user_ids)[:5])

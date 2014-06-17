@@ -1,17 +1,31 @@
-<div class="mt-35 pt-30 pb-30 line-height-20 bgc-333 co8 f12">
-	<div class="text-center gray-a">
-		<a class="pr-10 pl-10" href="{{MAIN_DOMAIN}}/s/about">关于我们</a>
-		|
-		<a class="pr-10 pl-10" href="{{MAIN_DOMAIN}}/question">智选问答</a>
-		|
-		<a class="pr-10 pl-10" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}">股票开户</a>
-		|
-		<a class="pr-10 pl-10" href="{{MAIN_DOMAIN}}/s/business">商务合作</a>
-		|
-		<a class="pr-10 pl-10" href="{{MAIN_DOMAIN}}/s/links">友情链接</a>
-		|
-		<a class="pr-10 pl-10" href="{{MAIN_DOMAIN}}/s/logs">更新日志</a>
-	</div>
-	<div class="text-center">Copyright &copy; 2013 - 2014 zhixuan.com. All Rights Reserved.</div>
-	<div class="text-center">蜀ICP备14001726号</div>
+<div class="mt-35 pt-30 pb-30 line-height-20 bgc-333 co8 f12" style="height: 220px;">
+    <div class="container zx-container pb-0 pt-20 pr">
+        <div class="bdc-444 bottom-border pb-15">
+            <span class="co3 f22">智选</span>
+            <span class="co8 ml-10">投资是一门学问，善学善问</span>
+        </div>
+        <div class="pt-15" style="width: 80%; height: 35px;">
+        	{% if flinks %}
+            <span class="co3 f12 pr-10">友情链接</span>
+            {% for flink in flinks %}
+            <a href="{{flink.href}}" target="_blank" class="pr-10 gray-white">{{flink.name}}</a>
+            {% endfor %}
+        	{% endif %}
+        </div>
+        <div class="pt-15">
+            <a class="pr-10 gray-white" href="{{MAIN_DOMAIN}}/s/about">关于我们</a> |
+            <a class="pr-10 pl-10 gray-white" href="{{MAIN_DOMAIN}}/question">智选问答</a> |
+            <a class="pr-10 pl-10 gray-white" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}">股票开户</a> |
+            <a class="pr-10 pl-10 gray-white" href="{{MAIN_DOMAIN}}/s/business">商务合作</a> |
+            <a class="pr-10 pl-10 gray-white" href="{{MAIN_DOMAIN}}/s/links">友情链接</a> |
+            <a class="pr-10 pl-10 gray-white" href="{{MAIN_DOMAIN}}/s/logs">更新日志</a>
+        </div>
+
+        <div class="pt-0">
+            <span>Copyright &copy; 2013 - 2014 zhixuan.com. All Rights Reserved.</span>
+            <span class="pl-10">蜀ICP备14001726号</span>
+        </div>
+
+        <img class="pa hidden-xs" style="width: 90px;right: 20px; top: 70px;" alt="智选日报二维码" src="{{MEDIA_URL}}img/common/zhixuanribao.jpg">
+    </div>
 </div>
