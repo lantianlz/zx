@@ -32,6 +32,11 @@ def get_important_question_by_title(request):
 
     for important_question in page_objs[0]:
         num += 1
+        author = None
+
+        if important_question.author_user_id:
+            author = UserBase().get_user_by_id(important_question.author_user_id)
+
         data.append({
             'num': num,
             'question_id': important_question.question.id,
@@ -39,7 +44,7 @@ def get_important_question_by_title(request):
             'user_nick': important_question.question.user.nick,
             'title': important_question.title,
             'summary': important_question.summary,
-            'author': important_question.author_user_id,
+            'author': author.nick if author else '',
             'img': important_question.img,
             'img_alt': important_question.img_alt,
             'sort_num': important_question.sort_num,
@@ -134,13 +139,19 @@ def get_important_question_by_question_id(request):
     data = ''
     important_question = QuestionBase().get_important_question_by_question_id(question_id)
     if important_question:
+
+        author = None
+
+        if important_question.author_user_id:
+            author = UserBase().get_user_by_id(important_question.author_user_id)
+
         data = {
             'question_id': important_question.question.id,
             'user_id': important_question.question.user.id,
             'user_nick': important_question.question.user.nick,
             'title': important_question.title,
             'summary': important_question.summary,
-            'author': important_question.author_user_id,
+            'author': author.nick if author else '',
             'img': important_question.img,
             'img_alt': important_question.img_alt,
             'sort_num': important_question.sort_num,
