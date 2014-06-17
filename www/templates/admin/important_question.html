@@ -41,7 +41,8 @@ $(document).ready(function(){
             'userId': 'user_id',
             'userNick': 'user_nick',
             'title': 'title',
-            'description': 'description',
+            'description': 'summary',
+            'author': 'author',
             'img': 'img',
             'imgAlt': 'img_alt',
             'sort': 'sort_num',
@@ -460,6 +461,24 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">作者</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name='author' value='<%= author %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">精选标题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name='title' value='<%= title %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">精选描述</label>
+            <div class="col-sm-6">
+                <textarea name="summary" rows="6" class="form-control"><%= description %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">排序权重</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" name='sort' value='<%= sort %>'>
@@ -480,7 +499,7 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">提问标题</label>
             <div class="col-sm-6">
-                <p class="form-control-static"><%= question_title %></p>
+                <p class="form-control-static"><%= question_title  %></p>
                 <input type="hidden" value="<%= question_id %>" name="questionId" />
             </div>
         </div>
@@ -495,6 +514,24 @@ $(document).ready(function(){
             <label class="col-sm-2 control-label">图片描述</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name='imgAlt' value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">作者</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name='author' value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">精选标题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name='title' value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">精选描述</label>
+            <div class="col-sm-8">
+                <textarea name="summary" rows="6" class="form-control"></textarea>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

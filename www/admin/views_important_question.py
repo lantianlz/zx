@@ -11,6 +11,7 @@ from www.misc import qiniu_client
 from common import utils, page
 
 from www.question.interface import QuestionBase
+from www.account.interface import UserBase
 
 
 @verify_permission('')
@@ -36,8 +37,9 @@ def get_important_question_by_title(request):
             'question_id': important_question.question.id,
             'user_id': important_question.question.user.id,
             'user_nick': important_question.question.user.nick,
-            'title': important_question.question.title,
-            'description': important_question.question.content,
+            'title': important_question.title,
+            'summary': important_question.summary,
+            'author': important_question.author_user_id,
             'img': important_question.img,
             'img_alt': important_question.img_alt,
             'sort_num': important_question.sort_num,
@@ -65,8 +67,18 @@ def add_important(request):
 
     img_alt = request.REQUEST.get('imgAlt', '')
     sort_num = request.REQUEST.get('sort', 0)
+    title = request.REQUEST.get('title')
+    summary = request.REQUEST.get('summary')
+    author = request.REQUEST.get('author')
+    author_id = None
 
-    code, msg = qb.set_important(question, request.user, '%s/%s' % (settings.IMG0_DOMAIN, img_name), img_alt, sort_num)
+    # 作者
+    if author:
+        author = UserBase().get_user_by_nick(author)
+        if author:
+            author_id = author.id
+
+    code, msg = qb.set_important(question, request.user, title, summary, author_id, '%s/%s' % (settings.IMG0_DOMAIN, img_name), img_alt, sort_num)
 
     url = ''
     if code == 0:
@@ -97,7 +109,18 @@ def modify_important(request):
         flag, img_name = qiniu_client.upload_img(img, img_type='important')
         img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
-    code, msg = qb.set_important(question, request.user, img_name, img_alt, sort_num)
+    title = request.REQUEST.get('title')
+    summary = request.REQUEST.get('summary')
+    author = request.REQUEST.get('author')
+    author_id = None
+
+    # 作者
+    if author:
+        author = UserBase().get_user_by_nick(author)
+        if author:
+            author_id = author.id
+
+    code, msg = qb.set_important(question, request.user, title, summary, author_id, img_name, img_alt, sort_num)
 
     url = '/admin/question/important_question#modify/%s' % iq.question.id
 
@@ -115,8 +138,9 @@ def get_important_question_by_question_id(request):
             'question_id': important_question.question.id,
             'user_id': important_question.question.user.id,
             'user_nick': important_question.question.user.nick,
-            'title': important_question.question.title,
-            'description': important_question.question.content,
+            'title': important_question.title,
+            'summary': important_question.summary,
+            'author': important_question.author_user_id,
             'img': important_question.img,
             'img_alt': important_question.img_alt,
             'sort_num': important_question.sort_num,
