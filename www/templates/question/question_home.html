@@ -64,11 +64,3 @@
 <!--问题列表结束-->
 {% endblock %}
 
-
-{% block footer %}
-{% if 'page' not in request.get_full_path and not question_type %}
-{% include "include/_footer_notlogin.html" %}
-{% else %}
-{% include "include/_footer.html" %}
-{% endif %}
-{% endblock footer %}

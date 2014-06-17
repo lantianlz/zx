@@ -568,7 +568,8 @@ class UserCountBase(object):
     def __init__(self):
         pass
 
-    def get_user_count_info(self, user_id):
+    @cache_required(cache_key='user_count_info_%s', expire=3600 * 24)
+    def get_user_count_info(self, user_id, must_update_cache=False):
         try:
             uc = UserCount.objects.get(user_id=user_id)
             return dict(user_question_count=uc.user_question_count, user_answer_count=uc.user_answer_count,
@@ -588,6 +589,9 @@ class UserCountBase(object):
             count -= 1
         setattr(uc, code, count)
         uc.save()
+
+        # 更新缓存
+        self.get_user_count_info(user_id, must_update_cache=True)
 
     @cache_required(cache_key='user_order_by_answer_count', expire=3600)
     def get_user_order_by_answer_count(self, must_update_cache=False, count=21):
