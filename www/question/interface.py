@@ -259,9 +259,14 @@ class QuestionBase(object):
         questions = []
         important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True)
         for iq in important_questions:
-            for attr in ['img', 'img_alt', 'sort_num', 'operate_user_id', ]:
+            for attr in ['img', 'img_alt', 'sort_num', 'operate_user_id']:
                 question = iq.question
                 setattr(question, attr, getattr(iq, attr))
+
+            question.author = iq.get_author()
+            question.iq_title = iq.title or question.title
+            question.iq_summary = iq.summary or question.get_summary()
+
             questions.append(question)
         return questions
 

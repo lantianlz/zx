@@ -29,8 +29,9 @@ def main():
     # ab.remove_answer(41, user)
     # print ab.get_answer_summary_by_id(1)
 
-    print qb.set_important(8, user, title="测试的title", summary="测试summary", author_user_id='',
-                           img='http://img0.zhixuan.com/important_28.jpg', img_alt='精选描述', sort_num=4)
+    print qb.set_important(
+        8, user, title="2014年新规新股申购:9问9答！（号称市场最全面2014.6.1", summary="fasdfadsfadsfads", author_user_id='',
+        img='http://img0.zhixuan.com/important_28.jpg', img_alt='这是一个神奇的精选', sort_num=4)
     # print qb.cancel_important(8, user)
 
     des = """

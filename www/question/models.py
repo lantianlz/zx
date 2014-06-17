@@ -121,7 +121,11 @@ class ImportantQuestion(models.Model):
         ordering = ['-sort_num', '-id']
 
     def get_author(self):
-        pass
+        from www.account.interface import UserBase
+        if self.author_user_id:
+            return UserBase().get_user_by_id(self.author_user_id)
+        else:
+            return self.question.get_user()
 
 
 class QuestionType(models.Model):

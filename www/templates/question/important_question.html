@@ -20,17 +20,18 @@
     <li class="list-group-item no-l-r-bd bdc-eee row pb-25 {% if not forloop.first %} pt-25 {% endif %} ">
 
         <div class="col-md-4 col-ms-12">
-            <a href="{{question.get_url}}"><img class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee" src="{{question.img}}" alt="{{question.img_alt}}"></a>
+            <a href="{{question.get_url}}"><img class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee" 
+                src="{{question.img}}" alt="{{question.img_alt}}" title="{{question.img_alt}}"></a>
         </div>
         <div class="col-md-8 col-ms-12">
             <div>
-                <a class="black-blue" href="{{question.get_url}}"><h4 class="mt-5"><strong>{{question.title|str_display:20}}</strong></h4></a>
+                <a class="black-blue" href="{{question.get_url}}"><h4 class="mt-5"><strong>{{question.iq_title|str_display:20}}</strong></h4></a>
             </div>
             <div class="f12 co8">
-                <a class="zx-cardtips gray-gray" data-user_id="{{question.user.id}}" href="{{question.user.get_url}}">{{question.user.nick}}</a>
+                <a class="zx-cardtips gray-gray" data-user_id="{{question.author.id}}" href="{{question.author.get_url}}">{{question.author.nick}}</a>
                 <span class="pl-5">{{question.create_time|date:"m-d H:i"}}</span>
             </div>
-            <div class='line-height-25 pt-5 f13 min-h80'>{{question.get_summary|str_display:85|safe}}</div>
+            <div class='line-height-25 pt-5 f13 min-h80'>{{question.iq_summary|str_display:85|safe}}</div>
             <ul class="list-inline pt-5 f12 min-h22">
                 {% for topic in question.question_topics %}
                 <li class="pl-0">
@@ -41,31 +42,6 @@
             </ul>
            
         </div>
-
-
-        <!--
-        <div class='daily-item'>
-            <span class="jinghua">
-                <img alt="精华" src="{{MEDIA_URL}}img/common/jinghua2.png"></span>
-            <div class='daily-title'>
-                <a class="black-blue" href="{{question.get_url}}">
-                    <h4><strong>{{question.title|str_display:30}}</strong></h4>
-                </a>
-            </div>
-            <div class='row pb-15'>
-                <div class='col-md-4'>
-                    <a href="{{question.get_url}}"><img class="w200 pl-3 pr-3 pt-3 pb-3 box-shadow-024 border-1 bdc-eee" src="{{question.img}}" alt="{{question.img_alt}}"></a>
-                </div>
-                <div class='col-md-8'>
-                    <div class='f12 co8'>
-                        时间：{{question.create_time|time_format}} &nbsp;&nbsp;&nbsp;
-                        作者：<a class="zx-cardtips" data-user_id="{{question.user.id}}" href="{{question.user.get_url}}">{{question.user.nick}}</a>
-                    </div>
-                    <div class='pt-10 line-height-25'>{{question.get_summary|safe}}</div>
-                </div>
-            </div>
-        </div>
-        -->
 
     </li>
     {% endfor %}
