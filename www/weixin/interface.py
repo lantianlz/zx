@@ -139,7 +139,7 @@ class WexinBase(object):
             logging.error(u'收到用户发送的语音数据，内容如下：%s' % recognition)
             if u'干货' in recognition or u'精选' in recognition or u'来一发' in recognition:
                 questions = QuestionBase().get_all_important_question()
-                question = questions[random.randint(len(questions))]
+                question = questions[random.randint(0, len(questions))]
                 items = self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
                                                                   hrefurl='%s%s' % (settings.MAIN_DOMAIN, question.get_url()))
 
