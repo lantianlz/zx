@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import random
 import requests
 import json
 import logging
@@ -8,6 +9,7 @@ from django.conf import settings
 
 from common import cache, debug
 from www.misc import consts
+from www.question.interface import QuestionBase
 
 
 dict_err = {
@@ -92,7 +94,6 @@ class WexinBase(object):
                                               content=content)
 
     def get_hotest_response(self, to_user, from_user):
-        from www.question.interface import QuestionBase
         items = ''
         for question in QuestionBase().get_all_important_question()[:4]:
             items += (self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
@@ -136,6 +137,13 @@ class WexinBase(object):
         if recognitions:
             recognition = recognitions[0].text.lower()
             logging.error(u'收到用户发送的语音数据，内容如下：%s' % recognition)
+            if u'干货' in recognition or u'精选' in recognition or u'来一发' in recognition:
+                questions = QuestionBase().get_all_important_question()
+                question = questions[random.randint(len(questions))]
+                items = self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
+                                                                  hrefurl='%s%s' % (settings.MAIN_DOMAIN, question.get_url()))
+
+                return self.get_base_base_news_response(items) % dict(to_user=from_user, from_user=to_user, timestamp=int(time.time()), articles_count=1)
 
         # 文字识别
         msg_types = jq('msgtype')
