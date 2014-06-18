@@ -22,7 +22,7 @@ weixin_api_url = 'https://api.weixin.qq.com'
 dict_weixin_app = {
     'zhixuan_test': {'app_id': 'wx00d185b89113874f', 'app_secret': 'dce7dca2d686edc52e61246a0630fd73', 'app_type': 'gh_4fae99286289',
                      'token': 'zhixuan_test', 'url': ''},
-    'zhixuan': {'app_id': '', 'app_secret': '', 'app_type': '',
+    'zhixuan': {'app_id': 'wx1e8f4fb6965ed5c0', 'app_secret': '7919c1db140bf6a299b3acd1668791c2', 'app_type': 'gh_23edefcd5e6d',
                 'token': 'zhixuan', 'url': ''},
 }
 
