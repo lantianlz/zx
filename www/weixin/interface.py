@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import random
 import requests
 import json
 import logging
@@ -8,6 +9,7 @@ from django.conf import settings
 
 from common import cache, debug
 from www.misc import consts
+from www.question.interface import QuestionBase
 
 
 dict_err = {
@@ -20,7 +22,7 @@ weixin_api_url = 'https://api.weixin.qq.com'
 dict_weixin_app = {
     'zhixuan_test': {'app_id': 'wx00d185b89113874f', 'app_secret': 'dce7dca2d686edc52e61246a0630fd73', 'app_type': 'gh_4fae99286289',
                      'token': 'zhixuan_test', 'url': ''},
-    'zhixuan': {'app_id': '', 'app_secret': '', 'app_type': '',
+    'zhixuan': {'app_id': 'wx1e8f4fb6965ed5c0', 'app_secret': '7919c1db140bf6a299b3acd1668791c2', 'app_type': 'gh_23edefcd5e6d',
                 'token': 'zhixuan', 'url': ''},
 }
 
@@ -86,16 +88,21 @@ class WexinBase(object):
                                content=error_info)
 
     def get_subscribe_event_response(self, to_user, from_user):
-        content = (u'欢迎关注智选，这里有最新鲜的投资资讯、最睿智的投资问答。\n'
-                   u'点击底部菜单立即开启智选之旅，智选定不负你的关注')
+        # content = (u'欢迎关注智选，这里有最新鲜的投资资讯、最睿智的投资问答。\n'
+        #            u'点击底部菜单立即开启智选之旅，智选定不负你的关注')
+        content = (u'古人云：鸟随鸾凤飞腾远，人伴贤良品质高。\n'
+                   u'古人又云：物以类聚，人以群分。\n'
+                   u'想要成为什么样的人，最好的办法是先交上这样的朋友。\n'
+                   u'你想成为一流的投资者吗？你想享受一流的咨询、互动服务吗？'
+                   u'智选投资问答社区有国内主流券商投资顾问、公（私）募基金研究员、投资大拿。\n\n'
+                   u'关注智选，你最智慧的选择')
         return self.get_base_content_response(to_user, from_user,
                                               content=content)
 
     def get_hotest_response(self, to_user, from_user):
-        from www.question.interface import QuestionBase
         items = ''
         for question in QuestionBase().get_all_important_question()[:4]:
-            items += (self.get_base_news_item_response() % dict(title=question.iq_title, des='', picurl=question.img,
+            items += (self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
                                                                 hrefurl='%s%s' % (settings.MAIN_DOMAIN, question.get_url())))
 
         base_xml = self.get_base_base_news_response(items)
@@ -136,6 +143,13 @@ class WexinBase(object):
         if recognitions:
             recognition = recognitions[0].text.lower()
             logging.error(u'收到用户发送的语音数据，内容如下：%s' % recognition)
+            if u'干货' in recognition or u'精选' in recognition or u'来一发' in recognition or u'资讯' in recognition:
+                questions = QuestionBase().get_all_important_question()
+                question = questions[random.randint(0, len(questions) - 1)]
+                items = self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
+                                                                  hrefurl='%s%s' % (settings.MAIN_DOMAIN, question.get_url()))
+
+                return self.get_base_base_news_response(items) % dict(to_user=from_user, from_user=to_user, timestamp=int(time.time()), articles_count=1)
 
         # 文字识别
         msg_types = jq('msgtype')
