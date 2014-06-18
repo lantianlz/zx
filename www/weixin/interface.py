@@ -95,7 +95,7 @@ class WexinBase(object):
         from www.question.interface import QuestionBase
         items = ''
         for question in QuestionBase().get_all_important_question()[:4]:
-            items += (self.get_base_news_item_response() % dict(title=question.iq_title, des='', picurl=question.img,
+            items += (self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
                                                                 hrefurl='%s%s' % (settings.MAIN_DOMAIN, question.get_url())))
 
         base_xml = self.get_base_base_news_response(items)
