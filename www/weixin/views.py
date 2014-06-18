@@ -6,6 +6,8 @@ import time
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 
+from www.weixin.interface import WexinBase
+
 
 def weixin_signature_required(func):
     """
@@ -26,13 +28,13 @@ def weixin_signature_required(func):
 
 
 # @weixin_signature_required
-def index(request, template_name=''):
+def index(request):
     logging.error('get info is:%s' % smart_str(request.GET))
     data = request.read()
     logging.error('post info is:%s' % smart_str(data))
 
     if data:
-        xml = '<xml></xml>'
+        xml = WexinBase().get_response(data) or '<xml></xml>'
         return HttpResponse(xml, mimetype='application/xml')
     else:
         return HttpResponse(request.REQUEST.get('echostr'))  # 修改微信配置url时和微信服务器鉴权
