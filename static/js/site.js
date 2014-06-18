@@ -1499,7 +1499,7 @@ function createEditor(selector){
             resizeType : 1,
             width: '100%',
             //autoHeightMode : true,
-            allowPreviewEmoticons : false,
+            allowPreviewEmoticons : true,
             allowImageUpload : true,
             allowImageRemote: true,
             // basePath: '/',
@@ -1512,7 +1512,7 @@ function createEditor(selector){
             items : [
                 'bold', 'italic', 'underline', 'removeformat', '|', 
                 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', '|', 
-                'image', 'link', '|', 
+                'image', 'link', '|', //'emoticons_zx',
                 'fullscreen'
             ],
             afterCreate : function() { 

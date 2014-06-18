@@ -48,7 +48,9 @@ def question_detail(request, question_id, template_name='question/question_detai
         raise Http404
     question = qb.format_quesitons([question, ], need_question_type=True, need_question_topics=True)[0]
 
-    good_answers = ab.format_answers(ab.get_good_answers_by_question_id(question_id), request.user, need_answer_likes=True)
+    sort = request.REQUEST.get('sort', 'like_count')
+
+    good_answers = ab.format_answers(ab.get_good_answers_by_question_id(question_id, "-" + sort), request.user, need_answer_likes=True)
     bad_answers = ab.format_answers(ab.get_bad_answers_by_question_id(question_id), request.user, need_answer_likes=True)
     good_answers_count = len(good_answers)
     bad_answers_count = len(bad_answers)

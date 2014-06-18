@@ -206,6 +206,13 @@ $(document).ready(function(){
     fullImage('.reply-content img');
     // 提问中的图片绑定全屏图片事件 
     fullImage('.question-entry .topic img');
+
+
+    // 排序
+    $('.sort-answers').bind('change', function(){
+        console.log($(this).val())
+        window.location.href = String.format('{0}?sort={1}', window.location.pathname, $(this).val());
+    });
     
 
 

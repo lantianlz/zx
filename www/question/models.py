@@ -52,8 +52,8 @@ class Answer(models.Model):
     state = models.BooleanField(default=True, db_index=True)
     create_time = models.DateTimeField(db_index=True, auto_now_add=True)
 
-    class Meta:
-        ordering = ["-sort_num", "-like_count", "id"]
+    # class Meta:
+    #     ordering = ["-sort_num", "-like_count", "id"]
 
     def get_from_user(self):
         from www.account.interface import UserBase

@@ -184,7 +184,17 @@ $(document).ready(function(){
 <div class="replies w">
     <ul class="list-group top-border bdc-eee" id="ul_replies">
         <li class="list-group-item no-l-r-bd bdc-eee">
-            <h4 class="mt-0 mb-0">共 {{good_answers_count}} 个回答</h4>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <h4 class="mt-0 mb-0 line-height-30">共 {{good_answers_count}} 个回答</h4>
+                </div>
+                <div class="col-md-3 col-xs-6 pull-right">
+                    <select class="form-control input-sm sort-answers">
+                        <option value="like_count" {% if sort == "like_count" %}selected{% endif %}>按赞数排序</option>
+                        <option value="create_time" {% if sort == "create_time" %}selected{% endif %}>按时间排序</option>
+                    </select>
+                </div>
+            </div>
         </li>
         {% for answer in good_answers %}
             {% include "question/_question_answer.html" %}
@@ -264,12 +274,12 @@ $(document).ready(function(){
             <img src="{{MEDIA_URL}}img/common/icon-locked.png"></div>
         <div class="col-md-10">
             <div class="title">须登录后才能回答</div>
-            <div class="col-md-4 links">
+            <div class="col-md-4 col-xs-6 links">
                 <a href="/login">
                     <button type="button" class="btn btn-primary btn-login">立即登录</button>
                 </a>
             </div>
-            <div class="col-md-4 links">
+            <div class="col-md-4 col-xs-6 links">
                 <a href="/regist">
                     <button type="button" class="btn btn-primary btn-regist">免费注册</button>
                 </a>
