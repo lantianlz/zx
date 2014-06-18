@@ -1,24 +1,35 @@
 {
-	"button": [
-		{
-			"type": "click", 
-			"name": "每日精选", 
-			"key": "today_data"
-		}, 
-		{
-			"name": "关于智选", 
-			"sub_button": [
-				{
-					"type": "view", 
-					"name": "关于我们", 
-					"url": "http://www.zhixuan.com/s/about"
-				},
-				{
-					"type": "view", 
-					"name": "更新日志", 
-					"url": "http://www.zhixuan.com/s/logs"
-				}
-			]
-		}
-	]
+    "button": [
+        {
+            "type": "click", 
+            "name": "最新干货", 
+            "key": "hotest"
+        }, 
+        {
+            "name": "更多", 
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name": "每日精选", 
+                    "url": "http://www.zhixuan.com/important"
+                },
+                {
+                    "type": "view", 
+                    "name": "最新问答", 
+                    "url": "http://www.zhixuan.com/question"
+                }
+            ]
+        }
+    ]
 }
+
+
+
+<xml>
+<ToUserName><![CDATA[gh_4fae99286289]]></ToUserName>
+<FromUserName><![CDATA[o07dat0ujliP84s4GPsLFXOrAcbk]]></FromUserName>
+<CreateTime>1403067969</CreateTime>
+<MsgType><![CDATA[event]]></MsgType>
+<Event><![CDATA[CLICK]]></Event>
+<EventKey><![CDATA[hotest]]></EventKey>
+</xml>
