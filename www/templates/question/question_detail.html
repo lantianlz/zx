@@ -270,21 +270,21 @@ $(document).ready(function(){
         </form>
     {% else %}
     <div class="not-login row">
-        <div class="col-md-2 lock">
-            <img src="{{MEDIA_URL}}img/common/icon-locked.png"></div>
-        <div class="col-md-10">
-            <div class="title">须登录后才能回答</div>
-            <div class="col-md-4 col-xs-6 links">
-                <a href="/login">
-                    <button type="button" class="btn btn-primary btn-login">立即登录</button>
+        
+            <div class="col-md-offset-3 col-md-6 col-xs-offset-1 col-xs-10 links pt-25 pr">
+                <a href="/regist" class="pt-15 pb-15 f14 bgc-zx co3 register" style="border-radius: 2px; box-shadow: 1px 1px 1px #999; padding-left: 45px; padding-right: 35px;">
+                    <!-- <button type="button" class="btn btn-danger btn-regist">免费注册</button> -->
+                    <span class="glyphicon glyphicon-registration-mark pa f18" style="left: 38px; top: 25px;"></span>
+                    免费注册
                 </a>
-            </div>
-            <div class="col-md-4 col-xs-6 links">
-                <a href="/regist">
-                    <button type="button" class="btn btn-primary btn-regist">免费注册</button>
+                <a href="/login" class="pt-15 pb-15 pl-35 pr-25 f14 bgc-zx co3 login" style="border-radius: 2px; box-shadow: 1px 1px 1px #999;">
+                    <!-- <button type="button" class="btn btn-primary btn-login">立即登录</button> -->
+                    立即登录
+                    <span class="glyphicon glyphicon-log-in"></span>
                 </a>
+                <span class="pa bgc-fff img-circle" style="left: 125px; top:8px; padding: 27px;"></span>
+                <span class="pa fi f14" style="left: 145px; top: 25px;">Or</span>
             </div>
-        </div>
     </div>
     {% endif %}
 </div>
