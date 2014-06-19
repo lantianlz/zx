@@ -43,7 +43,7 @@ $(document).ready(function(){
             <h4 class="f22"> <strong>{{question.title}}</strong>
             </h4>
         </div>
-        <div class="f14 pt-10 line-height-25">{{question.content|safe}}</div>
+        <div class="f14 pt-10 line-height-25 break-word">{{question.content|safe}}</div>
         <div class="topic-tags row">
             <ul class="list-flow">
                 {% for topic in question.question_topics %}{% include "question/_topics_list.html" %}{% endfor %}

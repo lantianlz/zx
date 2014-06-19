@@ -52,6 +52,7 @@
 .ff-yahei{font-family: "Microsoft YaHei"}
 
 .ws-nowrap{white-space: nowrap}
+.break-word{word-wrap: break-word;}
 
 .lh150{line-height:150%}
 .lh180{line-height:180%}
