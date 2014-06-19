@@ -240,6 +240,15 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
   color: #349cd8;
 }
 
+.white-white{
+  color: #fff;
+}
+
+.white-white:hover{
+  text-decoration: none;
+  color: #fff;
+}
+
 .gray-white{
   color: #999;
 }

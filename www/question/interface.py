@@ -483,7 +483,9 @@ class AnswerBase(object):
         objs = Answer.objects.select_related('question').filter(question=question_id, state=True, is_bad=False)
 
         if sort:
-            objs = objs.order_by(sort)
+            objs = objs.order_by(sort, 'id')
+        else:
+            objs = objs.order_by('id')
         return objs
 
     def get_bad_answers_by_question_id(self, question_id):

@@ -263,6 +263,27 @@
   padding: 15px 0 0 30px;
 }
 
+.not-login .register{
+  color: #fff;
+  background-color: #fc8936;
+  transition: all 0.5s;
+}
+.not-login .register:hover{
+  text-decoration: none;
+  color: #fff;
+  background-color: #D86B1D;
+}
+
+.not-login .login{
+  color: #fff;
+  transition: all 0.5s;
+}
+.not-login .login:hover{
+  text-decoration: none;
+  background-color: #3276b1;
+  color: #fff;
+}
+
 .vote .glyphicon{
   font-size: 16px;
 }
