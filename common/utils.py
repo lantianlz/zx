@@ -126,6 +126,9 @@ def filter_script(htmlstr):
 
     # 去掉多余的空行
     # s = blank_line.sub('\n', s)
+
+    # 替换超链
+    s = replace_href_to_open_blank(s)
     return s
 
 
@@ -157,7 +160,7 @@ def select_at(s):
     return list(set(p.findall(s)))  # 去掉重复提到的人
 
 
-def replace_at_html(value):
+def replace_at_html(content):
     """
     @note: 从内容中提取@信息
     """
@@ -170,8 +173,27 @@ def replace_at_html(value):
 
     tup_re = (u'@([\w\-\u4e00-\u9fa5]+)', _re_sub)
     p = re.compile(tup_re[0], re.DOTALL | re.IGNORECASE)
-    value = p.sub(tup_re[1], value)
-    return value
+    content = p.sub(tup_re[1], content)
+    return content
+
+
+def replace_href_to_open_blank(content):
+    """
+    @note: 替换链接在新窗口中打开并且设置nofollow
+    """
+    def _re_sub(match):
+        """
+        @note: callback for re.sub
+        """
+        atag = match.group(0)
+        href = match.group(1)
+        if 'zhixuan.com' not in href:
+            return '%s%s%s' % (atag[:2], ' target="_blank" rel="nofollow"', atag[2:])
+        return atag
+
+    p = re.compile(u'<a.+?(href=.+)?>.+?</a>', re.DOTALL | re.IGNORECASE)
+    content = p.sub(_re_sub, content)
+    return content
 
 
 def get_summary_from_html(content, max_num=100):
@@ -227,33 +249,6 @@ def get_random_code(length=16):
     for i in xrange(length):
         postfix += str_src[random.randint(0, len(str_src) - 1)]
     return postfix
-
-
-# def exec_command(command, timeout=25):
-#     """
-#     call shell-command and either return its output or kill it
-#     if it doesn't normally exit within timeout seconds and return None
-#     带超时设置的执行命令
-#     用例：
-#     common.utils.exec_command('your command', 25)
-#     """
-#     import subprocess
-#     import datetime
-#     import os
-#     import time
-#     import signal
-#     import shlex
-
-#     start = datetime.datetime.now()
-#     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#     while process.poll() is None:
-#         time.sleep(0.2)
-#         now = datetime.datetime.now()
-#         if (now - start).seconds > timeout:
-#             os.kill(process.pid, signal.SIGKILL)
-#             os.waitpid(-1, os.WNOHANG)
-#             return False, u'执行超时'
-#     return True, process.stdout.readlines()
 
 
 def exec_command(command, timeout=25):

@@ -26,8 +26,12 @@ def main():
                u'智选投资问答社区有国内主流券商投资顾问、公（私）募基金研究员、投资大拿。\n\n'
                u'关注智选，你最智慧的选择')
 
-    print wb.send_msg_to_weixin(content, to_user, app_key)
+    # print wb.send_msg_to_weixin(content, to_user, app_key)
     # print wb.get_weixin_access_token(app_key="zhixuan_test")
+
+    from common import utils
+    c = '来个链接看看<a href="http://www.a.com">www.zhixuan.com</a>来啊'
+    print utils.replace_href_to_open_blank(c)
 
 
 if __name__ == '__main__':
