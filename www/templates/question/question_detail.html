@@ -256,7 +256,7 @@ $(document).ready(function(){
 
 <!-- 回复块 -->
 <div class="answer">
-    <h4>可以在下面添加你的回答</h4>
+    <h4>{% if request.user.is_authenticated %}可以在下面添加你的回答{% else %}加入智选，即可回答该问题{% endif %}</h4>
 
     <div class="answer-main">
     {% if request.user.is_authenticated %}
