@@ -11,6 +11,8 @@ import re
 import datetime
 import random
 
+from django.conf import settings
+
 
 def uuid_without_dash():
     import uuid
@@ -141,6 +143,7 @@ def render_email_template(template_path='', context={}):
     if not template_path:
         return ''
     context.update(now=datetime.datetime.now())
+    context.update(MAIN_DOMAIN=settings.MAIN_DOMAIN)
 
     t = template.loader.get_template(template_path)
     c = template.Context(context)

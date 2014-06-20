@@ -54,6 +54,8 @@
 .ws-nowrap{white-space: nowrap}
 .break-word{word-wrap: break-word;}
 
+.text-indent-30{text-indent: 30px;}
+
 .lh150{line-height:150%}
 .lh180{line-height:180%}
 .lh200{line-height:200%}

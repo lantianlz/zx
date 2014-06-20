@@ -1,7 +1,7 @@
 {% extends "question/base_question.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}{{question.title|str_display:20}}{% endblock %}
+{% block title %}{{question.title}}{% endblock %}
 
 {% block keywords %}{% for topic in question.question_topics %}{{topic.name}}{% if not forloop.last %},{% endif %}{% endfor %}{% endblock keywords %}
 
