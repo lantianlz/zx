@@ -88,11 +88,14 @@ $(document).ready(function(){
 
         //
         modifyDepartment: function(data, callback){
-            var me = this;
+            var me = this, postData = {};
+
+            // 转换
+            _.map(data, function(i){postData[i.name] = i.value});
 
             ajaxSend(
-                "/admin/department/modify_department?" + data, 
-                {},
+                "/admin/department/modify_department", 
+                postData,
                 function(data){
                     if(callback){
                         callback(data);
@@ -229,7 +232,7 @@ $(document).ready(function(){
             var departmentId = this.$('form').data('department_id'),
                 me = this;
 
-            me.collection.modifyDepartment(this.$('form').serialize(), function(data){
+            me.collection.modifyDepartment(this.$('form').serializeArray(), function(data){
                 if(data.errcode === 0){
                     $.ZXMsg.alert('提示', '操作成功');
                     router.navigate('modify/' + departmentId, {'trigger': true});
