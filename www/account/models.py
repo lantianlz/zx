@@ -64,6 +64,9 @@ class Profile(models.Model):
     def get_url(self):
         return u'/p/%s' % self.id
 
+    def get_full_url(self):
+        return u'%s%s' % (settings.MAIN_DOMAIN, self.get_url())
+
     def get_avatar(self, key=''):
         if self.avatar:
             return '%s%s' % (self.avatar, ('!%s' % key) if key else '')

@@ -6,6 +6,7 @@ from django.db import transaction
 from common import utils, cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
+from www.tasks import async_send_email
 from www.account.interface import UserBase
 from www.message.models import UnreadCount, UnreadType, Notice, InviteAnswer, InviteAnswerIndex, GlobalNotice
 
@@ -163,7 +164,11 @@ class InviteAnswerBase(object):
 
             ub = UserBase()
             try:
-                assert ub.get_user_by_id(from_user_id) and ub.get_user_by_id(to_user_id) and QuestionBase().get_question_by_id(question_id)
+                from_user = ub.get_user_by_id(from_user_id)
+                to_user = ub.get_user_by_id(to_user_id)
+                question = QuestionBase().get_question_by_id(question_id)
+
+                assert from_user and to_user and question
             except:
                 transaction.rollback(using=DEFAULT_DB)
                 return 99800, dict_err.get(99800)
@@ -201,6 +206,10 @@ class InviteAnswerBase(object):
             # 更新未读消息，新邀请或者邀请已读才更新未读数
             if need_update_unread_count:
                 UnreadCountBase().update_unread_count(to_user_id, code='invite_answer')
+
+            # 发送提醒邮件
+            context = dict(user=from_user, question=question)
+            async_send_email(to_user.email, u'%s 在智选邀请你回答问题' % (from_user.nick, ), utils.render_email_template('email/invite.html', context), 'html')
 
             transaction.commit(using=DEFAULT_DB)
             return 0, dict_err.get(0)

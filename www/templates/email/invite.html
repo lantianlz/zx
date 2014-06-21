@@ -1,13 +1,13 @@
 {% extends "email/base_email.html" %}
 {% block email_body %}
 
-<img class="img-circle" src="http://img0.zhixuan.com/newest_avatar_8b75e242da4211e3abb600163e003240!65m65" />
+<img class="img-circle" src="{{user.get_avatar_65}}" />
 <div style="padding-left: 70px; margin-top:25px;">
     <div style="padding-top: 5px;">
-        <a href="#" style="padding-right: 5px;">半夜没事瞎溜达</a>邀请你回答提问：
+        <a href="{{user.get_full_url}}" style="padding-right: 5px;">{{user.nick}}</a>邀请你回答提问：
     </div>
     <div style="padding-top: 10px;">
-        <a href="{{MAIN_DOMAIN}}/p/14ae6282b49111e387fb00163e003240">今天个股普涨，但两市的成交金额较昨日缩量30%，下周怎么判断？</a>
+        <a href="{{MAIN_DOMAIN}}{{question.get_url}}">{{question.title}}</a>
     </div>
 </div>
 

@@ -7,10 +7,11 @@ from django.db.models import F
 from common import utils, debug, cache
 from www.misc.decorators import cache_required
 from www.misc import consts
-from www.account.interface import UserBase
-from www.message.interface import UnreadCountBase
-from www.account.interface import UserCountBase
+from www.tasks import async_send_email
 from www.timeline.interface import FeedBase
+from www.message.interface import UnreadCountBase
+from www.account.interface import UserBase
+from www.account.interface import UserCountBase
 from www.question.models import Question, Answer, Like, AtAnswer, AnswerBad
 from www.question.models import ImportantQuestion, Topic, TopicQuestion
 
@@ -431,6 +432,12 @@ class AnswerBase(object):
             # 更新未读消息
             if from_user_id != to_user_id:
                 UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
+
+                # 发送提醒邮件
+                from_user = UserBase().get_user_by_id(from_user_id)
+                to_user = UserBase().get_user_by_id(to_user_id)
+                context = dict(user=from_user, question=question)
+                async_send_email(to_user.email, u'%s 在智选回答了你的提问' % (from_user.nick, ), utils.render_email_template('email/answer.html', context), 'html')
 
             # 更新用户回答统计总数
             UserCountBase().update_user_count(user_id=from_user_id, code='user_answer_count')

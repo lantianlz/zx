@@ -9,6 +9,7 @@ from django.conf import settings
 from common import utils, debug, validators, cache
 from www.misc.decorators import cache_required
 from www.misc import consts
+from www.tasks import async_send_email
 from www.account.models import User, Profile, ExternalToken, Invitation, InvitationUser, UserCount
 from www.account.models import RecommendUser, LastActive
 
@@ -341,8 +342,6 @@ class UserBase(object):
             cache_obj.set(key, code, time_out=1800)
 
         if not cache_obj.get_time_is_locked(key, 60):
-            from www.tasks import async_send_email
-
             context = {'verify_url': '%s/account/user_settings/verify_email?code=%s' % (settings.MAIN_DOMAIN, code), }
 
             async_send_email(user.email, u'智选邮箱验证',
@@ -388,7 +387,6 @@ class UserBase(object):
             cache_obj.set(code, user, time_out=1800)
 
         if not cache_obj.get_time_is_locked(key, 60):
-            from www.tasks import async_send_email
 
             context = {
                 'reset_url': '%s/reset_password?code=%s' % (settings.MAIN_DOMAIN, code),
