@@ -3,8 +3,19 @@
 from celery.task import task
 
 
-@task(queue='email_worker', name='email_worker.email_send')
 def async_send_email(emails, title, content, type='text'):
+    '''
+    @note: 由于调用较多，包装一层，用于控制是否异步调用
+    '''
+    from django.conf import settings
+    if settings.LOCAL_FLAG:
+        async_send_email_worker(emails, title, content, type)
+    else:
+        async_send_email_worker.delay(emails, title, content, type)
+
+
+@task(queue='email_worker', name='email_worker.email_send')
+def async_send_email_worker(emails, title, content, type='text'):
     from common import utils
     return utils.send_email(emails, title, content, type)
 

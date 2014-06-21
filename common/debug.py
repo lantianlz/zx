@@ -57,10 +57,10 @@ def get_debug_detail(e, log_it=True):
 
 
 def get_debug_detail_and_send_email(e):
-    from www import tasks
+    from www.tasks import async_send_email
     debug_detail = get_debug_detail(e)
     if isinstance(debug_detail, (list, tuple)):
         debug_detail = str(debug_detail)
     logging.error(debug_detail)
-    tasks.async_send_email(settings.NOTIFICATION_EMAIL, u"%s%sworker error" % (settings.SERVER_NAME, str(datetime.datetime.now())),
-                           debug_detail, content_type="text")
+    async_send_email(settings.NOTIFICATION_EMAIL, u"%s%sworker error" % (settings.SERVER_NAME, str(datetime.datetime.now())),
+                     debug_detail, content_type="text")
