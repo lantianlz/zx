@@ -416,6 +416,7 @@ class AnswerBase(object):
             answer = Answer.objects.create(from_user_id=from_user_id, to_user_id=to_user_id, content=content,
                                            question=question, ip=ip)
 
+            from_user = UserBase().get_user_by_id(from_user_id)
             # 添加at信息
             if content.find('@') != -1:
                 at_usernicks = utils.select_at(content)
@@ -429,14 +430,17 @@ class AnswerBase(object):
                                 # 更新@未读消息数
                                 UnreadCountBase().update_unread_count(at_user.id, code='at_answer')
 
+                                # 发送提醒邮件
+                                context = dict(user=from_user, answer=answer)
+                                async_send_email(at_user.email, u'%s 在智选回答中@了你' % (from_user.nick, ), utils.render_email_template('email/at.html', context), 'html')
+
             # 更新未读消息
             if from_user_id != to_user_id:
                 UnreadCountBase().update_unread_count(to_user_id, code='received_answer')
 
                 # 发送提醒邮件
-                from_user = UserBase().get_user_by_id(from_user_id)
                 to_user = UserBase().get_user_by_id(to_user_id)
-                context = dict(user=from_user, question=question)
+                context = dict(user=from_user, answer=answer)
                 async_send_email(to_user.email, u'%s 在智选回答了你的提问' % (from_user.nick, ), utils.render_email_template('email/answer.html', context), 'html')
 
             # 更新用户回答统计总数

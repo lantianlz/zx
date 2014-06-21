@@ -6,12 +6,10 @@
 </a>
 <div class="" style="padding-left: 70px; margin-top:25px;">
     <div style="padding-top: 5px;">
-		<a href="{{user.get_full_url}}" style="padding-right: 5px;">{{user.nick}}</a>回答了你的提问：
-        <a style="padding-left: 10px;" href="{{MAIN_DOMAIN}}{{question.get_url}}">{{question.title}}</a>
+        <a href="{{user.get_full_url}}" style="padding-right: 5px;">{{user.nick}}</a>回答了你的提问：
+        <a style="padding-left: 10px;" href="{{MAIN_DOMAIN}}{{answer.question.get_url}}">{{answer.question.title}}</a>
     </div>
-    <div style="padding-top: 10px; padding-bottom: 15px; font-size: 14px">
-        去年四川反腐败，四川不少上市公司一路走低，比如兴蓉投资，金路集团等都有受影响，这次媒体消息称国家电网反腐败，违规招投标可能是最严重的问题，相关的上市公司有哪些呢？提前规避一下，怕遭...
-    </div>
+    <div style="padding-top: 10px; padding-bottom: 15px; font-size: 14px">{{answer.get_summary}}</div>
 </div>
 
 {% endblock %}

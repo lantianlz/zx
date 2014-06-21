@@ -1,16 +1,16 @@
 {% extends "email/base_email.html" %}
 {% block email_body %}
 
-<a href="{{MAIN_DOMAIN}}/p/14ae6282b49111e387fb00163e003240">
-	<img class="img-circle" src="http://img0.zhixuan.com/newest_avatar_8b75e242da4211e3abb600163e003240!65m65"/>
+<a href="{{user.get_full_url}}">
+    <img class="img-circle" src="{{user.get_avatar_65}}" />
 </a>
-<div style="padding-left: 70px; margin-top:25px;">
+
+<div class="" style="padding-left: 70px; margin-top:25px;">
     <div style="padding-top: 5px;">
-        <a href="#" style="padding-right: 5px;">半夜没事瞎溜达</a>在提问中@你：
+        <a href="{{user.get_full_url}}" style="padding-right: 5px;">{{user.nick}}</a>在提问中@你：
+        <a style="padding-left: 10px;" href="{{MAIN_DOMAIN}}{{answer.question.get_url}}">{{answer.question.title}}</a>
     </div>
-    <div style="padding-top: 10px;">
-        <a href="/p/14ae6282b49111e387fb00163e003240">张明芳的丽珠集团“泄密门”会导致管理层严打研究员的内幕消息输送么？</a>
-    </div>
+    <div style="padding-top: 10px; padding-bottom: 15px; font-size: 14px">{{answer.get_summary}}</div>
 </div>
 
 {% endblock %}
