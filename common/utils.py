@@ -64,17 +64,17 @@ def time_format(value):
 
 
 def send_email(emails, title, content, type='text'):
-    from django.conf import settings
     from django.core.mail import send_mail, EmailMessage
 
     if not emails:
         return
 
     if not isinstance(emails, (list, tuple)):
-        if 'mrzhixuan' in emails:
-            return
+        # if 'mrzhixuan' in emails:
+        #     return
         emails = [emails, ]
 
+    emails = [email for email in emails if not 'mrzhixuan' in email]
     if type != 'html':
         send_mail(title, content, settings.EMAIL_FROM, emails, fail_silently=True)
     else:
@@ -85,7 +85,6 @@ def send_email(emails, title, content, type='text'):
 
 
 def get_next_url(request):
-    from django.conf import settings
     from urlparse import urlparse
     next_url = request.REQUEST.get('next_url')
     if not next_url:

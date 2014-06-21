@@ -30,9 +30,10 @@ def main():
     # print wb.get_weixin_access_token(app_key="zhixuan_test")
 
     from common import utils
-    c = '来个链接看看<a href="http://www.a.com">www.zhixuan.com</a>来啊'
-    print utils.replace_href_to_open_blank(c)
-
+    # utils.send_email(emails="fas@mrzhixuan.com", title="aa", content="fasdf")
+    es = ["fasd@mrzhixuan.com", "a@zhixuan.com"]
+    es = [e for e in es if not 'mrzhixuan' in e]
+    print es
 
 if __name__ == '__main__':
     main()
