@@ -39,7 +39,7 @@ def get_all_important_question():
         question.answer = answer
         question.author = iq.get_author()
         question.iq_title = iq.title or question.title
-        question.iq_summary = iq.summary or question.get_summary()
+        question.answer_summary = answer.get_summary(200)
 
         questions.append(question)
     return questions

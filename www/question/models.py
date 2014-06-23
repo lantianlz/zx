@@ -62,12 +62,12 @@ class Answer(models.Model):
         from www.account.interface import UserBase
         return UserBase().get_user_by_id(self.from_user_id)
 
-    def get_summary(self):
+    def get_summary(self, max_num=100):
         """
         @attention: 通过内容获取摘要
         """
         from common import utils
-        return utils.get_summary_from_html_by_sub(self.content)
+        return utils.get_summary_from_html_by_sub(self.content, max_num=max_num)
 
 
 class AnswerBad(models.Model):
