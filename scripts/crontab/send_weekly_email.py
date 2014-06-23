@@ -12,20 +12,49 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
 os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 
+import datetime
 from common import utils
-from www.question.models import Question
+from www.question.interface import AnswerBase
+from www.question.models import ImportantQuestion
 from www.account.models import User
 from www.tasks import async_send_email
 
 
-def send_weekly_email():
-    context = dict()
-    for user in User.objects.filter(state__gt=0):
-        email = user.email
-        print email
+def get_all_important_question():
+    questions = []
+    now = datetime.datetime.now().date()
+    weekday = int(now.strftime('%w'))
+    offset = (6 + weekday) if weekday > 0 else 13
+    start_date = now - datetime.timedelta(days=offset)
+    end_date = start_date + datetime.timedelta(days=7)
+    important_questions = ImportantQuestion.objects.select_related('question').filter(question__state=True,
+                                                                                      create_time__gt=start_date, create_time__lt=end_date)
+    ab = AnswerBase()
+    for iq in important_questions:
+        for attr in ['img', 'img_alt', 'sort_num', 'operate_user_id']:
+            question = iq.question
+            setattr(question, attr, getattr(iq, attr))
+        answer = ab.format_answers([ab.get_answers_by_question_id(question.id)[0], ])[0]
 
-    email = ["lz@zhixuan.com", "lcm@zhixuan.com"]
-    async_send_email(email, u'智选每周精选', utils.render_email_template('email/important.html', context), 'html')
+        question.answer = answer
+        question.author = iq.get_author()
+        question.iq_title = iq.title or question.title
+        question.iq_summary = iq.summary or question.get_summary()
+
+        questions.append(question)
+    return questions
+
+
+def send_weekly_email():
+    questions = get_all_important_question()
+    if questions:
+        context = dict(questions=questions)
+        for user in User.objects.filter(state__gt=0):
+            email = user.email
+            context.update(dict(email=email))
+
+        email = ["lz@zhixuan.com", "lcm@zhixuan.com", "ni519201314@126.com"]
+        async_send_email(email, u'智选每周精选', utils.render_email_template('email/important.html', context), 'html')
 
     print 'ok'
 

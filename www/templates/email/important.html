@@ -1,3 +1,5 @@
+{% load custom_tags %}
+{% load custom_filters %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -111,51 +113,24 @@ body{
         
         <div class="main">
             <ul style="padding: 0;">
-                <li style="list-style: none; position: relative; padding: 0; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                    <a href="#">
-                        <img class="img-border" src="http://img0.zhixuan.com/important_e0bd7372f5c811e3895b00163e003240">
+                {% for question in questions %}
+                <li style="list-style: none; position: relative; padding: 0; border-bottom: {% if forloop.last %}0{% else %}1{% endif %}px solid #eee; padding-bottom: 20px;">
+                    <a href="{{MAIN_DOMAIN}}{{question.get_url}}">
+                        <img class="img-border" src="{{question.img}}" alt="{{question.img_alt}}">
                     </a>
-                    <a href="#"><h4 style="margin-bottom: 10px; padding-top: 5px;">如何看待华谊兄弟拟收购卖座网51%股权？</h4></a>
+                    <a href="{{MAIN_DOMAIN}}{{question.get_url}}"><h4 style="margin-bottom: 10px; padding-top: 5px; font-size: 15px;">{{question.iq_title|str_display:30}}</h4></a>
                     <div style="font-size: 12px; color: gray;">
-                        <a href="#">半夜没事瞎溜达</a><span style="padding-left: 5px;">(善吐槽，爱折腾，爱户外，爱你妹...)</span>
-                        <span style="float: right">23 个赞同</span>
+                        <a href="{{question.answer.from_user.get_full_url}}">{{question.answer.from_user.nick}}</a>
+                        <span style="padding-left: 5px;">({{question.answer.from_user.des|str_display:20}})</span>
+                        <span style="float: right">{{question.answer.like_count}} 个赞同</span>
                     </div>
                     <div style="padding-left: 205px; min-height: 150px;">
-                        <div style="padding-top: 10px; font-size: 13px; line-height: 23px;">                        深圳市华宇讯科技有限公司（卖座网）是腾讯两位前员工创立的，陈应魁任CEO，王星任CTO，从公开资料上查询，卖座网是2008年成立的，经纬创投投的天使轮，投资规模查询不到，但估计是300-500万。卖座网经营了6年，截止2013年年底，净资产负512万，华谊兄弟买了个...<a style="padding-left: 5px; white-space: nowrap" href="#">阅读全文</a>
+                        <div style="padding-top: 10px; font-size: 13px; line-height: 23px;">{{question.answer.get_summary|str_display:135}}
+                            <a style="padding-left: 5px; white-space: nowrap" href="{{MAIN_DOMAIN}}{{question.answer.get_url}}">阅读全文</a>
                         </div>
                     </div>
-                    
                 </li>
-                <li style="list-style: none; position: relative; padding: 0; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                    <a href="#">
-                        <img class="img-border" src="http://img0.zhixuan.com/important_50b2a750e47c11e3a19500163e003240">
-                    </a>
-                    <a href="#"><h4 style="margin-bottom: 10px; padding-top: 5px;">如何看待华谊兄弟拟收购卖座网51%股权？</h4></a>
-                    <div style="font-size: 12px; color: gray;">
-                        <a href="#">半夜没事瞎溜达</a><span style="padding-left: 5px;">(善吐槽，爱折腾，爱户外，爱你妹...)</span>
-                        <span style="float: right">23 个赞同</span>
-                    </div>
-                    <div style="padding-left: 205px; min-height: 150px;">
-                        <div style="padding-top: 10px; font-size: 13px; line-height: 23px;">                        深圳市华宇讯科技有限公司（卖座网）是腾讯两位前员工创立的，陈应魁任CEO，王星任CTO，从公开资料上查询，卖座网是2008年成立的，经纬创投投的天使轮，投资规模查询不到，但估计是300-500万。卖座网经营了6年，截止2013年年底，净资产负512万，华谊兄弟买了个...<a style="padding-left: 5px; white-space: nowrap" href="#">阅读全文</a>
-                        </div>
-                    </div>
-                    
-                </li>
-                <li style="list-style: none; position: relative; padding: 0; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                    <a href="#">
-                        <img class="img-border" src="http://img0.zhixuan.com/important_7a6a095cf55311e3895b00163e003240">
-                    </a>
-                    <a href="#"><h4 style="margin-bottom: 10px; padding-top: 5px;">如何看待华谊兄弟拟收购卖座网51%股权？</h4></a>
-                    <div style="font-size: 12px; color: gray;">
-                        <a href="#">半夜没事瞎溜达</a><span style="padding-left: 5px;">(善吐槽，爱折腾，爱户外，爱你妹...)</span>
-                        <span style="float: right">23 个赞同</span>
-                    </div>
-                    <div style="padding-left: 205px; min-height: 150px;">
-                        <div style="padding-top: 10px; font-size: 13px; line-height: 23px;">                        深圳市华宇讯科技有限公司（卖座网）是腾讯两位前员工创立的，陈应魁任CEO，王星任CTO，从公开资料上查询，卖座网是2008年成立的，经纬创投投的天使轮，投资规模查询不到，但估计是300-500万。卖座网经营了6年，截止2013年年底，净资产负512万，华谊兄弟买了个...<a style="padding-left: 5px; white-space: nowrap" href="#">阅读全文</a>
-                        </div>
-                    </div>
-                    
-                </li>
+                {% endfor %}
             </ul>
         </div>
         
