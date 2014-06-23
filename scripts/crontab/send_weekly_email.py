@@ -53,7 +53,7 @@ def send_weekly_email():
             email = user.email
             context.update(dict(email=email))
 
-        email = ["lz@zhixuan.com", "lcm@zhixuan.com", "ni519201314@126.com"]
+        email = ["lz@zhixuan.com", "lcm@zhixuan.com", "jz@zhixuan.com"]
         async_send_email(email, u'智选每周精选', utils.render_email_template('email/important.html', context), 'html')
 
     print 'ok'

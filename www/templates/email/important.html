@@ -121,7 +121,7 @@ body{
                     <a href="{{MAIN_DOMAIN}}{{question.get_url}}"><h4 style="margin-bottom: 10px; padding-top: 5px; font-size: 15px;">{{question.iq_title|str_display:30}}</h4></a>
                     <div style="font-size: 12px; color: gray;">
                         <a href="{{question.answer.from_user.get_full_url}}">{{question.answer.from_user.nick}}</a>
-                        <span style="padding-left: 5px;">({{question.answer.from_user.des|str_display:20}})</span>
+                        <span style="padding-left: 5px;">{% if question.answer.from_user.des %}({{question.answer.from_user.des|str_display:20}}){% endif %}</span>
                         <span style="float: right">{{question.answer.like_count}} 个赞同</span>
                     </div>
                     <div style="padding-left: 205px; min-height: 150px;">
