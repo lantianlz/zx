@@ -1,6 +1,10 @@
 {% extends "question/base_topic.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
+
+{% block keywords %}{{topic.name}},智选{% endblock keywords %}
+{% block description %}{{topic.get_summary|str_display:80}}{% endblock description %}
+
 {% block title %}{{topic.name}} - 话题{% endblock %}
 
 {% block css %}{% endblock %}
