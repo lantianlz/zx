@@ -32,12 +32,6 @@ def initial_letter_filter(text, autoescape=None):
 initial_letter_filter.needs_autoescape = False
 
 
-# def str_display(str_in, maxlength):
-#     """
-#     @attention: 截断输入字符串,超过最大长度加...
-#     """
-#     maxlength = int(maxlength)
-#     return (str_in[:maxlength] + u'...') if str_in.__len__() > maxlength else str_in
 @register.filter
 def str_display(str_in, str_parms):
     """

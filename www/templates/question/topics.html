@@ -49,7 +49,7 @@
                 <div class="col-md-6 col-xs-6 text-right">
                     <button type="button" class="btn btn-primary btn-xs pull-right btn-follow hide">关注话题</button>
                 </div>
-                <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{topic.get_summary|default:'暂无话题介绍'}}</div>
+                <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{topic.get_summary|default:'暂无话题介绍'|str_display:'35'}}</div>
             </div>
         </li>
         {% endfor %}

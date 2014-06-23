@@ -219,7 +219,7 @@ class Topic(models.Model):
         @note: 通过内容获取摘要
         """
         from common import utils
-        return utils.get_summary_from_html_by_sub(self.des, max_num=35)
+        return utils.get_summary_from_html_by_sub(self.des)
 
 
 class TopicQuestion(models.Model):
