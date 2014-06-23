@@ -159,14 +159,14 @@ ul>li:last-child{
         <div class="footer">
             <hr>
             <p class="text-right" style="font-size: 12px;">
-                2014-06-20 15:15:15
+                {{ now|date:'Y-m-d' }}
                 <br/>
                 （本邮件由系统自动发出，请勿回复。）
             </p>
         </div>
     </div>
     <div style="text-align: center; color: #b6c2cc; font-size: 12px; padding-top: 20px;">
-        <div>这封邮件的收件地址是 <a href="###">286394973@qq.com</a></div>
+        <div>这封邮件的收件地址是 <a href="###">{{email}}</a></div>
         <div>Copyright &copy; zhixuan.com.</div>
     </div>
 
