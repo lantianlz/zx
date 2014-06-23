@@ -125,7 +125,7 @@ body{
                         <span style="float: right">{{question.answer.like_count}} 个赞同</span>
                     </div>
                     <div style="padding-left: 205px; min-height: 150px;">
-                        <div style="padding-top: 10px; font-size: 13px; line-height: 23px;">{{question.answer_summary|safe|str_display:135}}
+                        <div style="padding-top: 10px; font-size: 13px; line-height: 23px;">{{question.answer_summary|str_display:135|safe}}
                             <a style="padding-left: 5px; white-space: nowrap" href="{{MAIN_DOMAIN}}{{question.answer.get_url}}">阅读全文</a>
                         </div>
                     </div>
