@@ -133,20 +133,21 @@ def filter_script(htmlstr):
     return s
 
 
-def render_email_template(template_path='', context={}):
+def render_email_template(template_name='', context={}):
     '''
     @note: 渲染模板
     '''
-    from django import template
+    from django.template.loader import render_to_string
 
-    if not template_path:
+    if not template_name:
         return ''
     context.update(now=datetime.datetime.now())
     context.update(MAIN_DOMAIN=settings.MAIN_DOMAIN)
 
-    t = template.loader.get_template(template_path)
-    c = template.Context(context)
-    return t.render(c)
+    return render_to_string(template_name, context)
+    # t = template.loader.get_template(template_name)
+    # c = template.Context(context)
+    # return t.render(c)
 
 
 # 判断user是否为user对象获取user id
