@@ -11,11 +11,12 @@ sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
                  ])
 os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
+from www.question.models import Question, QuestionType, Tag, TagQuestion, Topic, TopicQuestion
+from www.question.interface import TopicBase
+tb = TopicBase()
+
 
 def init_question_type():
-    from www.question.interface import TopicBase
-    from www.question.models import Question, QuestionType, Tag, TagQuestion, Topic, TopicQuestion
-    tb = TopicBase()
 
     if not Topic.objects.filter(domain='root'):
         root = Topic.objects.create(name=u"全部", domain="root", des="根话题", level=0)
@@ -50,4 +51,18 @@ def init_question_type():
 
 
 if __name__ == '__main__':
-    init_question_type()
+    if len(sys.argv) <= 1:
+        print u'0-初始化所有数据'
+        print u'1-更新话题下的提问数'
+    else:
+        param = sys.argv[1]
+        if param == '0':
+            init_question_type()
+        elif param == '1':
+            for topic in Topic.objects.all():
+                topic.question_count = TopicQuestion.objects.select_related('question').filter(topic=topic, question__state=True).count()
+                topic.save()
+            tb.get_all_topics(must_update_cache=True)
+        else:
+            print u'无效的参数'
+        print u'ok'
