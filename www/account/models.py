@@ -35,7 +35,7 @@ class Profile(models.Model):
     用户扩展信息
     '''
     gender_choices = ((0, u'未设置'), (1, u'男'), (2, u'女'), )
-    source_choices = ((0, u'web'), (1, u'weibo'))
+    source_choices = ((0, u'web'), (1, u'第三方登录'))
 
     auto_id = models.AutoField(primary_key=True)
     id = models.CharField(max_length=32, unique=True)

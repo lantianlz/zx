@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pprint import pprint
+# from pprint import pprint
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.template import RequestContext
@@ -63,7 +63,7 @@ def oauth_sina(request):
         # pprint(user_info)
         user_info = format_external_user_info(user_info, 'sina')
 
-        flag, result = UserBase().get_user_by_external_info(source='qq', access_token=access_token, external_user_id=openid,
+        flag, result = UserBase().get_user_by_external_info(source='sina', access_token=access_token, external_user_id=openid,
                                                             refresh_token=dict_result['refresh_token'], nick=user_info['nick'],
                                                             ip=utils.get_clientip(request), expire_time=dict_result['expires_in'],
                                                             user_url=user_info['url'], gender=user_info['gender'])
