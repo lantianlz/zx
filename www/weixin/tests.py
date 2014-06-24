@@ -29,11 +29,8 @@ def main():
     # print wb.send_msg_to_weixin(content, to_user, app_key)
     # print wb.get_weixin_access_token(app_key="zhixuan_test")
 
-    from common import utils
-    # utils.send_email(emails="fas@mrzhixuan.com", title="aa", content="fasdf")
-    es = ["fasd@mrzhixuan.com", "a@zhixuan.com"]
-    es = [e for e in es if not 'mrzhixuan' in e]
-    print es
+    from www.tasks import async_send_email_worker
+    async_send_email_worker.delay('lantian-lz@163.com', title="来自智选", content="邮件发送")
 
 if __name__ == '__main__':
     main()

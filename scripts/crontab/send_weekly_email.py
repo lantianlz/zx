@@ -8,6 +8,7 @@ import os
 SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
                  os.path.abspath(os.path.join(SITE_ROOT, '../../')),
+                 os.path.abspath(os.path.join(SITE_ROOT, '../../www')),
                  ])
 os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
