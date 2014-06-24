@@ -53,9 +53,10 @@ def send_weekly_email():
         for user in User.objects.filter(state__gt=0):
             email = user.email
             context.update(dict(email=email))
+            async_send_email(email, u'智选每周精选', utils.render_email_template('email/important.html', context), 'html')
 
-        email = ["lz@zhixuan.com", "lcm@zhixuan.com", "jz@zhixuan.com"]
-        async_send_email(email, u'智选每周精选', utils.render_email_template('email/important.html', context), 'html')
+        # email = ["lz@zhixuan.com", "lcm@zhixuan.com", "jz@zhixuan.com"]
+        # async_send_email(email, u'智选每周精选', utils.render_email_template('email/important.html', context), 'html')
 
     print 'ok'
 
