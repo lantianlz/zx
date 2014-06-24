@@ -48,6 +48,8 @@ def main(limit):
             f.write(content)
             f.close()
 
+    print 'ok'
+
 
 def check_content(content):
     exclude_set = set(['', ])

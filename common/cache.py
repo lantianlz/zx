@@ -4,6 +4,7 @@ import redis
 from cPickle import dumps, loads
 
 
+CACHE_WORKER = ('127.0.0.1', 6379, 1, 'worker')
 CACHE_TMP = ('127.0.0.1', 6379, 5, 'tmp')
 CACHE_STATIC = ('127.0.0.1', 6379, 6, 'static')
 CACHE_USER = ('127.0.0.1', 6379, 7, 'user')
@@ -14,6 +15,7 @@ CONNECTIONS = {}
 
 # admin后台渲染用
 CACHE_INDEX = {
+    'CACHE_WORKER': [u'异步worker库', CACHE_WORKER],
     'CACHE_TMP': [u'临时库', CACHE_TMP],
     'CACHE_STATIC': [u'无过期时间库', CACHE_STATIC],
     'CACHE_USER': [u'user库', CACHE_USER],
@@ -73,6 +75,9 @@ class Cache(object):
 
     def exists(self, key):
         return self.conn.exists(key)
+
+    def llen(self, key):
+        return self.conn.llen(key)
 
     def get_time_is_locked(self, key, time_out):
         '''
