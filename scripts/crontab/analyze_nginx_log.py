@@ -34,7 +34,7 @@ def main():
     content = u'www.log info is:\n%s \n\n' % (content_www,)
     time_content = u'shell run time:%.1f second' % (t2 - t1, )
     if check_content(content_www):
-        file_name = '%s/../scripts/last_analyze_log.txt' % settings.SITE_ROOT
+        file_name = '%s/../scripts/crontab/last_analyze_log.txt' % settings.SITE_ROOT
         try:
             f = open(file_name, 'r')
             file_content = f.read()
