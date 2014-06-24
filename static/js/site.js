@@ -1510,7 +1510,7 @@ if (!String.format) {
             }, _options),
 
             progressHtml = [
-                '<div class="progress progress-striped active pa" id="forever_progress" style="top: {0}px; width: {1}px; left: {2}px">',
+                '<div class="progress progress-striped active pa" id="forever_progress" style="top: {0}px; width: {1}px; left: {2}px; z-index: 99999;">',
                     '<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">',
                         '<span class="sr-only">0%</span>',
                     '</div>',
@@ -1647,9 +1647,10 @@ function createEditor(selector){
                                 }
                             });
                             
-                        }
+                        };
                         
                     if(clipboardData){
+                        
                         items = clipboardData.items;
                         
                         for(var i=0; i<items.length; i++){
