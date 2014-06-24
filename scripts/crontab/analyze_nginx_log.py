@@ -21,14 +21,12 @@ from common.utils import send_email
 from django.conf import settings
 
 
-def main():
+def main(limit):
 
     t1 = time.time()
-    cmd_www = """/usr/bin/tail -n 500000 /var/log/nginx/www.log | grep -v 127.0.0.1 | awk -F"-" {'print $1'} | sort |uniq -c |sort -rn |awk '{ if($1>1000) print "count " $1 " ip "$2 }' """
-    # cmd_api = """/usr/bin/tail -n 500000 /var/log/nginx/api.log | grep -v 127.0.0.1 | awk -F"-" {'print $1'} | sort |uniq -c |sort -rn |awk '{ if($1>5000) print "count " $1 " ip "$2 }' """
+    cmd_www = """/usr/bin/tail -n 500000 /var/log/nginx/www.log | grep -v 127.0.0.1 | awk -F"-" {'print $1'} | sort |uniq -c |sort -rn |awk '{ if($1>%s) print "count " $1 " ip "$2 }' """ % limit
 
     content_www = commands.getoutput(cmd_www)
-    # content_api = commands.getoutput(cmd_api)
 
     t2 = time.time()
     content = u'www.log info is:\n%s \n\n' % (content_www,)
@@ -61,4 +59,8 @@ def check_content(content):
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) <= 1:
+        limit = 1000
+    else:
+        limit = int(sys.argv[1])
+    main(limit)
