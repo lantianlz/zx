@@ -419,3 +419,23 @@ a.border-block-blue.active{
   background:    -moz-linear-gradient(left,#ace,#f96);
   background:     -ms-linear-gradient(left,#ace,#f96);
 }
+
+.zx-info-notice{
+  background-color: #56A8C7;
+  border-color: #56A8C7;
+}
+
+.zx-success-notice{
+  background-color: #65B153;
+  border-color: #0FA70D;
+}
+
+.zx-error-notice{
+  background-color: #C94C42;
+  border-color: #B43A30;
+}
+
+.zx-warning-notice{
+  background-color: #EEA31F;
+  border-color: #EEA31F;
+}

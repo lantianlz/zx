@@ -1421,6 +1421,73 @@ if (!String.format) {
         });
     };
 
+    /*
+        顶部通知
+        content: 通知内容
+        type: 是否重要通知
+
+        用例:
+        $.ZXNotice.InlineNotice(11, '这是通知', '', false, function(){})
+    */
+    $.ZXNotice.TopNotice = function(type, content, closeSeconds){
+        var noticeHtml = [
+                '<div class="alert alert-dismissable pf box-shadow-224 border-radius-2 co3 min-w600 zx-top-notice zx-{0}-notice">',
+                    '<button type="button" class="close" aria-hidden="true">',
+                        '<span class="glyphicon glyphicon-remove-circle co3 f18 pointer"></span>',
+                    '</button>',
+                    '<span class="glyphicon {1} pa pr-10 f20" style="left: 25px; top: 15px;"></span>',
+                    '<span class="notice-content pl-50">{2}</span>',
+                '</div>'
+            ].join(''),
+            // 图表
+            signDict = {
+                'success': 'glyphicon-ok', 
+                'error': 'glyphicon-exclamation-sign',
+                'warning': 'glyphicon-warning-sign',
+                'info': 'glyphicon-info-sign'
+            },
+            sign = signDict[type ? type : 'info'];
+
+
+        var target = $(String.format(noticeHtml, type, sign, content)).appendTo($('body')),
+            left = ($(window).width() - target.width()) / 2 - 30;
+
+        target
+        .css({'left': left > 0 ? left : 0 , 'top': 0})
+        .animate({'top': 55}, 300);
+
+        target
+        .find('.close')
+        .bind('click', function(){
+            // 关闭之后删除自己
+            target.animate({'top': 0}, 300, function(){target.remove()});
+        });
+
+        // 自动关闭时间
+        if(closeSeconds){
+            window.setTimeout(function(){
+                target.animate({'top': 0}, 300, function(){target.remove()});
+            }, closeSeconds);
+        }
+
+    };
+
+    $.ZXNotice.SuccessTopNotice = function(content){
+        $.ZXNotice.TopNotice('success', content, 3000);
+    };
+
+    $.ZXNotice.ErrorTopNotice = function(content){
+        $.ZXNotice.TopNotice('error', content);
+    };
+
+    $.ZXNotice.InfoTopNotice = function(content){
+        $.ZXNotice.TopNotice('info', content, 3000);
+    };
+
+    $.ZXNotice.WarningTopNotice = function(content){
+        $.ZXNotice.TopNotice('warning', content);
+    };
+
 
     /*
         图片显示插件
@@ -1484,18 +1551,16 @@ if (!String.format) {
     };
 
     /*
-        图片显示插件
+        进度条插件
     */
     $.ZXProgress = {
         version: '1.0.0',
         author: 'stranger',
-        description: '精度条插件'
+        description: '进度条插件'
     };
 
     /*
-        全屏图片显示插件
-        originUrl: 原始图片地址
-        newUrl：完整图片地址
+        进度条插件
 
         用例：
         $.ZXImage.ForeverProgress({width: 500, top: 20, left: 30});
@@ -1650,22 +1715,18 @@ function createEditor(selector){
                         };
                         
                     if(clipboardData){
-                        
                         items = clipboardData.items;
                         
                         for(var i=0; i<items.length; i++){
-
                             item = items[i];
 
                             if(item.kind == 'file' && item.type.indexOf('image/') !== -1){
-                                // 读取该图片            
+                                // 上传该图片            
                                 postImage(item.getAsFile());
                                 break;
                             }
                         }
-                        
                     }
-
                 });
 
 
@@ -1833,5 +1894,19 @@ $(document).ready(function(){
     $('.follow-zx .feedback').bind('click', function(){
         $.ZXMsg.feedback();
     });
+
+    // 
+    if(ERROR_MSG){
+        $.ZXNotice.ErrorTopNotice(ERROR_MSG);
+    }
+    if(SUCCESS_MSG){
+        $.ZXNotice.SuccessTopNotice(SUCCESS_MSG);
+    }
+    if(INFO_MSG){
+        $.ZXNotice.InfoTopNotice(INFO_MSG);
+    }
+    if(WARNING_MSG){
+        $.ZXNotice.WarningTopNotice(WARNING_MSG);
+    }
 });
 

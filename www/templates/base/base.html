@@ -51,14 +51,14 @@
 
         <div class="zx-alert">
             {% if success_msg %}
-            <div class="alert alert-success popmsg container zx-container box-shadow-224 border-radius-0">
+            <div class="alert alert-success popmsg container zx-container box-shadow-224 border-radius-0 none">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 {{success_msg}}
             </div>
             {% endif %}
 
             {% if error_msg %}
-                <div class="alert alert-danger alert-dismissable container zx-container box-shadow-224 border-radius-0">
+                <div class="alert alert-danger alert-dismissable container zx-container box-shadow-224 border-radius-0 none">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     {{error_msg}}
                 </div>
@@ -95,7 +95,11 @@
         <script type="text/javascript" src="{{MEDIA_URL}}js/site.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript">
             var MEDIA_URL = '{{MEDIA_URL|default:''}}',
-            CURRENT_USER_ID = "{{request.user.id|default:''}}";
+                CURRENT_USER_ID = "{{request.user.id|default:''}}",
+                ERROR_MSG = '{{error_msg|default:''}}',
+                SUCCESS_MSG = '{{success_msg|default:''}}',
+                INFO_MSG = '{{info_msg|default:''}}',
+                WARNING_MSG = '{{warning_msg|default:''}}';
         </script>
         {% block base_js %}{% endblock %}
 
