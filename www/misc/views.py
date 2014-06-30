@@ -41,7 +41,7 @@ def sitemap(request):
     @note: site文件动态提供
     '''
     from www.misc.interface import generate_sitemap
-    return HttpResponse(generate_sitemap())
+    return HttpResponse(generate_sitemap(), mimetype='application/xml')
 
 
 def link_view(request):
