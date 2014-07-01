@@ -33,7 +33,10 @@
                     <a href="{{MAIN_DOMAIN}}/question">问答</a>
                 </li>
                 <li {% if '/important' in request.path %} class="active" {% endif %}>
-                    <a href="{{MAIN_DOMAIN}}/important">每日精选</a>
+                    <a href="{{MAIN_DOMAIN}}/important">精选</a>
+                </li>
+                <li {% if '/zt' in request.path %} class="active" {% endif %}>
+                    <a href="{{MAIN_DOMAIN}}/zt">专题</a>
                 </li>
                 <li {% if '/account/invitation' in request.path %} class="active" {% endif %}>
                     <a href="{{MAIN_DOMAIN}}/account/invitation">邀请注册</a>
