@@ -74,48 +74,46 @@ $(document).ready(function(){
 {% block container_content %}
 <div class="text-center f40 pb-25 pt-25 co21"><span>专题列表</span></div>
 <ul class="list-inline pl-15 pt-20 co21">
+    {% for zhuanti in zhuantis %}
     <li class="col-md-3 col-xs-6 pb-40 zhuanti-item">
         <div class="border-1 bdc-bbb pl-15 pr-15 pt-15 pb-15 mr-5 ml-5 box-shadow-041 pr">
             <div class="f16 text-center pb-15 fb">
-                <span><a class="co21 no-hover-unl" href="/zt/aaa">新手开户</a></span>
+                <span><a class="co21 no-hover-unl" href="{{zhuanti.get_url}}">{{zhuanti.title}}</a></span>
             </div>
             <div class="pb-15">
                 <div class="col-md-4 col-md-offset-4 bottom-border bdc-444"></div>
             </div>
             <div class="f13 text-center pb-15 co8">
-                <a href="#" class="gray-gray zx-cardtips" data-user_id='1'>嘎嘎</a> 编
+                <span class="gray-gray">{{zhuanti.author_name}}</span> 编
             </div>
             <div class="cover-img">
-                <a href="/zt/aaa">
-                    <img class="w" src="http://img0.zhixuan.com/important_b4d2e1fefe9f11e3914100163e003240">
+                <a href="{{zhuanti.get_url}}">
+                    <img class="w" src="{{zhuanti.img}}" alt="{{zhuanti.title}}" >
                 </a>
             </div>
             <div class="desc pa pr-15 f13 line-height-25" style="top: 100px;">
-                <a href="/zt/aaa" class="co21 no-hover-unl">
-                    智选是一个面向所有投资者的网络问答平台,这里有普通投资者,也有业内精英,在“开放、平等、协作、分享”的互联网精神下,用户在这里提问,在这里回答,在这里学习,与...
-                </a>
+                <a href="{{zhuanti.get_url}}" class="co21 no-hover-unl">{{zhuanti.summary}}</a>
             </div>
         </div>
     </li>
+    {% endfor %}
     <li class="col-md-3 col-xs-6 pb-40 zhuanti-item">
         <div class="border-1 bdc-bbb pl-15 pr-15 pt-15 pb-15 mr-5 ml-5 box-shadow-041 pr">
             <div class="f16 text-center pb-15 fb">
-                <span>知识储备</span>
+                <span>更多专题，敬请期待</span>
             </div>
             <div class="pb-15">
                 <div class="col-md-4 col-md-offset-4 bottom-border bdc-444"></div>
             </div>
             <div class="f13 text-center pb-15 co8">
-                <span>半夜没事瞎溜达 编</span>
+                <span>智选</span>
             </div>
             <div class="cover-img">
                 <a href="/s/zhuanti2">
                     <img class="w cover-img" src="http://img0.zhixuan.com/important_553bff6cfc3511e3914100163e003240">
                 </a>
             </div>
-            <div class="desc pa pr-15 f13 line-height-25" style="top: 100px;">
-                旭游网络的游戏产品不算是市场主流，目前主要以足球类页游为主，虽然属于小众类游戏，但球迷的付费能力强，付费用户数的ARPU值很高，也有一定的市场空间。公司团队实力不错，较为成熟...
-            </div>
+            <div class="desc pa pr-15 f13 line-height-25" style="top: 100px;">更多专题，敬请期待</div>
         </div>
     </li>
 </ul>

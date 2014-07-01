@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     'www.timeline',
     'www.kaihu',
     'www.admin',
+    'www.zhuanti',
 )
 
 AUTHENTICATION_BACKENDS = ('www.middleware.user_backend.AuthBackend',)
