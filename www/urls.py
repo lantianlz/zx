@@ -35,7 +35,7 @@ urlpatterns = patterns('',
                        url(r'^admin/', include('www.admin.urls')),
                        url(r'^weixin/', include('www.weixin.urls')),
 
-                       url(r'^sitemap$', 'www.misc.views.sitemap'),
+                       url(r'^sitemap.xml$', 'www.misc.views.sitemap'),
                        # url(r'^8efc199540223825b0fb2026cc9b8e39\.html$', 'www.misc.views.link_view'),
                        url(r'^(?P<txt_file_name>\w+)\.txt$', 'www.misc.views.txt_view'),
                        url(r'^s/links$', 'www.misc.views.friendly_links'),

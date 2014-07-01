@@ -1901,18 +1901,24 @@ $(document).ready(function(){
         $.ZXMsg.feedback();
     });
 
-    // 
-    if(ERROR_MSG){
-        $.ZXNotice.ErrorTopNotice(ERROR_MSG);
+    // 提示信息框
+    try {
+        if(ERROR_MSG){
+            $.ZXNotice.ErrorTopNotice(ERROR_MSG);
+        }
+        if(SUCCESS_MSG){
+            $.ZXNotice.SuccessTopNotice(SUCCESS_MSG);
+        }
+        if(INFO_MSG){
+            $.ZXNotice.InfoTopNotice(INFO_MSG);
+        }
+        if(WARNING_MSG){
+            $.ZXNotice.WarningTopNotice(WARNING_MSG);
+        }
     }
-    if(SUCCESS_MSG){
-        $.ZXNotice.SuccessTopNotice(SUCCESS_MSG);
+    catch(e) {
+        alert(e);
     }
-    if(INFO_MSG){
-        $.ZXNotice.InfoTopNotice(INFO_MSG);
-    }
-    if(WARNING_MSG){
-        $.ZXNotice.WarningTopNotice(WARNING_MSG);
-    }
+
 });
 
