@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /p/*
 Disallow: /500
-Sitemap: <http://www.zhixuan.com/sitemap>
+Sitemap: <http://www.zhixuan.com/sitemap.xml>
