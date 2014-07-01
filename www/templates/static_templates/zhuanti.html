@@ -1,0 +1,571 @@
+{% extends "base/base_zhuanti.html" %}
+
+{% block title %}新手股票入门{% endblock title %}
+
+{% block base_css %}
+<style>
+.pulse-arrow-1{
+    color: #eee;
+
+    -webkit-animation: pulse-arrow 2s ease infinite;
+       -moz-animation: pulse-arrow 2s ease infinite;
+        -ms-animation: pulse-arrow 2s ease infinite;
+            animation: pulse-arrow 2s ease infinite;
+}
+.pulse-arrow-2{
+    color: #eee;
+
+    -webkit-animation: pulse-arrow 2s ease 1s infinite;
+       -moz-animation: pulse-arrow 2s ease 1s infinite;
+        -ms-animation: pulse-arrow 2s ease 1s infinite;
+            animation: pulse-arrow 2s ease 1s infinite;
+}
+@keyframes pulse-arrow{
+    from {color: #eee;}
+    50%  {color: gray;}
+    100% {color: #eee;}
+}
+
+@-webkit-keyframes pulse-arrow{
+    from {color: #eee;}
+    50%  {color: gray;}
+    100% {color: #eee;}
+}
+
+.bgc-pointer{
+    background-color:  #86C1D6;
+}
+
+.bgc-tips{
+    background-color:  #86C1D6;
+}
+
+.page-nav{
+    right: 3%;
+    top: 36%;
+}
+
+.page-nav li>span.pointer{
+    margin-bottom: 5px;
+}
+
+.page-nav li.active>span{
+    background-color: #428bca;
+}
+
+.page-nav .tips{
+    left: -62px;
+    top: 0px;
+    width: 75px;
+    height: 20px;
+    display: none;
+    padding-left: 5px;
+}
+
+.expand{
+    width: 0%;
+    height: 1px;
+    margin: 2px 0;
+    left: 0;
+    background: #2187e7;
+    position: absolute;
+    box-shadow: 0px 0px 10px 1px rgba(0,198,255,0.7);
+    transition: all 0.5s linear;
+}
+</style>
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+$(document).ready(function(){
+    var BACKGROUND_IMAGES = [
+        "{{MEDIA_URL}}img/common/zhuanti-1-1.jpg",
+        "{{MEDIA_URL}}img/common/zhuanti-1-2.jpg",
+        "{{MEDIA_URL}}img/common/zhuanti-1-3.jpg",
+        "{{MEDIA_URL}}img/common/zhuanti-1-4.jpg",
+        "{{MEDIA_URL}}img/common/zhuanti-1-5.jpg",
+        "{{MEDIA_URL}}img/common/zhuanti-1-6.jpg"
+    ],
+    totalSection = $('.section').length,
+    loadingInterval = null,
+    loadingState = 0,
+    // 后台预加载背景图片
+    loadBackgroundImage = function(url){
+        var img = new Image();
+        img.style.display = "none";
+        img.onload = function(){
+            loadingState += 1;
+
+            showPage();
+
+            $(img).remove();
+        }
+        $('body').append(img);
+        img.src = url;
+    };
+    showPage = function(){
+        // 图片加载是否完成
+        if(loadingState < totalSection){
+            return;
+        }
+
+        // 完成之后设进度条为100%
+        window.clearInterval(loadingInterval);
+        $('.expand').width($(window).width());
+
+        // 显示界面
+        _.delay(function(){
+            $('.cover3').remove();
+            $('.cover1').animate({top: -$(window).height()}, 500, 'easeInOutQuint', function(){$(this).remove()});
+            $('.cover2').animate({top: $(window).height()}, 500, 'easeInOutQuint', function(){$(this).remove()});
+        }, 600);
+        
+    },
+    pageTransform = function(pageIndex){
+
+        if($.ZXUtils.isPhone()){
+            return;
+        }
+
+        var targetSection = $('.section').eq(pageIndex-1),
+            tempTitle = targetSection.find('.title'),
+            tempContent = targetSection.find('.content'),
+            tempWidth = tempTitle.width(),
+            tempHeight = $(window).height();
+
+        tempTitle.hide();
+        tempContent.hide();
+        
+        switch(pageIndex){
+            // 同时从左至右
+            case 1:
+                _.delay(function(){
+                    
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 8, 
+                        'margin-top': tempHeight / 4,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+                    
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 8, 
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 700);
+
+                break;
+
+            // 分别上下合并
+            case 2:
+                _.delay(function(){
+                    
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': tempHeight / 8,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': tempHeight / 4,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+                    
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': tempHeight / 8,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': 0,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 800);
+
+                break;
+
+            // 分别左右合并
+            case 3:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4 + (tempWidth / 4)*0.3, 
+                        'margin-top': tempHeight / 4,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4 - (tempWidth / 4)*0.3, 
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 700);
+                break;
+
+            // 同时至下而上
+            case 4:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': tempHeight / 4 + (tempHeight / 4)*0.2,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': tempHeight / 4,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': (tempHeight / 4)*0.1,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': 0,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 800);
+                break;
+
+            // 同时至下而上
+            case 5:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4, 
+                        'margin-top': tempHeight / 4 - (tempHeight / 4)*0.8,
+                        'opacity': 0, 
+                    })
+                    .animate({
+                        'margin-top': tempHeight / 4,
+                        'opacity': 1
+                    }, 600, 'easeOutBounce');
+                }, 500);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4, 
+                        'margin-top': (tempHeight / 4)*0.1,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'opacity': 1,
+                        'margin-top': 0
+                    }, 600, 'easeInOutCubic');
+                }, 900);
+                break;
+
+            // 分别左右合并
+            case 6:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4)*0.4, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': tempHeight / 4,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': (tempWidth / 4)*0.1, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4)*0.4, 
+                        'margin-right': tempWidth / 4, 
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': (tempWidth / 4)*0.1, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 700);
+                break;
+        }
+    };
+
+    $('#fullpage').fullpage({
+        scrollingSpeed: 700,
+        easing: 'easeOutExpo',
+        afterRender: function(){
+            var sections = $('.section');
+
+            sections.map(function(i){
+                sections
+                .eq(i)
+                .find('.section-bg')
+                .attr('src', BACKGROUND_IMAGES[i]);
+            });
+
+            pageTransform(1);
+        },
+        onLeave: function(index, nextIndex, direction){
+
+            // 页面动画
+            pageTransform(nextIndex);
+
+            // 右侧导航栏
+            $('.page-nav li').removeClass('active').eq(nextIndex-1).addClass('active');
+
+            // 控制下一页按钮
+            nextIndex >= totalSection ? $('.go-next').fadeOut() : $('.go-next').fadeIn();
+        }
+    });
+
+    // 跳转下一屏
+    $('.go-next').bind('click', function(){
+        $.fn.fullpage.moveSectionDown();
+    });
+
+    // 右侧导航
+    $('.page-nav .pointer')
+    .bind('click', function(){
+        $.fn.fullpage.moveTo(parseInt($(this).data('page_index')));
+    }).
+    bind('mouseenter', function(){
+        $(this)
+        .find('.tips')
+        .stop(true, true)
+        .show()
+        .css({'width': 0, 'left': 5, 'z-index': 100})
+        .animate(
+            {'width': 70, 'left': -62}, 
+            300, 
+            'easeOutCirc'
+        );
+    }).
+    bind('mouseleave', function(){
+        $(this)
+        .find('.tips')
+        .stop(true, true)
+        // .css({'width': 0, 'left': 5})
+        .animate(
+            {'width': 0, 'left': 5}, 
+            300, 
+            'easeOutCirc', 
+            function(){ 
+                $(this).hide();
+            }
+        );
+    })
+
+    // 控制进度条
+    var currentPercent = 0, step = 5;
+    loadingInterval = window.setInterval(function(){
+
+        if(currentPercent >= 100){
+            currentPercent = 0;
+        }
+            
+        $('.expand').width(currentPercent / 100 * $(window).width());
+        currentPercent += step;
+    }, 500);
+
+    // 循环加载图片
+    _.map(BACKGROUND_IMAGES, function(imageUrl){
+        loadBackgroundImage(imageUrl);
+    });
+
+    //
+    $.ZXUtils.isPhone() ? $('.fix-nav').css({'right': '3%'}) : $('.fix-nav').css({'left': '8%'})
+});
+</script>
+{% endblock %}
+
+{% block container %}
+<div class="pf f24 co3 z99 fix-nav" style="top: 2%;">
+    <a href="/" class="ddd-999">智选</a>
+    <a href="/s/zhuanti_list" class="ddd-999 ml-20">专题</a>
+</div>
+<div id="fullpage">
+    <div class="section active">
+        <div class="col-md-6 col-xs-12 pr">
+            <div class="title pr">
+                <span class="f40">知识储备</span>
+            </div>
+            <ul class="content list-unstyled pt-20 f16 pr">
+                <li>
+                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f40">模拟炒股</span>
+            </div>
+            <ul class="content list-unstyled pt-20 f16">
+                <li>
+                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f40">选择券商</span>
+            </div>
+            <ul class="content list-unstyled pt-20 f16">
+                <li>
+                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f40">行情软件</span>
+            </div>
+            <ul class="content list-unstyled pt-20 f16">
+                <li>
+                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f40">选股方法</span>
+            </div>
+            <ul class="content list-unstyled pt-20 f16">
+                <li>
+                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f40">实盘操作</span>
+            </div>
+            <ul class="content list-unstyled pt-20 f16">
+                <li>
+                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 右侧导航 -->
+    <ul class="pf page-nav list-unstyled hidden-xs">
+        <li class="active pr pointer" data-page_index="1">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">知识储备</span>
+        </li>
+        <li class="pr pointer" data-page_index="2">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">模拟炒股</span>
+        </li>
+        <li class="pr pointer" data-page_index="3">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">选择券商</span>
+        </li>
+        <li class="pr pointer" data-page_index="4">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">行情软件</span>
+        </li>
+        <li class="pr pointer" data-page_index="5">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">选股方法</span>
+        </li>
+        <li class="pr pointer" data-page_index="6">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">实盘操作</span>
+        </li>
+    </ul>
+
+    <!-- 跳转下一屏 -->
+    <div class="pf text-center f24 go-next pointer hidden-xs" style="bottom: 3%; left: 50%;">
+        <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-1"></span></div>
+        <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-2"></span></div>
+    </div>
+
+    <!-- loading层 -->
+    <div class="cover1 pf z100 bgc-000" style="width: 100%; height: 50%; top: 0; left: 0;"></div>
+    <div class="cover2 pf z100 bgc-000" style="width: 100%; height: 50%; top: 50%; left: 0;"></div>
+    <div class="cover3 pf z100 bgc-000" style="width: 100%; height: 50%; top: 50%; left: 0;">
+        <span class="expand"></span>
+    </div>
+</div>
+{% endblock container %}

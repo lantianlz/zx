@@ -25,7 +25,9 @@
         </div>
         <div class="col-md-8 col-ms-12">
             <div>
-                <a class="black-blue" href="{{question.get_url}}"><h4 class="mt-5"><strong>{{question.iq_title|str_display:20}}</strong></h4></a>
+                <h4 class="mt-5">
+                    <a class="black-blue fb" href="{{question.get_url}}">{{question.iq_title|str_display:20}}</a>
+                </h4>
             </div>
             <div class="f12 co8">
                 <a class="zx-cardtips gray-gray" data-user_id="{{question.author.id}}" href="{{question.author.get_url}}">{{question.author.nick}}</a>

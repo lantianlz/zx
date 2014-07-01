@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block title %}{% endblock title %} - 智选</title>
+        <meta name="baidu-site-verification" content="gFGOn964zK" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="author" content="simplejoy" />
+        <!-- 兼容 双核浏览器 -->
+        <meta name="renderer" content="webkit" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
+        <meta name="keywords" content="{% block keywords %}智选,股票问答,投资问答,炒股问答,投资社区,股票,债券,期货,期权,投资{% endblock keywords %}" />
+        <meta name="description" content="{% block description %}智选是一个开放的投资问答平台，信息泛滥的年代，你不会缺少资讯，缺少的只是适合自己的投资信息。来智选提问，与业内精英探讨投资相关问题，收获最有价值的投资建议。{% endblock description %}" />
+        <link rel="shortcut icon" href="{{MEDIA_URL}}/img/common/favicon.ico" />
+
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/tooltipster.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/fullpage/jquery.fullPage.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery/tooltipster/themes/tooltipster-shadow.css" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/base.css?v={{MEDIA_VERSION}}" />
+        <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site.css?v={{MEDIA_VERSION}}" />
+        
+        {% block base_css %}{% endblock %}
+
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery-1.7.min.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/backbone/underscore-min.js"></script>
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/html5shiv.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/respond.min.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap.min.js"></script>
+
+    </head>
+
+    <body>
+        
+        {% block container %}{% endblock container %}
+
+        {% block footer %}
+        {#% include "include/_footer.html" %#}
+        {% endblock footer %}
+
+        {% block body_tail %}{% endblock body_tail %}
+
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.placeholder.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.cookie.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.mousewheel.min.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.tooltipster.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.easing.1.3.min.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.fullPage.min.js"></script>
+        
+        <script type="text/javascript" src="{{MEDIA_URL}}js/common.js?v={{MEDIA_VERSION}}"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/site.js?v={{MEDIA_VERSION}}"></script>
+        <script type="text/javascript">
+            var MEDIA_URL = '{{MEDIA_URL|default:''}}',
+                CURRENT_USER_ID = "{{request.user.id|default:''}}",
+                ERROR_MSG = '{{error_msg|default:''}}',
+                SUCCESS_MSG = '{{success_msg|default:''}}',
+                INFO_MSG = '{{info_msg|default:''}}',
+                WARNING_MSG = '{{warning_msg|default:''}}';
+        </script>
+        {% block base_js %}{% endblock %}
+
+        {% include "include/_tongji.html" %}
+
+        <!--[if lt IE 8]>
+        <div class="zx-alert" >
+            <div class="alert alert-success popmsg container zx-container box-shadow-224 border-radius-0">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                你现在使用的是旧版本的IE浏览器，为了能更好地体验智选所有功能，请尽快升级你的浏览器至<a href="http://pan.baidu.com/s/1eYgrG" target="_blank">高版本IE</a>，或者使用 <a href="https://www.google.com/intl/zh-CN/chrome/browser/" target="_blank">Chrome</a>，<a href="http://www.firefox.com.cn" target="_blank">Firefox</a>， <a href="http://www.apple.com/safari" target="_blank">Safari</a> 等更加符合标准的浏览器！
+            </div>
+        </div>
+        <![endif]-->
+    </body>
+</html>
