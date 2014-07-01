@@ -13,10 +13,10 @@
 $(document).ready(function(){
 
     $('.key-name').bind('blur', function(){
-        
+
         ajaxSend(
-            "/admin/tools/caches/get_cache?" + $('form').serialize(), 
-            {},
+            "/admin/tools/caches/get_cache", 
+            $.ZXUtils.formToDict('form'),
             function(data){
                 if(data.errcode == 0){
                     $('.key-value').val(data.errmsg)
@@ -28,9 +28,10 @@ $(document).ready(function(){
     });
 
     $('.save').bind('click', function(){
+
         ajaxSend(
-            "/admin/tools/caches/modify_cache?" + $('form').serialize(), 
-            {},
+            "/admin/tools/caches/modify_cache" , 
+            $.ZXUtils.formToDict('form'),
             function(data){
                 $.ZXMsg.alert('提示', data.errmsg);
             }
@@ -39,11 +40,12 @@ $(document).ready(function(){
     });
 
     $('.remove').bind('click', function(){
+
         $.ZXMsg.confirm('提示', '确认要删除此缓存?', function(result){
             if(result){
                 ajaxSend( 
-                    "/admin/tools/caches/remove_cache?" + $('form').serialize(), 
-                    {},
+                    "/admin/tools/caches/remove_cache", 
+                    $.ZXUtils.formToDict('form'),
                     function(data){
                         $.ZXMsg.alert('提示', data.errmsg);
                     }

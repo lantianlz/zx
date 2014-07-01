@@ -319,6 +319,21 @@ if (!String.format) {
 
     };
 
+    /*
+        将表单数据转换成字典，用于ajax
+
+        用例:
+        $.ZXUtils.formToDict('myform');
+    */
+    $.ZXUtils.formToDict = function(selector){
+        var postData = {};
+
+        // 转换
+        _.map($(selector).serializeArray(), function(i){postData[i.name] = i.value});
+
+        return postData;
+    };
+
 
 
     /* 
