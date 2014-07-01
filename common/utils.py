@@ -91,9 +91,12 @@ def get_next_url(request):
         referrer = request.META.get('HTTP_REFERER')
         if referrer and referrer.startswith(settings.MAIN_DOMAIN):
             referrer = list(urlparse(referrer))[2]
-            if referrer != request.path and referrer not in ('/', '/regist', '/reset_password', '/forget_password'):
-                # referrer的query参数会丢失
-                next_url = referrer + '?' + list(urlparse(referrer))[4]
+            if referrer != request.path:
+                if referrer not in ('/', '/regist', '/reset_password', '/forget_password'):
+                    for key in ("regist", ):
+                        if referrer.find(key) == -1:
+                            # referrer的query参数会丢失
+                            next_url = referrer + '?' + list(urlparse(referrer))[4]
     return next_url or '/home'
 
 
