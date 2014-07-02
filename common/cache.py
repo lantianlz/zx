@@ -79,6 +79,9 @@ class Cache(object):
     def llen(self, key):
         return self.conn.llen(key)
 
+    def ttl(self, key):
+        return self.conn.ttl(key)
+
     def get_time_is_locked(self, key, time_out):
         '''
         @note: 设置锁定时间
@@ -165,9 +168,10 @@ if __name__ == '__main__':
     os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
     cache_obj = Cache()
-    # print cache_obj.set(u'keyaaom@a.c!@#$%^&*()om', 'aaa', time_out=1000)
+    # print cache_obj.set(u'keyaaom@a.c!@#$%^&*()omkeyaaom@a.c!@#$%^&*()om', 'aaa', time_out=1000)
+    print cache_obj.ttl(u'keyaaom@a.c!@#$%^&*()om')
 
-    cache_queue = CacheQueue('test', 5)
+    # cache_queue = CacheQueue('test', 5)
     # cache_queue.push('7')
-    print cache_queue[0:-1]
-    print cache_queue.init(items=[1, 2, 3, 4, 5])
+    # print cache_queue[0:-1]
+    # print cache_queue.init(items=[1, 2, 3, 4, 5])
