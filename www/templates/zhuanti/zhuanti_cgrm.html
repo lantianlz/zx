@@ -135,6 +135,7 @@ $(document).ready(function(){
 
         tempTitle.hide();
         tempContent.hide();
+        tempContent.children().width($(window).width()/8*3);
         
         switch(pageIndex){
             // 同时从左至右
@@ -156,6 +157,7 @@ $(document).ready(function(){
 
                 _.delay(function(){
                     
+
                     tempContent
                     .show()
                     .css({
@@ -348,6 +350,7 @@ $(document).ready(function(){
         afterRender: function(){
             var sections = $('.section');
 
+            // 设置图片
             sections.map(function(i){
                 sections
                 .eq(i)
@@ -396,7 +399,6 @@ $(document).ready(function(){
         $(this)
         .find('.tips')
         .stop(true, true)
-        // .css({'width': 0, 'left': 5})
         .animate(
             {'width': 0, 'left': 5}, 
             300, 
@@ -424,8 +426,16 @@ $(document).ready(function(){
         loadBackgroundImage(imageUrl);
     });
 
-    //
-    $.ZXUtils.isPhone() ? $('.fix-nav').css({'right': '3%'}) : $('.fix-nav').css({'left': '8%'})
+    // 设置顶部导航位置
+    $.ZXUtils.isPhone() ? $('.fix-nav').css({'right': '3%'}) : $('.fix-nav').css({'left': '8%'});
+
+    // 分享操作
+    $('.share-to-qq').bind('click', function(){
+        $.ZXShare.qq(window.location.href, '不错的新手股票入门专题，推荐你来看看!');
+    });
+    $('.share-to-sina').bind('click', function(){
+        $.ZXShare.sinaWeibo(window.location.href, '不错的新手股票入门专题，推荐你来看看!', '');
+    });
 });
 </script>
 {% endblock %}
@@ -435,17 +445,19 @@ $(document).ready(function(){
     <a href="/" class="ddd-999">智选</a>
     <a href="/zt" class="ddd-999 ml-20">专题</a>
 </div>
+<div class="pf f12 co3 z99 share-nav hidden-xs" style="top: 3%; right: 3%;">
+    <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3 share-to-qq" href="javascript:void(0);">分享到QQ</a>
+    <a class="border-block-red ml-5 pl-10 pr-10 pt-3 pb-3 share-to-sina" href="javascript:void(0);">分享到微博</a>
+</div>
 <div id="fullpage">
     <div class="section active">
         <div class="col-md-6 col-xs-12 pr">
             <div class="title pr">
                 <span class="f40">知识储备</span>
             </div>
-            <ul class="content list-unstyled pt-20 f16 pr">
-                <li>
-                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
-                </li>
-            </ul>
+            <div class="content pt-20 f16 pr">
+                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            </div>
         </div>
         <div class="col-md-6 col-xs-12">
             <img class="w section-bg" src="">
@@ -459,11 +471,9 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f40">模拟炒股</span>
             </div>
-            <ul class="content list-unstyled pt-20 f16">
-                <li>
-                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
-                </li>
-            </ul>
+            <div class="content pt-20 f16 pr">
+                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            </div>
         </div>
     </div>
     <div class="section">
@@ -471,11 +481,9 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f40">选择券商</span>
             </div>
-            <ul class="content list-unstyled pt-20 f16">
-                <li>
-                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
-                </li>
-            </ul>
+            <div class="content pt-20 f16 pr">
+                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            </div>
         </div>
         <div class="col-md-6 col-xs-12">
             <img class="w section-bg" src="">
@@ -489,11 +497,9 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f40">行情软件</span>
             </div>
-            <ul class="content list-unstyled pt-20 f16">
-                <li>
-                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
-                </li>
-            </ul>
+            <div class="content pt-20 f16 pr">
+                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            </div>
         </div>
     </div>
     <div class="section">
@@ -501,11 +507,9 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f40">选股方法</span>
             </div>
-            <ul class="content list-unstyled pt-20 f16">
-                <li>
-                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
-                </li>
-            </ul>
+            <div class="content pt-20 f16 pr">
+                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            </div>
         </div>
         <div class="col-md-6 col-xs-12">
             <img class="w section-bg" src="">
@@ -519,11 +523,9 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f40">实盘操作</span>
             </div>
-            <ul class="content list-unstyled pt-20 f16">
-                <li>
-                    <span class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </span>
-                </li>
-            </ul>
+            <div class="content pt-20 f16 pr">
+                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            </div>
         </div>
     </div>
     

@@ -54,7 +54,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/friendly_link/search", 
+                "/admin/kaihu/friendly_link/search", 
                 {'name': name||'', 'city_name': city||'', 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
@@ -69,7 +69,7 @@ $(document).ready(function(){
 
         addFriendlyLink: function(data, callback){
             ajaxSend(
-                "/admin/friendly_link/add_friendly_link?" + data, 
+                "/admin/kaihu/friendly_link/add_friendly_link?" + data, 
                 {},
                 function(data){
                     if(callback){
@@ -84,7 +84,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/friendly_link/get_friendly_link_by_id", 
+                "/admin/kaihu/friendly_link/get_friendly_link_by_id", 
                 {'link_id': linkId},
                 function(data){
                     if(callback){
@@ -99,7 +99,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/friendly_link/remove_friendly_link", 
+                "/admin/kaihu/friendly_link/remove_friendly_link", 
                 {'link_id': linkId},
                 function(data){
                     if(callback){
@@ -114,7 +114,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/friendly_link/modify_friendly_link?" + data, 
+                "/admin/kaihu/friendly_link/modify_friendly_link?" + data, 
                 {},
                 function(data){
                     if(callback){

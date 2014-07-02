@@ -59,7 +59,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/department/search", 
+                "/admin/kaihu/department/search", 
                 {'name': name||'', 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
@@ -76,7 +76,7 @@ $(document).ready(function(){
             var me = this;
 
             ajaxSend(
-                "/admin/department/get_department_by_id", 
+                "/admin/kaihu/department/get_department_by_id", 
                 {'department_id': departmentId},
                 function(data){
                     if(callback){
@@ -94,7 +94,7 @@ $(document).ready(function(){
             _.map(data, function(i){postData[i.name] = i.value});
 
             ajaxSend(
-                "/admin/department/modify_department", 
+                "/admin/kaihu/department/modify_department", 
                 postData,
                 function(data){
                     if(callback){
@@ -187,7 +187,7 @@ $(document).ready(function(){
             this.companyTextBox = $.ZXTextboxList.create('#belong_company_modify', {
                 max: 1,
                 placeholder: '选择所属公司',
-                url: '/admin/department/get_company_by_name',
+                url: '/admin/kaihu/department/get_company_by_name',
                 param: 'company_name',
                 loadPlaceholder: '正在加载...'
             });
