@@ -296,6 +296,7 @@ a:hover{color: #259;}
 .border-radius-50{border-radius: 50px;}
 
 .no-l-r-bd{border-left: 0px;border-right: 0px;}
+.no-top-bd{border-top: 0px;}
 
 .border-1{border: solid 1px;}
 
@@ -303,9 +304,9 @@ a:hover{color: #259;}
 .bottom-border{border-bottom: solid 1px;}
 .bottom-border-3{border-bottom: solid 3px;}
 .left-border{border-left: solid 1px;}
+.left-border-4{border-left: solid 4px;}
 .right-border{border-right: solid 1px;}
 .no-border{border: 0px;}
-
 
 
 .bdc-zx{border-color: #428bca;}
