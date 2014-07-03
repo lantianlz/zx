@@ -1,7 +1,7 @@
 {% extends "admin/home.html" %}
 {% load custom_tags %}
 {% load custom_filters %}
-{% block title %}友情链接管理{% endblock %}
+{% block title %}资讯管理{% endblock %}
 
 {% block css %}
 <style type="text/css">
@@ -44,7 +44,7 @@ $(document).ready(function(){
             'cityName': 'city_name',
             'departmentId': 'department_id',
             'departmentName': 'department_name',
-            'sort': 'sort',
+            'sort': 'sort_num',
             'state': 'state',
             'createDate': 'create_date'
         },
@@ -66,10 +66,10 @@ $(document).ready(function(){
             );
         },
 
-        addArticle: function(data, callback){
+        addArticle: function(postData, callback){
             ajaxSend(
-                "/admin/kaihu/article/add_article?" + data, 
-                {},
+                "/admin/kaihu/article/add_article", 
+                postData,
                 function(data){
                     if(callback){
                         callback(data);
@@ -109,12 +109,12 @@ $(document).ready(function(){
         },
 
         //
-        modifyArticle: function(data, callback){
+        modifyArticle: function(postData, callback){
             var me = this;
 
             ajaxSend(
-                "/admin/kaihu/article/modify_article?" + data, 
-                {},
+                "/admin/kaihu/article/modify_article", 
+                postData,
                 function(data){
                     if(callback){
                         callback(data);
@@ -201,6 +201,20 @@ $(document).ready(function(){
                 this.cityTextBox.add(name, value)
             }
         },
+        departmentTextBox: null,
+        initDepartmentTextBox: function(name, value){
+            this.departmentTextBox = $.ZXTextboxList.create('#belong_department_modify', {
+                max: 1,
+                placeholder: '选择营业部',
+                url: '/admin/user/customer_manager/get_departments_by_name',
+                param: 'department_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.departmentTextBox.add(name, value)
+            }
+        },
 
         // 显示面板
         showPanel: function(){
@@ -212,6 +226,8 @@ $(document).ready(function(){
             this.$el.html(this.template(data));
 
             this.initCityTextBox(data.cityName, data.cityId);
+            this.initDepartmentTextBox(data.departmentName, data.departmentId);
+            createEditor('#content_editor_modify');
         },
 
         // 显示提问信息
@@ -234,7 +250,7 @@ $(document).ready(function(){
             var articleId = this.$('form').data('article_id'),
                 me = this;
 
-            me.collection.modifyArticle(this.$('form').serialize(), function(data){
+            me.collection.modifyArticle($.ZXUtils.formToDict('#modify_article form'), function(data){
                 if(data.errcode === 0){
                     $.ZXMsg.alert('提示', '操作成功');
                     router.navigate('modify/' + articleId, {'trigger': true});
@@ -249,7 +265,7 @@ $(document).ready(function(){
             var articleId = this.$('form').data('article_id'),
                 me = this;
 
-            $.ZXMsg.confirm('提示', '确认要删除此友情链接吗?', function(result){
+            $.ZXMsg.confirm('提示', '确认要删除此资讯吗?', function(result){
                 
                 if(result){
                     me.collection.removeArticle(articleId, function(data){
@@ -287,6 +303,20 @@ $(document).ready(function(){
                 this.cityTextBox.add(name, value);
             }
         },
+        departmentTextBox: null,
+        initDepartmentTextBox: function(name, value){
+            this.departmentTextBox = $.ZXTextboxList.create('#belong_department_add', {
+                max: 1,
+                placeholder: '选择营业部',
+                url: '/admin/user/customer_manager/get_departments_by_name',
+                param: 'department_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.departmentTextBox.add(name, value)
+            }
+        },
 
         showPanel: function(){
             var me = this;
@@ -306,19 +336,21 @@ $(document).ready(function(){
                 history.go(-1);
             });
             $('#add_article_modal .ok').bind('click', function(){
-                me.addFriendlyLink();
+                me.addArticle();
             });
             
             $('#add_article_modal').modal({'show': true, 'backdrop': 'static'});
 
-            this.initCityTextBox();
+            me.initCityTextBox();
+            me.initDepartmentTextBox();
+            createEditor('#content_editor_add');
         },
 
         addArticle: function(){
             var articleId = this.$('form').data('article_id'),
                 me = this;
 
-            articles.addArticle(me.$('form').serialize(), function(data){
+            articles.addArticle($.ZXUtils.formToDict('#add_article_modal form'), function(data){
                 if(data.errcode === 0){
                     router.navigate('modify/' + data.errmsg, {trigger: true});
                     $('#add_article_modal').modal('hide');
@@ -387,7 +419,7 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="article_list">
-        <div class="pl-0 pr-0 pb-10 col-md-2">
+        <div class="pl-0 pr-0 pb-10 col-md-4">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入资讯名称..." />
                 <span class="input-group-btn">
@@ -447,54 +479,39 @@ $(document).ready(function(){
     <form class="form-horizontal" data-article_id="<%= articleId %>" role="form" method="post" action="">
         <input type="hidden" name="article_id" value="<%= articleId %>" />
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接类型</label>
+            <label class="col-sm-2 control-label">标题</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="title" value='<%= title %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">内容</label>
             <div class="col-sm-9">
-            {% for i in link_types %}
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="link_type" value="{{i.value}}" <% if(type=='{{i.value}}'){ %> checked <% } %> >
-                        {{i.name}}
-                    </label>
-                </div>
-            {% endfor %}
-
-                
+            <textarea name="content" rows="6" id="content_editor_modify" class="form-control" style="height: 300px;"><%= content %></textarea>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">所属城市</label>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <input type="text" class="form-control" name="belong_city" id="belong_city_modify" value=''>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接名称</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" name="name" value='<%= name %>'>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接地址</label>
+            <label class="col-sm-2 control-label">营业部</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" placeholder="http://www.site.com" name="href" value='<%= href %>'>
-            </div>
-        </div>
-        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-2 control-label">链接描述</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" placeholder="" name="des" value='<%= des %>'>
+                <input type="text" class="form-control" name="belong_department" id="belong_department_modify" value=''>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">排序</label>
-            <div class="col-sm-1">
+            <div class="col-sm-2">
                 <input type="text" name="sort" class="form-control" value='<%= sort %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <div class="col-sm-12">
                 <button type="button" class="btn btn-primary save">提交你的修改</button>
-                <button type="button" class="btn btn-danger ml-15 remove">删除此友情链接</button>
+                <button type="button" class="btn btn-danger ml-15 remove">删除此资讯</button>
             </div>
         </div>
     </form>
@@ -512,44 +529,31 @@ $(document).ready(function(){
             <div class="modal-body">
                 <form class="form-horizontal" role="form" method="post" action="">
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接类型</label>
-                        <div class="col-sm-9">
-                        {% for i in link_types %}
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="link_type" value="{{i.value}}" checked>
-                                    {{i.name}}
-                                </label>
-                            </div>
-                        {% endfor %}
+                        <label class="col-sm-2 control-label">标题</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="title" value=''>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">所属城市</label>
-                        <div class="col-sm-3">
+                        <label class="col-sm-2 control-label">内容</label>
+                        <div class="col-sm-10">
+                        <textarea name="content" rows="6" id="content_editor_add" class="form-control" style="height: 300px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">所属城市</label>
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" name="belong_city" id="belong_city_add" value=''>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接名称</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" name="name" value=''>
+                        <label class="col-sm-2 control-label">营业部</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="belong_department" id="belong_department_add" value=''>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接地址</label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="http://www.site.com" class="form-control" name="href" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接描述</label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="" class="form-control" name="des" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">排序</label>
+                        <label class="col-sm-2 control-label">排序</label>
                         <div class="col-sm-2">
                             <input type="text" name="sort" class="form-control" value='0'>
                         </div>

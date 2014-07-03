@@ -329,7 +329,11 @@ if (!String.format) {
         var postData = {};
 
         // 转换
-        _.map($(selector).serializeArray(), function(i){postData[i.name] = i.value});
+        _.map($(selector).serializeArray(), function(i){
+            if(i.value){
+                postData[i.name] = i.value
+            }
+        });
 
         return postData;
     };

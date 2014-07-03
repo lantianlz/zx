@@ -28,7 +28,7 @@ def search(request):
     if title:
         questions = QuestionBase().get_question_by_title(title)
     else:
-        questions = QuestionBase().get_all_questions_by_order_count(order)
+        questions = QuestionBase().get_all_questions_by_order_type(order)
 
     page_objs = page.Cpt(questions, count=10, page=page_index).info
 

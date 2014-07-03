@@ -10,7 +10,7 @@ from www.misc.decorators import staff_required, common_ajax_response, verify_per
 from www.misc import qiniu_client
 from common import utils, page
 
-from www.zhuanti.interface import ZhuantiBase
+from www.kaihu.interface import ArticleBase, CityBase, DepartmentBase
 
 
 @verify_permission('')
@@ -18,27 +18,22 @@ def article(request, template_name='admin/article.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@verify_permission('add_zhuanti')
-def add_zhuanti(request):
+@verify_permission('add_article')
+@common_ajax_response
+def add_article(request):
     title = request.REQUEST.get('title')
-    summary = request.REQUEST.get('summary')
-    author = request.REQUEST.get('author')
-    domain = request.REQUEST.get('domain')
+    content = request.REQUEST.get('content')
+    city_id = request.REQUEST.get('belong_city')
+    department_id = request.REQUEST.get('belong_department')
     sort_num = request.REQUEST.get('sort')
 
-    img = request.FILES.get('img')
-    if img:
-        flag, img_name = qiniu_client.upload_img(img, img_type='topic')
-        img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
+    # 如果设置了营业部，则使用营业部所属城市
+    if department_id:
+        city_id = DepartmentBase().get_department_by_id(department_id).city.id
 
-    flag, msg = ZhuantiBase().create_zhuanti(title, summary, img_name, domain, author, sort_num)
+    code, obj = ArticleBase().add_article(title, content, city_id, department_id, sort_num)
 
-    if flag == 0:
-        url = "/admin/zhuanti?#modify/%s" % (msg.id)
-    else:
-        url = "/admin/zhuanti?%s" % (msg)
-
-    return HttpResponseRedirect(url)
+    return code, obj.id
 
 
 def format_article(objs, num):
@@ -48,12 +43,13 @@ def format_article(objs, num):
         num += 1
         data.append({
             'num': num,
-            'zhuanti_id': x.id,
+            'article_id': x.id,
             'title': x.title,
-            'summary': x.summary,
-            'img': x.img,
-            'author_name': x.author_name,
-            'domain': x.domain,
+            'content': x.content,
+            'city_id': x.city_id if x.city_id else '',
+            'city_name': CityBase().get_city_by_id(x.city_id).city if x.city_id else '',
+            'department_id': x.department_id if x.department_id else '',
+            'department_name': DepartmentBase().get_department_by_id(x.department_id).name if x.department_id else '',
             'sort_num': x.sort_num,
             'state': x.state,
             'create_time': str(x.create_time)
@@ -62,14 +58,22 @@ def format_article(objs, num):
     return data
 
 
-@verify_permission('query_zhuanti')
+@verify_permission('query_article')
 def search(request):
     data = []
-    zb = ZhuantiBase()
+    ab = ArticleBase()
+
+    title = request.REQUEST.get('title')
+
+    objs = []
+    if title:
+        objs = ab.get_article_by_title(title)
+    else:
+        objs = ab.get_all_articles(state=None)
 
     page_index = int(request.REQUEST.get('page_index'))
 
-    page_objs = page.Cpt(zb.get_all_zhuantis(state=None), count=10, page=page_index).info
+    page_objs = page.Cpt(objs, count=10, page=page_index).info
 
     # 格式化json
     num = 10 * (page_index - 1)
@@ -81,52 +85,37 @@ def search(request):
     )
 
 
-@verify_permission('query_zhuanti')
-def get_zhuanti_by_id(request):
-    zhuanti_id = request.REQUEST.get('zhuanti_id')
-    zb = ZhuantiBase()
+@verify_permission('query_article')
+def get_article_by_id(request):
+    article_id = request.REQUEST.get('article_id')
 
-    obj = zb.get_zhuanti_by_id_or_domain(zhuanti_id)
+    obj = ArticleBase().get_article_by_id(article_id)
 
-    data = format_zhuanti([obj], 1)[0]
+    data = format_article([obj], 1)[0]
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@verify_permission('remove_zhuanti')
+@verify_permission('remove_article')
 @common_ajax_response
-def remove_zhuanti(request):
-    zhuanti_id = request.REQUEST.get('zhuanti_id')
-    return ZhuantiBase().remove_zhuanti(zhuanti_id)
+def remove_article(request):
+    article_id = request.REQUEST.get('article_id')
+    return ArticleBase().remove_article(article_id)
 
 
-@verify_permission('modify_zhuanti')
-def modify_zhuanti(request):
-    zb = ZhuantiBase()
+@verify_permission('modify_article')
+@common_ajax_response
+def modify_article(request):
 
-    zhuanti_id = request.REQUEST.get('zhuanti_id')
-
-    obj = zb.get_zhuanti_by_id_or_domain(zhuanti_id)
-    img_name = obj.img
+    article_id = request.REQUEST.get('article_id')
 
     title = request.REQUEST.get('title')
-    summary = request.REQUEST.get('summary')
-    author = request.REQUEST.get('author')
-    domain = request.REQUEST.get('domain')
+    content = request.REQUEST.get('content')
+    city_id = request.REQUEST.get('belong_city')
+    department_id = request.REQUEST.get('belong_department')
     sort_num = request.REQUEST.get('sort')
 
-    img = request.FILES.get('img')
-    if img:
-        flag, img_name = qiniu_client.upload_img(img, img_type='topic')
-        img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
+    # 如果设置了营业部，则使用营业部所属城市
+    if department_id:
+        city_id = DepartmentBase().get_department_by_id(department_id).city.id
 
-    flag, msg = ZhuantiBase().modify_zhuanti(
-        zhuanti_id, title=title, summary=summary, img=img_name,
-        author_name=author, domain=domain, sort_num=sort_num
-    )
-
-    if flag == 0:
-        url = "/admin/zhuanti?#modify/%s" % (obj.id)
-    else:
-        url = "/admin/zhuanti?%s#modify/%s" % (msg, obj.id)
-
-    return HttpResponseRedirect(url)
+    return ArticleBase().modify_article(article_id, title=title, content=content, city_id=city_id, department_id=department_id, sort_num=sort_num)

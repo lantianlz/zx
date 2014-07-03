@@ -15,6 +15,7 @@ dict_err = {
     50101: u'找不到指定营业部',
     50102: u'找不到指定客户经理',
     50103: u'找不到指定友情链接',
+    50104: u'找不到指定资讯',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -379,8 +380,19 @@ class ArticleBase(object):
         except Article.DoesNotExist:
             return None
 
-    def get_all_articles(self):
-        return Article.objects.filter(state=True)
+    def get_all_articles(self, state=True):
+        objs = Article.objects.all()
+
+        if state:
+            objs = objs.filter(state=state)
+
+        return objs
+
+    def get_article_by_title(self, title):
+        return self.get_all_articles(state=None).filter(title=title)
+
+    def get_article_by_id(self, article_id):
+        return self.get_all_articles(state=None).get(id=article_id)
 
     def get_articles_by_city_id(self, city_id):
         return Article.objects.filter(state=True, city_id=city_id)
@@ -393,3 +405,40 @@ class ArticleBase(object):
                                          department_id=department_id, sort_num=sort_num)
 
         return 0, article
+
+    def modify_article(self, article_id, **kwargs):
+
+        if not article_id:
+            return 99800, dict_err.get(99800)
+
+        article = self.get_article_by_id(article_id)
+        if not article:
+            return 50104, dict_err.get(50104)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(article, k, v)
+
+            article.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
+    def remove_article(self, article_id):
+        if not article_id:
+            return 99800, dict_err.get(99800)
+
+        article = self.get_article_by_id(article_id)
+        if not article:
+            return 50104, dict_err.get(50104)
+
+        try:
+            article.state = False
+            article.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)

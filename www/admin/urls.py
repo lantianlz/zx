@@ -101,9 +101,13 @@ urlpatterns += patterns('www.admin.views_department',
                         url(r'^kaihu/department/search$', 'search'),
                         url(r'^kaihu/department$', 'department'),
                         )
-# 营业部
+# 资讯
 urlpatterns += patterns('www.admin.views_article',
 
+                        url(r'^kaihu/article/remove_article$', 'remove_article'),
+                        url(r'^kaihu/article/modify_article$', 'modify_article'),
+                        url(r'^kaihu/article/get_article_by_id$', 'get_article_by_id'),
+                        url(r'^kaihu/article/add_article$', 'add_article'),
                         url(r'^kaihu/article/search$', 'search'),
                         url(r'^kaihu/article$', 'article'),
                         )
@@ -112,7 +116,9 @@ urlpatterns += patterns('www.admin.views_article',
 # 统计
 urlpatterns += patterns('www.admin.views_statistics',
 
-                        url(r'^statistics/statistic_register_user$', 'statistic_register_user'),
+                        url(r'^statistics/statistics_answers$', 'statistics_answers'),
+                        url(r'^statistics/statistics_questions$', 'statistics_questions'),
+                        url(r'^statistics/statistics_register_user$', 'statistics_register_user'),
                         url(r'^statistics/get_active_user$', 'get_active_user'),
                         url(r'^statistics/active_user$', 'active_user'),
                         url(r'^statistics/register_user$', 'register_user'),
