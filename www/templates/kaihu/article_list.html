@@ -5,7 +5,7 @@
 {% block css %}
 <style type="text/css">
 .more-infos{
-	display: none;
+    display: none;
 }
 </style>
 {% endblock %}
@@ -13,34 +13,18 @@
 {% block javascript %}
 {% endblock %}
 
+{% block title %}{{city.get_city_name_for_seo}}理财资讯{% endblock %}
+
 {% block info_left %}
 <ul class="list-group pt-5">
-	<li class="list-group-item no-l-r-bd bdc-eee">
-		<div>
-			<a class="black-blue f16 fb" href="#">【小路看新闻】7月2日新闻联播消息二则：</a>
-			<span class="f12 co8 pull-right">2014-07-02</span>
-		</div>
-		<div class="pt-10">
-			国务院总理李克强7月2日主持召开国务院常务会议，会议指出：1、充分发挥审计监督作用，是建设现代政府的重要一环，是规范权力运行和反腐败的利器。2、旅游业是现代服务业的重要组成部分，带动作用大。加快旅游业改革发展，是适应人民群众消费升级和产业结构调整的...
-		</div>
-	</li>
-	<li class="list-group-item no-l-r-bd bdc-eee">
-		<div>
-			<a class="black-blue f16 fb" href="#">外盘有色继续走强，继续关注锌与镍</a>
-			<span class="f12 co8 pull-right">2014-07-01</span>
-		</div>
-		<div class="pt-10">
-			伦敦的有色金属昨天调整之后，今天再度走强，铜，锌，都走的很强。最近锌比较火热受到市场关注。另外提示前期市场火爆过的镍有突破盘整区间来第二波的迹象，继续观察，如果真的镍再度大幅走强，回调已久的60043......
-		</div>
-	</li>
-	<li class="list-group-item no-l-r-bd bdc-eee">
-		<div>
-			<a class="black-blue f16 fb" href="#">湘鄂情也要进军互联网了？</a>
-			<span class="f12 co8 pull-right">2014-06-23</span>
-		</div>
-		<div class="pt-10">
-			湘鄂情决定更名为“中科云网”，此次变更公司名称和业务范畴的背后，是湘鄂情与中科院计算技术研究所全面深度合作。。。 哎，现在的公司，你要是不说在搞云计算和大数据，或者o2o，你都拿不出手啊。。......
-		</div>
-	</li>
+    {% for article in articles %}
+    <li class="list-group-item no-l-r-bd bdc-eee">
+        <div>
+            <a class="black-blue f16 fb" href="{{article.get_url}}">{{article.title}}</a>
+            <span class="f12 co8 pull-right">{{article.create_time|date:"Y-m-d"}}</span>
+        </div>
+        <div class="pt-10">{{article.get_summary}}</div>
+    </li>
+    {% endfor %}
 </ul>
 {% endblock info_left %}

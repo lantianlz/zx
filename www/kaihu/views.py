@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
-import logging
 
 from django.http import HttpResponse, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from common import page
+from common import page, utils
 from www.timeline.interface import FeedBase
 from www.kaihu import interface
 
@@ -14,6 +13,7 @@ cb = interface.CityBase()
 db = interface.DepartmentBase()
 cmb = interface.CustomerManagerBase()
 flb = interface.FriendlyLinkBase()
+atb = interface.ArticleBase()
 
 
 def home(request, template_name='kaihu/home.html'):
@@ -64,10 +64,21 @@ def department_detail(request, department_id, template_name='kaihu/department_de
 
 
 def article_list(request, template_name='kaihu/article_list.html'):
+    sub_domain = utils.get_sub_domain_from_http_host(request.META.get('HTTP_HOST', ''))
+    city = cb.get_city_by_pinyin_abbr(sub_domain)
+    if not city:
+        raise Http404
+
+    articles = atb.get_articles_by_city_id(city.id)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def article_detail(request, article_id, template_name='kaihu/article_detail.html'):
+    article = atb.get_article_by_id(article_id)
+    if not article:
+        raise Http404
+
+    city = cb.get_city_by_id(article.city_id)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 # ===================================================ajax部分=================================================================#

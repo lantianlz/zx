@@ -7,7 +7,7 @@ from common import cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
-from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink
+from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article
 
 
 dict_err = {
@@ -369,3 +369,27 @@ class CompanyBase(object):
         if company_name:
             companys = Company.objects.filter(name__contains=company_name)
         return companys
+
+
+class ArticleBase(object):
+
+    def get_article_by_id(self, article_id):
+        try:
+            return Article.objects.get(state=True, id=article_id)
+        except Article.DoesNotExist:
+            return None
+
+    def get_all_articles(self):
+        return Article.objects.filter(state=True)
+
+    def get_articles_by_city_id(self, city_id):
+        return Article.objects.filter(state=True, city_id=city_id)
+
+    def add_article(self, title, content, city_id, department_id=None, sort_num=0):
+        if not (title and content and CityBase().get_city_by_id(city_id)):
+            return 99800, dict_err.get(99800)
+
+        article = Article.objects.create(title=title, content=content, city_id=city_id,
+                                         department_id=department_id, sort_num=sort_num)
+
+        return 0, article
