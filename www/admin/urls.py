@@ -101,6 +101,12 @@ urlpatterns += patterns('www.admin.views_department',
                         url(r'^kaihu/department/search$', 'search'),
                         url(r'^kaihu/department$', 'department'),
                         )
+# 营业部
+urlpatterns += patterns('www.admin.views_article',
+
+                        url(r'^kaihu/article/search$', 'search'),
+                        url(r'^kaihu/article$', 'article'),
+                        )
 
 
 # 统计

@@ -1,0 +1,567 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}友情链接管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var Article = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': '',
+            'articleId': '',
+            'title': '',
+            'content': '',
+            'cityId': '',
+            'cityName': '',
+            'departmentId': '',
+            'departmentName': '',
+            'sort': '',
+            'state': '',
+            'createDate': ''
+        }
+
+    });
+
+    // collections
+    var Articles = Backbone.Collection.extend({
+        model: Article,
+
+        _modelMaps: {
+            'num': 'num',
+            'articleId': 'article_id',
+            'title': 'title',
+            'content': 'content',
+            'cityId': 'city_id',
+            'cityName': 'city_name',
+            'departmentId': 'department_id',
+            'departmentName': 'department_name',
+            'sort': 'sort',
+            'state': 'state',
+            'createDate': 'create_date'
+        },
+
+        // 查询
+        search: function(title, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/article/search", 
+                {'title': title||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+                    me.title = title||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+        },
+
+        addArticle: function(data, callback){
+            ajaxSend(
+                "/admin/kaihu/article/add_article?" + data, 
+                {},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        // 获取一个提问的model
+        getOne: function(articleId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/article/get_article_by_id", 
+                {'article_id': articleId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        // 删除
+        removeArticle: function(articleId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/article/remove_article", 
+                {'article_id': articleId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        //
+        modifyArticle: function(data, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/article/modify_article?" + data, 
+                {},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#article_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#article_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search': 'searchArticle',
+            'click .pointer': 'modifyArticle'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+            this.$('tbody').html(this.template({'articles': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.title
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#article_list"]').tab('show');
+        },
+
+        searchArticle: function(){
+            var title = this.$('.key-word').val();
+
+            router.navigate(String.format('/search/{0}/1', title), {trigger: true});
+        },
+
+        modifyArticle: function(sender){
+            var target = $(sender.currentTarget),
+                articleId = target.data('article_id');
+
+            router.navigate('/modify/' + articleId, {trigger: true});
+        }
+
+    });
+
+    // modifyView
+    var ModifyView = Backbone.View.extend({
+        
+        el: '#modify_article',
+
+        template: _.template($('#modify_article_template').html()),
+
+        events: {
+            'click .save': 'save',
+            'click .remove': 'remove'
+        },
+
+        cityTextBox: null,
+        initCityTextBox: function(name, value){
+            this.cityTextBox = $.ZXTextboxList.create('#belong_city_modify', {
+                max: 1,
+                placeholder: '选择所属城市',
+                url: '/admin/user/customer_manager/get_citys_by_name',
+                param: 'city_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.cityTextBox.add(name, value)
+            }
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_article"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+
+            this.initCityTextBox(data.cityName, data.cityId);
+        },
+
+        // 显示提问信息
+        modifyArticle: function(articleId){
+            var me = this;
+
+            this.collection.getOne(articleId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的文章!');
+                }
+            });
+        },
+
+        // 保存
+        save: function(){
+            var articleId = this.$('form').data('article_id'),
+                me = this;
+
+            me.collection.modifyArticle(this.$('form').serialize(), function(data){
+                if(data.errcode === 0){
+                    $.ZXMsg.alert('提示', '操作成功');
+                    router.navigate('modify/' + articleId, {'trigger': true});
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            })
+        },
+
+        // 删除
+        remove: function(){
+            var articleId = this.$('form').data('article_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要删除此友情链接吗?', function(result){
+                
+                if(result){
+                    me.collection.removeArticle(articleId, function(data){
+                        if(data.errcode === 0){
+                            listView.searchArticle();
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                }
+                
+            });
+        }
+
+
+    });
+
+    
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_article_template').html()),
+
+        cityTextBox: null,
+        initCityTextBox: function(name, value){
+            this.cityTextBox = $.ZXTextboxList.create('#belong_city_add', {
+                max: 1,
+                placeholder: '选择所属城市',
+                url: '/admin/user/customer_manager/get_citys_by_name',
+                param: 'city_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.cityTextBox.add(name, value);
+            }
+        },
+
+        showPanel: function(){
+            var me = this;
+
+            me.render();
+        },
+
+        render: function(){
+            var me = this;
+
+            $('#add_article_modal').remove();
+            
+            $('body').append(this.template());
+
+            // 绑定事件
+            $('#add_article_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_article_modal .ok').bind('click', function(){
+                me.addFriendlyLink();
+            });
+            
+            $('#add_article_modal').modal({'show': true, 'backdrop': 'static'});
+
+            this.initCityTextBox();
+        },
+
+        addArticle: function(){
+            var articleId = this.$('form').data('article_id'),
+                me = this;
+
+            articles.addArticle(me.$('form').serialize(), function(data){
+                if(data.errcode === 0){
+                    router.navigate('modify/' + data.errmsg, {trigger: true});
+                    $('#add_article_modal').modal('hide');
+                    $.ZXMsg.alert('提示', '添加成功!');
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            })
+        }
+
+    });
+
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                                     "search",
+            "modify/:linkId":                       "modify",
+            "search/(:title)/:pageIndex":           "search",
+            "add":                                  "add"
+        },
+
+        // 查询
+        search: function(title, pageIndex){
+            articles.search(title||'', pageIndex||1);
+        },
+
+        // 显示修改界面
+        modify: function(articleId){
+            modifyView.modifyArticle(articleId);
+        },
+
+        add: function(){
+            addView.showPanel();
+        }
+
+    });
+    
+    // 初始化
+    var articles = new Articles(),
+        listView = new ListView({'collection': articles}),
+        modifyView = new ModifyView({'collection': articles}),
+        addView = new AddView(),
+        router = new Router();
+ 
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#article_list" class="black-blue" data-toggle="pill">资讯列表</a>
+    </li>
+    <li>
+        <a href="#modify_article" class="black-blue" data-toggle="pill">修改资讯信息</a>
+    </li>
+    <li class="pull-right">
+        <a href="#add" class="black-blue" >添加资讯</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="article_list">
+        <div class="pl-0 pr-0 pb-10 col-md-2">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入资讯名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>标题</th>
+                    <th>所属城市</th>
+                    <th>所属营业部</th>
+                    <th>排序</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改客户经理信息 -->
+    <div class="tab-pane fade" id="modify_article">
+        
+    </div>
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="article_template">
+    <% _.each(articles, function(article){ %>
+        <tr class="pointer" data-article_id="<%= article.articleId %>">
+            <td><%= article.num %></td>
+            <td><%= article.title %></td>
+            <td><%= article.cityName %></td>
+            <td><%= article.departmentName %></td>
+            <td><%= article.sort %></td>
+            <td>
+                <% if (!article.state) { %>
+                    <span class="glyphicon glyphicon-remove cl_red" title="已删除"></span>
+                <% } %>
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="modify_article_template">
+    <form class="form-horizontal" data-article_id="<%= articleId %>" role="form" method="post" action="">
+        <input type="hidden" name="article_id" value="<%= articleId %>" />
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">链接类型</label>
+            <div class="col-sm-9">
+            {% for i in link_types %}
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="link_type" value="{{i.value}}" <% if(type=='{{i.value}}'){ %> checked <% } %> >
+                        {{i.name}}
+                    </label>
+                </div>
+            {% endfor %}
+
+                
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">所属城市</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="belong_city" id="belong_city_modify" value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">链接名称</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="name" value='<%= name %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">链接地址</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="http://www.site.com" name="href" value='<%= href %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">链接描述</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="" name="des" value='<%= des %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">排序</label>
+            <div class="col-sm-1">
+                <input type="text" name="sort" class="form-control" value='<%= sort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove">删除此友情链接</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!-- 添加问题模板 -->
+<script type="text/template" id="add_article_template">
+<div class="modal fade" id="add_article_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+                <h4 class="modal-title">添加资讯</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" method="post" action="">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">链接类型</label>
+                        <div class="col-sm-9">
+                        {% for i in link_types %}
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="link_type" value="{{i.value}}" checked>
+                                    {{i.name}}
+                                </label>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">所属城市</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="belong_city" id="belong_city_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">链接名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="name" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">链接地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="http://www.site.com" class="form-control" name="href" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">链接描述</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="" class="form-control" name="des" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">排序</label>
+                        <div class="col-sm-2">
+                            <input type="text" name="sort" class="form-control" value='0'>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock admin-right %}

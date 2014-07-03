@@ -115,11 +115,11 @@ def global_hot_topics(context):
 
 
 @register.simple_tag(takes_context=True)
-def latest_info(context):
+def latest_article(context):
     """
     @note: 最新资讯
     """
-    return render_to_response('kaihu/_latest_info.html', locals(), context_instance=context).content
+    return render_to_response('kaihu/_latest_article.html', locals(), context_instance=context).content
 
 # @register.simple_tag(takes_context=True)
 # def global_recommend_users(context):

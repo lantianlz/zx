@@ -63,11 +63,11 @@ def department_detail(request, department_id, template_name='kaihu/department_de
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def info_list(request, template_name='kaihu/info_list.html'):
+def article_list(request, template_name='kaihu/article_list.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def info_detail(request, info_id, template_name='kaihu/info_detail.html'):
+def article_detail(request, article_id, template_name='kaihu/article_detail.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 # ===================================================ajax部分=================================================================#
