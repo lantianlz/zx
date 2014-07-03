@@ -1,0 +1,25 @@
+{% extends "base/base_home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block home_css %}
+<style type="text/css">
+
+</style>
+{% block css %}{% endblock %}
+{% endblock %}
+
+{% block home_js%}
+{% block javascript %}{% endblock %}
+{% endblock %}
+
+{% block container_content %}
+<div class="col-xs-12 col-md-8 ">
+	{% block info_left %}{% endblock info_left %}
+</div>
+
+<div class="col-xs-12 col-md-4 pl-50">
+	<!-- 最新资讯 -->
+    {% latest_info %}
+</div>
+{% endblock container_content %}

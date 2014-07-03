@@ -85,23 +85,21 @@ urlpatterns += patterns('www.admin.views_customer_manager',
 # 友情链接
 urlpatterns += patterns('www.admin.views_friendly_link',
 
-                        url(r'^friendly_link/modify_friendly_link$', 'modify_friendly_link'),
-                        url(r'^friendly_link/remove_friendly_link$', 'remove_friendly_link'),
-                        url(r'^friendly_link/get_friendly_link_by_id$', 'get_friendly_link_by_id'),
-                        url(r'^friendly_link/add_friendly_link$', 'add_friendly_link'),
-                        url(r'^friendly_link/search$', 'search'),
-                        url(r'^friendly_link$', 'friendly_link'),
+                        url(r'^kaihu/friendly_link/modify_friendly_link$', 'modify_friendly_link'),
+                        url(r'^kaihu/friendly_link/remove_friendly_link$', 'remove_friendly_link'),
+                        url(r'^kaihu/friendly_link/get_friendly_link_by_id$', 'get_friendly_link_by_id'),
+                        url(r'^kaihu/friendly_link/add_friendly_link$', 'add_friendly_link'),
+                        url(r'^kaihu/friendly_link/search$', 'search'),
+                        url(r'^kaihu/friendly_link$', 'friendly_link'),
                         )
-
-
 # 营业部
 urlpatterns += patterns('www.admin.views_department',
 
-                        url(r'^department/modify_department$', 'modify_department'),
-                        url(r'^department/get_company_by_name$', 'get_company_by_name'),
-                        url(r'^department/get_department_by_id$', 'get_department_by_id'),
-                        url(r'^department/search$', 'search'),
-                        url(r'^department$', 'department'),
+                        url(r'^kaihu/department/modify_department$', 'modify_department'),
+                        url(r'^kaihu/department/get_company_by_name$', 'get_company_by_name'),
+                        url(r'^kaihu/department/get_department_by_id$', 'get_department_by_id'),
+                        url(r'^kaihu/department/search$', 'search'),
+                        url(r'^kaihu/department$', 'department'),
                         )
 
 
@@ -130,4 +128,16 @@ urlpatterns += patterns('www.admin.views_tools',
                         url(r'^tools/caches/remove_cache$', 'remove_cache'),
                         url(r'^tools/caches/modify_cache$', 'modify_cache'),
                         url(r'^tools/caches$', 'caches'),
+                        )
+
+
+# 专题
+urlpatterns += patterns('www.admin.views_zhuanti',
+
+                        url(r'^zhuanti/remove_zhuanti$', 'remove_zhuanti'),
+                        url(r'^zhuanti/modify_zhuanti$', 'modify_zhuanti'),
+                        url(r'^zhuanti/get_zhuanti_by_id$', 'get_zhuanti_by_id'),
+                        url(r'^zhuanti/add_zhuanti$', 'add_zhuanti'),
+                        url(r'^zhuanti/search$', 'search'),
+                        url(r'^zhuanti$', 'zhuanti'),
                         )

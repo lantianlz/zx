@@ -323,11 +323,25 @@ a.border-block-blue.active{
   color: white;
 }
 
-a.border-block-blue.active{
-    background-color: #428bca;
-    border-color: #428bca;
+a.border-block-red{
+    border: solid 1px #d44137;
+    color: #d44137;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+a.border-block-red:hover{
+    background-color: #d44137;
+    border-color: #d44137;
     color: white;
 }
+a.border-block-red.active{
+  background-color: #d44137;
+  border-color: #d44137;
+  color: white;
+}
+
 
 /*文字滑动效果*/
 .shimmer {

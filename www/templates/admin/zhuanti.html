@@ -1,0 +1,474 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}专题管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var Zhuanti = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': '',
+            'zhuantiId': '',
+            'title': '',
+            'summary': '',
+            'img': '',
+            'authorName': '',
+            'domain': '',
+            'sort': '',
+            'state': '',
+            'createDate': ''
+        }
+
+    });
+
+    // collections
+    var Zhuantis = Backbone.Collection.extend({
+        model: Zhuanti,
+
+        _modelMaps: {
+            'num': 'num',
+            'zhuantiId': 'zhuanti_id',
+            'title': 'title',
+            'summary': 'summary',
+            'img': 'img',
+            'authorName': 'author_name',
+            'domain': 'domain',
+            'sort': 'sort_num',
+            'state': 'state',
+            'createDate': 'create_time'
+        },
+
+        // 查询
+        search: function(pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/zhuanti/search", 
+                {'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+        },
+
+        // 获取一个提问的model
+        getOne: function(zhuantiId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/zhuanti/get_zhuanti_by_id", 
+                {'zhuanti_id': zhuantiId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        // 删除
+        removeZhuanti: function(zhuantiId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/zhuanti/remove_zhuanti", 
+                {'zhuanti_id': zhuantiId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#zhuanti_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#zhuanti_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .pointer': 'modifyZhuanti'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+            this.$('tbody').html(this.template({'zhuantis': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search'
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#zhuanti_list"]').tab('show');
+        },
+
+        searchZhuanti: function(){
+
+            router.navigate('/search/1', {trigger: true});
+        },
+
+        modifyZhuanti: function(sender){
+            var target = $(sender.currentTarget),
+                zhuantiId = target.data('zhuanti_id');
+
+            router.navigate('/modify/' + zhuantiId, {trigger: true});
+        }
+
+    });
+
+    // modifyView
+    var ModifyView = Backbone.View.extend({
+        
+        el: '#modify_zhuanti',
+
+        template: _.template($('#modify_zhuanti_template').html()),
+
+        events: {
+            'click .save': 'save',
+            'click .remove': 'remove'
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_zhuanti"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+        },
+
+        // 显示提问信息
+        modifyZhuanti: function(zhuantiId){
+            var me = this;
+
+            this.collection.getOne(zhuantiId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的专题!');
+                }
+            });
+        },
+
+        // 保存
+        save: function(){
+            this.$('form').submit();
+        },
+
+        // 删除
+        remove: function(){
+            var zhuantiId = this.$('form').data('zhuanti_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要删除此专题吗?', function(result){
+                
+                if(result){
+                    me.collection.removeZhuanti(zhuantiId, function(data){
+                        if(data.errcode === 0){
+                            listView.searchZhuanti();
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                }
+                
+            });
+        }
+
+
+    });
+
+    
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_zhuanti_template').html()),
+
+        showPanel: function(){
+            var me = this;
+
+            me.render();
+        },
+
+        render: function(){
+            var me = this;
+
+            $('#add_zhuanti_modal').remove();
+            
+            $('body').append(this.template());
+
+            // 绑定事件
+            $('#add_zhuanti_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_zhuanti_modal .ok').bind('click', function(){
+                me.addZhuanti();
+            });
+            
+            $('#add_zhuanti_modal').modal({'show': true, 'backdrop': 'static'});
+        },
+
+        addZhuanti: function(){
+            var me = this;
+
+            me.$('form').submit();
+        }
+
+    });
+
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                     "search",
+            "modify/:zhuantiId":    "modify",
+            "search/:pageIndex":    "search",
+            "add":                  "add"
+        },
+
+        // 查询
+        search: function(pageIndex){
+            zhuantis.search(pageIndex||1);
+        },
+
+        // 显示修改界面
+        modify: function(linkId){
+            modifyView.modifyZhuanti(linkId);
+        },
+
+        add: function(){
+            addView.showPanel();
+        }
+
+    });
+    
+    // 初始化
+    var zhuantis = new Zhuantis(),
+        listView = new ListView({'collection': zhuantis}),
+        modifyView = new ModifyView({'collection': zhuantis}),
+        addView = new AddView(),
+        router = new Router();
+ 
+    Backbone.history.start();
+
+    if(window.location.href.indexOf('?') > -1){
+        $.ZXMsg.alert('提示', decodeURI(window.location.search).substring(1));
+    }
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#zhuanti_list" class="black-blue" data-toggle="pill">专题列表</a>
+    </li>
+    <li>
+        <a href="#modify_zhuanti" class="black-blue" data-toggle="pill">修改专题信息</a>
+    </li>
+    <li class="pull-right">
+        <a href="#add" class="black-blue" >添加专题</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="zhuanti_list">
+        
+        <div class="pl-0 pr-0 pb-10 col-md-2">
+            <div class="input-group input-group-sm none">
+                <input type="text" class="form-control border-radius-0 key-word-city" placeholder="输入城市名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>专题名称</th>
+                    <th>专题作者</th>
+                    <th>专题域名</th>
+                    <th>排序</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改客户经理信息 -->
+    <div class="tab-pane fade" id="modify_zhuanti">
+        
+    </div>
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="zhuanti_template">
+    <% _.each(zhuantis, function(zhuanti){ %>
+        <tr class="pointer" data-zhuanti_id="<%= zhuanti.zhuantiId %>">
+            <td><%= zhuanti.num %></td>
+            <td><%= zhuanti.title %></td>
+            <td><%= zhuanti.authorName %></td>
+            <td><%= zhuanti.domain %></td>
+            <td><%= zhuanti.sort %></td>
+            <td>
+                <% if (!zhuanti.state) { %>
+                    <span class="glyphicon glyphicon-remove cl_red" title="已删除"></span>
+                <% } %>
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="modify_zhuanti_template">
+    <form class="form-horizontal" data-zhuanti_id="<%= zhuantiId %>" role="form" method="post" action="/admin/zhuanti/modify_zhuanti" enctype="multipart/form-data">
+        <input type="hidden" name="zhuanti_id" value="<%= zhuantiId %>" />
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-3 control-label">专题封面</label>
+            <div class="col-sm-6">
+                <img class="w200 mb-10" src="<%= img %>" />
+                <input name="img" type="file" />图片尺寸为 200(宽) X 150(长)
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-3 control-label">专题名称</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="title" value='<%= title %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-3 control-label">专题描述</label>
+            <div class="col-sm-6">
+                <textarea class="form-control" rows="5" name="summary"><%= summary %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-3 control-label">专题作者</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="author" value='<%= authorName %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-3 control-label">专题域名</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="domain" value='<%= domain %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-3 control-label">排序</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="sort"  value='<%= sort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove">删除此专题</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!-- 添加问题模板 -->
+<script type="text/template" id="add_zhuanti_template">
+<div class="modal fade" id="add_zhuanti_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+                <h4 class="modal-title">添加专题信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" method="post" action="/admin/zhuanti/add_zhuanti" enctype="multipart/form-data">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">专题封面</label>
+                        <div class="col-sm-6">
+                            <img class="avatar-65 avatar-circle mb-10" src="" />
+                            <input name="img" type="file" />图片尺寸为 200(宽) X 150(长)
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">专题名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="title" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">专题描述</label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" rows="5" name="summary"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">专题作者</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="author" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">专题域名</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="domain" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">排序</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="sort"  value='0'>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock admin-right %}

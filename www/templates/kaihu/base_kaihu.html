@@ -3,7 +3,6 @@
 {% load custom_filters %}
 
 {% block home_css %}
-<!-- <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/user_profile.css?v={{MEDIA_VERSION}}" /> -->
 <style type="text/css">
 .hot-topics{
     border-top: 0;
@@ -13,7 +12,6 @@
 {% endblock %}
 
 {% block home_js%}
-<!-- <script type="text/javascript" src="{{MEDIA_URL}}js/site/user_profile.js?v={{MEDIA_VERSION}}"></script> -->
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Euh1QN3IbOinInNNq9lWnQPB"></script>
 {% block javascript %}{% endblock %}
 {% endblock %}
@@ -27,8 +25,11 @@
         <!-- 热门话题 -->
         {% global_hot_topics %}
 
+        <!-- 最新资讯 -->
+        {% latest_info %}
+
         <!-- 二维码 -->
-        {% include 'include/_global_qrcode.html' %}
+        {#% include 'include/_global_qrcode.html' %#}
 
     {% endblock %}
 </div>

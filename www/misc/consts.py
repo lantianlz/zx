@@ -80,5 +80,11 @@ PERMISSIONS = [
     #{'code': 'add_department', 'name': u'添加营业部', 'parent': 'department_manage'},
     {'code': 'query_department', 'name': u'查询营业部', 'parent': 'department_manage'},
     {'code': 'modify_department', 'name': u'修改营业部', 'parent': 'department_manage'},
-    #{'code': 'remove_department', 'name': u'查询全站通告', 'parent': 'department_manage'},
+    #{'code': 'remove_department', 'name': u'删除营业部', 'parent': 'department_manage'},
+
+    {'code': 'zhuanti_manage', 'name': u'专题管理', 'parent': None},
+    {'code': 'add_zhuanti', 'name': u'添加专题', 'parent': 'zhuanti_manage'},
+    {'code': 'query_zhuanti', 'name': u'查询专题', 'parent': 'zhuanti_manage'},
+    {'code': 'modify_zhuanti', 'name': u'修改专题', 'parent': 'zhuanti_manage'},
+    {'code': 'remove_zhuanti', 'name': u'删除专题', 'parent': 'zhuanti_manage'},
 ]
