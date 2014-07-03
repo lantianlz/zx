@@ -80,8 +80,8 @@ def global_statistic(context):
 
     gs = cache_obj.get(key)
     if not gs:
-        answer_count = Answer.objects.all().count()
-        question_count = Question.objects.all().count()
+        answer_count = Answer.objects.filter(state=True).count()
+        question_count = Question.objects.filter(state=True).count()
         account_count = User.objects.all().count()
         now = datetime.datetime.now()
         gs = dict(answer_count=answer_count, question_count=question_count,

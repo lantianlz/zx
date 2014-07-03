@@ -131,3 +131,18 @@ class FriendlyLink(models.Model):
     class Meta:
         unique_together = [("name", "city_id", 'link_type'), ]
         ordering = ["-sort_num", "id"]
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=64, unique=True)
+    content = models.TextField()
+
+    city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True, null=True)
+    department_id = models.IntegerField(verbose_name=u'营业部信息', db_index=True, null=True)
+
+    sort_num = models.IntegerField(default=0, db_index=True)
+    state = models.BooleanField(default=True, db_index=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-sort_num", "-id"]
