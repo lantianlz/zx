@@ -89,7 +89,7 @@ def search(request):
 def get_article_by_id(request):
     article_id = request.REQUEST.get('article_id')
 
-    obj = ArticleBase().get_article_by_id(article_id)
+    obj = ArticleBase().get_article_by_id(article_id, need_state=False)
 
     data = format_article([obj], 1)[0]
     return HttpResponse(json.dumps(data), mimetype='application/json')

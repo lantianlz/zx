@@ -86,6 +86,9 @@ class DepartmentBase(object):
     def get_departments_by_city_id(self, city_id):
         return list(self.get_all_departments().filter(city_id=city_id))
 
+    def get_departments_by_random(self, city_id):
+        return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None).order_by('?'))
+
     def get_department_by_id(self, department_id):
         try:
             department = self.get_all_departments().filter(id=department_id)[0]
@@ -374,25 +377,24 @@ class CompanyBase(object):
 
 class ArticleBase(object):
 
-    def get_article_by_id(self, article_id):
+    def get_article_by_id(self, article_id, need_state=True):
         try:
-            return Article.objects.get(state=True, id=article_id)
+            ps = dict(id=article_id)
+            if need_state:
+                ps.update(dict(state=True))
+            return Article.objects.get(**ps)
         except Article.DoesNotExist:
             return None
 
     def get_all_articles(self, state=True):
         objs = Article.objects.all()
-
-        if state:
+        if state is not None:
             objs = objs.filter(state=state)
 
         return objs
 
     def get_article_by_title(self, title):
         return self.get_all_articles(state=None).filter(title=title)
-
-    def get_article_by_id(self, article_id):
-        return self.get_all_articles(state=None).get(id=article_id)
 
     def get_articles_by_city_id(self, city_id):
         return Article.objects.filter(state=True, city_id=city_id)

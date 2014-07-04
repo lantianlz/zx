@@ -129,6 +129,21 @@ def latest_article(context):
     articles = ArticleBase().get_articles_by_city_id(city.id)[:10]
     return render_to_response('kaihu/_latest_article.html', locals(), context_instance=context).content
 
+
+@register.simple_tag(takes_context=True)
+def random_department(context):
+    """
+    @note: 随机出现营业部
+    """
+    from common import utils
+    from www.kaihu.interface import DepartmentBase, CityBase
+
+    city_abbr = utils.get_sub_domain_from_http_host(context['request'].META.get('HTTP_HOST', ''))
+    city = CityBase().get_city_by_pinyin_abbr(city_abbr)
+
+    departments = DepartmentBase().get_departments_by_random(city.id)[:10]
+    return render_to_response('kaihu/_random_department.html', locals(), context_instance=context).content
+
 # @register.simple_tag(takes_context=True)
 # def global_recommend_users(context):
 #     """
