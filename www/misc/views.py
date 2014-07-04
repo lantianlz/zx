@@ -161,13 +161,13 @@ def crop_img(request):
 
 def show_index_for_all_domain(request):
     from www.account.views import show_index
-    from www.kaihu.views import department_list, home
+    from www.kaihu.views import department_list, home as kaihu_home
 
     # 通配符域名的情况下，跳转到不同的views
     sub_domain = utils.get_sub_domain_from_http_host(request.META.get('HTTP_HOST', ''))
-    if sub_domain:
+    if sub_domain and sub_domain not in ("127", "192"):
         if sub_domain == 'kaihu':
-            return home(request)
+            return kaihu_home(request)
         if sub_domain not in ('www', ):
             return department_list(request, city_abbr=sub_domain)
 
