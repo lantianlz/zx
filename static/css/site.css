@@ -342,6 +342,25 @@ a.border-block-red.active{
   color: white;
 }
 
+a.border-block-orange{
+    border: solid 1px #FF9C06;
+    color: #FF9C06;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+a.border-block-orange:hover{
+    background-color: #FF9C06;
+    border-color: #FF9C06;
+    color: white;
+}
+a.border-block-orange.active{
+  background-color: #FF9C06;
+  border-color: #FF9C06;
+  color: white;
+}
+
 
 /*文字滑动效果*/
 .shimmer {
