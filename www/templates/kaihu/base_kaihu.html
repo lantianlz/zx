@@ -23,27 +23,7 @@
 <div class="zx-kaihu-right col-md-4 pl-50">
     {% block kaihu-right %}
         <!-- 热门话题 -->
-        {#% global_hot_topics %#}
-        <div class="pt-15">
-            <span class="fb f16">营业部</span>
-        </div>
-        <ul class="list-group bottom-border bdc-eee pb-20 mb-10">
-            <li class="list-group-item no-l-r-bd bdc-eee pl-0 pt-15 no-top-bd pb-0">
-                <a class="left-border-4 pl-10 bdc-light-zx black-blue" href="/kaihu/article/1">国泰君安证券成都金堂县复兴街证券营业部</a>
-            </li>
-            <li class="list-group-item no-l-r-bd bdc-eee pl-0 pt-15 no-top-bd pb-0">
-                <a class="left-border-4 pl-10 bdc-light-zx black-blue" href="/kaihu/article/1">华泰证券成都晋阳路证券营业部</a>
-            </li>
-            <li class="list-group-item no-l-r-bd bdc-eee pl-0 pt-15 no-top-bd pb-0">
-                <a class="left-border-4 pl-10 bdc-light-zx black-blue" href="/kaihu/article/1">安信证券成都蜀辉路证券营业部</a>
-            </li>
-            <li class="list-group-item no-l-r-bd bdc-eee pl-0 pt-15 no-top-bd pb-0">
-                <a class="left-border-4 pl-10 bdc-light-zx black-blue" href="/kaihu/article/1">长城证券成都芳沁街证券营业部</a>
-            </li>
-            <li class="list-group-item no-l-r-bd bdc-eee pl-0 pt-15 no-top-bd pb-0">
-                <a class="left-border-4 pl-10 bdc-light-zx black-blue" href="/kaihu/article/1">川财证券成都中新街证券营业部</a>
-            </li>
-        </ul>
+        {% random_department %}
 
         <!-- 最新资讯 -->
         {% latest_article %}
