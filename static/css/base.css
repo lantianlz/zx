@@ -45,6 +45,7 @@
 .f20{font-size: 20px}
 .f22{font-size: 22px}
 .f24{font-size: 24px}
+.f25{font-size: 25px}
 .f30{font-size: 30px;}
 .f40{font-size: 40px;}
 .f65{font-size: 65px;}
@@ -253,9 +254,10 @@
 .fixline{border-bottom:1px solid #EEEEEE; width: 100%;height:1px;}
 
 .line-height-20{line-height: 20px;}
-.line-height-20{line-height: 22px;}
+.line-height-22{line-height: 22px;}
 .line-height-25{line-height: 25px;}
 .line-height-30{line-height: 30px;}
+.line-height-45{line-height: 45px;}
 
 a{color: #259;transition: color 0.5s;}
 a:focus {outline: none;-moz-outline: none;}
