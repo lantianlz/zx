@@ -22,13 +22,13 @@
 }
 @keyframes pulse-arrow{
     from {color: #eee;}
-    50%  {color: gray;}
+    50%  {color: #3C3C3C;}
     100% {color: #eee;}
 }
 
 @-webkit-keyframes pulse-arrow{
     from {color: #eee;}
-    50%  {color: gray;}
+    50%  {color: #3C3C3C;}
     100% {color: #eee;}
 }
 
@@ -126,6 +126,31 @@ $(document).ready(function(){
             $('.cover2').animate({top: $(window).height()}, 500, 'easeInOutQuint', function(){$(this).remove()});
         }, 600);
         
+    },
+    showPageNav = function(pageIndex){
+        $('.page-nav .pointer').eq(pageIndex)
+        .find('.tips')
+        .stop(true, true)
+        .show()
+        .css({'width': 0, 'left': 5, 'z-index': 100})
+        .animate(
+            {'width': 70, 'left': -62}, 
+            300, 
+            'easeOutCirc'
+        );
+    },
+    hidePageNav = function(pageIndex){
+        $('.page-nav .pointer').eq(pageIndex)
+        .find('.tips')
+        .stop(true, true)
+        .animate(
+            {'width': 0, 'left': 5}, 
+            300, 
+            'easeOutCirc', 
+            function(){ 
+                $(this).hide();
+            }
+        );
     },
     pageTransform = function(pageIndex){
 
@@ -365,6 +390,7 @@ $(document).ready(function(){
             });
 
             pageTransform(1);
+            showPageNav(0);
         },
         onLeave: function(index, nextIndex, direction){
 
@@ -373,6 +399,8 @@ $(document).ready(function(){
 
             // 右侧导航栏
             $('.page-nav li').removeClass('active').eq(nextIndex-1).addClass('active');
+            hidePageNav(index-1);
+            showPageNav(nextIndex-1);
 
             // 控制下一页按钮
             nextIndex >= totalSection ? $('.go-next').fadeOut() : $('.go-next').fadeIn();
@@ -390,29 +418,35 @@ $(document).ready(function(){
         $.fn.fullpage.moveTo(parseInt($(this).data('page_index')));
     }).
     bind('mouseenter', function(){
-        $(this)
-        .find('.tips')
-        .stop(true, true)
-        .show()
-        .css({'width': 0, 'left': 5, 'z-index': 100})
-        .animate(
-            {'width': 70, 'left': -62}, 
-            300, 
-            'easeOutCirc'
-        );
+        // $(this)
+        // .find('.tips')
+        // .stop(true, true)
+        // .show()
+        // .css({'width': 0, 'left': 5, 'z-index': 100})
+        // .animate(
+        //     {'width': 70, 'left': -62}, 
+        //     300, 
+        //     'easeOutCirc'
+        // );
+        if(!$(this).hasClass('active')){
+            showPageNav(parseInt($(this).data('page_index')) - 1);
+        }
     }).
     bind('mouseleave', function(){
-        $(this)
-        .find('.tips')
-        .stop(true, true)
-        .animate(
-            {'width': 0, 'left': 5}, 
-            300, 
-            'easeOutCirc', 
-            function(){ 
-                $(this).hide();
-            }
-        );
+        // $(this)
+        // .find('.tips')
+        // .stop(true, true)
+        // .animate(
+        //     {'width': 0, 'left': 5}, 
+        //     300, 
+        //     'easeOutCirc', 
+        //     function(){ 
+        //         $(this).hide();
+        //     }
+        // );
+        if(!$(this).hasClass('active')){
+            hidePageNav(parseInt($(this).data('page_index')) - 1);
+        }
     })
 
     // 控制进度条
@@ -443,7 +477,7 @@ $(document).ready(function(){
         $.ZXShare.sinaWeibo(window.location.href, '不错的新手股票入门专题，推荐你来看看!', '');
     });
 
-    //
+    // 收藏
     $('.favorite').bind('click', function(){
         $.ZXNotice.WarningTopNotice('请按下 Ctrl + D 收藏本地址！');
     });
@@ -570,7 +604,7 @@ $(document).ready(function(){
     </ul>
 
     <!-- 跳转下一屏 -->
-    <div class="pf text-center f24 go-next pointer hidden-xs" style="bottom: 3%; left: 50%;">
+    <div class="pf text-center f24 go-next pointer hidden-xs zx-tooltip" style="bottom: 3%; left: 50%;" data-toggle="tooltip" data-placement="top" data-original-title="点击跳转下一页" data-trigger="hover" title="">
         <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-1"></span></div>
         <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-2"></span></div>
     </div>
