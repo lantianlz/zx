@@ -7,7 +7,7 @@ from common import cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
-from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink
+from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article
 
 
 dict_err = {
@@ -15,6 +15,7 @@ dict_err = {
     50101: u'找不到指定营业部',
     50102: u'找不到指定客户经理',
     50103: u'找不到指定友情链接',
+    50104: u'找不到指定资讯',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -84,6 +85,9 @@ class DepartmentBase(object):
 
     def get_departments_by_city_id(self, city_id):
         return list(self.get_all_departments().filter(city_id=city_id))
+
+    def get_departments_by_random(self, city_id):
+        return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None).order_by('?'))
 
     def get_department_by_id(self, department_id):
         try:
@@ -369,3 +373,74 @@ class CompanyBase(object):
         if company_name:
             companys = Company.objects.filter(name__contains=company_name)
         return companys
+
+
+class ArticleBase(object):
+
+    def get_article_by_id(self, article_id, need_state=True):
+        try:
+            ps = dict(id=article_id)
+            if need_state:
+                ps.update(dict(state=True))
+            return Article.objects.get(**ps)
+        except Article.DoesNotExist:
+            return None
+
+    def get_all_articles(self, state=True):
+        objs = Article.objects.all()
+        if state is not None:
+            objs = objs.filter(state=state)
+
+        return objs
+
+    def get_article_by_title(self, title):
+        return self.get_all_articles(state=None).filter(title=title)
+
+    def get_articles_by_city_id(self, city_id):
+        return Article.objects.filter(state=True, city_id=city_id)
+
+    def add_article(self, title, content, city_id, department_id=None, sort_num=0):
+        if not (title and content and CityBase().get_city_by_id(city_id)):
+            return 99800, dict_err.get(99800)
+
+        article = Article.objects.create(title=title, content=content, city_id=city_id,
+                                         department_id=department_id, sort_num=sort_num)
+
+        return 0, article
+
+    def modify_article(self, article_id, **kwargs):
+
+        if not article_id:
+            return 99800, dict_err.get(99800)
+
+        article = self.get_article_by_id(article_id)
+        if not article:
+            return 50104, dict_err.get(50104)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(article, k, v)
+
+            article.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
+    def remove_article(self, article_id):
+        if not article_id:
+            return 99800, dict_err.get(99800)
+
+        article = self.get_article_by_id(article_id)
+        if not article:
+            return 50104, dict_err.get(50104)
+
+        try:
+            article.state = False
+            article.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)

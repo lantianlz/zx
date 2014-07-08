@@ -266,6 +266,15 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
   /*text-decoration: none;*/
   color: #999;
 }
+
+.ddd-999{
+  color: #ddd;
+}
+
+.ddd-999:hover{
+  text-decoration: none;
+  color: #999;
+}
 /******自定义控件样式********/
 .zx-checkbox{
     padding-left: 30px;
@@ -314,11 +323,44 @@ a.border-block-blue.active{
   color: white;
 }
 
-a.border-block-blue.active{
-    background-color: #428bca;
-    border-color: #428bca;
+a.border-block-red{
+    border: solid 1px #d44137;
+    color: #d44137;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+a.border-block-red:hover{
+    background-color: #d44137;
+    border-color: #d44137;
     color: white;
 }
+a.border-block-red.active{
+  background-color: #d44137;
+  border-color: #d44137;
+  color: white;
+}
+
+a.border-block-orange{
+    border: solid 1px #FF9C06;
+    color: #FF9C06;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+a.border-block-orange:hover{
+    background-color: #FF9C06;
+    border-color: #FF9C06;
+    color: white;
+}
+a.border-block-orange.active{
+  background-color: #FF9C06;
+  border-color: #FF9C06;
+  color: white;
+}
+
 
 /*文字滑动效果*/
 .shimmer {

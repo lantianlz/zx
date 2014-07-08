@@ -80,8 +80,8 @@ def global_statistic(context):
 
     gs = cache_obj.get(key)
     if not gs:
-        answer_count = Answer.objects.all().count()
-        question_count = Question.objects.all().count()
+        answer_count = Answer.objects.filter(state=True).count()
+        question_count = Question.objects.filter(state=True).count()
         account_count = User.objects.all().count()
         now = datetime.datetime.now()
         gs = dict(answer_count=answer_count, question_count=question_count,
@@ -110,9 +110,39 @@ def global_hot_topics(context):
     @note: 热门话题
     """
     from www.question.interface import TopicBase
+
     global_hotest_topics = TopicBase().get_all_topics_for_show()[:5]
     return render_to_response('question/_global_hot_topics.html', locals(), context_instance=context).content
 
+
+@register.simple_tag(takes_context=True)
+def latest_article(context):
+    """
+    @note: 最新资讯
+    """
+    from common import utils
+    from www.kaihu.interface import ArticleBase, CityBase
+
+    city_abbr = utils.get_sub_domain_from_http_host(context['request'].META.get('HTTP_HOST', ''))
+    city = CityBase().get_city_by_pinyin_abbr(city_abbr)
+
+    articles = ArticleBase().get_articles_by_city_id(city.id)[:10]
+    return render_to_response('kaihu/_latest_article.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def random_department(context):
+    """
+    @note: 随机出现营业部
+    """
+    from common import utils
+    from www.kaihu.interface import DepartmentBase, CityBase
+
+    city_abbr = utils.get_sub_domain_from_http_host(context['request'].META.get('HTTP_HOST', ''))
+    city = CityBase().get_city_by_pinyin_abbr(city_abbr)
+
+    departments = DepartmentBase().get_departments_by_random(city.id)[:10]
+    return render_to_response('kaihu/_random_department.html', locals(), context_instance=context).content
 
 # @register.simple_tag(takes_context=True)
 # def global_recommend_users(context):

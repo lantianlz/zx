@@ -197,11 +197,8 @@ $(document).ready(function(){
         },
 
         saveTopic: function(){
-            
-            var questionId = this.$('form').data('question_id'),
-                me = this;
 
-            me.$('form').submit();
+            this.$('form').submit();
         },
 
         removeTopic: function(sender){
@@ -258,8 +255,7 @@ $(document).ready(function(){
         },
 
         addTopic: function(){
-            var topicId = this.$('form').data('topic_id'),
-                me = this;
+            var me = this;
 
             me.$('form').submit();
         }

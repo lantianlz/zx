@@ -60,6 +60,8 @@ PERMISSIONS = [
     {'code': 'statistics_manage', 'name': u'统计管理', 'parent': None},
     {'code': 'statistics_active_user', 'name': u'当日活跃用户统计', 'parent': 'statistics_manage'},
     {'code': 'statistics_register_user', 'name': u'注册用户统计', 'parent': 'statistics_manage'},
+    {'code': 'statistics_questions', 'name': u'提问统计', 'parent': 'statistics_manage'},
+    {'code': 'statistics_answers', 'name': u'回答统计', 'parent': 'statistics_manage'},
 
     {'code': 'tools', 'name': u'常用工具', 'parent': None},
     {'code': 'get_cache', 'name': u'查询缓存', 'parent': 'tools'},
@@ -80,5 +82,17 @@ PERMISSIONS = [
     #{'code': 'add_department', 'name': u'添加营业部', 'parent': 'department_manage'},
     {'code': 'query_department', 'name': u'查询营业部', 'parent': 'department_manage'},
     {'code': 'modify_department', 'name': u'修改营业部', 'parent': 'department_manage'},
-    #{'code': 'remove_department', 'name': u'查询全站通告', 'parent': 'department_manage'},
+    #{'code': 'remove_department', 'name': u'删除营业部', 'parent': 'department_manage'},
+
+    {'code': 'zhuanti_manage', 'name': u'专题管理', 'parent': None},
+    {'code': 'add_zhuanti', 'name': u'添加专题', 'parent': 'zhuanti_manage'},
+    {'code': 'query_zhuanti', 'name': u'查询专题', 'parent': 'zhuanti_manage'},
+    {'code': 'modify_zhuanti', 'name': u'修改专题', 'parent': 'zhuanti_manage'},
+    {'code': 'remove_zhuanti', 'name': u'删除专题', 'parent': 'zhuanti_manage'},
+
+    {'code': 'article_manage', 'name': u'资讯管理', 'parent': None},
+    {'code': 'add_article', 'name': u'添加资讯', 'parent': 'article_manage'},
+    {'code': 'query_article', 'name': u'查询资讯', 'parent': 'article_manage'},
+    {'code': 'modify_article', 'name': u'修改资讯', 'parent': 'article_manage'},
+    {'code': 'remove_article', 'name': u'删除资讯', 'parent': 'article_manage'},
 ]

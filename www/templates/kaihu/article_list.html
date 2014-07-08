@@ -1,0 +1,30 @@
+{% extends "kaihu/base_article.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block css %}
+<style type="text/css">
+.more-infos{
+    display: none;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block title %}{{city.get_city_name_for_seo}}理财资讯{% endblock %}
+
+{% block info_left %}
+<ul class="list-group pt-5">
+    {% for article in articles %}
+    <li class="list-group-item no-l-r-bd bdc-eee">
+        <div>
+            <a class="black-blue f16 fb" href="{{article.get_url}}">{{article.title}}</a>
+            <span class="f12 co8 pull-right">{{article.create_time|date:"Y-m-d"}}</span>
+        </div>
+        <div class="pt-10">{{article.get_summary}}</div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock info_left %}

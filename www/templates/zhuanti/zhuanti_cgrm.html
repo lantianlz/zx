@@ -1,0 +1,680 @@
+{% extends "base/base_zhuanti.html" %}
+
+{% block keywords %}股票入门基础知识,炒股入门知识{% endblock keywords %}
+{% block description %}{{zhuanti.get_summary}}{% endblock description %}
+
+{% block title %}{{zhuanti.title}}{% endblock title %}
+
+{% block base_css %}
+<style>
+.pulse-arrow-1{
+    color: #eee;
+
+    -webkit-animation: pulse-arrow 2s ease infinite;
+       -moz-animation: pulse-arrow 2s ease infinite;
+        -ms-animation: pulse-arrow 2s ease infinite;
+            animation: pulse-arrow 2s ease infinite;
+}
+.pulse-arrow-2{
+    color: #eee;
+
+    -webkit-animation: pulse-arrow 2s ease 1s infinite;
+       -moz-animation: pulse-arrow 2s ease 1s infinite;
+        -ms-animation: pulse-arrow 2s ease 1s infinite;
+            animation: pulse-arrow 2s ease 1s infinite;
+}
+@keyframes pulse-arrow{
+    from {color: #eee;}
+    50%  {color: #3C3C3C;}
+    100% {color: #eee;}
+}
+
+@-webkit-keyframes pulse-arrow{
+    from {color: #eee;}
+    50%  {color: #3C3C3C;}
+    100% {color: #eee;}
+}
+
+.bgc-pointer{
+    background-color:  #86C1D6;
+}
+
+.bgc-tips{
+    background-color:  #86C1D6;
+}
+
+.page-nav{
+    right: 3%;
+    top: 36%;
+}
+
+.page-nav li>span.pointer{
+    margin-bottom: 5px;
+}
+
+.page-nav li.active>span{
+    background-color: #428bca;
+}
+
+.page-nav .tips{
+    left: -62px;
+    top: 0px;
+    width: 75px;
+    height: 20px;
+    display: none;
+    padding-left: 5px;
+}
+
+.expand{
+    width: 0%;
+    height: 1px;
+    margin: 2px 0;
+    left: 0;
+    background: #2187e7;
+    position: absolute;
+    box-shadow: 0px 0px 10px 1px rgba(0,198,255,0.7);
+    transition: all 0.5s linear;
+}
+
+.content a{
+    color: #428bca;
+}
+</style>
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+$(document).ready(function(){
+    var BACKGROUND_IMAGES = [
+        "{{IMG0_DOMAIN}}/zhuanti-1-1.jpg",
+        // "{{MEDIA_URL}}img/common/zhuanti-1-1.jpg",
+        "{{IMG0_DOMAIN}}/zhuanti-1-2.jpg",
+        // "{{MEDIA_URL}}img/common/zhuanti-1-2.jpg",
+        "{{IMG0_DOMAIN}}/zhuanti-1-3.jpg",
+        // "{{MEDIA_URL}}img/common/zhuanti-1-3.jpg",
+        "{{IMG0_DOMAIN}}/zhuanti-1-4.jpg",
+        // "{{MEDIA_URL}}img/common/zhuanti-1-4.jpg",
+        "{{IMG0_DOMAIN}}/zhuanti-1-5.jpg",
+        // "{{MEDIA_URL}}img/common/zhuanti-1-5.jpg",
+        "{{IMG0_DOMAIN}}/zhuanti-1-6.jpg",
+        // "{{MEDIA_URL}}img/common/zhuanti-1-6.jpg"
+    ],
+    totalSection = $('.section').length,
+    loadingInterval = null,
+    loadingState = 0,
+    // 后台预加载背景图片
+    loadBackgroundImage = function(url){
+        var img = new Image();
+        img.style.display = "none";
+        img.onload = function(){
+            loadingState += 1;
+
+            showPage();
+
+            $(img).remove();
+        }
+        $('body').append(img);
+        img.src = url;
+    };
+    showPage = function(){
+        // 图片加载是否完成
+        if(loadingState < totalSection){
+            return;
+        }
+
+        // 完成之后设进度条为100%
+        window.clearInterval(loadingInterval);
+        $('.expand').width($(window).width());
+
+        // 显示界面
+        _.delay(function(){
+            $('.cover3').remove();
+            $('.cover1').animate({top: -$(window).height()}, 500, 'easeInOutQuint', function(){$(this).remove()});
+            $('.cover2').animate({top: $(window).height()}, 500, 'easeInOutQuint', function(){$(this).remove()});
+        }, 600);
+
+        pageTransform(1);
+        showPageNav(0);
+        
+    },
+    showPageNav = function(pageIndex){
+        $('.page-nav .pointer').eq(pageIndex)
+        .find('.tips')
+        .stop(true, true)
+        .show()
+        .css({'width': 0, 'left': 5, 'z-index': 100})
+        .animate(
+            {'width': 70, 'left': -62}, 
+            300, 
+            'easeOutCirc'
+        );
+    },
+    hidePageNav = function(pageIndex){
+        $('.page-nav .pointer').eq(pageIndex)
+        .find('.tips')
+        .stop(true, true)
+        .animate(
+            {'width': 0, 'left': 5}, 
+            300, 
+            'easeOutCirc', 
+            function(){ 
+                $(this).hide();
+            }
+        );
+    },
+    pageTransform = function(pageIndex){
+
+        if($.ZXUtils.isPhone()){
+            return;
+        }
+
+        var targetSection = $('.section').eq(pageIndex-1),
+            tempTitle = targetSection.find('.title'),
+            tempContent = targetSection.find('.content'),
+            tempWidth = tempTitle.width(),
+            tempHeight = $(window).height(),
+            marginTop = (tempTitle.parents('.section').find('.section-bg').height() - tempTitle.height() - tempContent.height()) / 2;
+        
+        tempTitle.hide();
+        tempContent.hide();
+        tempContent.children().width($(window).width()/8*3);
+
+        switch(pageIndex){
+            // 同时从左至右
+            case 1:
+
+                _.delay(function(){
+                    
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 8, 
+                        'margin-top': marginTop,//tempHeight / 4,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 8, 
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 700);
+
+                break;
+
+            // 分别上下合并
+            case 2:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': marginTop / 2,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': marginTop,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+                    
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': marginTop / 4,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': 0,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 800);
+
+                break;
+
+            // 分别左右合并
+            case 3:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4 + (tempWidth / 4)*0.3, 
+                        'margin-top': marginTop,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4 - (tempWidth / 4)*0.3, 
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': tempWidth / 4, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 700);
+                break;
+
+            // 同时至下而上
+            case 4:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': marginTop + (marginTop)*0.4,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': marginTop,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4) * 0.1, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': marginTop*0.2,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-top': 0,
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 800);
+                break;
+
+            // 同时至下而上
+            case 5:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4, 
+                        'margin-top': marginTop - marginTop*0.8,
+                        'opacity': 0, 
+                    })
+                    .animate({
+                        'margin-top': marginTop,
+                        'opacity': 1
+                    }, 600, 'easeOutBounce');
+                }, 500);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': tempWidth / 4, 
+                        'margin-top': marginTop*0.2,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'opacity': 1,
+                        'margin-top': 0
+                    }, 600, 'easeInOutCubic');
+                }, 900);
+                break;
+
+            // 分别左右合并
+            case 6:
+                _.delay(function(){
+
+                    tempTitle
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4)*0.4, 
+                        'margin-right': tempWidth / 4, 
+                        'margin-top': marginTop,
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': (tempWidth / 4)*0.1, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 600);
+
+                _.delay(function(){
+
+                    tempContent
+                    .show()
+                    .css({
+                        'margin-left': (tempWidth / 4)*0.4, 
+                        'margin-right': tempWidth / 4, 
+                        'opacity': 0
+                    })
+                    .animate({
+                        'margin-left': (tempWidth / 4)*0.1, 
+                        'opacity': 1
+                    }, 600, 'easeInOutCubic');
+                }, 700);
+                break;
+        }
+    };
+
+    $('#fullpage').fullpage({
+        scrollingSpeed: 700,
+        easing: 'easeOutExpo',
+        afterRender: function(){
+            var sections = $('.section');
+
+            // 设置图片
+            sections.map(function(i){
+                sections
+                .eq(i)
+                .find('.section-bg')
+                .attr('src', BACKGROUND_IMAGES[i]);
+            });
+            
+        },
+        onLeave: function(index, nextIndex, direction){
+
+            // 页面动画
+            pageTransform(nextIndex);
+
+            // 右侧导航栏
+            $('.page-nav li').removeClass('active').eq(nextIndex-1).addClass('active');
+            hidePageNav(index-1);
+            showPageNav(nextIndex-1);
+
+            // 控制下一页按钮
+            nextIndex >= totalSection ? $('.go-next').fadeOut() : $('.go-next').fadeIn();
+        }
+    });
+
+    // 跳转下一屏
+    $('.go-next').bind('click', function(){
+        $.fn.fullpage.moveSectionDown();
+    });
+
+    // 右侧导航
+    $('.page-nav .pointer')
+    .bind('click', function(){
+        $.fn.fullpage.moveTo(parseInt($(this).data('page_index')));
+    }).
+    bind('mouseenter', function(){
+        
+        if(!$(this).hasClass('active')){
+            showPageNav(parseInt($(this).data('page_index')) - 1);
+        }
+    }).
+    bind('mouseleave', function(){
+        
+        if(!$(this).hasClass('active')){
+            hidePageNav(parseInt($(this).data('page_index')) - 1);
+        }
+    })
+
+    // 控制进度条
+    var currentPercent = 0, step = 5;
+    loadingInterval = window.setInterval(function(){
+
+        if(currentPercent >= 100){
+            currentPercent = 0;
+        }
+            
+        $('.expand').width(currentPercent / 100 * $(window).width());
+        currentPercent += step;
+    }, 500);
+
+    // 循环加载图片
+    _.map(BACKGROUND_IMAGES, function(imageUrl){
+        loadBackgroundImage(imageUrl);
+    });
+
+    // 设置顶部导航位置
+    $.ZXUtils.isPhone() ? $('.fix-nav').css({'right': '3%'}) : $('.fix-nav').css({'left': '8%'});
+
+    // 分享操作
+    $('.share-to-qq').bind('click', function(){
+        $.ZXShare.qq(window.location.href, '不错的新手股票入门专题，推荐你来看看!');
+    });
+    $('.share-to-sina').bind('click', function(){
+        $.ZXShare.sinaWeibo(window.location.href, '不错的新手股票入门专题，推荐你来看看!', '');
+    });
+
+    // 收藏
+    $('.favorite').bind('click', function(){
+        $.ZXNotice.WarningTopNotice('请按下 Ctrl + D 收藏本地址！');
+    });
+});
+</script>
+{% endblock %}
+
+{% block container %}
+<div class="pf f24 co3 z99 fix-nav" style="top: 2%;">
+    <a href="/" class="ddd-999">智选</a>
+    <a href="/zt" class="ddd-999 ml-20">专题</a>
+</div>
+<div class="pf f12 co3 z99 share-nav hidden-xs" style="top: 3%; right: 3%;">
+    <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3 share-to-qq" href="javascript:void(0);">分享到QQ</a>
+    <a class="border-block-red ml-5 pl-10 pr-10 pt-3 pb-3 share-to-sina" href="javascript:void(0);">分享到微博</a>
+    <a class="border-block-orange ml-5 pl-10 pr-10 pt-3 pb-3 favorite" href="javascript:void(0);">收藏</a>
+</div>
+<div id="fullpage">
+    <div class="section active">
+        <div class="col-md-6 col-xs-12 pr">
+            <div class="title pr">
+                <span class="f35">基础知识</span>
+            </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    “股市有风险，入市需谨慎”，小编的亲身经历体会出，这句话不是走过场，而是警示。股市承载了太多人的梦想，却让太多人失望和迷茫，小编希望投资者在本专题中汲取知识，少走弯路，多多赚钱。炒股入门首先要做好知识储备，如同行军打仗，粮草先行。
+                    <br />
+                    以下是小编从智选问答中整理的基础知识：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/298">什么是股票，股票有什么用？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/299">股票的种类？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/300">股票怎么进行买卖？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/301">股票术语有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/302">散户为什么要投资股市，有哪些注意事项？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12 hidden-xs">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">模拟炒股</span>
+            </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    小编见过太多新手初入股市就投入重金，想博一个开门红，却不知股市变幻莫测，稍有不慎即被套牢，最后连账户都不愿打开。所以小编劝各位准备在股市中冲浪之前，先模拟炒股一下，或者投入股市的资金不要高于你的年收入，切莫初次就把理财资金全部投入。有个笑话“如何通过炒股变为百万富翁？”答之：“携千万巨款入市即可”。
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/303">模拟炒股和实盘炒股有什么区别？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/304">有哪些网站或者软件可以模拟炒股？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/305">为什么模拟炒股较为赚钱，而实盘炒股却亏钱呢？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 hidden-sm hidden-md hidden-lg">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">选择券商</span>
+            </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    目前国内有115家证券公司，投资者选择在某家证券公司开设股票账户，办理沪深股东代码卡，那么交易就会通过该证券公司，所以要考虑后续的服务和收费标准，业内竞争比较激烈，每家证券公司能提供的增值服务和交易佣金也不一样。
+                    <br />
+                    小编从智选问答中整理出以下相关问题：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/307">股票开户的详细流程？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/308">不同的证券公司之间有什么差异？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/309">为什么找证券公司开户需要找客户经理？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/310">在证券公司开户后，除了炒股还可以做哪些呢？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12 hidden-xs">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">行情软件</span>
+            </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    市面上的炒股软件鱼龙混杂，新手不要轻信某些收费炒股软件，“提供买卖点，推荐股票,包赚，XXXX”等等，如果真有这么神奇的软件，作者会以几千元卖给我们？普及率较高的炒股软件有：大智慧，同花顺，通达信。建议新手选择一款免费版上手，各家券商也有相应的版本。
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/311">付费的炒股软件值得购买吗？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/313">大智慧的快捷键有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/314">同花顺的快捷键有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/312">通达信的快捷键有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/316">解释一下炒股软件里面的众多术语？比如换手率，振幅？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/315">推荐几款免费的炒股软件？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 hidden-sm hidden-md hidden-lg">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">选股方法</span>
+            </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    小编见过一些投资者入市之初，专买低价股，一些则喜欢追涨杀跌。这些投资者在实战中交了不少学费，才慢慢摸索到适合自己的选股方法。小编认为选股依据就两种，技术面选股和基本面选股，万变不离其宗。
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/29">基本面选股和技术图形选股的实质区别是什么？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/320">适合新手的技术指标有哪些？如何运用？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/321">基本面分析需要关注哪些方面？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/322">有哪些炒股入门书籍值得看？推荐书单</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12 hidden-xs">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">实盘操作</span>
+            </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    炒股如同将军带兵行军打仗，你投入的资金就是你的军队，如何利用这只军队去攻城略地，仅仅纸上谈兵是不够的。小编的忠告就一句“认真对待资金，严格执行交易纪律，每一次交易都有最坏预期的处理预案。”
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/323">大致介绍一下A股的交易规则？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/324">才开始炒股，投入多少资金比较合适？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/325">如何进行资金管理？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" href="{{MAIN_DOMAIN}}/question/64">分散投资真的好吗？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 hidden-sm hidden-md hidden-lg">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    
+    <!-- 右侧导航 -->
+    <ul class="pf page-nav list-unstyled hidden-xs">
+        <li class="active pr pointer" data-page_index="1">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">基础知识</span>
+        </li>
+        <li class="pr pointer" data-page_index="2">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">模拟炒股</span>
+        </li>
+        <li class="pr pointer" data-page_index="3">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">选择券商</span>
+        </li>
+        <li class="pr pointer" data-page_index="4">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">行情软件</span>
+        </li>
+        <li class="pr pointer" data-page_index="5">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">选股方法</span>
+        </li>
+        <li class="pr pointer" data-page_index="6">
+            <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">实盘操作</span>
+        </li>
+    </ul>
+
+    <!-- 跳转下一屏 -->
+    <div class="pf text-center f24 go-next pointer hidden-xs zx-tooltip" style="bottom: 3%; left: 50%;" data-toggle="tooltip" data-placement="top" data-original-title="点击跳转下一页" data-trigger="hover" title="">
+        <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-1"></span></div>
+        <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-2"></span></div>
+    </div>
+
+    <!-- loading层 -->
+    <div class="cover1 pf z100 bgc-000" style="width: 100%; height: 50%; top: 0; left: 0;"></div>
+    <div class="cover2 pf z100 bgc-000" style="width: 100%; height: 50%; top: 50%; left: 0;"></div>
+    <div class="cover3 pf z100 bgc-000" style="width: 100%; height: 50%; top: 50%; left: 0;">
+        <span class="expand"></span>
+    </div>
+</div>
+{% endblock container %}

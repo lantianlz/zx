@@ -370,11 +370,17 @@ class QuestionBase(object):
 
         return self.format_quesitons(questions)
 
-    def get_all_questions_by_order_count(self, order):
+    def get_all_questions_by_order_type(self, order):
         '''
         根据统计数据排序
         '''
         return self.format_quesitons(Question.objects.all().order_by('-' + order))
+
+    def get_questions_by_range_date(self, start_date, end_date):
+        '''
+        查询指定区间的提问
+        '''
+        return Question.objects.filter(create_time__range=(start_date, end_date))
 
 
 class AnswerBase(object):
@@ -603,6 +609,12 @@ class AnswerBase(object):
                                   answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
                                   answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=user.des or '')
         return answer_summary
+
+    def get_answers_by_range_date(self, start_date, end_date):
+        '''
+        查询指定区间的回答
+        '''
+        return Answer.objects.filter(create_time__range=(start_date, end_date))
 
 
 class LikeBase(object):

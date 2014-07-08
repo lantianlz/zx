@@ -14,7 +14,17 @@ $(document).ready(function(){
     var d1 = new Date(),
         today = $.ZXUtils.formatDate(d1, 'y-m-d'),
         d2 = new Date(d1.getFullYear(), d1.getMonth() - 1, d1.getDate()),
-        lastMonth = $.ZXUtils.formatDate(d2, 'y-m-d');
+        lastMonth = $.ZXUtils.formatDate(d2, 'y-m-d'),
+        validateDate = function(startDate, endDate){
+            var offset = (endDate - startDate)/1000/60/60/24;
+
+            if(offset > 31){
+                $.ZXMsg.alert('提示', '时间间隔不能超过31天');
+                return false;
+            }
+
+            return true;
+        };
 
     $('.start-date').datetimepicker({
         format: 'yyyy-mm-dd',
@@ -33,21 +43,21 @@ $(document).ready(function(){
     $('.end-date').val(today);
 
 
-    $('.select').bind('click', function(){
+    $('.register-user-statistcs').bind('click', function(){
         // 验证时间间隔是否小于30天
         var startDate = new Date($('.start-date').val()),
-            startDateStr = $.ZXUtils.formatDate(new Date($('.start-date').val()), 'y-m-d'),
+            startDateStr = $.ZXUtils.formatDate(startDate, 'y-m-d'),
             endDate = new Date($('.end-date').val()),
-            endDateStr = $.ZXUtils.formatDate(new Date($('.end-date').val()), 'y-m-d'),
-            offset = (endDate - startDate)/1000/60/60/24;
+            endDateStr = $.ZXUtils.formatDate(endDate, 'y-m-d');
 
-        if(offset > 31){
-            $.ZXMsg.alert('提示', '时间间隔不能超过31天');
+        // 验证日期
+        if(!validateDate(startDate, endDate)){
             return;
         }
+            
 
         ajaxSend(
-            "/admin/statistics/statistic_register_user", 
+            "/admin/statistics/statistics_register_user", 
             {'start_date': startDateStr, 'end_date': endDateStr}, 
             function(data){
                 $.ZXChart.lineChart({
@@ -60,28 +70,97 @@ $(document).ready(function(){
                         name: '人数',
                         data: _.map(data, function(d){return d.value})
                     }]
-                })
-
+                });
             }
         );
+    });
 
-        
-    })
+
+    $('.question-statistcs').bind('click', function(){
+        // 验证时间间隔是否小于30天
+        var startDate = new Date($('.start-date').val()),
+            startDateStr = $.ZXUtils.formatDate(startDate, 'y-m-d'),
+            endDate = new Date($('.end-date').val()),
+            endDateStr = $.ZXUtils.formatDate(endDate, 'y-m-d');
+
+        // 验证日期
+        if(!validateDate(startDate, endDate)){
+            return;
+        }
+            
+
+        ajaxSend(
+            "/admin/statistics/statistics_questions", 
+            {'start_date': startDateStr, 'end_date': endDateStr}, 
+            function(data){
+                $.ZXChart.lineChart({
+                    title: String.format("{0} 至 {1}期间提问统计", startDateStr, endDateStr),
+                    subtitle: '',
+                    categories: _.map(data, function(d){return d.date}),
+                    xAxis: '日期',
+                    yAxis: '提问个数',
+                    series: [{
+                        name: '提问数',
+                        data: _.map(data, function(d){return d.value})
+                    }]
+                });
+            }
+        );
+    });
+
+    
+    $('.answer-statistcs').bind('click', function(){
+        // 验证时间间隔是否小于30天
+        var startDate = new Date($('.start-date').val()),
+            startDateStr = $.ZXUtils.formatDate(startDate, 'y-m-d'),
+            endDate = new Date($('.end-date').val()),
+            endDateStr = $.ZXUtils.formatDate(endDate, 'y-m-d');
+
+        // 验证日期
+        if(!validateDate(startDate, endDate)){
+            return;
+        }
+            
+
+        ajaxSend(
+            "/admin/statistics/statistics_answers", 
+            {'start_date': startDateStr, 'end_date': endDateStr}, 
+            function(data){
+                $.ZXChart.lineChart({
+                    title: String.format("{0} 至 {1}期间回答统计", startDateStr, endDateStr),
+                    subtitle: '',
+                    categories: _.map(data, function(d){return d.date}),
+                    xAxis: '日期',
+                    yAxis: '回答个数',
+                    series: [{
+                        name: '回答数',
+                        data: _.map(data, function(d){return d.value})
+                    }]
+                });
+            }
+        );
+    });
+
+
+    // $('.select').click();
+
 });
 
 </script>
 {% endblock %}
 
 {% block admin-right %}
-<div class="pt-10">
+<div class="pt-10 row pl-20">
     <div class="pl-0 pr-5 pb-10 col-md-2">
         <input type="text" readonly class="form-control input-sm start-date" placeholder="开始日期">
     </div>
     <div class="pl-10 pr-5 pb-10 col-md-2">
         <input type="text" readonly class="form-control input-sm end-date" placeholder="结束日期">
     </div>
-    <div class="pl-10 pr-0 pb-10 col-md-1">
-        <button type="button" class="btn btn-default btn-sm select">统计</button>
+    <div class="pl-10 pr-0 pb-10 col-md-8">
+        <button type="button" class="btn btn-default btn-sm register-user-statistcs">注册用户统计</button>
+        <button type="button" class="btn btn-default btn-sm question-statistcs">提问统计</button>
+        <button type="button" class="btn btn-default btn-sm answer-statistcs">回答统计</button>
     </div>
 </div>
 

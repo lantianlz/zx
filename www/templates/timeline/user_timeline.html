@@ -6,7 +6,7 @@
 {% block home_css %}
 <style type="text/css">
 .hot-topics{
-	border-top: 0;
+    border-top: 0;
 }
 </style>
 {% endblock %}
@@ -21,11 +21,11 @@
         
     </div>
         
-	<div class="bottom-border bdc-bbb row pt-10 pb-5">
-	    <div class="col-md-6">
-	        <span class="f16 fb">最新动态</span>
-	    </div>
-	</div>
+    <div class="bottom-border bdc-bbb row pt-10 pb-5">
+        <div class="col-md-6">
+            <span class="f16 fb">最新动态</span>
+        </div>
+    </div>
 
     <!-- 推荐关注 -->
     <div class="recommend-users pl-15 pr-15 pb-15 none">
@@ -40,9 +40,9 @@
         </ul>
     </div>
 
-	<ul class="list-group feed-list">
+    <ul class="list-group feed-list">
     </ul>
-	
+    
 </div>
 
 <div class="col-md-4 pl-50">
@@ -95,67 +95,73 @@
         <% if(feed.feedType == 1){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
             <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
-            <div class="pl-55">
-                <div class="co8 f12">
+            <div class="pl-55 row">
+                <div class="co8 f12 col-xs-11">
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 提出了该问题
                 </div>
-                <div class="pt-5">
+                <div class="pt-5 col-xs-11">
                     <a class="black-blue f14 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
-                <div class="pt-10 f13"><%= feed.questionDesc %></div>
-                <div class="f12 co8 gray-a pt-5">
-                    <span><%= feed.questionAnswerCount %> 个回答 • <%= feed.feedDate %></span>
+                <div class="pt-10 f13 col-xs-12"><%= feed.questionDesc %></div>
+                <div class="f12 co8 gray-a pt-5 col-xs-12">
+                    <span><%= feed.questionAnswerCount %> 个回答 ? <%= feed.feedDate %></span>
                 </div>
+                <span class="pa img-circle avatar-45 fa fa-question line-height-45 text-center f20  bdc-ddd co17" style="right: 10px; top: 5px;" title="提问"></span>
             </div>
+            
         </li>
         <% } %>
 
         <% if(feed.feedType == 2){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
-            <div class="pl-55">
-                <div class="co8 f12">
+            <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle " alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
+            <div class="pl-55 row">
+                <div class="co8 f12 col-xs-11">
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 赞了该回答
                 </div>
-                <div class="pt-5">
+                <div class="pt-5 col-xs-11">
                     <a class="black-blue f14 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
-                <div class="pt-10 f12">
+                <div class="pt-10 f12 col-xs-12">
                     <a href="/p/<%= feed.answerUserId %>" class="zx-cardtips pr-5 black-blue fb" data-user_id='<%= feed.answerUserId %>'><%= feed.answerUserName %></a><% if(feed.answerUserDesc) {%><span class="fb">(<%= feed.answerUserDesc %>)</span><% } %>
                 </div>
-                <div class="pt-5 f13">
+                <div class="pt-5 f13 col-xs-12">
                     <%= feed.answerContent %>
                     <a href="question/<%= feed.questionId %>#to_answer_<%= feed.answerId %>" class="pl-5 f12">
                         <span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
                     </a>
                 </div>
-                <div class="f12 co8 gray-a pt-5">
-                    <span><%= feed.answerLikeCount %> 个赞 • <%= feed.feedDate %></span>
+                <div class="f12 co8 gray-a pt-5 col-xs-12">
+                    <span><%= feed.answerLikeCount %> 个赞 ? <%= feed.feedDate %></span>
                 </div>
+                <span class="pa img-circle avatar-45 fa fa-heart line-height-45 text-center f20  bdc-ddd co17" style="right: 10px; top: 5px;" title="赞"></span>
             </div>
+            
         </li>
         <% } %>
 
         <% if(feed.feedType == 3){ %>
-        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0 pr">
             <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
-            <div class="pl-55">
-                <div class="co8 f12">
+            <div class="pl-55 row">
+                <div class="co8 f12 col-xs-11">
                     <a href="/p/<%= feed.userId %>" class="zx-cardtips" data-user_id='<%= feed.userId %>'><%= feed.userName %></a> 回答了该提问
                 </div>
-                <div class="pt-5">
+                <div class="pt-5 col-xs-11">
                     <a class="black-blue f14 fb" href="/question/<%= feed.questionId %>"><%= feed.questionTitle %></a>
                 </div>
-                <div class="pt-10 f13">
+                <div class="pt-10 f13 col-xs-12">
                     <%= feed.answerContent %>
                     <a href="question/<%= feed.questionId %>#to_answer_<%= feed.answerId %>" class="pl-5 f12">
                         <span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
                     </a>
                 </div>
-                <div class="f12 co8 gray-a pt-5">
-                    <span><%= feed.answerLikeCount %> 个赞 • <%= feed.feedDate %></span>
+                <div class="f12 co8 gray-a pt-5 col-xs-12">
+                    <span><%= feed.answerLikeCount %> 个赞 ? <%= feed.feedDate %></span>
                 </div>
+                <span class="pa img-circle avatar-45 line-height-45 fa fa-reply text-center f20 bdc-ddd co17" style="right: 10px; top: 5px;" title="回答"></span>
             </div>
+            
         </li>
         <% } %>
     <% }) %>

@@ -14,6 +14,7 @@ from www.custom_tags.templatetags.custom_filters import str_display
 
 from www.kaihu.interface import CityBase, DepartmentBase, CustomerManagerBase, FriendlyLinkBase
 from www.account.interface import UserBase
+from www.question.interface import QuestionBase, AnswerBase
 
 
 @verify_permission('')
@@ -72,14 +73,14 @@ def register_user(request, template_name='admin/statistics_register_user.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-@verify_permission('statistics_register_user')
-def statistic_register_user(request):
+def common_statistics(start_date, end_date, objs):
+    '''
+    通用统计
+    '''
     data = {}
-    start_date = request.REQUEST.get('start_date')
-    end_date = request.REQUEST.get('end_date')
 
     # 数据库数据
-    for x in UserBase().get_users_by_range_date(start_date + ' 00:00:00', end_date + ' 23:59:59'):
+    for x in objs:
         date = str(x.create_time)[5:10]
         if not data.has_key(date):
             data[date] = 0
@@ -100,7 +101,61 @@ def statistic_register_user(request):
     sort_data = [{'date': k, 'value': temp[k]} for k in temp.keys()]
     sort_data.sort(key=lambda x: x['date'])
 
+    return sort_data
+
+
+@verify_permission('statistics_register_user')
+def statistics_register_user(request):
+    '''
+    注册用户统计
+    '''
+    start_date = request.REQUEST.get('start_date')
+    end_date = request.REQUEST.get('end_date')
+
+    data = common_statistics(
+        start_date, end_date,
+        UserBase().get_users_by_range_date(start_date + ' 00:00:00', end_date + ' 23:59:59')
+    )
+
     return HttpResponse(
-        json.dumps(sort_data),
+        json.dumps(data),
+        mimetype='application/json'
+    )
+
+
+@verify_permission('statistics_questions')
+def statistics_questions(request):
+    '''
+    提问统计
+    '''
+    start_date = request.REQUEST.get('start_date')
+    end_date = request.REQUEST.get('end_date')
+
+    data = common_statistics(
+        start_date, end_date,
+        QuestionBase().get_questions_by_range_date(start_date + ' 00:00:00', end_date + ' 23:59:59')
+    )
+
+    return HttpResponse(
+        json.dumps(data),
+        mimetype='application/json'
+    )
+
+
+@verify_permission('statistics_answers')
+def statistics_answers(request):
+    '''
+    提问统计
+    '''
+    start_date = request.REQUEST.get('start_date')
+    end_date = request.REQUEST.get('end_date')
+
+    data = common_statistics(
+        start_date, end_date,
+        AnswerBase().get_answers_by_range_date(start_date + ' 00:00:00', end_date + ' 23:59:59')
+    )
+
+    return HttpResponse(
+        json.dumps(data),
         mimetype='application/json'
     )
