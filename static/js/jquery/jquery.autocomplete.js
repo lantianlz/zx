@@ -82,7 +82,8 @@
                 paramName: 'query',
                 transformResult: function (response) {
                     return typeof response === 'string' ? $.parseJSON(response) : response;
-                }
+                },
+                showDelay: 100
             };
 
         // Shared variables:
@@ -246,24 +247,26 @@
             var that = this,
                 offset,
                 styles;
+            window.setTimeout(function(){
+                // Don't adjsut position if custom container has been specified:
+                if (that.options.appendTo !== 'body') {
+                    return;
+                }
 
-            // Don't adjsut position if custom container has been specified:
-            if (that.options.appendTo !== 'body') {
-                return;
-            }
+                offset = that.el.offset();
 
-            offset = that.el.offset();
+                styles = {
+                    top: (offset.top + that.el.outerHeight() + ($.browser.msie ? document.documentElement.scrollTop : 0)) + 'px', 
+                    left: offset.left + 'px'
+                };
 
-            styles = {
-                top: (offset.top + that.el.outerHeight() + ($.browser.msie ? document.documentElement.scrollTop : 0)) + 'px', 
-                left: offset.left + 'px'
-            };
+                if (that.options.width === 'auto') {
+                    styles.width = (that.el.outerWidth() - 2) + 'px';
+                }
+                
+                $(that.suggestionsContainer).css(styles);
 
-            if (that.options.width === 'auto') {
-                styles.width = (that.el.outerWidth() - 2) + 'px';
-            }
-
-            $(that.suggestionsContainer).css(styles);
+            }, that.options.showDelay);
         },
 
         enableKillerFn: function () {
@@ -389,7 +392,7 @@
             }
         },
 
-        onValueChange: _.throttle(function () {
+        onValueChange: function () {
 
             var that = this,
                 options = that.options,
@@ -420,7 +423,7 @@
             } else {
                 that.getSuggestions(query);
             }
-        }, 1000),
+        },
 
         findSuggestionIndex: function (query) {
             var that = this,
@@ -588,7 +591,7 @@
                 beforeRender.call(that.element, container);
             }
 
-            container.show();
+            container.show('fast');
             that.visible = true;
 
             that.findBestHint();
