@@ -22,13 +22,13 @@
 }
 @keyframes pulse-arrow{
     from {color: #eee;}
-    50%  {color: gray;}
+    50%  {color: #3C3C3C;}
     100% {color: #eee;}
 }
 
 @-webkit-keyframes pulse-arrow{
     from {color: #eee;}
-    50%  {color: gray;}
+    50%  {color: #3C3C3C;}
     100% {color: #eee;}
 }
 
@@ -127,6 +127,31 @@ $(document).ready(function(){
         }, 600);
         
     },
+    showPageNav = function(pageIndex){
+        $('.page-nav .pointer').eq(pageIndex)
+        .find('.tips')
+        .stop(true, true)
+        .show()
+        .css({'width': 0, 'left': 5, 'z-index': 100})
+        .animate(
+            {'width': 70, 'left': -62}, 
+            300, 
+            'easeOutCirc'
+        );
+    },
+    hidePageNav = function(pageIndex){
+        $('.page-nav .pointer').eq(pageIndex)
+        .find('.tips')
+        .stop(true, true)
+        .animate(
+            {'width': 0, 'left': 5}, 
+            300, 
+            'easeOutCirc', 
+            function(){ 
+                $(this).hide();
+            }
+        );
+    },
     pageTransform = function(pageIndex){
 
         if($.ZXUtils.isPhone()){
@@ -137,22 +162,24 @@ $(document).ready(function(){
             tempTitle = targetSection.find('.title'),
             tempContent = targetSection.find('.content'),
             tempWidth = tempTitle.width(),
-            tempHeight = $(window).height();
-
+            tempHeight = $(window).height(),
+            marginTop = (tempTitle.parents('.section').find('.section-bg').height() - tempTitle.height() - tempContent.height()) / 2;
+        
         tempTitle.hide();
         tempContent.hide();
         tempContent.children().width($(window).width()/8*3);
-        
+
         switch(pageIndex){
             // 同时从左至右
             case 1:
+
                 _.delay(function(){
                     
                     tempTitle
                     .show()
                     .css({
                         'margin-left': tempWidth / 8, 
-                        'margin-top': tempHeight / 4,
+                        'margin-top': marginTop,//tempHeight / 4,
                         'opacity': 0
                     })
                     .animate({
@@ -162,7 +189,6 @@ $(document).ready(function(){
                 }, 600);
 
                 _.delay(function(){
-                    
 
                     tempContent
                     .show()
@@ -181,17 +207,17 @@ $(document).ready(function(){
             // 分别上下合并
             case 2:
                 _.delay(function(){
-                    
+
                     tempTitle
                     .show()
                     .css({
                         'margin-left': (tempWidth / 4) * 0.1, 
                         'margin-right': tempWidth / 4, 
-                        'margin-top': tempHeight / 8,
+                        'margin-top': marginTop / 2,
                         'opacity': 0
                     })
                     .animate({
-                        'margin-top': tempHeight / 4,
+                        'margin-top': marginTop,
                         'opacity': 1
                     }, 600, 'easeInOutCubic');
                 }, 600);
@@ -203,7 +229,7 @@ $(document).ready(function(){
                     .css({
                         'margin-left': (tempWidth / 4) * 0.1, 
                         'margin-right': tempWidth / 4, 
-                        'margin-top': tempHeight / 8,
+                        'margin-top': marginTop / 4,
                         'opacity': 0
                     })
                     .animate({
@@ -222,7 +248,7 @@ $(document).ready(function(){
                     .show()
                     .css({
                         'margin-left': tempWidth / 4 + (tempWidth / 4)*0.3, 
-                        'margin-top': tempHeight / 4,
+                        'margin-top': marginTop,
                         'opacity': 0
                     })
                     .animate({
@@ -255,11 +281,11 @@ $(document).ready(function(){
                     .css({
                         'margin-left': (tempWidth / 4) * 0.1, 
                         'margin-right': tempWidth / 4, 
-                        'margin-top': tempHeight / 4 + (tempHeight / 4)*0.2,
+                        'margin-top': marginTop + (marginTop)*0.4,
                         'opacity': 0
                     })
                     .animate({
-                        'margin-top': tempHeight / 4,
+                        'margin-top': marginTop,
                         'opacity': 1
                     }, 600, 'easeInOutCubic');
                 }, 600);
@@ -271,7 +297,7 @@ $(document).ready(function(){
                     .css({
                         'margin-left': (tempWidth / 4) * 0.1, 
                         'margin-right': tempWidth / 4, 
-                        'margin-top': (tempHeight / 4)*0.1,
+                        'margin-top': marginTop*0.2,
                         'opacity': 0
                     })
                     .animate({
@@ -289,11 +315,11 @@ $(document).ready(function(){
                     .show()
                     .css({
                         'margin-left': tempWidth / 4, 
-                        'margin-top': tempHeight / 4 - (tempHeight / 4)*0.8,
+                        'margin-top': marginTop - marginTop*0.8,
                         'opacity': 0, 
                     })
                     .animate({
-                        'margin-top': tempHeight / 4,
+                        'margin-top': marginTop,
                         'opacity': 1
                     }, 600, 'easeOutBounce');
                 }, 500);
@@ -304,7 +330,7 @@ $(document).ready(function(){
                     .show()
                     .css({
                         'margin-left': tempWidth / 4, 
-                        'margin-top': (tempHeight / 4)*0.1,
+                        'margin-top': marginTop*0.2,
                         'opacity': 0
                     })
                     .animate({
@@ -323,7 +349,7 @@ $(document).ready(function(){
                     .css({
                         'margin-left': (tempWidth / 4)*0.4, 
                         'margin-right': tempWidth / 4, 
-                        'margin-top': tempHeight / 4,
+                        'margin-top': marginTop,
                         'opacity': 0
                     })
                     .animate({
@@ -364,7 +390,11 @@ $(document).ready(function(){
                 .attr('src', BACKGROUND_IMAGES[i]);
             });
 
-            pageTransform(1);
+            _.delay(function(){
+                pageTransform(1);
+                showPageNav(0);
+            }, 500);
+            
         },
         onLeave: function(index, nextIndex, direction){
 
@@ -373,6 +403,8 @@ $(document).ready(function(){
 
             // 右侧导航栏
             $('.page-nav li').removeClass('active').eq(nextIndex-1).addClass('active');
+            hidePageNav(index-1);
+            showPageNav(nextIndex-1);
 
             // 控制下一页按钮
             nextIndex >= totalSection ? $('.go-next').fadeOut() : $('.go-next').fadeIn();
@@ -390,29 +422,16 @@ $(document).ready(function(){
         $.fn.fullpage.moveTo(parseInt($(this).data('page_index')));
     }).
     bind('mouseenter', function(){
-        $(this)
-        .find('.tips')
-        .stop(true, true)
-        .show()
-        .css({'width': 0, 'left': 5, 'z-index': 100})
-        .animate(
-            {'width': 70, 'left': -62}, 
-            300, 
-            'easeOutCirc'
-        );
+        
+        if(!$(this).hasClass('active')){
+            showPageNav(parseInt($(this).data('page_index')) - 1);
+        }
     }).
     bind('mouseleave', function(){
-        $(this)
-        .find('.tips')
-        .stop(true, true)
-        .animate(
-            {'width': 0, 'left': 5}, 
-            300, 
-            'easeOutCirc', 
-            function(){ 
-                $(this).hide();
-            }
-        );
+        
+        if(!$(this).hasClass('active')){
+            hidePageNav(parseInt($(this).data('page_index')) - 1);
+        }
     })
 
     // 控制进度条
@@ -443,7 +462,7 @@ $(document).ready(function(){
         $.ZXShare.sinaWeibo(window.location.href, '不错的新手股票入门专题，推荐你来看看!', '');
     });
 
-    //
+    // 收藏
     $('.favorite').bind('click', function(){
         $.ZXNotice.WarningTopNotice('请按下 Ctrl + D 收藏本地址！');
     });
@@ -465,9 +484,108 @@ $(document).ready(function(){
     <div class="section active">
         <div class="col-md-6 col-xs-12 pr">
             <div class="title pr">
-                <span class="f40">知识储备</span>
+                <span class="f35">基础知识</span>
             </div>
-            <div class="content pt-20 f16 pr">
+            <div class="content pt-15 f14 pr">
+                <div class="">
+                    “股市有风险，入市需谨慎”，小编的亲身经历体会出，这句话不是走过场，而是警示。股市承载了太多人的梦想，却让太多人失望和迷茫，小编希望投资者在本专题中汲取知识，少走弯路，多多赚钱。炒股入门首先要做好知识储备，如同行军打仗，粮草先行。
+                    <br />
+                    以下是小编从智选问答中整理的基础知识：
+                    <ul class="pl-15">
+                        <li><a href="{{MAIN_DOMAIN}}/question/298">什么是股票，股票有什么用？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/299">股票的种类？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/300">股票怎么进行买卖？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/301">股票术语有哪些？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/302">散户为什么要投资股市，有哪些注意事项？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12 hidden-xs">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">模拟炒股</span>
+            </div>
+            <div class="content pt-20 f14 pr">
+                <div class="">
+                    小编见过太多新手初入股市就投入重金，想博一个开门红，却不知股市变幻莫测，稍有不慎即被套牢，最后连账户都不愿打开。所以小编劝各位准备在股市中冲浪之前，先模拟炒股一下，或者投入股市的资金不要高于你的年收入，切莫初次就把理财资金全部投入。有个笑话“如何通过炒股变为百万富翁？”答之：“携千万巨款入市即可”。
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="pl-15">
+                        <li><a href="{{MAIN_DOMAIN}}/question/303">模拟炒股和实盘炒股有什么区别？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/304">有哪些网站或者软件可以模拟炒股？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/305">为什么模拟炒股较为赚钱，而实盘炒股却亏钱呢？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 hidden-sm hidden-md hidden-lg">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">选择券商</span>
+            </div>
+            <div class="content pt-20 f14 pr">
+                <div class="">
+                    目前国内有115家证券公司，投资者选择在某家证券公司开设股票账户，办理沪深股东代码卡，那么交易就会通过该证券公司，所以要考虑后续的服务和收费标准，业内竞争比较激烈，每家证券公司能提供的增值服务和交易佣金也不一样。
+                    <br />
+                    小编从智选问答中整理出以下相关问题：
+                    <ul class="pl-15">
+                        <li><a href="{{MAIN_DOMAIN}}/question/303">股票开户的详细流程？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/304">不同的证券公司之间有什么差异？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/305">为什么找证券公司开户需要找客户经理？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/305">在证券公司开户后，除了炒股还可以做哪些呢？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12 hidden-xs">
+            <img class="w section-bg" src="">
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">行情软件</span>
+            </div>
+            <div class="content pt-20 f14 pr">
+                <div class="">
+                    市面上的炒股软件鱼龙混杂，新手不要轻信某些收费炒股软件，“提供买卖点，推荐股票,包赚，XXXX”等等，如果真有这么神奇的软件，作者会以几千元卖给我们？普及率较高的炒股软件有：大智慧，同花顺，通达信。建议新手选择一款免费版上手，各家券商也有相应的版本。
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="pl-15">
+                        <li><a href="{{MAIN_DOMAIN}}/question/303">付费的炒股软件值得购买吗？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/304">大智慧的快捷键有哪些？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/305">同花顺的快捷键有哪些？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/305">通达信的快捷键有哪些？</a></li>
+                        <li><a href="{{MAIN_DOMAIN}}/question/305">解释一下炒股软件里面的众多术语？比如换手率，振幅？</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 hidden-sm hidden-md hidden-lg">
+            <img class="w section-bg" src="">
+        </div>
+    </div>
+    <div class="section">
+        <div class="col-md-6 col-xs-12">
+            <div class="title">
+                <span class="f35">选股方法</span>
+            </div>
+            <div class="content pt-20 f14 pr">
                 <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
             </div>
         </div>
@@ -476,68 +594,19 @@ $(document).ready(function(){
         </div>
     </div>
     <div class="section">
-        <div class="col-md-6 col-xs-12">
+        <div class="col-md-6 col-xs-12 hidden-xs">
             <img class="w section-bg" src="">
         </div>
         <div class="col-md-6 col-xs-12">
             <div class="title">
-                <span class="f40">模拟炒股</span>
+                <span class="f35">实盘操作</span>
             </div>
-            <div class="content pt-20 f16 pr">
+            <div class="content pt-20 f14 pr">
                 <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
             </div>
         </div>
-    </div>
-    <div class="section">
-        <div class="col-md-6 col-xs-12">
-            <div class="title">
-                <span class="f40">选择券商</span>
-            </div>
-            <div class="content pt-20 f16 pr">
-                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xs-12">
+        <div class="col-md-6 col-xs-12 hidden-sm hidden-md hidden-lg">
             <img class="w section-bg" src="">
-        </div>
-    </div>
-    <div class="section">
-        <div class="col-md-6 col-xs-12">
-            <img class="w section-bg" src="">
-        </div>
-        <div class="col-md-6 col-xs-12">
-            <div class="title">
-                <span class="f40">行情软件</span>
-            </div>
-            <div class="content pt-20 f16 pr">
-                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
-            </div>
-        </div>
-    </div>
-    <div class="section">
-        <div class="col-md-6 col-xs-12">
-            <div class="title">
-                <span class="f40">选股方法</span>
-            </div>
-            <div class="content pt-20 f16 pr">
-                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xs-12">
-            <img class="w section-bg" src="">
-        </div>
-    </div>
-    <div class="section">
-        <div class="col-md-6 col-xs-12">
-            <img class="w section-bg" src="">
-        </div>
-        <div class="col-md-6 col-xs-12">
-            <div class="title">
-                <span class="f40">实盘操作</span>
-            </div>
-            <div class="content pt-20 f16 pr">
-                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
-            </div>
         </div>
     </div>
     
@@ -570,7 +639,7 @@ $(document).ready(function(){
     </ul>
 
     <!-- 跳转下一屏 -->
-    <div class="pf text-center f24 go-next pointer hidden-xs" style="bottom: 3%; left: 50%;">
+    <div class="pf text-center f24 go-next pointer hidden-xs zx-tooltip" style="bottom: 3%; left: 50%;" data-toggle="tooltip" data-placement="top" data-original-title="点击跳转下一页" data-trigger="hover" title="">
         <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-1"></span></div>
         <div><span class="co3 glyphicon glyphicon-chevron-down pulse-arrow-2"></span></div>
     </div>
