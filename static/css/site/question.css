@@ -222,13 +222,12 @@
 }
 
 .reply-main p{
-  margin: 5px 0;
+  margin: 0;
 }
 
 .topic p{
   margin: 5px 0;
 }
-
 
 .answer-title{
   border-bottom: solid 1px #e6e6e6;
