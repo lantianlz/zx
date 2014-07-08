@@ -1,9 +1,9 @@
 {% extends "base/base_zhuanti.html" %}
 
 {% block keywords %}股票入门基础知识,炒股入门知识{% endblock keywords %}
-{% block description %}小编为投资新手准备的炒股入门攻略，准备长期投资于股市的小伙伴们，学习基础知识，打好根基，才能够在股市中走得更高更远。好的开始是成功的一半，小伙伴们和小编一起来学习吧。{% endblock description %}
+{% block description %}{{zhuanti.get_summary}}{% endblock description %}
 
-{% block title %}新手股票入门{% endblock title %}
+{% block title %}{{zhuanti.title}}{% endblock title %}
 
 {% block base_css %}
 <style>

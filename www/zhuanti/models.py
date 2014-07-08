@@ -24,3 +24,10 @@ class Zhuanti(models.Model):
 
     def get_url(self):
         return u'/zt/%s' % self.domain
+
+    def get_summary(self):
+        """
+        @attention: 通过内容获取摘要
+        """
+        from common import utils
+        return utils.get_summary_from_html_by_sub(self.summary)
