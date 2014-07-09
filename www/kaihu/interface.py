@@ -396,8 +396,11 @@ class ArticleBase(object):
     def get_article_by_title(self, title):
         return self.get_all_articles(state=None).filter(title=title)
 
-    def get_articles_by_city_id(self, city_id):
-        return Article.objects.filter(state=True, city_id=city_id)
+    def get_articles_by_city_id(self, city_id, order_by=None):
+        articles = Article.objects.filter(state=True, city_id=city_id)
+        if order_by:
+            return articles.order_by(order_by)
+        return articles
 
     def add_article(self, title, content, city_id, department_id=None, sort_num=0):
         if not (title and content and CityBase().get_city_by_id(city_id)):
