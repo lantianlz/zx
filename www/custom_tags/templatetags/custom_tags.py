@@ -120,13 +120,20 @@ def latest_article(context):
     """
     @note: 最新资讯
     """
+    import re
     from common import utils
     from www.kaihu.interface import ArticleBase, CityBase
 
     city_abbr = utils.get_sub_domain_from_http_host(context['request'].META.get('HTTP_HOST', ''))
     city = CityBase().get_city_by_pinyin_abbr(city_abbr)
 
-    articles = ArticleBase().get_articles_by_city_id(city.id)[:10]
+    path = context['request'].path
+    p = re.compile(u'\/kaihu/article\/?\d*', re.I)
+    ps = dict(city_id=city.id)
+    if p.findall(path):
+        ps.update(dict(order_by="?"))
+    articles = ArticleBase().get_articles_by_city_id(**ps)[:10]
+
     return render_to_response('kaihu/_latest_article.html', locals(), context_instance=context).content
 
 
