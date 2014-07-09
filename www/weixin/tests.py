@@ -32,5 +32,15 @@ def main():
     from www.tasks import async_send_email_worker
     async_send_email_worker.delay('lantian-lz@163.com', title="来自智选", content="邮件发送")
 
+    from common.utils import replace_href_to_open_blank
+    body = """
+    <p>目前市场上用的最多的炒股软件有三款：大智慧，通达信，同花顺。大部分证券公司也提供这三款软件的定制版，都是可以免费使用的。</p><p><br></p>
+    <p><strong>大智慧</strong>下载地址：<a href="http://www.gw.com.cn/download.shtml" data-ke-src="http://www.gw.com.cn/download.shtml" target="_blank">http://www.gw.com.cn/download.shtml</a></p>
+    <p>建议下载大智慧经典版，界面简洁适用，适合新手入门操作。</p>
+    <p><img src="http://img0.zhixuan.com/editor_28e65d6205cd11e485ab00163e003240" data-ke-src="http://img0.zhixuan.com/editor_28e65d6205cd11e485ab00163e003240" alt="大智慧" title="大智慧" class="pointer" align="" height="93" width="206"> </p>
+    <p><strong>通达信</strong>下载地址：<a href="http://www.tdx.com.cn/soft/vip" data-ke-src="http://www.tdx.com.cn/soft/vip" target="_blank">http://www.tdx.com.cn/soft/vip</a> </p>
+    """
+    print replace_href_to_open_blank(body)
+
 if __name__ == '__main__':
     main()

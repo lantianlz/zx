@@ -3,7 +3,7 @@
 import datetime
 from django.db import transaction
 
-from common import cache, debug
+from common import cache, debug, utils
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
@@ -403,6 +403,7 @@ class ArticleBase(object):
         if not (title and content and CityBase().get_city_by_id(city_id)):
             return 99800, dict_err.get(99800)
 
+        content = utils.filter_script(content)
         article = Article.objects.create(title=title, content=content, city_id=city_id,
                                          department_id=department_id, sort_num=sort_num)
 
@@ -418,6 +419,7 @@ class ArticleBase(object):
             return 50104, dict_err.get(50104)
 
         try:
+            kwargs["content"] = utils.filter_script(kwargs["content"])
             for k, v in kwargs.items():
                 setattr(article, k, v)
 

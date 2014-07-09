@@ -194,10 +194,13 @@ def replace_href_to_open_blank(content):
         atag = match.group(0)
         href = match.group(1)
         if 'zhixuan.com' not in href:
-            return '%s%s%s' % (atag[:2], ' target="_blank" rel="nofollow"', atag[2:])
+            data = '%s%s%s' % (atag[:2], ' rel="nofollow"', atag[2:])
+            if "_blank" not in data:
+                data = '%s%s%s' % (atag[:2], ' target="_blank"', atag[2:])
+            return data
         return atag
 
-    p = re.compile(u'<a.+?(href=.+)?>.+?</a>', re.DOTALL | re.IGNORECASE)
+    p = re.compile(u'<a.+?(href=.+?)>.+?</a>', re.DOTALL | re.IGNORECASE)
     content = p.sub(_re_sub, content)
     return content
 
