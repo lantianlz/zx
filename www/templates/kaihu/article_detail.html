@@ -13,7 +13,7 @@
 
 {% block title %}{{article.title}}  {{city.get_city_name_for_seo}}理财资讯{% endblock %}
 {% block keywords %}{{article.title}}  {{city.get_city_name_for_seo}}理财资讯{% endblock %}
-{% block description %}{{article.get_summary|str_display:50}}{% endblock %}
+{% block description %}{{article.get_summary|str_display:50|safe}}{% endblock %}
 
 {% block info_left %}
 <div class="text-center">
