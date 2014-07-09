@@ -33,7 +33,7 @@ def add_article(request):
 
     code, obj = ArticleBase().add_article(title, content, city_id, department_id, sort_num)
 
-    return code, obj.id
+    return code, obj.id if code == 0 else ''
 
 
 def format_article(objs, num):

@@ -1,0 +1,57 @@
+{% extends "question/base_search.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+});
+</script>
+{% endblock %}
+
+{% block css %}{% endblock %}
+
+{% block search_main %}
+<ul class="list-group">
+    {% for question in questions %}
+        {% include "question/_question_li_display.html" %}
+    {% endfor %}
+    <li class="list-group-item pt-10 pb-0 no-l-r-bd bdc-eee">
+        <a href="http://192.168.0.111:8000/topic/ggfx">
+            <img class="pa avatar-65 avatar-circle" src="http://img0.zhixuan.com/topic_ggfx.jpg" alt="个股分析">
+        </a>
+        <div class="pl-75">
+            <div class="f16"><a href="http://192.168.0.111:8000/topic/ggfx" class="zx-topictips tooltipstered" data-topic_id="8"><span class="co23">智选</span>分析</a></div>
+            <div class="pt-10 f14">个股分析指对上市公司发行的股票进行分析，一般分为技术面和基本面分析。</div>
+            <div class="pt-5 pb-5 f12 co8">共 55 个问题</div>
+        </div>
+    </li>
+    <li class="list-group-item pt-10 pb-0 no-l-r-bd bdc-eee">
+        <a href="http://192.168.0.111:8000/topic/ggfx">
+            <img class="pa avatar-65 avatar-circle" src="http://img0.zhixuan.com/topic_tzcl.jpg" alt="个股分析">
+        </a>
+        <div class="pl-75">
+            <div class="f16"><a href="http://192.168.0.111:8000/topic/ggfx" class="zx-topictips tooltipstered" data-topic_id="8"><span class="co23">智选</span>投资策略</a></div>
+            <div class="pt-10 f14">投资策略指对投资资产根据不同需求和风险承受能力进行的安排、配制。包括选择股票、债券、商品期货及不动产品种、配制投资资产比例、安排投资周期等内容。
+</div>
+            <div class="pt-5 pb-5 f12 co8">共 55 个问题</div>
+        </div>
+    </li>
+    <li class="list-group-item pt-10 pb-0 no-l-r-bd bdc-eee">
+        <a href="http://192.168.0.111:8000/topic/ggfx">
+            <img class="pa avatar-65 avatar-circle" src="http://img0.zhixuan.com/topic_hgjj.jpg" alt="个股分析">
+        </a>
+        <div class="pl-75">
+            <div class="f16"><a href="http://192.168.0.111:8000/topic/ggfx" class="zx-topictips tooltipstered" data-topic_id="8"><span class="co23">智选</span>大盘</a></div>
+            <div class="pt-10 f14">大盘：是指沪市的“上证综合指数”和深市的“深证成份股指数”的股票。
+
+上证综指和深证成指是运用统计学中的指数方法编制而成的，反映沪深股市总体价格变动和走势的指标。
+
+大盘走势可理解为沪深股市走势。
+</div>
+            <div class="pt-5 pb-5 f12 co8">共 55 个问题</div>
+        </div>
+    </li>
+</ul>
+{% endblock %}

@@ -200,6 +200,15 @@ def topic_question(request, topic_domain, template_name='question/topic_question
     questions = qb.format_quesitons(questions)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
+def search(request):
+    '''
+
+    '''
+    search_type = request.REQUEST.get('type', 'question')
+    key_words = request.REQUEST.get('key_words', '')
+
+    return render_to_response('question/search_%s.html' % search_type, locals(), context_instance=RequestContext(request))
 # ===================================================ajax部分=================================================================#
 
 

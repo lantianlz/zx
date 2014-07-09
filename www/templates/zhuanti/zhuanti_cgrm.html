@@ -1,6 +1,9 @@
 {% extends "base/base_zhuanti.html" %}
 
-{% block title %}新手股票入门{% endblock title %}
+{% block keywords %}股票入门基础知识,炒股入门知识{% endblock keywords %}
+{% block description %}{{zhuanti.get_summary}}{% endblock description %}
+
+{% block title %}{{zhuanti.title}}{% endblock title %}
 
 {% block base_css %}
 <style>
@@ -72,6 +75,10 @@
     box-shadow: 0px 0px 10px 1px rgba(0,198,255,0.7);
     transition: all 0.5s linear;
 }
+
+.content a{
+    color: #428bca;
+}
 </style>
 {% endblock %}
 
@@ -125,6 +132,9 @@ $(document).ready(function(){
             $('.cover1').animate({top: -$(window).height()}, 500, 'easeInOutQuint', function(){$(this).remove()});
             $('.cover2').animate({top: $(window).height()}, 500, 'easeInOutQuint', function(){$(this).remove()});
         }, 600);
+
+        pageTransform(1);
+        showPageNav(0);
         
     },
     showPageNav = function(pageIndex){
@@ -389,12 +399,6 @@ $(document).ready(function(){
                 .find('.section-bg')
                 .attr('src', BACKGROUND_IMAGES[i]);
             });
-
-            _.delay(function(){
-                pageTransform(1);
-                showPageNav(0);
-            }, 700);
-            
         },
         onLeave: function(index, nextIndex, direction){
 
@@ -486,17 +490,17 @@ $(document).ready(function(){
             <div class="title pr">
                 <span class="f35">基础知识</span>
             </div>
-            <div class="content pt-15 f14 pr">
-                <div class="">
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
                     “股市有风险，入市需谨慎”，小编的亲身经历体会出，这句话不是走过场，而是警示。股市承载了太多人的梦想，却让太多人失望和迷茫，小编希望投资者在本专题中汲取知识，少走弯路，多多赚钱。炒股入门首先要做好知识储备，如同行军打仗，粮草先行。
                     <br />
                     以下是小编从智选问答中整理的基础知识：
-                    <ul class="pl-15">
-                        <li><a href="{{MAIN_DOMAIN}}/question/298">什么是股票，股票有什么用？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/299">股票的种类？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/300">股票怎么进行买卖？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/301">股票术语有哪些？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/302">散户为什么要投资股市，有哪些注意事项？</a></li>
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/298">什么是股票，股票有什么用？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/299">股票的种类？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/300">股票怎么进行买卖？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/301">股票术语有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/302">散户为什么要投资股市，有哪些注意事项？</a></li>
                     </ul>
                 </div>
             </div>
@@ -513,15 +517,15 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f35">模拟炒股</span>
             </div>
-            <div class="content pt-20 f14 pr">
-                <div class="">
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
                     小编见过太多新手初入股市就投入重金，想博一个开门红，却不知股市变幻莫测，稍有不慎即被套牢，最后连账户都不愿打开。所以小编劝各位准备在股市中冲浪之前，先模拟炒股一下，或者投入股市的资金不要高于你的年收入，切莫初次就把理财资金全部投入。有个笑话“如何通过炒股变为百万富翁？”答之：“携千万巨款入市即可”。
                     <br />
                     以下是小编从智选问答中整理的相关问题：
-                    <ul class="pl-15">
-                        <li><a href="{{MAIN_DOMAIN}}/question/303">模拟炒股和实盘炒股有什么区别？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/304">有哪些网站或者软件可以模拟炒股？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/305">为什么模拟炒股较为赚钱，而实盘炒股却亏钱呢？</a></li>
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/303">模拟炒股和实盘炒股有什么区别？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/304">有哪些网站或者软件可以模拟炒股？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/305">为什么模拟炒股较为赚钱，而实盘炒股却亏钱呢？</a></li>
                     </ul>
                 </div>
             </div>
@@ -535,16 +539,16 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f35">选择券商</span>
             </div>
-            <div class="content pt-20 f14 pr">
-                <div class="">
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
                     目前国内有115家证券公司，投资者选择在某家证券公司开设股票账户，办理沪深股东代码卡，那么交易就会通过该证券公司，所以要考虑后续的服务和收费标准，业内竞争比较激烈，每家证券公司能提供的增值服务和交易佣金也不一样。
                     <br />
                     小编从智选问答中整理出以下相关问题：
-                    <ul class="pl-15">
-                        <li><a href="{{MAIN_DOMAIN}}/question/303">股票开户的详细流程？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/304">不同的证券公司之间有什么差异？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/305">为什么找证券公司开户需要找客户经理？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/305">在证券公司开户后，除了炒股还可以做哪些呢？</a></li>
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/307">股票开户的详细流程？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/308">不同的证券公司之间有什么差异？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/309">为什么找证券公司开户需要找客户经理？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/310">在证券公司开户后，除了炒股还可以做哪些呢？</a></li>
                     </ul>
                 </div>
             </div>
@@ -561,17 +565,18 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f35">行情软件</span>
             </div>
-            <div class="content pt-20 f14 pr">
-                <div class="">
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
                     市面上的炒股软件鱼龙混杂，新手不要轻信某些收费炒股软件，“提供买卖点，推荐股票,包赚，XXXX”等等，如果真有这么神奇的软件，作者会以几千元卖给我们？普及率较高的炒股软件有：大智慧，同花顺，通达信。建议新手选择一款免费版上手，各家券商也有相应的版本。
                     <br />
                     以下是小编从智选问答中整理的相关问题：
-                    <ul class="pl-15">
-                        <li><a href="{{MAIN_DOMAIN}}/question/303">付费的炒股软件值得购买吗？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/304">大智慧的快捷键有哪些？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/305">同花顺的快捷键有哪些？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/305">通达信的快捷键有哪些？</a></li>
-                        <li><a href="{{MAIN_DOMAIN}}/question/305">解释一下炒股软件里面的众多术语？比如换手率，振幅？</a></li>
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/311">付费的炒股软件值得购买吗？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/313">大智慧的快捷键有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/314">同花顺的快捷键有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/312">通达信的快捷键有哪些？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/316">解释一下炒股软件里面的众多术语？比如换手率，振幅？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/315">推荐几款免费的炒股软件？</a></li>
                     </ul>
                 </div>
             </div>
@@ -585,8 +590,18 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f35">选股方法</span>
             </div>
-            <div class="content pt-20 f14 pr">
-                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    小编见过一些投资者入市之初，专买低价股，一些则喜欢追涨杀跌。这些投资者在实战中交了不少学费，才慢慢摸索到适合自己的选股方法。小编认为选股依据就两种，技术面选股和基本面选股，万变不离其宗。
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/29">基本面选股和技术图形选股的实质区别是什么？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/320">适合新手的技术指标有哪些？如何运用？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/321">基本面分析需要关注哪些方面？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/322">有哪些炒股入门书籍值得看？推荐书单</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="col-md-6 col-xs-12">
@@ -601,8 +616,18 @@ $(document).ready(function(){
             <div class="title">
                 <span class="f35">实盘操作</span>
             </div>
-            <div class="content pt-20 f14 pr">
-                <div class="">从事投资交易，要量力而为，万不可孤注一掷，把一生的积蓄或全部家底如下大赌注一样全部投入。因为在这种情况下，一旦市势本身预测不准，就有发生大亏损甚至不能自拔的可能。这时比较明知的做法就是实行“金字塔加码”的办法，先进行一部分投资，如果市势明朗、于己有利、就再增加部分投资。此外，更要注意在市势逆境的时候，千万要预防孤注一掷的心态萌发。 </div>
+            <div class="content pt-10 f14 pr">
+                <div class="line-height-22">
+                    炒股如同将军带兵行军打仗，你投入的资金就是你的军队，如何利用这只军队去攻城略地，仅仅纸上谈兵是不够的。小编的忠告就一句“认真对待资金，严格执行交易纪律，每一次交易都有最坏预期的处理预案。”
+                    <br />
+                    以下是小编从智选问答中整理的相关问题：
+                    <ul class="list-unstyled">
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/323">大致介绍一下A股的交易规则？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/324">才开始炒股，投入多少资金比较合适？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/325">如何进行资金管理？</a></li>
+                        <li><span class="fa fa-caret-right"></span><a class="pl-10" target="_blank" href="{{MAIN_DOMAIN}}/question/64">分散投资真的好吗？</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="col-md-6 col-xs-12 hidden-sm hidden-md hidden-lg">
@@ -614,7 +639,7 @@ $(document).ready(function(){
     <ul class="pf page-nav list-unstyled hidden-xs">
         <li class="active pr pointer" data-page_index="1">
             <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>
-            <span class="inline-block pa tips co3 z99 bgc-tips">知识储备</span>
+            <span class="inline-block pa tips co3 z99 bgc-tips">基础知识</span>
         </li>
         <li class="pr pointer" data-page_index="2">
             <span class="inline-block img-circle avatar-20 z100 bgc-pointer mb-5"></span>

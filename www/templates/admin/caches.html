@@ -19,7 +19,8 @@ $(document).ready(function(){
             $.ZXUtils.formToDict('form'),
             function(data){
                 if(data.errcode == 0){
-                    $('.key-value').val(data.errmsg)
+                    $('.key-value').val(data.errmsg[0]);
+                    $('.key-expire').val(data.errmsg[1]);
                 } else {
                     $.ZXMsg.alert('提示', data.errmsg);
                 }
@@ -98,7 +99,7 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">失效时间</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" name="key_expire" value='3600'>
+                <input type="text" class="form-control key-expire" name="key_expire" value='3600'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

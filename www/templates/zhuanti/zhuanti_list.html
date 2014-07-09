@@ -91,8 +91,8 @@ $(document).ready(function(){
                     <img class="w" src="{{zhuanti.img}}" alt="{{zhuanti.title}}" >
                 </a>
             </div>
-            <div class="desc pa pr-15 f13 line-height-25" style="top: 100px;">
-                <a href="{{zhuanti.get_url}}" class="co21 no-hover-unl">{{zhuanti.summary}}</a>
+            <div class="desc pa pr-15 f13 line-height-22" style="top: 100px;">
+                <a href="{{zhuanti.get_url}}" class="co21 no-hover-unl">{{zhuanti.summary|safe}}</a>
             </div>
         </div>
     </li>
