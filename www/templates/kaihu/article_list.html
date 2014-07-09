@@ -23,7 +23,7 @@
             <a class="black-blue f16 fb" href="{{article.get_url}}">{{article.title}}</a>
             <span class="f12 co8 pull-right">{{article.create_time|date:"Y-m-d"}}</span>
         </div>
-        <div class="pt-10">{{article.get_summary}}</div>
+        <div class="pt-10">{{article.get_summary|safe}}</div>
     </li>
     {% endfor %}
 </ul>
