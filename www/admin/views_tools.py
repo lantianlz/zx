@@ -61,7 +61,7 @@ def get_cache(request):
     try:
         c = cache.Cache(cache.CACHE_INDEX[index][1])
 
-        return 0, c.get(key) or ''
+        return 0, [c.get(key) or '', c.ttl(key) or 0]
     except Exception, e:
         debug.get_debug_detail(e)
         return 1, u'系统错误!'

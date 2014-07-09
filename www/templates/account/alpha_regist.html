@@ -1,0 +1,46 @@
+{% extends "base/base_welcome.html" %}
+
+{% block title %}注册{% endblock %}
+{% block css %}
+<style type="text/css">
+.zx-logo{
+	text-shadow: 1px 1px 0 #D0E0F1;
+	font-size: 32px;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+	});
+</script>
+
+{% endblock %}
+
+{% block container %}
+<div class="col-md-6 col-md-offset-3" style="margin-top: 200px;">
+	<div class="pr">
+		<a href="{{MAIN_DOMAIN}}" class="zx-logo no-hover-unl">智选</a>
+		<span class="f12 co-zx pa pl-3" style="bottom: 5px">Beta</span>
+	</div>
+	
+	<div class="pt-15">
+		智选是一个开放的投资问答平台，信息泛滥的年代，你不会缺少资讯，缺少的只是适合自己的投资信息。来智选提问，与业内精英探讨投资相关问题，收获最有价值的投资建议。
+	</div>
+	<div class="pt-15">
+		网站目前正在内测中，只邀最够格的你。
+	</div>
+	<div class="pt-15">
+		索取邀请注册链接请联系：
+		<span class="fa fa-qq"></span>
+		<a href="tencent://message/?uin=2659790310" target="_blank" class="">2659790310</a>
+		<span class="fa fa-envelope pl-15"></span>
+		<a href="mailto:jz@zhixuan.com" target="_blank" class="">jz@zhixuan.com</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock footer %}
