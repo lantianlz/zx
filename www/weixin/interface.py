@@ -24,6 +24,8 @@ dict_weixin_app = {
                      'token': 'zhixuan_test', 'url': ''},
     'zhixuan': {'app_id': 'wx1e8f4fb6965ed5c0', 'app_secret': '7919c1db140bf6a299b3acd1668791c2', 'app_type': 'gh_23edefcd5e6d',
                 'token': 'zhixuan', 'url': ''},
+    '3news': {'app_id': '', 'app_secret': '', 'app_type': 'gh_3f35e606a629',
+              'token': '3news', 'url': ''},
 }
 
 
