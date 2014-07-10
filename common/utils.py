@@ -234,12 +234,21 @@ def get_summary_from_html(content, max_num=100):
     return summary
 
 
-def get_summary_from_html_by_sub(content, max_num=100):
+def get_summary_from_html_by_sub(content, max_num=100, filter_nbsp=False):
     """
     @note: 通过内容获取摘要，采用替换标签的方式实现
     """
     if content is None:
         return content
+    tag_script = re.compile('<\s*script[^>]*>[\s\S]*?<\s*/\s*script\s*>', re.I)
+    tag_style = re.compile('<\s*style[^>]*>[\s\S]*?<\s*/\s*style\s*>', re.I)
+    content = tag_script.sub('', content)
+    content = tag_style.sub('', content)
+
+    if filter_nbsp:
+        tag_nbsp = re.compile('\&\w+?;', re.I)
+        content = tag_nbsp.sub('', content)
+
     tag_s = re.compile('<.+?>')
     tag_e = re.compile('</\w+?>')
     content = tag_s.sub('', content)
