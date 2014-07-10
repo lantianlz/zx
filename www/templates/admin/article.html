@@ -22,6 +22,7 @@ $(document).ready(function(){
             'content': '',
             'cityId': '',
             'cityName': '',
+            'cityPinyinAbbr': '',
             'departmentId': '',
             'departmentName': '',
             'sort': '',
@@ -42,6 +43,7 @@ $(document).ready(function(){
             'content': 'content',
             'cityId': 'city_id',
             'cityName': 'city_name',
+            'cityPinyinAbbr': 'city_pinyin_abbr',
             'departmentId': 'department_id',
             'departmentName': 'department_name',
             'sort': 'sort_num',
@@ -459,11 +461,11 @@ $(document).ready(function(){
 <!-- 客户经理列表 -->
 <script type="text/template" id="article_template">
     <% _.each(articles, function(article){ %>
-        <tr class="pointer" data-article_id="<%= article.articleId %>">
+        <tr>
             <td><%= article.num %></td>
-            <td><%= article.title %></td>
+            <td><a href="<%= article.cityPinyinAbbr %>.{{SERVER_DOMAIN}}/kaihu/article/<%= article.articleId %>" target="_blank"><%= article.title %></a></td>
             <td><%= article.cityName %></td>
-            <td><%= article.departmentName %></td>
+            <td class="pointer" data-article_id="<%= article.articleId %>"><%= article.departmentName %></td>
             <td><%= article.sort %></td>
             <td>
                 <% if (!article.state) { %>
