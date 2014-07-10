@@ -24,7 +24,7 @@ body{
 .user-profile-main{
 	border-left: solid 1px #ddd;
 	box-shadow: -2px 2px 6px #ddd;
-	min-height: 430px;
+	min-height: 500px;
 }
 
 .user-profile-main ul.nav{

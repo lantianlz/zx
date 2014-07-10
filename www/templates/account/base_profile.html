@@ -121,10 +121,31 @@
         {% endif %}
     </div>
     {% endif %}
+
+    <!-- 搜索提问 -->
+    {% if '/answers' not in request.path and '/following' not in request.path and '/followers' not in request.path %} 
+    <div class="pr mt-25 mb-25 pl-25 pr-25">
+        <form action="/p/0b9088f6aa0a11e3a8c700163e003240/questions">
+            <input type="text" class="form-control input-sm" name="key_words" placeholder="搜索此人的提问..." value="{{user_key_words}}" maxlength="50" autocomplete="off">
+            <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 27px; top: 7px;"><span class="fa fa-search co8"></span></button>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- 搜索回答 -->
+    {% if '/answers' in request.path %}
+    <div class="pr mt-25 mb-25 pl-25 pr-25">
+        <form action="/p/0b9088f6aa0a11e3a8c700163e003240/answers">
+            <input type="text" class="form-control input-sm" name="key_words" placeholder="搜索此人的回答..." value="{{user_key_words}}" maxlength="50" autocomplete="off">
+            <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 27px; top: 7px;"><span class="fa fa-search co8"></span></button>
+        </form>
+    </div>
+    {% endif %}
+
 </div>
 <div class="user-profile-main col-md-8">
     <ul class="nav nav-pills pt-20 zx-nav-pills">
-        <li {% if '/answers' not in request.path and  '/following' not in request.path and '/followers' not in request.path %} class="active" {% endif %} {% if '/questions' in request.path %} class="active" {% endif %}>
+        <li {% if '/answers' not in request.path and '/following' not in request.path and '/followers' not in request.path %} class="active" {% endif %} {% if '/questions' in request.path %} class="active" {% endif %}>
             <a class="black-blue" href="/p/{{user.id}}/questions" >{% if request.is_me %}我{% else %}{{user.get_ta_display}}{% endif %}的提问</a>
         </li>
         <li {% if '/answers' in request.path %} class="active" {% endif %}>

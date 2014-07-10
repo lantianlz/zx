@@ -137,6 +137,7 @@ def user_questions(request, user_id, template_name='account/user_questions.html'
     '''
     提问 - 个人主页
     '''
+    user_key_words = request.REQUEST.get('key_words', '')
     user = user_id  # 装饰器转换了对象
 
     from www.question.interface import QuestionBase
@@ -159,6 +160,7 @@ def user_answers(request, user_id, template_name='account/user_answers.html'):
     '''
     回答 - 个人主页
     '''
+    user_key_words = request.REQUEST.get('key_words', '')
     user = user_id  # 装饰器转换了对象
 
     from www.question.interface import AnswerBase
