@@ -354,7 +354,6 @@ $(document).ready(function(){
                 <input type="text" class="form-control" name="name" value='<%= name %>'>
             </div>
         </div>
-        
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">排序</label>
             <div class="col-sm-2">
@@ -370,13 +369,15 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">所属城市</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" name="belong_city" id="belong_city_modify" value=''>
+                <!-- <input type="text" class="form-control" name="belong_city" id="belong_city_modify" value=''> -->
+                <p class="form-control-static"><%= cityName %></p>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">所属公司</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" name="belong_company" id="belong_company_modify" value=''>
+                <!-- <input type="text" class="form-control" name="belong_company" id="belong_company_modify" value=''> -->
+                <p class="form-control-static"><%= companyName %></p>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
