@@ -234,10 +234,10 @@ $(document).ready(function(){
 
             me.collection.modifyDepartment(this.$('form').serializeArray(), function(data){
                 if(data.errcode === 0){
-                    $.ZXMsg.alert('提示', '操作成功');
+                    $.ZXNotice.SuccessTopNotice('操作成功!');
                     router.navigate('modify/' + departmentId, {'trigger': true});
                 } else {
-                    $.ZXMsg.alert('提示', data.errmsg);
+                    $.ZXNotice.ErrorTopNotice(data.errmsg);
                 }
             })
         }
