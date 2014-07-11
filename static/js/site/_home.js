@@ -99,7 +99,7 @@ $(document).ready(function(){
                             html = String.format([
                                 '<div class="pointer pt-10 pb-10 pr-20 pl-5 bdc-eee bottom-border pr">',
                                     '<div class="f12">',
-                                        '{0}<span class="co8 f12">{1} 个回答</span>',
+                                        '{0}<span class="co8 f12 pl-5">{1} 个回答</span>',
                                         '<span class="pa fa fa-question f18 co17" style="right: 10px; top: 10px;"></span>',
                                     '</div>',
                                 '</div>'
