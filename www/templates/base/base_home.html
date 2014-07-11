@@ -26,8 +26,15 @@
             <span class="zx-beta pa f12 co-zx">Beta</span>
             <!-- 手机访问时搜索框 -->
             <div class="pa xs-search-container hidden-sm hidden-md hidden-lg" style="left: 100px; top: 13px; width: 160px;">
-                <input type="text" class="form-control input-sm search-input" name="search" placeholder="搜索提问、话题或人..." value="" maxlength="50">
-                <span class="fa fa-search pa co8 f16 pointer" style="right: 8px; top: 7px;"></span>
+                <!-- <input type="text" class="form-control input-sm search-input" name="search" placeholder="搜索提问、话题或人..." value="" maxlength="50"> -->
+                <!-- <span class="fa fa-search pa co8 f16 pointer" style="right: 8px; top: 7px;"></span> -->
+
+
+                <form class="" action="/question/search">
+                    <input type="text" class="form-control input-sm search-input pr-30" name="key_words" placeholder="搜索提问、回答或人..." value="{{key_words}}" maxlength="50">
+                    <input type="hidden" name="type" value="question">
+                    <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 2px; top: 7px;"><span class="fa fa-search co8" ></span></button>
+                </form>
             </div>
         </div>
         <div class="collapse navbar-collapse zx-navbar-collapse">

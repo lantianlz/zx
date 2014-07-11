@@ -6,7 +6,7 @@ $(document).ready(function(){
     .bind('focus', function(){
         var me = $(this);
 
-        me.attr('placeholder', '搜索提问、话题或者人...');
+        $.ZXUtils.isPhone() ? '' : me.attr('placeholder', '搜索提问、话题或者人...');
 
         $('.navbar .search-container').stop(1,1).animate({'width': 500}, 450, 'easeOutQuart', function(){
             me.select();
@@ -61,7 +61,7 @@ $(document).ready(function(){
 
     })
     .bind('blur', function(){
-        $(this).attr('placeholder', '搜索...');
+        $.ZXUtils.isPhone() ? '' : $(this).attr('placeholder', '搜索...');
         $('.navbar .search-container').stop(1,1).animate({'width': 130}, 500, 'easeOutQuart');
     });
 
