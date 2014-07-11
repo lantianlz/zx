@@ -234,3 +234,7 @@
     box-shadow: 0 0 4px #f1f1f1;
   }
 }
+
+.autocomplete-suggestion{
+  padding: 0;
+}
