@@ -112,7 +112,7 @@ def get_company_by_name(request):
     return HttpResponse(json.dumps(result), mimetype='application/json')
 
 
-@verify_permission('modify_friendly_link')
+@verify_permission('modify_department')
 @common_ajax_response
 def modify_department(request):
     department_id = request.REQUEST.get('department_id')
