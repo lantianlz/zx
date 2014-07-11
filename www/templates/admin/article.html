@@ -463,7 +463,7 @@ $(document).ready(function(){
     <% _.each(articles, function(article){ %>
         <tr>
             <td><%= article.num %></td>
-            <td><a href="<%= article.cityPinyinAbbr %>.{{SERVER_DOMAIN}}/kaihu/article/<%= article.articleId %>" target="_blank"><%= article.title %></a></td>
+            <td><a href="http://<%= article.cityPinyinAbbr %>.{{SERVER_DOMAIN}}/kaihu/article/<%= article.articleId %>" target="_blank"><%= article.title %></a></td>
             <td><%= article.cityName %></td>
             <td class="pointer" data-article_id="<%= article.articleId %>"><%= article.departmentName %></td>
             <td><%= article.sort %></td>
