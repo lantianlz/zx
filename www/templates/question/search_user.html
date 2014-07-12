@@ -5,7 +5,7 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-
+    $.ZXUtils.highlight($('.user-name'), "{{key_words}}", '<span class="co23">{0}</span>');
 });
 </script>
 {% endblock %}
@@ -21,7 +21,7 @@ $(document).ready(function(){
         </a>
         <div class="pl-55">
             <div>
-                <a href="{{user.get_url}}">{{user.nick}}</a>
+                <a class="user-name" href="{{user.get_url}}">{{user.nick}}</a>
             </div>
             <div class="f12 pt-5">
                 <a class="black-blue pr-5" href="/p/2299e654aa6011e3ac1c00163e003240/questions">提问 {{user.user_question_count}}</a>
