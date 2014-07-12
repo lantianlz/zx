@@ -3,6 +3,13 @@
 {% load custom_filters %}
 {% block title %}回答 - 个人主页{% endblock %}
 
+{% block javascript %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.ZXUtils.highlight($('.answer-content'), "{{user_key_words}}", '<span class="co23">{0}</span>');
+    });
+</script>
+{% endblock javascript %}
 
 {% block tab_content %}
 <div class="tab-pane active fade in">
@@ -10,8 +17,8 @@
     <ul class="list-group only-top-border">
         {% for answer in answers %}
         <li class="list-group-item">
-            <div class="content f14 pb-10">
-                <span class="pt-5">{{answer.get_summary|safe}}</span>
+            <div class="answer-content f14 pb-10 p-5">
+                {{answer.get_summary|safe}}
             </div>
             <div class="pb-10 f12">
                 回答了提问：<a href="{{answer.question.get_url}}">{{answer.question.title|str_display:30}}</a>
