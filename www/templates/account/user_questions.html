@@ -3,6 +3,13 @@
 {% load custom_filters %}
 {% block title %}提问 - 个人主页{% endblock %}
 
+{% block javascript %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.ZXUtils.highlight($('.question-title'), "{{user_key_words}}", '<span class="co23">{0}</span>');
+    });
+</script>
+{% endblock javascript %}
 
 {% block tab_content %}
 <div class="tab-pane active fade in" id="questions">
@@ -11,7 +18,7 @@
         {% for question in questions %}
         <li class="list-group-item">
             <div class="content f14">
-                <a href="{{question.get_url}}">{{question.title|str_display:30}}</a>
+                <a class="question-title" href="{{question.get_url}}">{{question.title|str_display:30}}</a>
             </div>
             <div class="stats pt-10">
                 <span>
