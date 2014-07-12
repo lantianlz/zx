@@ -43,7 +43,7 @@ $(document).ready(function(){
             'content': 'content',
             'cityId': 'city_id',
             'cityName': 'city_name',
-            'cityPinyinAbbr': 'city_pinyin_abbr',
+            'cityPinyin': 'city_pinyin_abbr',
             'departmentId': 'department_id',
             'departmentName': 'department_name',
             'sort': 'sort_num',
@@ -461,11 +461,11 @@ $(document).ready(function(){
 <!-- 客户经理列表 -->
 <script type="text/template" id="article_template">
     <% _.each(articles, function(article){ %>
-        <tr>
+        <tr class="pointer" data-article_id="<%= article.articleId %>">
             <td><%= article.num %></td>
-            <td><a href="http://<%= article.cityPinyinAbbr %>.{{SERVER_DOMAIN}}/kaihu/article/<%= article.articleId %>" target="_blank"><%= article.title %></a></td>
+            <td><%= article.title %></td>
             <td><%= article.cityName %></td>
-            <td class="pointer" data-article_id="<%= article.articleId %>"><%= article.departmentName %></td>
+            <td><%= article.departmentName %></td>
             <td><%= article.sort %></td>
             <td>
                 <% if (!article.state) { %>
@@ -485,6 +485,11 @@ $(document).ready(function(){
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="title" value='<%= title %>'>
             </div>
+            <p class="form-control-static pf" style="right: 145px;">
+                <a href="http://<%= cityPinyin %>.{{SERVER_DOMAIN}}/kaihu/article/<%= articleId %>" target="_blank">
+                    <span class="fa fa-eye pr-5"></span>预览
+                </a>
+            </p>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">内容</label>

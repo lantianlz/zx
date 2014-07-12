@@ -748,7 +748,7 @@
                 $(that.suggestionsContainer).scrollTop(offsetTop - that.options.maxHeight + heightDelta);
             }
 
-            that.el.val(that.getValue(that.suggestions[index].value));
+            // that.el.val(that.getValue(that.suggestions[index].value));
             that.signalHint(null);
         },
 

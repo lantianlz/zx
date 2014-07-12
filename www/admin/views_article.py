@@ -42,6 +42,7 @@ def format_article(objs, num):
     for x in objs:
         num += 1
         city = CityBase().get_city_by_id(x.city_id) if x.city_id else None
+
         data.append({
             'num': num,
             'article_id': x.id,

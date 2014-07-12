@@ -22,19 +22,33 @@ $(document).ready(function(){
                 deferRequestBy: 300,
                 showDelay: 500,
                 isLocal: false,
-                autoSelectFirst: true,
+                maxHeight: 600,
+                autoSelectFirst: false,
                 triggerSelectOnValidInput: false,
                 transformResult: function(response) {
                     
                     var data = JSON.parse(response),
-                        result = [];
+                        result = [],
+                        modelMaps = {
+                            "type": "type", 
+                            "value": "value", 
+                            "data": "data", 
+                            "des": "des",
+                            "avatar": "avatar", 
+                            "answerCount": "answer_count", 
+                            "url": "url"
+                        };
 
-                    var suggestions = [];
                     if(data){
-                        suggestions = $.ZXUtils.dictMapParse(data, {"type": "type", 'value':"value", "data":"data", "des":"des", 
-                                                                    "avatar":"avatar", "answerCount":"answer_count", "url":"url"})
+                        result = $.ZXUtils.dictMapParse(data, modelMaps);
+                        result.push({
+                            'type': 'link',
+                            'value': "0",
+                            'data': '点击查看所有搜索结果',
+                            'url': '/search?key_words='+me.val()+'&type=question'
+                        })
                     }
-                    return {"suggestions":suggestions};
+                    return {"suggestions": result};
                 },
                 onSelect: function(suggestion){
                     window.location.href = suggestion.url;
@@ -72,6 +86,13 @@ $(document).ready(function(){
                                 ].join(''),
                                 suggestion.data,
                                 suggestion.answerCount
+                            );
+                            break;
+                        default: 
+                            html = String.format([
+                                '<div class="pointer bgc-e9e9e9 text-center pt-10 pb-10">{0}</div>'
+                                ].join(''),
+                                suggestion.data
                             );
                             break;
                     }

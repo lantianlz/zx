@@ -5,6 +5,9 @@
 
 {% block css %}
 <style type="text/css">
+.preview{
+    right: 135px;
+}
 </style>
 {% endblock %}
 
@@ -51,6 +54,7 @@ $(document).ready(function(){
             'tel': 'tel',
             'cityId': 'city_id',
             'cityName': 'city_name',
+            'cityPinyin': 'city_pinyin_abbr',
             'sort': 'sort_num'
         },
 
@@ -353,6 +357,11 @@ $(document).ready(function(){
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="name" value='<%= name %>'>
             </div>
+            <p class="form-control-static pf" style="right: 145px;">
+                <a href="http://<%= cityPinyin %>.{{SERVER_DOMAIN}}/kaihu/department_detail/<%= departmentId %>" target="_blank">
+                    <span class="fa fa-eye pr-5"></span>预览
+                </a>
+            </p>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">排序</label>
