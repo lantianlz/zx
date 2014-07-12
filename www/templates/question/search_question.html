@@ -13,12 +13,16 @@ $(document).ready(function(){
 {% block css %}{% endblock %}
 
 {% block search_main %}
+{% if questions %}
 <ul class="list-group">
     {% for question in questions %}
         {% include "question/_question_li_display.html" %}
     {% endfor %}
 </ul>
-
 {{page_params|paging:request}}
+{% else %}
+<div class="blank5"></div>
+<div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+{% endif %}
 
 {% endblock %}

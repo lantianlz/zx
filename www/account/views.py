@@ -137,12 +137,17 @@ def user_questions(request, user_id, template_name='account/user_questions.html'
     '''
     提问 - 个人主页
     '''
-    user_key_words = request.REQUEST.get('key_words', '')
+    from www.question.interface import QuestionBase
+
+    key_words = request.REQUEST.get('key_words', '').strip()
     user = user_id  # 装饰器转换了对象
 
-    from www.question.interface import QuestionBase
     qb = QuestionBase()
-    questions = qb.get_questions_by_user_id(user.id)
+
+    if not key_words:
+        questions = qb.get_questions_by_user_id(user.id)
+    else:
+        questions = qb.search_user_questions(user.id, key_words)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
@@ -160,12 +165,16 @@ def user_answers(request, user_id, template_name='account/user_answers.html'):
     '''
     回答 - 个人主页
     '''
-    user_key_words = request.REQUEST.get('key_words', '')
+    from www.question.interface import AnswerBase
+
+    key_words = request.REQUEST.get('key_words', '').strip
     user = user_id  # 装饰器转换了对象
 
-    from www.question.interface import AnswerBase
     ab = AnswerBase()
-    answers = ab.get_user_sended_answer(user.id)
+    if not key_words:
+        answers = ab.get_user_sended_answer(user.id)
+    else:
+        answers = ab.search_user_answers(user.id, key_words)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))

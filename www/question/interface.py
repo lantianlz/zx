@@ -387,6 +387,11 @@ class QuestionBase(object):
             return []
         return Question.objects.filter(title__icontains=title, state=True)[:200]
 
+    def search_user_questions(self, user_id, title):
+        if not title:
+            return []
+        return Question.objects.filter(user_id=user_id, title__icontains=title, state=True)[:200]
+
 
 class AnswerBase(object):
 
@@ -625,6 +630,11 @@ class AnswerBase(object):
         if not content:
             return []
         return Answer.objects.filter(content__icontains=content, state=True)[:200]
+
+    def search_user_answers(self, user_id, content):
+        if not content:
+            return []
+        return Answer.objects.filter(from_user_id=user_id, content__icontains=content, state=True)[:200]
 
 
 class LikeBase(object):

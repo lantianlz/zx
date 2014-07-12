@@ -237,8 +237,7 @@ def search(request):
         users = page_objs[0]
         users = [UserBase().format_user_with_count_info(user) for user in users]
 
-    if page_objs:
-        page_params = (page_objs[1], page_objs[4])
+    page_params = (page_objs[1], page_objs[4]) if page_objs else (1, 1)
 
     return render_to_response('question/search_%s.html' % search_type, locals(), context_instance=RequestContext(request))
 # ===================================================ajax部分=================================================================#
