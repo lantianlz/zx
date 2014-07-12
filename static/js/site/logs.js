@@ -12,6 +12,14 @@ $(document).ready(function(){
 
         setData: function(){
             this.reset([
+                {'count': 5, 'year': '2014年', 'date': '07月12日', 'contents': _.map([
+                    '新增邮件提醒功能，相关个人动态，第一时间发送邮件通知',
+                    '新增智选每周精选，每周一自动发出，欢迎查收',
+                    '智选微信公众号支持菜单，互动更简单，欢迎订阅，二维码在网站右侧下方',
+                    '专题频道正式上线，精彩专题不容错过',
+                    '新增搜索功能'
+                ], function(content){return String.format('<li><p>{0}</p></li>', content)}).join('')},
+
                 {'count': 4, 'year': '2014年', 'date': '06月12日', 'contents': _.map([
                     '邀请回答功能上线，提问从此不再孤单',
                     '回答处增加点赞人员展示，谁赞了回答一目了然',

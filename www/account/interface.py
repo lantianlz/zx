@@ -481,6 +481,18 @@ class UserBase(object):
 
         return format_user
 
+    def format_user_with_count_info(self, user):
+        """
+        @note: 给用户设置上统计数字信息
+        """
+        user_count_info = UserCountBase().get_user_count_info(user.id)
+        user.user_question_count = user_count_info['user_question_count']
+        user.user_answer_count = user_count_info['user_answer_count']
+        user.user_liked_count = user_count_info['user_liked_count']
+        user.following_count = user_count_info['following_count']
+        user.follower_count = user_count_info['follower_count']
+        return user
+
     def get_active_users(self, date):
 
         return LastActive.objects.filter(last_active_time__gte=date)
@@ -491,7 +503,7 @@ class UserBase(object):
     def search_users(self, nick):
         if not nick:
             return []
-        return Profile.objects.filter(nick__icontains=nick)
+        return Profile.objects.filter(nick__icontains=nick)[:200]
 
 
 class InvitationBase(object):

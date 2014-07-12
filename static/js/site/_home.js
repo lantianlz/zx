@@ -72,7 +72,7 @@ $(document).ready(function(){
                                 ].join(''),
                                 suggestion.avatar, 
                                 suggestion.data,
-                                suggestion.des
+                                suggestion.des || '暂无简介'
                             );
                             break;
 

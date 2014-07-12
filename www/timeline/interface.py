@@ -35,12 +35,7 @@ class UserFollowBase(object):
             if following_or_follower == 'follower':
                 obj.user = UserBase().get_user_by_id(obj.from_user_id)
 
-            user_count_info = UserCountBase().get_user_count_info(obj.user.id)
-            obj.user.user_question_count = user_count_info['user_question_count']
-            obj.user.user_answer_count = user_count_info['user_answer_count']
-            obj.user.user_liked_count = user_count_info['user_liked_count']
-            obj.user.following_count = user_count_info['following_count']
-            obj.user.follower_count = user_count_info['follower_count']
+            UserBase().format_user_with_count_info(obj.user)
         return objs
 
     def format_following(self, objs):
