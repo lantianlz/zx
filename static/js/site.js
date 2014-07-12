@@ -349,6 +349,11 @@ if (!String.format) {
         $.ZXUtils.highlight($('strong'), "aaa", '<span class="co23">{0}</span>');
     */
     $.ZXUtils.highlight = function(selector, rule, replacement){
+
+        if(!rule){
+            return;
+        }
+
         var re = new RegExp('('+rule+')', "gi");
 
         _.map($(selector), function(i){

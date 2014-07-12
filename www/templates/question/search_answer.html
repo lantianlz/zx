@@ -5,7 +5,7 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-    $.ZXUtils.highlight($('.item-question-content'), "{{key_words}}", '<span class="co23">{0}</span>');
+    $.ZXUtils.highlight($('.item-question-content>span'), "{{key_words}}", '<span class="co23">{0}</span>');
 });
 </script>
 {% endblock %}
@@ -23,7 +23,8 @@ $(document).ready(function(){
                     <strong>{{answer.question.title|str_display:30}}</strong>
                 </a>
             </div>
-            <div class="item-question-content f13 w mt-10 break-word">{{answer.get_summary|safe}}
+            <div class="item-question-content f13 w mt-10 break-word">
+                <span>{{answer.get_summary|safe}}</span>
                 <a href="question/{{answer.question.id}}#to_answer_{{answer.id}}" class="pl-5 f12">
                         <span class="f12 glyphicon glyphicon-send pr-3"></span>查看详细
                 </a>
