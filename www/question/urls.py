@@ -11,7 +11,6 @@ urlpatterns = patterns('www.question.views',
                        url(r'^get_topic_info_by_name', 'get_topic_info_by_name'),
                        url(r'^ask_question$', 'ask_question'),
                        url(r'^modify_question/(?P<question_id>\w+)$', 'modify_question'),
-                       url(r'^search$', 'search'),
 
                        url(r'^create_answer/(?P<question_id>\w+)$', 'create_answer'),
                        url(r'^modify_answer$', 'modify_answer'),

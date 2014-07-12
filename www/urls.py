@@ -19,6 +19,8 @@ urlpatterns = patterns('',
                        url(r'^qiniu_img_return$', 'www.misc.views.qiniu_img_return'),
                        url(r'^save_img$', 'www.misc.views.save_img'),
                        url(r'^crop_img$', 'www.misc.views.crop_img'),
+                       url(r'^search_auto_complete$', 'www.question.views.search_auto_complete'),
+                       url(r'^search$', 'www.question.views.search'),
 
                        url(r'^n/(?P<nick>.*)$', 'www.account.views.get_user_by_nick'),
                        url(r'^p/(?P<user_id>\w+)/?$', 'www.account.views.user_questions'),

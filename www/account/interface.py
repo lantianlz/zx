@@ -488,6 +488,11 @@ class UserBase(object):
     def get_users_by_range_date(self, start_date, end_date):
         return User.objects.filter(create_time__range=(start_date, end_date))
 
+    def search_users(self, nick):
+        if not nick:
+            return []
+        return Profile.objects.filter(nick__contains=nick)
+
 
 class InvitationBase(object):
 

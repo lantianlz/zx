@@ -25,6 +25,7 @@ class UserMiddware(object):
 
             if sub_domain in ('www', 'wwwinside', 'static') and path.startswith('/kaihu'):
                 raise Http404
+        request.sub_domain = sub_domain
 
     def process_response(self, request, response):
         if hasattr(request, '_process_start_timestamp'):

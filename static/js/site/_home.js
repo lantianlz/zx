@@ -6,7 +6,7 @@ $(document).ready(function(){
     .bind('focus', function(){
         var me = $(this);
 
-        me.attr('placeholder', '搜索提问、话题或者人...');
+        me.attr('placeholder', '搜索提问、回答或者人...');
 
         $('.navbar .search-container').stop(1,1).animate({'width': 500}, 450, 'easeOutQuart', function(){
             me.select();
@@ -16,8 +16,8 @@ $(document).ready(function(){
             }
 
             $('.navbar .search-input').autocomplete({
-                serviceUrl: '/account/get_user_info_by_nick',
-                paramName: 'user_nick',
+                serviceUrl: '/search_auto_complete',
+                paramName: 'key',
                 width: 500,
                 deferRequestBy: 300,
                 showDelay: 500,
@@ -29,48 +29,14 @@ $(document).ready(function(){
                     var data = JSON.parse(response),
                         result = [];
 
-                    // if(data){
-                    //     result = [{
-                    //         value: data.nick,
-                    //         data: data.user_id,
-                    //         desc: data.des,
-                    //         avatar: data.avatar
-                    //     }];
-                    // }
-                    return {
-                        suggestions: [{
-                                type: 'user',
-                                value: '1', 
-                                data: '智选创始人', 
-                                desc: '暂无简介', 
-                                avatar: 'http://img0.zhixuan.com/avatar_17ee2dd6ae3f11e3867d00163e003240',
-                                url: 'http://www.a.com:8000/p/2299e654aa6011e3ac1c00163e003240'
-                            }, {
-                                type: 'user',
-                                value: '2', 
-                                data: '智选五毛', 
-                                desc: '善吐槽，爱折腾，爱户外，爱你妹 力争每日三吐槽，每日放三炮...', 
-                                avatar: 'http://img0.zhixuan.com/avatar_d97317d6ae4011e3867d00163e003240',
-                                url: 'http://www.a.com:8000/p/cf6e8770aa7b11e3ac1c00163e003240'
-                            }, {
-                                type: 'question',
-                                value: '3', 
-                                data: '智选（002474）昨日涨停，今日又早盘放量的票...', 
-                                answerCount: 12, 
-                                url: 'http://www.a.com:8000/question/184'
-                            }, {
-                                type: 'question',
-                                value: '4', 
-                                data: 'MSCI：决定不将智选纳入影响？', 
-                                answerCount: 5, 
-                                url: 'http://www.a.com:8000/question/183'
-                            }
-                        ]
-                    };
+                    var suggestions = [];
+                    if(data){
+                        suggestions = $.ZXUtils.dictMapParse(data, {"type": "type", 'value':"value", "data":"data", "des":"des", 
+                                                                    "avatar":"avatar", "answerCount":"answer_count", "url":"url"})
+                    }
+                    return {"suggestions":suggestions};
                 },
                 onSelect: function(suggestion){
-                    console.log(suggestion)
-                    
                     window.location.href = suggestion.url;
                 },
                 formatResult: function(suggestion, value){
@@ -91,7 +57,7 @@ $(document).ready(function(){
                                 ].join(''),
                                 suggestion.avatar, 
                                 suggestion.data,
-                                suggestion.desc
+                                suggestion.des
                             );
                             break;
 

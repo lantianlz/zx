@@ -382,6 +382,11 @@ class QuestionBase(object):
         '''
         return Question.objects.filter(create_time__range=(start_date, end_date))
 
+    def search_questions(self, title):
+        if not title:
+            return []
+        return Question.objects.filter(title__contains=title, state=True)
+
 
 class AnswerBase(object):
 

@@ -287,3 +287,26 @@ def get_answer_like(request):
         likes = lb.format_likes(lb.get_likes_by_answer(answer_id))
         data = [dict(user_id=like.from_user.id, user_nick=like.from_user.nick) for like in likes]
     return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def search_auto_complete(request):
+    '''
+    @note: 搜索自动补全
+    '''
+    from www.custom_tags.templatetags.custom_filters import str_display
+    from www.account.interface import UserBase
+
+    key = request.REQUEST.get('key', '').strip()
+    data = []
+    if key:
+        users = UserBase().search_users(key)[:5]
+        questions = qb.search_questions(key)[:5]
+        i = 1
+        for user in users:
+            data.append(dict(type="user", value=str(i), data=user.nick, des=str_display((user.des or '暂无简介').strip(), 30), avatar=user.get_avatar_65(), url=user.get_url()))
+            i += 1
+
+        for question in questions:
+            data.append(dict(type="question", value=str(i), data=str_display(question.title, 25), answer_count=question.answer_count, url=question.get_url()))
+            i += 1
+    return HttpResponse(json.dumps(data), mimetype='application/json')
