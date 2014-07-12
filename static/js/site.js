@@ -339,6 +339,27 @@ if (!String.format) {
     };
 
 
+    /*
+        高亮显示某段文本
+        selector: 选择器
+        rule: 正则
+        replacement: 替换成的样式
+
+        用例:
+        $.ZXUtils.highlight($('strong'), "aaa", '<span class="co23">{0}</span>');
+    */
+    $.ZXUtils.highlight = function(selector, rule, replacement){
+        var re = new RegExp('('+rule+')', "gi");
+
+        _.map($(selector), function(i){
+            $(i).html(
+                $(i).html().replace(re, String.format(replacement, "$1"))
+            );
+        });
+
+    };
+
+
 
     /* 
         弹窗插件

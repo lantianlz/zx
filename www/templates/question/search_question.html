@@ -5,7 +5,7 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-
+	$.ZXUtils.highlight($('.item-question-title strong'), "{{key_words}}", '<span class="co23">{0}</span>');
 });
 </script>
 {% endblock %}

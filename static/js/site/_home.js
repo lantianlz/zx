@@ -41,6 +41,7 @@ $(document).ready(function(){
 
                     if(data){
                         result = $.ZXUtils.dictMapParse(data, modelMaps);
+                        // 添加查看所有结果项
                         result.push({
                             'type': 'link',
                             'value': "0",
@@ -88,6 +89,7 @@ $(document).ready(function(){
                                 suggestion.answerCount
                             );
                             break;
+                            
                         default: 
                             html = String.format([
                                 '<div class="pointer bgc-e9e9e9 text-center pt-10 pb-10">{0}</div>'
