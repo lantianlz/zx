@@ -481,3 +481,11 @@ a.border-block-orange.active{
   background-color: #EEA31F;
   border-color: #EEA31F;
 }
+
+.notice-content>a{
+  color: #FFF500;
+}
+
+.notice-content>a:hover{
+  color: #FFF500;
+}
