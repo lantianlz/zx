@@ -13,6 +13,7 @@ $(document).ready(function(){
 {% block css %}{% endblock %}
 
 {% block search_main %}
+{% if answers %}
 <ul class="list-group">
     {% for answer in answers %}
     <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
@@ -43,7 +44,10 @@ $(document).ready(function(){
         </div>
     </li>
     {% endfor %}
-
     {{page_params|paging:request}}
 </ul>
+{% else %}
+<div class="blank5"></div>
+<div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+{% endif %}
 {% endblock %}

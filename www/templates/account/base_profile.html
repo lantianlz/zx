@@ -126,8 +126,8 @@
     <!-- 搜索提问 -->
     {% if '/answers' not in request.path and '/following' not in request.path and '/followers' not in request.path %} 
     <div class="pr mt-25 mb-25 pl-25 pr-25">
-        <form action="/p/0b9088f6aa0a11e3a8c700163e003240/questions">
-            <input type="text" class="form-control input-sm" name="key_words" placeholder="搜索此人的提问..." value="{{user_key_words}}" maxlength="50" autocomplete="off">
+        <form action="{{request.path}}">
+            <input type="text" class="form-control input-sm" name="key_words" placeholder="搜索此人的提问..." value="{{key_words}}" maxlength="50" autocomplete="off">
             <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 27px; top: 7px;"><span class="fa fa-search co8"></span></button>
         </form>
     </div>
@@ -136,8 +136,8 @@
     <!-- 搜索回答 -->
     {% if '/answers' in request.path %}
     <div class="pr mt-25 mb-25 pl-25 pr-25">
-        <form action="/p/0b9088f6aa0a11e3a8c700163e003240/answers">
-            <input type="text" class="form-control input-sm" name="key_words" placeholder="搜索此人的回答..." value="{{user_key_words}}" maxlength="50" autocomplete="off">
+        <form action="{{request.path}}">
+            <input type="text" class="form-control input-sm" name="key_words" placeholder="搜索此人的回答..." value="{{key_words}}" maxlength="50" autocomplete="off">
             <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 27px; top: 7px;"><span class="fa fa-search co8"></span></button>
         </form>
     </div>

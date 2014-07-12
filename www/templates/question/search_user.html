@@ -13,6 +13,7 @@ $(document).ready(function(){
 {% block css %}{% endblock %}
 
 {% block search_main %}
+{% if users %}
 <ul class="list-group">
     {% for user in users %}
     <li class="list-group-item no-l-r-bd bdc-eee pl-0">
@@ -38,4 +39,8 @@ $(document).ready(function(){
     {% endfor %}
     {{page_params|paging:request}}
 </ul>
+{% else %}
+<div class="blank5"></div>
+<div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+{% endif %}
 {% endblock %}
