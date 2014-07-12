@@ -385,7 +385,7 @@ class QuestionBase(object):
     def search_questions(self, title):
         if not title:
             return []
-        return Question.objects.filter(title__contains=title, state=True)
+        return Question.objects.filter(title__icontains=title, state=True)
 
 
 class AnswerBase(object):

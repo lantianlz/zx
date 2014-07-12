@@ -202,11 +202,28 @@ def topic_question(request, topic_domain, template_name='question/topic_question
 
 
 def search(request):
-    '''
+    search_type = request.REQUEST.get('type', 'question').strip()
+    if search_type not in ("question", "answer", "user"):
+        raise Http404
 
-    '''
-    search_type = request.REQUEST.get('type', 'question')
-    key_words = request.REQUEST.get('key_words', '')
+    key_words = request.REQUEST.get('key_words', '').strip()
+    if not key_words:
+        info_msg = u"请输入搜索关键词"
+
+    if search_type == "question":
+        questions = qb.search_questions(key_words)
+        # 分页
+        page_num = int(request.REQUEST.get('page', 1))
+        page_objs = page.Cpt(questions, count=10, page=page_num).info
+        questions = page_objs[0]
+        questions = qb.format_quesitons(questions)
+
+    if search_type == "answer":
+        pass
+    if search_type == "user":
+        pass
+
+    page_params = (page_objs[1], page_objs[4])
 
     return render_to_response('question/search_%s.html' % search_type, locals(), context_instance=RequestContext(request))
 # ===================================================ajax部分=================================================================#

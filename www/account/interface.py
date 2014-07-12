@@ -491,7 +491,7 @@ class UserBase(object):
     def search_users(self, nick):
         if not nick:
             return []
-        return Profile.objects.filter(nick__contains=nick)
+        return Profile.objects.filter(nick__icontains=nick)
 
 
 class InvitationBase(object):

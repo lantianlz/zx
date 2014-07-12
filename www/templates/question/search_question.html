@@ -17,53 +17,8 @@ $(document).ready(function(){
     {% for question in questions %}
         {% include "question/_question_li_display.html" %}
     {% endfor %}
-    <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-        <div class="item-container pt-10 pb-10">
-            <div class="item-question-title">
-                <a class="black-blue f16" href="/question/184">
-                    <strong><span class="co23">智选</span>（002474）昨日涨停，今日又早盘放量的票，是不是连续涨停的概率很大...</strong>
-                </a>
-            </div>
-            <div class="item-question-content f13 w mt-10 break-word">  如图，早盘10点不到，榕基软件的成交金额已经和昨天全天快持平了。                        我在8.3元建了点仓位。                希望能涨停，不然就要吃面了 </div>
-            <div class="item-question-tags"></div>
-            <div class="pt-15">
-                
-                <a class="no-hover-unl" href="/p/f39d9b2cca8d11e395bd00163e003240">
-                    <img class="avatar-25 avatar-circle" alt="关灯吃面" src="http://img0.zhixuan.com/newest_avatar_45750156ca8e11e3a1f000163e003240!25m25">
-                </a>
-                <a href="/p/f39d9b2cca8d11e395bd00163e003240" class="zx-cardtips tooltipstered" data-user_id="f39d9b2cca8d11e395bd00163e003240">
-                    <span class="f12">关灯吃面</span>
-                </a>
-                
-                <span class="f12 pl-15 co8">
-                    0 个回答 • 7 次浏览 • 06-11 09:57:57
-                </span>
-            </div>
-        </div>
-    </li>
-    <li class="list-group-item pt-0 pb-0 no-l-r-bd bdc-eee">
-        <div class="item-container pt-10 pb-10">
-            <div class="item-question-title">
-                <a class="black-blue f16" href="/question/183">
-                    <strong>MSCI：决定不将<span class="co23">智选</span>纳入新兴市场指数，今天低开就是这个消息影响？</strong>
-                </a>
-            </div>
-            <div class="item-question-content f13 w mt-10 break-word">这个消息应该影响不大吧，也能给大盘施压？但还是说明A股太烂了，国际友人不待见啊。</div>
-            <div class="item-question-tags"></div>
-            <div class="pt-15">
-                
-                <a class="no-hover-unl" href="/p/20fa197eef9611e3915b00163e003240">
-                    <img class="avatar-25 avatar-circle" alt="鸟枪换炮" src="http://img0.zhixuan.com/newest_avatar_4353c9c8ef9811e3a91500163e003240!25m25">
-                </a>
-                <a href="/p/20fa197eef9611e3915b00163e003240" class="zx-cardtips tooltipstered" data-user_id="20fa197eef9611e3915b00163e003240">
-                    <span class="f12">鸟枪换炮</span>
-                </a>
-                
-                <span class="f12 pl-15 co8">
-                    0 个回答 • 119 次浏览 • 06-11 09:45:44
-                </span>
-            </div>
-        </div>
-    </li>
 </ul>
+
+{{page_params|paging:request}}
+
 {% endblock %}

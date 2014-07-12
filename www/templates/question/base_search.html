@@ -17,17 +17,14 @@
 
     <ul class="nav nav-pills pt-20 zx-nav-pills">
         <li {% if 'question' == search_type %} class="active" {% endif %}>
-            <a class="black-blue" href="/question/search?key_words={{key_words}}&type=question">提问</a>
+            <a class="black-blue" href="/search?key_words={{key_words}}&type=question">提问</a>
         </li>
         <li {% if 'answer' == search_type %} class="active" {% endif %}>
-            <a class="black-blue" href="/question/search?key_words={{key_words}}&type=answer">回答</a>
+            <a class="black-blue" href="/search?key_words={{key_words}}&type=answer">回答</a>
         </li>
-        <li {% if 'person' == search_type %} class="active" {% endif %}>
-            <a class="black-blue" href="/question/search?key_words={{key_words}}&type=person">用户</a>
+        <li {% if 'user' == search_type %} class="active" {% endif %}>
+            <a class="black-blue" href="/search?key_words={{key_words}}&type=user">用户</a>
         </li>
-        <!-- <li {% if 'topic' == search_type %} class="active" {% endif %}>
-            <a class="black-blue" href="/question/search?key_words={{key_words}}&type=topic">话题</a>
-        </li> -->
     </ul>
     {% block search_main %}
     {% endblock %}
@@ -50,9 +47,6 @@
     <!-- 二维码 -->
     {% include 'include/_global_qrcode.html' %}
 
-    <!-- 统计 -->
-    {% global_statistic %}
-    
 </div>
 <!--右侧主体开始-->
 {% endblock container_content %}
