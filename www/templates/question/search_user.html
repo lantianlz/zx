@@ -14,47 +14,28 @@ $(document).ready(function(){
 
 {% block search_main %}
 <ul class="list-group">
+    {% for user in users %}
     <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-        <a href="/p/2299e654aa6011e3ac1c00163e003240">
-            <img class="pa avatar-45 avatar-circle" alt="嘎嘎" src="http://img0.zhixuan.com/avatar_17ee2dd6ae3f11e3867d00163e003240!65m65">
+        <a href="{{user.get_url}}">
+            <img class="pa avatar-45 avatar-circle" alt="{{user.nick}}" src="{{user.get_avatar_65}}">
         </a>
         <div class="pl-55">
             <div>
-                <a href="/p/2299e654aa6011e3ac1c00163e003240"><span class="co23">智选</span>创始人</a>
+                <a href="{{user.get_url}}">{{user.nick}}</a>
             </div>
             <div class="f12 pt-5">
-                <a class="black-blue pr-5" href="/p/2299e654aa6011e3ac1c00163e003240/questions">提问 11</a>
+                <a class="black-blue pr-5" href="/p/2299e654aa6011e3ac1c00163e003240/questions">提问 {{user.user_question_count}}</a>
                 |
-                <a class="black-blue pr-5 pl-5" href="/p/2299e654aa6011e3ac1c00163e003240/answers">回答 62</a>|
-                <a class="black-blue pr-5 pl-5">被赞 28</a>
+                <a class="black-blue pr-5 pl-5" href="/p/2299e654aa6011e3ac1c00163e003240/answers">回答 {{user.user_answer_count}}</a>|
+                <a class="black-blue pr-5 pl-5">被赞 {{user.user_liked_count}}</a>
                 |
-                <a class="black-blue pr-5 pl-5" href="/p/2299e654aa6011e3ac1c00163e003240/following">关注 37</a>|
-                <a class="black-blue pr-5 pl-5" href="/p/2299e654aa6011e3ac1c00163e003240/followers">粉丝 33</a>
+                <a class="black-blue pr-5 pl-5" href="/p/2299e654aa6011e3ac1c00163e003240/following">关注 {{user.following_count}}</a>|
+                <a class="black-blue pr-5 pl-5" href="/p/2299e654aa6011e3ac1c00163e003240/followers">粉丝 {{user.follower_count}}</a>
             </div>
-            <div class="f12 co8 pt-5"></div>
-            
+            <div class="f12 co8 pt-5">{{user.des|default:"暂无简介"}}</div>
         </div>
     </li>
-    <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-        <a href="/p/cf6e8770aa7b11e3ac1c00163e003240">
-            <img class="pa avatar-45 avatar-circle" alt="李小侃" src="http://img0.zhixuan.com/avatar_d97317d6ae4011e3867d00163e003240!65m65">
-        </a>
-        <div class="pl-55">
-            <div>
-                <a href="/p/cf6e8770aa7b11e3ac1c00163e003240"><span class="co23">智选</span>五毛</a>
-            </div>
-            <div class="f12 pt-5">
-                <a class="black-blue pr-5" href="/p/cf6e8770aa7b11e3ac1c00163e003240/questions">提问 23</a>
-                |
-                <a class="black-blue pr-5 pl-5" href="/p/cf6e8770aa7b11e3ac1c00163e003240/answers">回答 87</a>|
-                <a class="black-blue pr-5 pl-5">被赞 51</a>
-                |
-                <a class="black-blue pr-5 pl-5" href="/p/cf6e8770aa7b11e3ac1c00163e003240/following">关注 14</a>|
-                <a class="black-blue pr-5 pl-5" href="/p/cf6e8770aa7b11e3ac1c00163e003240/followers">粉丝 22</a>
-            </div>
-            <div class="f12 co8 pt-5">善吐槽，爱折腾，爱户外，爱你妹  力争每日三吐槽，每日放三炮，每日发三疯 与脑残齐鸣，与疯子为伍，誓与蛇精病患共存亡，做一个永不弃疗的非正常人！</div>
-            
-        </div>
-    </li>
+    {% endfor %}
+    {{page_params|paging:request}}
 </ul>
 {% endblock %}

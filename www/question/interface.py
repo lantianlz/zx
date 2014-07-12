@@ -385,7 +385,7 @@ class QuestionBase(object):
     def search_questions(self, title):
         if not title:
             return []
-        return Question.objects.filter(title__icontains=title, state=True)
+        return Question.objects.filter(title__icontains=title, state=True)[:200]
 
 
 class AnswerBase(object):
@@ -620,6 +620,11 @@ class AnswerBase(object):
         查询指定区间的回答
         '''
         return Answer.objects.filter(create_time__range=(start_date, end_date))
+
+    def search_answers(self, content):
+        if not content:
+            return []
+        return Answer.objects.filter(content__icontains=content, state=True)[:200]
 
 
 class LikeBase(object):
