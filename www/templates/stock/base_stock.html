@@ -1,0 +1,25 @@
+{% extends "base/base_home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block home_css %}
+{% block css %}{% endblock %}
+{% endblock %}
+
+{% block home_js%}
+{% block javascript %}{% endblock %}
+{% endblock %}
+
+{% block container_content %}
+<!--左侧主体开始-->
+<div class="col-xs-12 col-md-8 ">
+    {% block stock_main%}{% endblock %}
+</div>
+<!--左侧主体结束-->
+
+<!--右侧主体开始-->
+<div class="col-xs-12 col-md-4 pl-50">
+    {% block stock_left %}{% endblock %}
+</div>
+<!--右侧主体开始-->
+{% endblock container_content %}
