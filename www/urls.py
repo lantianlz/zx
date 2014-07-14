@@ -37,6 +37,7 @@ urlpatterns = patterns('',
                        url(r'^zt/', include('www.zhuanti.urls')),
                        url(r'^kaihu/', include('www.kaihu.urls')),
                        url(r'^admin/', include('www.admin.urls')),
+                       url(r'^stock/', include('www.stock.urls')),
 
                        url(r'^sitemap.xml$', 'www.misc.views.sitemap'),
                        # url(r'^8efc199540223825b0fb2026cc9b8e39\.html$', 'www.misc.views.link_view'),

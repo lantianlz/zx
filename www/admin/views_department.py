@@ -69,12 +69,11 @@ def search(request):
     objs = []
 
     name = request.REQUEST.get('name')
+    order = request.REQUEST.get('order', '0')
+
     page_index = int(request.REQUEST.get('page_index'))
 
-    if name:
-        objs = db.get_departments_by_name(name)
-    else:
-        objs = db.get_all_departments()
+    objs, all_count = db.search_departments_for_admin(name, order)
 
     page_objs = page.Cpt(objs, count=10, page=page_index).info
 
@@ -83,7 +82,7 @@ def search(request):
     data = format_department(page_objs[0], num)
 
     return HttpResponse(
-        json.dumps({'data': data, 'page_count': page_objs[4], 'total_count': page_objs[5]}),
+        json.dumps({'data': data, 'page_count': page_objs[4], 'total_count': page_objs[5], 'all_count': all_count}),
         mimetype='application/json'
     )
 

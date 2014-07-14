@@ -2,6 +2,7 @@
 
 import datetime
 from django.db import transaction
+from django.db.models import Q
 
 from common import cache, debug, utils
 from www.misc.decorators import cache_required
@@ -98,10 +99,25 @@ class DepartmentBase(object):
         return department
 
     def get_departments_by_name(self, department_name):
-        departments = []
+        departments = self.get_all_departments()
         if department_name:
-            departments = self.get_all_departments().filter(name__contains=department_name)
+            departments = departments.filter(name__contains=department_name)
         return departments
+
+    def search_departments_for_admin(self, department_name, des_state):
+        departments = self.get_departments_by_name(department_name)
+
+        total = departments.count()
+
+        # 描述不为空
+        if des_state == '1':
+            departments = departments.exclude(Q(des__isnull=True) | Q(des=''))
+
+        # 描述为空
+        if des_state == '2':
+            departments = departments.filter(Q(des__isnull=True) | Q(des=''))
+
+        return departments, total
 
     def modify_department(self, department_id, **kwargs):
         if not department_id:

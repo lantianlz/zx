@@ -59,16 +59,19 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, pageIndex){
+        search: function(name, order, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/kaihu/department/search", 
-                {'name': name||'', 'page_index': pageIndex||1}, 
+                {'name': name||'', 'order': order||'0', 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
+                    me.order = order||'0';
                     me.name = name||'';
+                    me.all_count = data.all_count;
+                    me.total_count = data.total_count;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
                 }
@@ -132,23 +135,35 @@ $(document).ready(function(){
             var data = this.collection.toJSON();
 
             this.showPanel();
+
+            this.setProgress(Math.round(this.collection.total_count / this.collection.all_count * 10000) / 100);
+
             this.$('tbody').html(this.template({'departments': data}));
+
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name
+                'search/' + this.collection.name + '/' + this.collection.order
             );
         },
 
         // 显示面板
         showPanel: function(){
             $('.zx-nav-pills a[href="#department_list"]').tab('show');
+
+            // 精度条
+        },
+
+        setProgress: function(percent){
+            this.$('.progress-percent').html(percent + '%');
+            this.$('.progress-bar').css('width', percent + '%');
         },
 
         search: function(){
-            var name = this.$('.key-word').val();
+            var name = this.$('.key-word').val(),
+                order = this.$('.order').val();
 
-            router.navigate(String.format('/search/{0}/1', name), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/1', name, order), {trigger: true});
         },
 
         modifyDepartment: function(sender){
@@ -256,12 +271,12 @@ $(document).ready(function(){
         routes: {
             "":                             "search",
             "modify/:departmentId":         "modify",
-            "search/(:name)/:pageIndex":    "search",
+            "search/(:name)/(:order)/:pageIndex":    "search",
         },
 
         // 查询
-        search: function(name, pageIndex){
-            departments.search(name||'', pageIndex||1);
+        search: function(name, order, pageIndex){
+            departments.search(name||'', order||'0', pageIndex||1);
         },
 
         // 显示修改界面
@@ -297,12 +312,26 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="department_list">
-        <div class="pl-0 pb-10 col-md-3">
+        <div class="pl-0 pb-10 col-md-2">
+            <select class="form-control input-sm order">
+                <option value="0">全部营业部</option>
+                <option value="1">有描述营业部</option>
+                <option value="2">无描述营业部</option>
+            </select>
+        </div>
+        <div class="pl-0 pb-10 col-md-5">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入营业部名称..." />
                 <span class="input-group-btn">
                     <button class="btn btn-default search" type="button">查询</button>
                 </span>
+            </div>
+        </div>
+        <div class="pl-0 pr-0 pt-5 col-md-5">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" style="width: 0%">
+                    <span class="progress-percent co22">0%</span>
+                </div>
             </div>
         </div>
         <table class="table table-hover">
