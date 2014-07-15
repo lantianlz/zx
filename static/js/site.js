@@ -217,17 +217,17 @@ if (!String.format) {
     };
 
     /*
-        屏幕宽度 大于768 而 小于992 归于平板
+        屏幕宽度 大于768 而 小于1024 归于平板
     */
     $.ZXUtils.isPad = function(){
-        return (768 <= $(window).width() && $(window).width() < 992) ? true : false;
+        return (768 <= $(window).width() && $(window).width() <= 1024) ? true : false;
     };
 
     /*
-        屏幕宽度大于 992 归于桌面
+        屏幕宽度大于 1024 归于桌面
     */
     $.ZXUtils.isDesktop = function(){
-        return (992 <= $(window).width()) ? true : false;
+        return (1024 < $(window).width()) ? true : false;
     };
 
     /*

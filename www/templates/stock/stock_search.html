@@ -1,0 +1,37 @@
+{% extends "stock/base_stock.html" %}
+
+{% block title %}「{{stock_key_words}}」的股票搜索结果{% endblock title %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $.ZXUtils.highlight($('.stock-title'), "{{stock_key_words}}", '<span class="co23">{0}</span>');
+});
+</script>
+{% endblock %}
+
+{% block stock_main%}
+<ul class="list-group">
+    <li class="list-group-item no-l-r-bd bdc-eee">
+        <a href="/stock/1"><img class="pa avatar-65 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600000.png"></a>
+        <div class="pl-75">
+            <div class="f14 pt-5"><a href="/stock/1" class="stock-title">浦发银行(600000)</a></div>
+            <div class="co8 f13 pt-5">上海浦东发展银行股份有限公司为1992年8月28日经中国人民银行总行以银复(1992)350号文批准设立的股份制商业银行,1992年10月19日由上海市工商行政管理局颁...</div>
+        </div>
+    </li>
+    <li class="list-group-item no-l-r-bd bdc-eee">
+        <a href="/stock/1"><img class="pa avatar-65 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/601166.png"></a>
+        <div class="pl-75">
+            <div class="f14 pt-5"><a href="/stock/1" class="stock-title">兴业银行(601166)</a></div>
+            <div class="co8 f13 pt-5">兴业银行是中国首批成立的股份制商业银行之一， 1988年8月26日开业，总行设在福建省福州市。1988年4月11日，国务院批准同意在福建省福兴财务...</div>
+        </div>
+    </li>
+    <li class="list-group-item no-l-r-bd bdc-eee">
+        <a href="/stock/1"><img class="pa avatar-65 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600036.png"></a>
+        <div class="pl-75">
+            <div class="f14 pt-5"><a href="/stock/1" class="stock-title">招商银行(600036)</a></div>
+            <div class="co8 f13 pt-5">本行是经中国人民银行银复(1986)175号文、银复(1987)86号文批准成立的商业银行,由招商局轮船股份有限公司于一九八七年三月三十一日在...</div>
+        </div>
+    </li>
+</ul>
+{% endblock stock_main%}

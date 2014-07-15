@@ -19,7 +19,56 @@
 
 <!--右侧主体开始-->
 <div class="col-xs-12 col-md-4 pl-50">
-    {% block stock_left %}{% endblock %}
+    <div class="bottom-border bdc-eee pb-5">
+        <form action="/stock/search" class="pt-15 pb-5">
+            <input type="text" class="form-control input-sm pr-30" name="key_words" placeholder="输入上市公司名称 / 代码" value="{{stock_key_words}}" maxlength="50">
+            <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 15px; top: 22px;"><span class="fa fa-search co8" ></span></button>
+        </form>
+    </div>
+
+    {% block stock_right %}
+    <div class="pb-5 mt-10 pt-10">
+        <span class="f16 fb">热门股票</span>
+        <a href="/stocks" class="f12 co8 pull-right more-topics">更多股票 »</a>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+            <a href="#"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600000.png"></a>
+            <div class="pl-55">
+                <div class="f14 pt-5"><a href="#">浦发银行(600000)</a></div>
+                <div class="f12 co8">共 236 条动态</div>
+            </div>
+        </li>
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+            <a href="#"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/601318.png"></a>
+            <div class="pl-55">
+                <div class="f14 pt-5"><a href="#">中国平安(601318)</a></div>
+                <div class="f12 co8">共 195 条动态</div>
+            </div>
+        </li>
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+            <a href="#"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600521.png"></a>
+            <div class="pl-55">
+                <div class="f14 pt-5"><a href="#">华海药业(600521)</a></div>
+                <div class="f12 co8">共 162 条动态</div>
+            </div>
+        </li>
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+            <a href="#"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600750.png"></a>
+            <div class="pl-55">
+                <div class="f14 pt-5"><a href="#">江中药业(600750)</a></div>
+                <div class="f12 co8">共 105 条动态</div>
+            </div>
+        </li>
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+            <a href="#"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600519.png"></a>
+            <div class="pl-55">
+                <div class="f14 pt-5"><a href="#">贵州茅台(600519)</a></div>
+                <div class="f12 co8">共 98 条动态</div>
+            </div>
+        </li>
+    </ul>
+    {% endblock %}
 </div>
 <!--右侧主体开始-->
 {% endblock container_content %}
