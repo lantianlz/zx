@@ -93,7 +93,7 @@
     <% _.each(feeds, function(feed){ %>
 
         <% if(feed.feedType == 1){ %>
-        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0 none">
             <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55 row">
                 <div class="co8 f12 col-xs-11">
@@ -113,7 +113,7 @@
         <% } %>
 
         <% if(feed.feedType == 2){ %>
-        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0 none">
             <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle " alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55 row">
                 <div class="co8 f12 col-xs-11">
@@ -141,7 +141,7 @@
         <% } %>
 
         <% if(feed.feedType == 3){ %>
-        <li class="list-group-item no-l-r-bd bdc-eee pl-0 pr">
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0 pr none">
             <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
             <div class="pl-55 row">
                 <div class="co8 f12 col-xs-11">
@@ -169,7 +169,7 @@
 
 <!-- 更多按钮模板 -->
 <script type="text/template" id="getMore-template">
-    <li class="list-group-item no-l-r-bd bdc-eee pl-0 no-border">
+    <li class="list-group-item no-l-r-bd bdc-eee pl-0 no-border none">
         <div class="text-center">
             <span id="loadingMoreFeed"></span>
             <button type="button" class="btn btn-block btn-default get-more" data-feed_id="<%= feedId %>">查看更多...</button>

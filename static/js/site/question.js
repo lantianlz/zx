@@ -331,7 +331,7 @@ $(document).ready(function(){
             var me = this,
                 target = $(sender.currentTarget),
                 userId = target.data('user_id'),
-                userNick = target.prev().html();
+                userNick = target.parent().find('a').html();
 
             // 设置ajax元素id,防止多次点击
             g_ajax_processing_obj_id = target.setUUID().attr('id');
@@ -342,7 +342,7 @@ $(document).ready(function(){
                     target.removeClass('btn-invite btn-primary').addClass("btn-default").text('已邀请');
                     // 显示已邀请人
                     me._invitedPersons.unshift({'user_id': userId, 'user_nick': userNick});
-
+                    
                     me.showInvitedPersons();
                 } else {
                     $.ZXMsg.alert('提示', data.errmsg);

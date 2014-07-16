@@ -181,6 +181,8 @@ $(document).ready(function(){
         render: function(data){
             this.$el.append(this.template({'feeds': data}));
 
+            
+
             // 初始化名片
             $.ZXTooltipster.PersonCard();
         },
@@ -202,6 +204,16 @@ $(document).ready(function(){
             if(lastFeedId){
                 this.renderGetMore(lastFeedId);
             }
+
+            // 添加展示效果
+            this.$('.none').each(function(i){
+                var me = $(this);
+                
+                _.delay(function(){
+                    me.removeClass('none').addClass('animated fadeInUp');
+                }, i*200);
+            });
+            
         },
 
         // 查看更多

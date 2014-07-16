@@ -6,6 +6,19 @@
 
 {% block title %}最新股票动态{% endblock title %}
 
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.show-detail').one('click', function(){
+        var me = $(this);
+
+        me.html(me.data('content'));
+        me.removeClass('pointer show-detail');
+    });
+});
+</script>
+{% endblock javascript %}
+
 {% block stock_main%}
 <div class="bottom-border bdc-bbb pt-10 pb-5 pl-10">
     <span class="f16 fb">最新股票动态</span>
@@ -15,60 +28,62 @@
 	<li class="list-group-item no-l-r-bd bdc-eee pl-0 pr">
         <a href="/stock/1"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600000.png"></a>
         <div class="pl-55 pt-3">
-            <div class="co8 f12">
+            <div class="">
+                <a class="f14 black-blue fb" href="/stock/feed/1">据说贵司要增发，想圈很多钱，但看目前的业绩似乎不乐观，请问贵公司找好金主了？</a>
+            </div>
+            <div class="co8 f12 pt-5">
                 <a href="/stock/1" class="">浦发银行(600000)</a>
                 <span class="f12 pull-right">2014-07-15 10:36:51</span>
             </div>
-            <div class="pt-5">
-                <a class="f14 black-blue fb" href="/stock/feed/1">天宸现在还有正在建设中的地产项目吗？管理层朝九晚五每天都在忙什么？公司的主业是什么？有什么发展规划吗？没有5年规划，那也来个3年规划如何？去年说要建设公司新...</a>
-            </div>
-            <div class="pt-10 f13">
-                您好，公司目前有南方物流园区的近400亩商业用地及浦东机场南侧近400亩农用地，没有正在建设中的地产项目。
+            <div class="pt-15 f13 line-height-22 pointer show-detail" data-content="你好！市值管理是一项长期且重要的工作，公司首先会“练好内功”：进一步优化客户结构和产品结构，加强新技术研究，提高盈利能力；进一步优化治理结构，完善考核与激励机制；加大公司品牌宣传力度，积极履行社会责任。其次，公司会“做好沟通”：加强信息披露工作，主动履行信息披露义务；加强投资者关系管理，公司会吸收优秀上市公司经验；加强公共关系维护工作，与分析师、财经媒体、政府、投资者建立良好沟通关系，培育稳定的投资者客户群。谢谢关心！">
+                你好！市值管理是一项长期且重要的工作，公司首先会“练好内功”：进一步优化客户结构和产品结构，加强新技术研究，提高盈利能力；进一步优化治理结构，完善考核与激励机...
+                <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a></span>
             </div>
         </div>
     </li>
     <li class="list-group-item no-l-r-bd bdc-eee pl-0 pr">
         <a href="/p/cf6e8770aa7b11e3ac1c00163e003240"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600521.png"></a>
         <div class="pl-55 pt-3">
-            <div class="co8 f12">
+            <div class="">
+                <a class="f14 black-blue fb" href="/question/332">太原重工（印度）有限公司的经营状况怎么样？？？</a>
+            </div>
+            <div class="co8 f12 pt-5">
                 <a href="/p/cf6e8770aa7b11e3ac1c00163e003240" class="">华海药业(600521)</a>
                 <span class="f12 pull-right">2014-07-15 10:36:51</span>
             </div>
-            <div class="pt-5">
-                <a class="f14 black-blue fb" href="/question/332">一公司有没有服务器的研发与生产？二国家推国产替代对公司与IBM的合作及业务有没有影响？三上半年订单情况与利润如何？四安迅奔科技是不是公司子公司？业务...</a>
-            </div>
-            <div class="pt-10 f13">
-                您的问题解答如下: 1、华胜天成投资成立新云，开发拓展Power Linux服务器市场，为未来拟推出华胜天成自主品牌的linux服务器打下基础成自主品牌的lin成自主品牌的lin...
+            <div class="pt-15 f13 line-height-22" data-content="尊敬的投资者，您好！公司在充电桩、集中式充电机、充电站无功补偿设备、充电站交流保护自动化设备、充电站流保护自动化设备、充电站能量管理及计费系统等。">
+                尊敬的投资者，您好！公司在充电桩、集中式充电机、充电站无功补偿设备、充电站交流保护自动化设备、充电站流保护自动化设备、充电站能量管理及计费系统等。
             </div>
         </div>
     </li>
     <li class="list-group-item no-l-r-bd bdc-eee pl-0 pr">
         <a href="/p/cf6e8770aa7b11e3ac1c00163e003240"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/601318.png"></a>
         <div class="pl-55 pt-3">
-            <div class="co8 f12">
+            <div class="">
+                <a class="f14 black-blue fb" href="/stock/feed/1">强烈要求平安像苹果公司学中报10转40降低投资门槛 提高股票活跃度.</a>
+            </div>
+            <div class="co8 f12 pt-5">
                 <a href="/p/cf6e8770aa7b11e3ac1c00163e003240" class="">中国平安(601318)</a>
                 <span class="f12 pull-right">2014-07-15 10:36:51</span>
             </div>
-            <div class="pt-5">
-                <a class="f14 black-blue fb" href="/question/332">强烈要求平安像苹果公司学中报10转40降低投资门槛 提高股票活跃度.</a>
-            </div>
-            <div class="pt-10 f13">
-                尊敬的投资者： 您好！非常感谢您对平安的关注与支持。建议已收悉，并将及时转达给公司管理层。
+            <div class="pt-15 f13 line-height-22 pointer show-detail" data-content="尊敬的投资者您好！感谢您一直以来对广汇能源的关注和支持。目前调试进展顺利，新能源公司技术人员正在全力以赴按计划完成调试工作。工厂生产一切正常，近期互动平台已经根据投资者提问，相对频繁地发布了日生产数据，投资者可以根据数据增长情况作出判断，无须听信谣言。">
+                尊敬的投资者您好！感谢您一直以来对广汇能源的关注和支持。目前调试进展顺利，新能源公司技术人员正在全力以赴按计划完成调试工作。工厂生产一切正常，近期互动平台...<a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a>
             </div>
         </div>
     </li>
     <li class="list-group-item no-l-r-bd bdc-eee pl-0 pr">
         <a href="/p/cf6e8770aa7b11e3ac1c00163e003240"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600810.png"></a>
         <div class="pl-55 pt-3">
-            <div class="co8 f12">
+            <div class="">
+                <a class="f14 black-blue fb" href="/stock/feed/1">请问公司是否与亿思达集团有相关合作？ 请问公司是否具备红外线、3D技术？</a>
+            </div>
+            <div class="co8 f12 pt-5">
                 <a href="/p/cf6e8770aa7b11e3ac1c00163e003240" class="">神马股份(600810)</a>
                 <span class="f12 pull-right">2014-07-15 10:36:51</span>
             </div>
-            <div class="pt-5">
-                <a class="f14 black-blue fb" href="/question/332">神马对自己的承诺视为儿戏，2011年突然宣布取消增发，坑了多少投资者。今年又建议豁免其收购承诺，理由竟然是权属责任不清，神马的管理层这不是自己扇自己脸吗？...</a>
-            </div>
-            <div class="pt-10 f13">
-                二级市场的价格受到诸多因素的影响, 除了公司经营业绩，宏观经济形势、大盘走势、国家政策、投资者心理等都会导致公司股价的波动。无论人福医药的股价如何波动，公司的管...
+            <div class="pt-15 f13 line-height-22 pointer show-detail" data-content="公司的股价低迷，公司也表示要做好市值，请问公司管理层高层是否真的关心股价，关心公司的形象。除了经营好公司做好业绩，高层具体还做了哪些保护市值的事。现在公司市值30多个亿，股价4元不到，是否和天雁匹配。是不是天雁不值30多亿的市值，难道股价还要跌吗，既然不匹配，为啥还要轻骑这么大的壳。">
+                公司的股价低迷，公司也表示要做好市值，请问公司管理层高层是否真的关心股价，关心公司的形象。除了经营好公司做好业绩，高层具体还做了哪些保护市值的事...
+                <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a>
             </div>
         </div>
     </li>

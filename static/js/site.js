@@ -1439,7 +1439,7 @@ if (!String.format) {
     */
     $.ZXNotice.InlineNotice = function(noticeId, content, toElement, important, closeCallback){
         var noticeHtml = [
-                '<div class="alert alert-dismissable mb-10 {1} box-shadow-224 border-radius-2 co3 zx-inline-notice none">',
+                '<div class="alert alert-dismissable mb-10 {1} box-shadow-224 border-radius-2 co3 zx-inline-notice none animated flipInX">',
                     '<button type="button" class="close" aria-hidden="true">',
                         '<span class="glyphicon glyphicon-remove-circle co3 f18 pointer remove-inline-notice"></span>',
                     '</button>',
@@ -1451,7 +1451,7 @@ if (!String.format) {
         var target = $(String.format(noticeHtml, content, important?'bgc-CA7842':'bgc-zx')).appendTo(toElement);
 
         // 显示
-        target.show('fast');
+        target.show();
        
         // 绑定回调函数
         target
