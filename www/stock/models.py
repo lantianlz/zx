@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Stock(models.Model):
-    board_choices = ((0, u'主板'), (1, u"中小板"), (2, u"创业板"), (3, u"B股"), (4, u"其他"))
+    board_choices = ((0, u'主板'), (1, u"中小企业板"), (2, u"创业板"), (3, u"B股"), (4, u"其他"))
     market_choices = ((0, u'沪股市'), (1, u"深圳股市"))
 
     name = models.CharField(max_length=64, unique=True)

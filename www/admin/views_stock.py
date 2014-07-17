@@ -26,6 +26,8 @@ def stock(request, template_name='admin/stock.html'):
 def add_stock(request):
     name = request.REQUEST.get('name')
     code = request.REQUEST.get('code')
+    origin_uid = request.REQUEST.get('origin_uid', '')
+    origin_uid = code if origin_uid == '' else origin_uid
     des = request.REQUEST.get('des')
     belong_board = request.REQUEST.get('board')
     belong_market = request.REQUEST.get('market')
@@ -38,7 +40,7 @@ def add_stock(request):
         flag, img_name = qiniu_client.upload_img(img, img_type='stock')
         img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
-    flag, msg = StockBase().create_stock(name, code, belong_board, belong_market, img_name, des, sort_num, state)
+    flag, msg = StockBase().create_stock(name, code, belong_board, belong_market, img_name, origin_uid, des, sort_num, state)
 
     if flag == 0:
         url = "/admin/stock/stock?#modify/%s" % (msg.id)
@@ -94,38 +96,49 @@ def search(request):
     )
 
 
-@verify_permission('query_friendly_link')
-def get_friendly_link_by_id(request):
-    link_id = request.REQUEST.get('link_id')
-    flb = FriendlyLinkBase()
+@verify_permission('query_stock')
+def get_stock_by_id(request):
+    stock_id = request.REQUEST.get('stock_id')
 
-    obj = flb.get_friendly_link_by_id(link_id, state=None)
+    obj = StockBase().get_stock_by_id(stock_id, state=None)
 
-    data = format_friendly_link(flb.format_friendly_links(obj), 1)[0]
+    data = format_stock([obj], 1)[0]
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@verify_permission('remove_friendly_link')
-@common_ajax_response
-def remove_friendly_link(request):
-    link_id = request.REQUEST.get('link_id')
-    return FriendlyLinkBase().remove_friendly_link(link_id)
+@verify_permission('modify_stock')
+def modify_stock(request):
+    sb = StockBase()
 
+    stock_id = request.REQUEST.get('stock_id')
 
-@verify_permission('modify_friendly_link')
-@common_ajax_response
-def modify_friendly_link(request):
-    link_id = request.REQUEST.get('link_id')
-    link_type = request.REQUEST.get('link_type', 0)
-    city_id = request.REQUEST.get('belong_city')
-    if not city_id:
-        city_id = None
+    obj = sb.get_stock_by_id(stock_id, state=None)
+    img_name = obj.img
 
     name = request.REQUEST.get('name')
-    href = request.REQUEST.get('href')
-    sort_num = request.REQUEST.get('sort')
+    code = request.REQUEST.get('code')
+    origin_uid = request.REQUEST.get('origin_uid', '')
+    origin_uid = code if origin_uid == '' else origin_uid
     des = request.REQUEST.get('des')
+    belong_board = request.REQUEST.get('board')
+    belong_market = request.REQUEST.get('market')
+    sort_num = request.REQUEST.get('sort')
+    state = request.REQUEST.get('state', '0')
+    state = False if state == '0' else True
 
-    return FriendlyLinkBase().modify_friendly_link(
-        link_id, link_type=link_type, city_id=city_id, name=name, href=href, sort_num=sort_num, des=des
+    img = request.FILES.get('img')
+    if img:
+        flag, img_name = qiniu_client.upload_img(img, img_type='topic')
+        img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
+
+    flag, msg = sb.modify_stock(
+        stock_id, name=name, code=code, origin_uid=origin_uid, sort_num=sort_num, img=img_name,
+        des=des, belong_board=belong_board, belong_market=belong_market, state=state,
     )
+
+    if flag == 0:
+        url = "/admin/stock/stock?#modify/%s" % (obj.id)
+    else:
+        url = "/admin/stock/stock?%s#modify/%s" % (msg, obj.id)
+
+    return HttpResponseRedirect(url)
