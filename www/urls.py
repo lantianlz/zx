@@ -53,5 +53,4 @@ urlpatterns += patterns('',
                         url(r'^topic/(?P<topic_domain>\w+)$', 'www.question.views.topic_question'),
                         url(r'^topics$', 'www.question.views.topics'),
                         url(r'^important/?$', 'www.question.views.important_question'),
-                        url(r'^stocks$', 'www.stock.views.stock_list'),
                         )

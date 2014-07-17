@@ -31,18 +31,6 @@ def import_variable(context, name, value, json_flag=False):
     return ''
 
 
-# @register.simple_tag(takes_context=True)
-# def question_type_option_display(context):
-#     """
-#     @note: 问答类型option方式展现
-#     """
-#     from www.question.interface import TopicBase
-#     aqts = TopicBase().get_all_question_type()
-
-#     return render_to_response('question/_question_type_option_display.html', locals(),
-#                               context_instance=context).content
-
-
 @register.simple_tag(takes_context=True)
 def question_type_radio_display(context):
     """
@@ -151,9 +139,13 @@ def random_department(context):
     departments = DepartmentBase().get_departments_by_random(city.id)[:10]
     return render_to_response('kaihu/_random_department.html', locals(), context_instance=context).content
 
-# @register.simple_tag(takes_context=True)
-# def global_recommend_users(context):
-#     """
-#     @note: 推荐用户
-#     """
-#     return render_to_response('account/_global_recommend_users.html', locals(), context_instance=context).content
+
+@register.simple_tag(takes_context=True)
+def hot_stock(context):
+    """
+    @note: 热门股票
+    """
+    from www.stock.interface import StockBase
+    stocks = StockBase().get_all_stocks()[:10]
+
+    return render_to_response('stock/_hot_stock.html', locals(), context_instance=context).content

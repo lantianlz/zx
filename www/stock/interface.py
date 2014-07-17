@@ -27,10 +27,27 @@ def stock_required(func):
     return _decorator
 
 
+class StockBase(object):
+
+    def __init__(self):
+        pass
+
+    def get_all_stocks(self, state=True):
+        ps = dict()
+        if state is not None:
+            ps.update(state=state)
+        return Stock.objects.filter(**ps)
+
+
 class StockFeedBase(object):
 
     def __init__(self):
         pass
+
+    def format_stock_feeds(self, stock_feeds):
+        for stock_feed in stock_feeds:
+            stock_feed.answer_content_length = len(stock_feed.answer_content)
+        return stock_feeds
 
     @stock_required
     @transaction.commit_manually(using=DEFAULT_DB)
@@ -60,3 +77,9 @@ class StockFeedBase(object):
             debug.get_debug_detail(e)
             transaction.rollback(using=DEFAULT_DB)
             return 99900, dict_err.get(99900)
+
+    def get_all_stock_feeds(self, state=True):
+        ps = dict(stock__state=True)
+        if state is not None:
+            ps.update(state=state)
+        return StockFeed.objects.select_related("stock").filter(**ps)
