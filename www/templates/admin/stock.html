@@ -333,33 +333,33 @@ $(document).ready(function(){
     <form class="form-horizontal" role="form" method="post" action="/admin/stock/stock/modify_stock" enctype="multipart/form-data">
         <input type="hidden" name="stock_id" value="<%= stockId %>" />
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">个股图片</label>
+            <label class="col-sm-2 control-label">个股图片</label>
             <div class="col-sm-6">
                 <img class="avatar-65 avatar-circle mb-10" src="<%= img %>" />
                 <input name="img" type="file" />图片尺寸为 65(宽) X 65(长)
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">名称</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">名称</label>
+            <div class="col-sm-2">
                 <input type="text" class="form-control" name="name" value='<%= name %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">代码</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">代码</label>
+            <div class="col-sm-2">
                 <input type="text" class="form-control" name="code" value='<%= code %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">描述</label>
+            <label class="col-sm-2 control-label">描述</label>
             <div class="col-sm-8">
                 <textarea class="form-control" rows="5" name="des"><%= des %></textarea>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">所属板块</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">所属板块</label>
+            <div class="col-sm-2">
                 <select class="form-control input-sm" name="board">
                     {% for i in boards %}
                         <option value="{{i.value}}" <% if(board=="{{i.value}}"){ %>selected="selected"<% } %> >{{i.name}}</option>
@@ -368,8 +368,8 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">所属交易所</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">所属交易所</label>
+            <div class="col-sm-2">
                 <select class="form-control input-sm" name="market">
                     {% for i in markets %}
                         <option value="{{i.value}}" <% if(market=="{{i.value}}"){ %>selected="selected"<% } %> >{{i.name}}</option>
@@ -378,14 +378,14 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">排序</label>
+            <label class="col-sm-2 control-label">排序</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" name="sort"  value='<%= sort %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-            <label class="col-sm-3 control-label">状态</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">状态</label>
+            <div class="col-sm-2">
                 <select class="form-control input-sm" name="state">
                     <option value="0" <% if(state=="0"){ %>selected="selected"<% } %> >不可用</option>
                     <option value="1" <% if(state=="1"){ %>selected="selected"<% } %> >正常</option>
