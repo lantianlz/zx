@@ -11,6 +11,7 @@ class Stock(models.Model):
     origin_uid = models.CharField(max_length=16, unique=True)
     code = models.CharField(max_length=16, unique=True)
     des = models.TextField(null=True)
+    main_business = models.TextField(null=True)  # 主营业务
     belong_board = models.IntegerField(choices=board_choices)   # 所属板块
     belong_market = models.IntegerField(choices=market_choices)   # 所属交易所
 

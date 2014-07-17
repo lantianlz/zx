@@ -20,10 +20,11 @@
             <div class="col-md-12 col-xs-12">
                 <a href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
             </div>
-            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{stock.des|default:"暂无简介"|str_display:38}}</div>
+            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{stock.des|default:"暂无简介"|str_display:32}}</div>
         </div>
     </li>
     {% endfor %}
 </ul>
+<div class="blank5"></div>
 {{page_params|paging:request}}
 {% endblock stock_main%}
