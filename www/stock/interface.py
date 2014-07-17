@@ -10,6 +10,7 @@ from www.stock.models import Stock, StockFeed
 
 dict_err = {
     80100: u'股票不存在',
+    80101: u'股票名称或者代码已经存在',
 }
 dict_err.update(consts.G_DICT_ERROR)
 DEFAULT_DB = "default"
@@ -37,6 +38,33 @@ class StockBase(object):
         if state is not None:
             ps.update(state=state)
         return Stock.objects.filter(**ps)
+
+    def get_stocks_by_name(self, name):
+        stocks = self.get_all_stocks(None)
+
+        if name:
+            stocks = stocks.filter(name__contains=name)
+
+        return stocks
+
+    def create_stock(self, name, code, belong_board, belong_market, img, des=None, sort_num=0, state=False):
+        try:
+            assert name and code and belong_board and belong_market and img
+        except:
+            return 99800, dict_err.get(99800)
+        if Stock.objects.filter(name=name) or Stock.objects.filter(code=code):
+            return 80101, dict_err.get(80101)
+
+        try:
+            stock = Stock.objects.create(
+                name=name, code=code, belong_board=belong_board, belong_market=belong_market,
+                img=img, des=des, sort_num=sort_num, state=state
+            )
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, stock
 
 
 class StockFeedBase(object):

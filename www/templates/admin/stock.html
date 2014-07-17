@@ -16,17 +16,7 @@ $(document).ready(function(){
 
         // 默认值
         defaults: {
-            'num': '',
-            'linkId': '',
-            'name': '',
-            'href': '',
-            'type': '',
-            'cityName': '',
-            'cityId': '',
-            'sort': '',
-            'state': '',
-            'type': '',
-            'des': ''
+           
         }
 
     });
@@ -44,6 +34,8 @@ $(document).ready(function(){
             'board': 'belong_board',
             'market': 'belong_market',
             'img': 'img',
+            'feedCount': 'feed_count',
+            'followingCount': 'following_count',
             'sort': 'sort',
             'state': 'state'
         },
@@ -270,22 +262,7 @@ $(document).ready(function(){
     var AddView = Backbone.View.extend({
         el: 'body',
 
-        template: _.template($('#add_friendly_link_template').html()),
-
-        cityTextBox: null,
-        initCityTextBox: function(name, value){
-            this.cityTextBox = $.ZXTextboxList.create('#belong_city_add', {
-                max: 1,
-                placeholder: '选择所属城市',
-                url: '/admin/user/customer_manager/get_citys_by_name',
-                param: 'city_name',
-                loadPlaceholder: '正在加载...'
-            });
-
-            if(value){
-                this.cityTextBox.add(name, value);
-            }
-        },
+        template: _.template($('#add_stock_template').html()),       
 
         showPanel: function(){
             var me = this;
@@ -296,36 +273,23 @@ $(document).ready(function(){
         render: function(){
             var me = this;
 
-            $('#add_friendly_link_modal').remove();
+            $('#add_stock_modal').remove();
             
             $('body').append(this.template());
 
             // 绑定事件
-            $('#add_friendly_link_modal .cancel').bind('click', function(){
+            $('#add_stock_modal .cancel').bind('click', function(){
                 history.go(-1);
             });
-            $('#add_friendly_link_modal .ok').bind('click', function(){
-                me.addFriendlyLink();
+            $('#add_stock_modal .ok').bind('click', function(){
+                me.addStock();
             });
             
-            $('#add_friendly_link_modal').modal({'show': true, 'backdrop': 'static'});
-
-            this.initCityTextBox();
+            $('#add_stock_modal').modal({'show': true, 'backdrop': 'static'});
         },
 
-        addFriendlyLink: function(){
-            var linkId = this.$('form').data('link_id'),
-                me = this;
-
-            friendlyLinks.addFriendlyLink(me.$('form').serialize(), function(data){
-                if(data.errcode === 0){
-                    router.navigate('modify/' + data.errmsg, {trigger: true});
-                    $('#add_friendly_link_modal').modal('hide');
-                    $.ZXMsg.alert('提示', '添加成功!');
-                } else {
-                    $.ZXMsg.alert('提示', data.errmsg);
-                }
-            })
+        addStock: function(){
+            this.$('form').submit();
         }
 
     });
@@ -360,10 +324,14 @@ $(document).ready(function(){
     var stocks = new Stocks(),
         listView = new ListView({'collection': stocks}),
         // modifyView = new ModifyView({'collection': stocks}),
-        // addView = new AddView(),
+        addView = new AddView(),
         router = new Router();
  
     Backbone.history.start();
+
+    if(window.location.href.indexOf('?') > -1){
+        $.ZXNotice.ErrorTopNotice(decodeURI(window.location.search).substring(1));
+    }
 
 });
 
@@ -429,9 +397,8 @@ $(document).ready(function(){
     <% _.each(stocks, function(stock){ %>
         <tr class="pointer" data-stock_id="<%= stock.stockId %>">
             <td><%= stock.num %></td>
-            <td><a href="/stock/<%= stock.stockId %>"><img src="<%= stock.img %>" /></a></td>
-            <td><%= stock.name %></td>
-            <td><%= stock.img %></td>
+            <td><a href="/stock/<%= stock.stockId %>"><img class="avatar-45 avatar-square" src="<%= stock.img %>" /></a></td>
+            <td><%= stock.name %>(<%= stock.code %>)</td>
             <td>
                 {% for i in boards %}
                     <% if(stock.board=='{{i.value}}'){ %> {{i.name}} <% } %>
@@ -511,57 +478,74 @@ $(document).ready(function(){
 </script>
 
 <!-- 添加问题模板 -->
-<script type="text/template" id="add_friendly_link_template">
-<div class="modal fade" id="add_friendly_link_modal" tabindex="-1" role="dialog">
+<script type="text/template" id="add_stock_template">
+<div class="modal fade" id="add_stock_modal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header pb-5">
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
-                <h4 class="modal-title">添加友情链接</h4>
+                <h4 class="modal-title">添加个股</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form" method="post" action="">
+                <form class="form-horizontal" role="form" method="post" action="/admin/stock/stock/add_stock" enctype="multipart/form-data">
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接类型</label>
-                        <div class="col-sm-9">
-                        {% for i in link_types %}
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="link_type" value="{{i.value}}" checked>
-                                    {{i.name}}
-                                </label>
-                            </div>
-                        {% endfor %}
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">所属城市</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name="belong_city" id="belong_city_add" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接名称</label>
+                        <label class="col-sm-3 control-label">个股图片</label>
                         <div class="col-sm-6">
+                            <img class="avatar-65 avatar-circle mb-10" src="" />
+                            <input name="img" type="file" />图片尺寸为 65(宽) X 65(长)
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">名称</label>
+                        <div class="col-sm-3">
                             <input type="text" class="form-control" name="name" value=''>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接地址</label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="http://www.site.com" class="form-control" name="href" value=''>
+                        <label class="col-sm-3 control-label">代码</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="code" value=''>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">链接描述</label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="" class="form-control" name="des" value=''>
+                        <label class="col-sm-3 control-label">描述</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" rows="5" name="des"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">所属板块</label>
+                        <div class="col-sm-3">
+                            <select class="form-control input-sm" name="board">
+                                {% for i in boards %}
+                                    <option value="{{i.value}}">{{i.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">所属交易所</label>
+                        <div class="col-sm-3">
+                            <select class="form-control input-sm" name="market">
+                                {% for i in markets %}
+                                    <option value="{{i.value}}">{{i.name}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-3 control-label">排序</label>
                         <div class="col-sm-2">
-                            <input type="text" name="sort" class="form-control" value='0'>
+                            <input type="text" class="form-control" name="sort"  value='0'>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">状态</label>
+                        <div class="col-sm-3">
+                            <select class="form-control input-sm" name="state">
+                                <option value="0">不可用</option>
+                                <option value="1" selected="selected">正常</option>
+                            </select>
                         </div>
                     </div>
                 </form>
