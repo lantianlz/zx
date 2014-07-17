@@ -1,5 +1,6 @@
 {% extends "stock/base_stock.html" %}
-
+{% load custom_tags %}
+{% load custom_filters %}
 {% block keywords %}股票一览表,A股,B股,主板,中小板,创业板{% endblock keywords %}
 
 {% block description %}股票一览表包含：主板，中小板，创业板等上市公司股票简称及股票代码，点击可查看上市公司最新动态、个股最新问答、最新公告、公司新闻等信息。{% endblock description %}
@@ -12,41 +13,17 @@
 </div>
 
 <ul class="list-inline">
+    {% for stock in stocks %}
 	<li class="pt-15 col-md-6 col-xs-12 bottom-border bdc-eee">
-        <a href="/stock/1"><img class="pa avatar-65 avatar-square" alt="个股分析" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600000.png"></a>
+        <a href="{{stock.get_url}}"><img class="pa avatar-65 avatar-square" alt="{{stock.name}}" src="{{stock.img}}"></a>
         <div class="pl-75 row pr-10">
             <div class="col-md-12 col-xs-12">
-                <a href="/stock/1">浦发银行(600000)</a>
+                <a href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
             </div>
-            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">上海浦东发展银行股份有限公司为1992年8月28日经中国人民银行总行以...</div>
+            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{stock.des|default:"暂无简介"|str_display:38}}</div>
         </div>
     </li>
-    <li class="pt-15 col-md-6 col-xs-12 bottom-border bdc-eee">
-        <a href="/stock/1"><img class="pa avatar-65 avatar-square" alt="个股分析" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/601318.png"></a>
-        <div class="pl-75 row pr-10">
-            <div class="col-md-12 col-xs-12">
-                <a href="/stock/1">中国平安(601318)</a>
-            </div>
-            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">中国平安保险(集团)股份有限公司于1988年诞生于深圳蛇口，是中国第...</div>
-        </div>
-    </li>
-    <li class="pt-15 col-md-6 col-xs-12 bottom-border bdc-eee">
-        <a href="/stock/1"><img class="pa avatar-65 avatar-square" alt="个股分析" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600521.png"></a>
-        <div class="pl-75 row pr-10">
-            <div class="col-md-12 col-xs-12">
-                <a href="/stock/1">浦发银行(600521)</a>
-            </div>
-            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">上海浦东发展银行股份有限公司为1992年8月28日经中国人民银行总行以...</div>
-        </div>
-    </li>
-    <li class="pt-15 col-md-6 col-xs-12 bottom-border bdc-eee">
-        <a href="/stock/1"><img class="pa avatar-65 avatar-square" alt="个股分析" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600750.png"></a>
-        <div class="pl-75 row pr-10">
-            <div class="col-md-12 col-xs-12">
-                <a href="/stock/1">中国平安(600750)</a>
-            </div>
-            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">中国平安保险(集团)股份有限公司于1988年诞生于深圳蛇口，是中国第...</div>
-        </div>
-    </li>
+    {% endfor %}
 </ul>
+{{page_params|paging:request}}
 {% endblock stock_main%}

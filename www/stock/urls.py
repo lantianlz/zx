@@ -7,6 +7,6 @@ urlpatterns = patterns('www.stock.views',
                        url(r'^$', 'stock_home'),
                        url(r'^all$', 'stock_all'),
                        url(r'^(?P<stock_id>\d+)$', 'stock_detail'),
-                       url(r'^feed/(?P<feed_id>\d+)$', 'stock_feed'),
+                       url(r'^feed/(?P<stock_feed_id>\d+)$', 'stock_feed'),
                        url(r'^search$', 'stock_search'),
                        )

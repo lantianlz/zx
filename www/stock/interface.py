@@ -19,9 +19,8 @@ def stock_required(func):
     def _decorator(self, stock_id_or_object, *args, **kwargs):
         stock = stock_id_or_object
         if not isinstance(stock_id_or_object, Stock):
-            try:
-                stock = Stock.objects.get(id=stock_id_or_object, state=True)
-            except Stock.DoesNotExist:
+            stock = StockBase().get_stock_by_id(stock_id_or_object)
+            if not stock:
                 return 80100, dict_err.get(80100)
         return func(self, stock, *args, **kwargs)
     return _decorator
@@ -37,6 +36,15 @@ class StockBase(object):
         if state is not None:
             ps.update(state=state)
         return Stock.objects.filter(**ps)
+
+    def get_stock_by_id(self, stock_id, state=True):
+        ps = dict(id=stock_id)
+        if state is not None:
+            ps.update(state=state)
+        try:
+            return Stock.objects.get(**ps)
+        except Stock.DoesNotExist:
+            pass
 
 
 class StockFeedBase(object):
@@ -54,7 +62,6 @@ class StockFeedBase(object):
     def create_feed(self, stock_id_or_object, question_content, answer_content,
                     belong_market, origin_id=None, create_time=None, create_question_time=None):
         try:
-
             try:
                 assert stock_id_or_object and question_content and answer_content
                 assert belong_market is not None
@@ -83,3 +90,15 @@ class StockFeedBase(object):
         if state is not None:
             ps.update(state=state)
         return StockFeed.objects.select_related("stock").filter(**ps)
+
+    def get_stock_feeds_by_stock(self, stock):
+        return StockFeed.objects.select_related("stock").filter(stock=stock, state=True)
+
+    def get_stock_feed_by_id(self, stock_feed_id, state=True):
+        ps = dict(id=stock_feed_id)
+        if state is not None:
+            ps.update(state=state)
+        try:
+            return StockFeed.objects.select_related("stock").get(**ps)
+        except StockFeed.DoesNotExist:
+            pass
