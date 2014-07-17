@@ -3,7 +3,7 @@
 import datetime
 from django.db import transaction
 
-from common import debug
+from common import debug, utils
 from www.misc import consts
 from www.stock.models import Stock, StockFeed
 
@@ -123,7 +123,7 @@ class StockFeedBase(object):
 
     def format_stock_feeds(self, stock_feeds):
         for stock_feed in stock_feeds:
-            stock_feed.answer_content_length = len(stock_feed.answer_content)
+            stock_feed.answer_content_length = utils.get_chinese_length(stock_feed.answer_content)
         return stock_feeds
 
     @stock_required
