@@ -10,6 +10,9 @@ from www.stock.models import Stock, StockFeed
 
 dict_err = {
     80100: u'股票不存在',
+    80101: u'股票名称或者代码已经存在',
+    80102: u'股票名称已经存在',
+    80103: u'股票代码已经存在',
 }
 dict_err.update(consts.G_DICT_ERROR)
 DEFAULT_DB = "default"
@@ -37,6 +40,34 @@ class StockBase(object):
             ps.update(state=state)
         return Stock.objects.filter(**ps)
 
+    def get_stocks_by_name(self, name):
+        stocks = self.get_all_stocks(None)
+
+        if name:
+            stocks = stocks.filter(name__contains=name)
+
+        return stocks
+
+    def create_stock(self, name, code, belong_board, belong_market, img, origin_uid, des=None, sort_num=0, state=False):
+        try:
+            assert name and code and belong_board and belong_market and img
+        except:
+            return 99800, dict_err.get(99800)
+
+        if Stock.objects.filter(name=name) or Stock.objects.filter(code=code):
+            return 80101, dict_err.get(80101)
+
+        try:
+            stock = Stock.objects.create(
+                name=name, code=code, belong_board=belong_board, belong_market=belong_market,
+                img=img, origin_uid=origin_uid, des=des, sort_num=sort_num, state=state
+            )
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, stock
+
     def get_stock_by_id(self, stock_id, state=True):
         ps = dict(id=stock_id)
         if state is not None:
@@ -54,6 +85,35 @@ class StockBase(object):
             return Stock.objects.get(**ps)
         except Stock.DoesNotExist:
             pass
+
+    def modify_stock(self, stock_id, **kwargs):
+
+        if not stock_id or not kwargs.get('name') or not kwargs.get('code') \
+            or not kwargs.get('belong_board') or not kwargs.get('belong_market'):
+            return 99800, dict_err.get(99800)
+
+        stock = self.get_stock_by_id(stock_id, None)
+        if not stock:
+            return 80100, dict_err.get(80100)
+
+        temp = Stock.objects.filter(name=kwargs.get('name'))
+        if temp and temp[0].id != stock.id:
+            return 80102, dict_err.get(80102)
+
+        temp = Stock.objects.filter(code=kwargs.get('code'))
+        if temp and temp[0].id != stock.id:
+            return 80103, dict_err.get(80103)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(stock, k, v)
+
+            stock.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
 
 
 class StockFeedBase(object):

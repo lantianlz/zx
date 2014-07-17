@@ -95,4 +95,16 @@ PERMISSIONS = [
     {'code': 'query_article', 'name': u'查询资讯', 'parent': 'article_manage'},
     {'code': 'modify_article', 'name': u'修改资讯', 'parent': 'article_manage'},
     {'code': 'remove_article', 'name': u'删除资讯', 'parent': 'article_manage'},
+
+    {'code': 'stock_manage', 'name': u'个股管理', 'parent': None},
+    {'code': 'add_stock', 'name': u'添加个股', 'parent': 'stock_manage'},
+    {'code': 'query_stock', 'name': u'查询个股', 'parent': 'stock_manage'},
+    {'code': 'modify_stock', 'name': u'修改个股', 'parent': 'stock_manage'},
+    {'code': 'remove_stock', 'name': u'删除个股', 'parent': 'stock_manage'},
+
+    {'code': 'stock_feed_manage', 'name': u'股票动态管理', 'parent': None},
+    {'code': 'add_stock_feed', 'name': u'添加股票动态', 'parent': 'stock_feed_manage'},
+    {'code': 'query_stock_feed', 'name': u'查询股票动态', 'parent': 'stock_feed_manage'},
+    {'code': 'modify_stock_feed', 'name': u'修改股票动态', 'parent': 'stock_feed_manage'},
+    {'code': 'remove_stock_feed', 'name': u'删除股票动态', 'parent': 'stock_feed_manage'},
 ]
