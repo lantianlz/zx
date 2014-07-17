@@ -153,3 +153,9 @@ urlpatterns += patterns('www.admin.views_zhuanti',
                         url(r'^zhuanti/search$', 'search'),
                         url(r'^zhuanti$', 'zhuanti'),
                         )
+
+# 股票
+urlpatterns += patterns('www.admin.views_stock',
+
+                        url(r'^stock/stock$', 'stock'),
+                        )

@@ -133,6 +133,17 @@ a.list-group-item.active{
 
         <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/zhuanti' in request.path %}active{% endif %}" href="/admin/zhuanti">专题管理</a>
 
+        <!-- 股票管理 -->
+        <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/stock' in request.path %}active{% endif %}">
+            <span class="co21">股票管理</span><span class="glyphicon glyphicon-chevron-right pull-right f12 mt-3 co21"></span>
+            
+            <ul class="sub-admin-nav list-group pa none box-shadow-224">
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/stock/stock' in request.path %}active{% endif %}" href="/admin/stock/stock">个股管理</a>
+
+                <a class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/stock/feed' in request.path %}active{% endif %}" href="/admin/stock/feed">股票动态管理</a>
+                
+            </ul>
+        </li>
         
         <!-- 开户子站管理 -->
         <li class="list-group-item bgc-e9e9e9 box-shadow-224 border-1 bdc-fff {% if '/admin/kaihu' in request.path %}active{% endif %}">
