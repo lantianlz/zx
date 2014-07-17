@@ -42,7 +42,7 @@ class StockFeed(models.Model):
     create_time = models.DateTimeField(db_index=True)
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ["-create_time", "id"]
 
     def get_url(self):
         return u'/stock/feed/%s' % self.id
