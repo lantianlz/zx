@@ -1,13 +1,27 @@
 # -*- coding: utf-8 -*-
 
-import json
+# import json
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
+from common import page
+from www.stock import interface
+sb = interface.StockBase()
+sfb = interface.StockFeedBase()
+
 
 def stock_home(request, template_name='stock/stock_home.html'):
+    stock_feeds = sfb.get_all_stock_feeds()
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(stock_feeds, count=100, page=page_num).info
+    stock_feeds = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    stock_feeds = sfb.format_stock_feeds(stock_feeds)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -22,7 +36,7 @@ def stock_feed(request, feed_id, template_name='stock/stock_feed.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def stock_list(request, template_name='stock/stock_list.html'):
+def stock_all(request, template_name='stock/stock_all.html'):
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
