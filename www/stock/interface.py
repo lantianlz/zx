@@ -46,6 +46,15 @@ class StockBase(object):
         except Stock.DoesNotExist:
             pass
 
+    def get_stock_by_code(self, code, state=True):
+        ps = dict(code=code)
+        if state is not None:
+            ps.update(state=state)
+        try:
+            return Stock.objects.get(**ps)
+        except Stock.DoesNotExist:
+            pass
+
 
 class StockFeedBase(object):
 

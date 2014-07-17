@@ -25,7 +25,7 @@ class Stock(models.Model):
         ordering = ["-sort_num", '-feed_count']
 
     def get_url(self):
-        return u'/stock/%s' % self.id
+        return u'/stock/%s' % self.code
 
 
 class StockFeed(models.Model):

@@ -26,11 +26,10 @@ def stock_home(request, template_name='stock/stock_home.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def stock_detail(request, stock_id, template_name='stock/stock_detail.html'):
-    stock = sb.get_stock_by_id(stock_id)
+def stock_detail(request, stock_code, template_name='stock/stock_detail.html'):
+    stock = sb.get_stock_by_code(stock_code)
     if not stock:
         raise Http404
-
     stock_feeds = sfb.get_stock_feeds_by_stock(stock)
 
     # 分页
