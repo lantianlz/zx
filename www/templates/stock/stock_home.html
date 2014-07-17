@@ -38,10 +38,10 @@ $(document).ready(function(){
                 <a href="{{stock_feed.stock.get_url}}" class="">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
                 <span class="f12 pull-right">{{stock_feed.create_time}}</span>
             </div>
-            <div class="pt-15 f13 line-height-22 pointer show-detail" data-content="{{stock_feed.answer_content}}">
-                {{stock_feed.answer_content|str_display:210}}
-                {% if stock_feed.answer_content_length > 210 %}
-                <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a></span>
+            <div class="pt-15 f13 line-height-22 {% if stock_feed.answer_content_length > 200 %}pointer show-detail{% endif %}" data-content="{{stock_feed.answer_content}}">
+                {{stock_feed.answer_content|str_display:200}}
+                {% if stock_feed.answer_content_length > 200 %}
+                <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a>
                 {% endif %}
             </div>
         </div>
