@@ -43,16 +43,16 @@
                     <a {% if '/' == request.path and request.user.is_authenticated or '/home' == request.path %} class=""{% else %} class="bottom-border-3 bdc-transparent" {% endif %} href="{{MAIN_DOMAIN}}">首页</a>
                 </li>
                 <li {% if '/question/' in request.path %} class="active" {% endif %}>
-                    <a href="{{MAIN_DOMAIN}}/question">问答</a>
+                    <a href="{{MAIN_DOMAIN}}/question/">问答</a>
                 </li>
                 <li {% if '/important' in request.path %} class="active" {% endif %}>
                     <a href="{{MAIN_DOMAIN}}/important">精选</a>
                 </li>
                 <li {% if '/zt' in request.path %} class="active" {% endif %}>
-                    <a href="{{MAIN_DOMAIN}}/zt">专题</a>
+                    <a href="{{MAIN_DOMAIN}}/zt/">专题</a>
                 </li>
                 <li {% if '/stock' in request.path %} class="active" {% endif %}>
-                    <a href="{{MAIN_DOMAIN}}/stock">股票动态</a>
+                    <a href="{{MAIN_DOMAIN}}/stock/">股票动态</a>
                 </li>
 
                 {% if request.sub_domain == "www" %}

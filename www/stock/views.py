@@ -62,7 +62,7 @@ def stock_all(request, template_name='stock/stock_all.html'):
 
 
 def stock_search(request, template_name='stock/stock_search.html'):
-
     stock_key_words = request.REQUEST.get('key_words', '')
+    stocks = sb.search_stocks(stock_key_words)[:20]
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
