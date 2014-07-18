@@ -1562,7 +1562,7 @@ if (!String.format) {
                 '<div class="modal fade text-center" id="full_image_modal">',
                     '<image src="'+originUrl+'" />',
                     '<div class="loading-img co3">正在加载原始图片...</div>',
-                    '<span class="pa glyphicon glyphicon-remove-circle co3 f30 pointer" style="right: 5px; top: 5px;"></span>',
+                    '<span class="pf glyphicon glyphicon-remove-circle co3 f30 pointer" style="right: 20px; top: 5px;"></span>',
                 '</div>'
             ].join('');
 
