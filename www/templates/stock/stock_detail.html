@@ -22,7 +22,7 @@
     {% for stock_feed in stock_feeds %}
     <li class="list-group-item no-l-r-bd bdc-eee">
         <div><a href="{{stock_feed.get_url}}" class="f14 black-blue fb">{{stock_feed.question_content}}</a></div>
-        <div class="f13 pt-15">{{stock_feed.answer_content}}</div>
+        <div class="f13 pt-15 line-height-22">{{stock_feed.answer_content}}</div>
         <div class="pt-5 text-right"><span class="co8 f12">{{stock_feed.create_time}}</span></div>
     </li>
     {% endfor %}
@@ -37,8 +37,8 @@
 </div>
 
 <div class="f16 pb-10 fb pt-15 mt-15 top-border bdc-eee">主营业务</div>
-<div>{{stock.main_business|default:"暂无"}}</div>
+<div class="line-height-22">{{stock.main_business|default:"暂无"}}</div>
 
 <div class="f16 pb-10 fb pt-15 mt-15 top-border bdc-eee">所属板块</div>
-<div>{{stock.get_belong_board_display}}</div>
+<div class="line-height-22">{{stock.get_belong_board_display}}</div>
 {% endblock stock_right %}
