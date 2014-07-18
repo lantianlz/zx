@@ -2,11 +2,11 @@
 {% load custom_tags %}
 {% load custom_filters %}
 
-{% block keywords %}股票,股票动态,最新股票动态,智选,个股研究,个股分析,个股评论,行业,B股,主力,中小板,三板{% endblock keywords %}
+{% block keywords %}股票,股票动态,最新股票动态,最新股票消息,智选,个股研究,个股分析,个股评论,行业,B股,主力,中小板,三板{% endblock keywords %}
 
-{% block description %}智选（www.zhixuan.com）提供最新股票动态：上市公司动态、个股问答、公司新闻、最热股票等股票行情信息。{% endblock description %}
+{% block description %}智选（www.zhixuan.com）提供最新股票消息动态：上市公司动态、个股问答、公司新闻、最热股票等股票行情信息。{% endblock description %}
 
-{% block title %}最新股票动态{% endblock title %}
+{% block title %}最新股票消息动态{% endblock title %}
 
 {% block javascript %}
 <script type="text/javascript">
@@ -38,9 +38,9 @@ $(document).ready(function(){
                 <a href="{{stock_feed.stock.get_url}}" class="">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
                 <span class="f12 pull-right">{{stock_feed.create_time}}</span>
             </div>
-            <div class="pt-15 f13 line-height-22 {% if stock_feed.answer_content_length > 200 %}pointer show-detail{% endif %}" data-content="{{stock_feed.answer_content}}">
-                {{stock_feed.answer_content|str_display:200}}
-                {% if stock_feed.answer_content_length > 200 %}
+            <div class="pt-15 f13 line-height-22 {% if stock_feed.answer_content_length > 150 %}pointer show-detail{% endif %}" data-content="{{stock_feed.answer_content}}">
+                {{stock_feed.answer_content|str_display:150}}
+                {% if stock_feed.answer_content_length > 150 %}
                 <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a>
                 {% endif %}
             </div>
