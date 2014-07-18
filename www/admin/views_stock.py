@@ -29,6 +29,7 @@ def add_stock(request):
     origin_uid = request.REQUEST.get('origin_uid', '')
     origin_uid = code if origin_uid == '' else origin_uid
     des = request.REQUEST.get('des')
+    main_business = request.REQUEST.get('main_business')
     belong_board = request.REQUEST.get('board')
     belong_market = request.REQUEST.get('market')
     sort_num = request.REQUEST.get('sort')
@@ -40,7 +41,7 @@ def add_stock(request):
         flag, img_name = qiniu_client.upload_img(img, img_type='stock')
         img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
-    flag, msg = StockBase().create_stock(name, code, belong_board, belong_market, img_name, origin_uid, des, sort_num, state)
+    flag, msg = StockBase().create_stock(name, code, belong_board, belong_market, img_name, origin_uid, des, main_business, sort_num, state)
 
     if flag == 0:
         url = "/admin/stock/stock?#modify/%s" % (msg.id)
@@ -63,6 +64,7 @@ def format_stock(objs, num):
             'des': x.des,
             'belong_board': x.belong_board,
             'belong_market': x.belong_market,
+            'main_business': x.main_business,
             'img': x.img,
             'feed_count': x.feed_count,
             'following_count': x.following_count,
@@ -77,7 +79,6 @@ def format_stock(objs, num):
 def search(request):
     data = []
     sb = StockBase()
-    fls = []
 
     name = request.REQUEST.get('name')
     page_index = int(request.REQUEST.get('page_index'))
@@ -120,6 +121,7 @@ def modify_stock(request):
     origin_uid = request.REQUEST.get('origin_uid', '')
     origin_uid = code if origin_uid == '' else origin_uid
     des = request.REQUEST.get('des')
+    main_business = request.REQUEST.get('main_business')
     belong_board = request.REQUEST.get('board')
     belong_market = request.REQUEST.get('market')
     sort_num = request.REQUEST.get('sort')
@@ -133,7 +135,7 @@ def modify_stock(request):
 
     flag, msg = sb.modify_stock(
         stock_id, name=name, code=code, origin_uid=origin_uid, sort_num=sort_num, img=img_name,
-        des=des, belong_board=belong_board, belong_market=belong_market, state=state,
+        des=des, belong_board=belong_board, belong_market=belong_market, state=state, main_business=main_business
     )
 
     if flag == 0:

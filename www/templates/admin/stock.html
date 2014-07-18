@@ -34,6 +34,7 @@ $(document).ready(function(){
             'board': 'belong_board',
             'market': 'belong_market',
             'img': 'img',
+            'mainBusiness': 'main_business',
             'feedCount': 'feed_count',
             'followingCount': 'following_count',
             'sort': 'sort',
@@ -263,7 +264,7 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="stock_list">
-        <div class="pl-0 pr-0 pb-10 col-md-2">
+        <div class="pl-0 pr-0 pb-10 col-md-3">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入个股名称..." />
                 <span class="input-group-btn">
@@ -277,6 +278,7 @@ $(document).ready(function(){
                     <th>#</th>
                     <th>图片</th>
                     <th>名称</th>
+                    <th>动态总数</th>
                     <th>所属板块</th>
                     <th>所属交易所</th>
                     <th>排序</th>
@@ -308,6 +310,7 @@ $(document).ready(function(){
             <td><%= stock.num %></td>
             <td><a href="/stock/<%= stock.stockId %>" target="_blank"><img class="avatar-45 avatar-square" src="<%= stock.img %>" /></a></td>
             <td><%= stock.name %>(<%= stock.code %>)</td>
+            <td><%= stock.feedCount %></td>
             <td>
                 {% for i in boards %}
                     <% if(stock.board=='{{i.value}}'){ %> {{i.name}} <% } %>
@@ -355,6 +358,12 @@ $(document).ready(function(){
             <label class="col-sm-2 control-label">描述</label>
             <div class="col-sm-8">
                 <textarea class="form-control" rows="5" name="des"><%= des %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">主营业务</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" rows="5" name="main_business"><%= mainBusiness %></textarea>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -435,6 +444,12 @@ $(document).ready(function(){
                         <label class="col-sm-3 control-label">描述</label>
                         <div class="col-sm-8">
                             <textarea class="form-control" rows="5" name="des"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">主营业务</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" rows="5" name="main_business"></textarea>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
