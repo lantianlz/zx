@@ -1,0 +1,30 @@
+{% extends "stock/base_stock.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block keywords %}股票一览表,A股,B股,主板,中小板,创业板{% endblock keywords %}
+
+{% block description %}股票一览表包含：主板，中小板，创业板等上市公司股票简称及股票代码，点击可查看上市公司最新动态、个股最新问答、最新公告、公司新闻等信息。{% endblock description %}
+
+{% block title %}股票一览表{% endblock title %}
+
+{% block stock_main%}
+<div class="bottom-border bdc-bbb pt-10 pb-5 pl-15">
+        <span class="f16 fb">股票一览表</span>
+</div>
+
+<ul class="list-inline">
+    {% for stock in stocks %}
+	<li class="pt-15 col-md-6 col-xs-12 bottom-border bdc-eee">
+        <a href="{{stock.get_url}}"><img class="pa avatar-65 avatar-square" alt="{{stock.name}}" src="{{stock.img}}"></a>
+        <div class="pl-75 row pr-10">
+            <div class="col-md-12 col-xs-12">
+                <a href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
+            </div>
+            <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{stock.des|default:"暂无简介"|str_display:32}}</div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+<div class="blank5"></div>
+{{page_params|paging:request}}
+{% endblock stock_main%}

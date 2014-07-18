@@ -4,13 +4,14 @@ from django.db import models
 
 
 class Stock(models.Model):
-    board_choices = ((0, u'主板'), (1, u"中小板"), (2, u"创业板"), (3, u"B股"), (4, u"其他"))
+    board_choices = ((0, u'主板'), (1, u"中小企业板"), (2, u"创业板"), (3, u"B股"), (4, u"其他"))
     market_choices = ((0, u'沪股市'), (1, u"深圳股市"))
 
     name = models.CharField(max_length=64, unique=True)
     origin_uid = models.CharField(max_length=16, unique=True)
     code = models.CharField(max_length=16, unique=True)
     des = models.TextField(null=True)
+    main_business = models.TextField(null=True)  # 主营业务
     belong_board = models.IntegerField(choices=board_choices)   # 所属板块
     belong_market = models.IntegerField(choices=market_choices)   # 所属交易所
 
@@ -25,7 +26,7 @@ class Stock(models.Model):
         ordering = ["-sort_num", '-feed_count']
 
     def get_url(self):
-        return u'/stock/%s' % self.id
+        return u'/stock/%s' % self.code
 
 
 class StockFeed(models.Model):
@@ -42,7 +43,7 @@ class StockFeed(models.Model):
     create_time = models.DateTimeField(db_index=True)
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ["-create_time", "id"]
 
     def get_url(self):
         return u'/stock/feed/%s' % self.id

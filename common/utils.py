@@ -316,3 +316,16 @@ def get_sub_domain_from_http_host(http_host):
         http_host = ('http://%s' % http_host) if not http_host.startswith('http') else http_host
         prefix = urlparse.urlparse(http_host)[1].split('.', 1)[0]
         return prefix
+
+
+def get_chinese_length(text):
+    """
+    @note: 获取长度，中文算1个，字母算半个
+    """
+    str_count = 0
+    for c in text:
+        if ord(c) > 127:
+            str_count += 2
+        else:
+            str_count += 1
+    return str_count / 2
