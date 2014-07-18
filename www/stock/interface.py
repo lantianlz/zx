@@ -48,9 +48,9 @@ class StockBase(object):
         return stocks
 
     def search_stocks(self, key):
-        stocks = Stock.objects.filter(name__icontains=key)
+        stocks = Stock.objects.filter(name__icontains=key, state=True)
         if not stocks:
-            stocks = Stock.objects.filter(code__icontains=key)
+            stocks = Stock.objects.filter(code__icontains=key, state=True)
         return stocks
 
     def create_stock(self, name, code, belong_board, belong_market, img, origin_uid, des=None, main_business=0, sort_num=0, state=False):

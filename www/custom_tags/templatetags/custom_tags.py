@@ -61,6 +61,7 @@ def global_statistic(context):
     """
     from www.question.models import Question, Answer
     from www.account.models import User
+    from www.stock.models import StockFeed
     from common import cache
 
     key = 'global_statistic'
@@ -71,10 +72,15 @@ def global_statistic(context):
         answer_count = Answer.objects.filter(state=True).count()
         question_count = Question.objects.filter(state=True).count()
         account_count = User.objects.all().count()
+        stock_feed_count = StockFeed.objects.all().count()
+        stock_feed_latest_time = StockFeed.objects.all().order_by("-create_time")[0].create_time
+
         now = datetime.datetime.now()
         gs = dict(answer_count=answer_count, question_count=question_count,
-                  account_count=account_count, update_time=now.strftime('%Y-%m-%d %H:%M:%S'))
-        cache_obj.set(key, gs, time_out=3600 * 8)
+                  account_count=account_count, update_time=now.strftime('%Y-%m-%d %H:%M:%S'),
+                  stock_feed_count=stock_feed_count, stock_feed_latest_time=stock_feed_latest_time,
+                  )
+        cache_obj.set(key, gs, time_out=3600 * 2)
     return render_to_response('include/_global_statistic.html', locals(),
                               context_instance=context).content
 

@@ -12,6 +12,7 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block stock_main%}
+{% if stocks %}
 <ul class="list-group">
     {% for stock in stocks %}
     <li class="list-group-item no-l-r-bd bdc-eee">
@@ -23,4 +24,7 @@ $(document).ready(function(){
     </li>
     {% endfor %}
 </ul>
+{% else %}
+<div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+{% endif %}
 {% endblock stock_main%}
