@@ -8,18 +8,56 @@
 {% block description %}智选用户回答「{{question.title}}」，希望对你有所帮助。欢迎加入智选，投资是一门学问，独立思考，善学善问。{% endblock description %}
 
 {% block javascript %}
-{% if question.is_important %}
+
 <script type="text/javascript">
 $(document).ready(function(){
+    {% if question.is_important %}
     // 精华盖章动画
     var jinghua = $('.jinghua img');
     jinghua.show()
     .css({'width': '444.5px', 'height': '385px'})
     .animate({'width': '254', 'height': '220px', 'opacity': '0.6'}, 500)
     .animate({'width': '102px', 'height': '88px', 'opacity': '0.99'}, 50);
+    {% endif %}
+
+    var intro = introJs();
+    intro.setOptions({
+        steps: [{
+            intro: "智选问答使用引导"
+        }, {
+            element: '.step6',
+            intro: "有不懂的可以点此提问",
+            position: 'left'
+        }, {
+            element: '.step1',
+            intro: "问得好，将这个提问分享给小伙伴",
+        }, {
+            element: '.step2',
+            intro: "点此可以邀请大神回答",
+            position: 'right'
+        }, {
+            element: '.step3',
+            intro: '点此切换排序方式',
+            position: 'left'
+        }, {
+            element: '.step4',
+            intro: "回答的不错，点个赞",
+            position: 'left'
+        }, {
+            element: '.step5',
+            intro: "精彩的回复，我要分享给小伙伴",
+            position: 'right'
+        }],
+        nextLabel: "下一步",
+        prevLabel: "上一步",
+        skipLabel: "跳过",
+        doneLabel: "关闭"
+    });
+
+    intro.start();
 });
 </script>
-{% endif %}
+
 {% endblock %}
 
 {% block css %}{% endblock %}
@@ -50,14 +88,15 @@ $(document).ready(function(){
             </ul>
         </div>
         <div class="topic-footer row" data-question_id="{{question.id}}">
-            <div class="text-right gray-a pb-10 f12 col-md-12">
-                
-                <a class="question-share-qq" href="javascript: void(0);">
-                    分享到QQ
-                </a>
-                <a class="question-share-sina" href="javascript: void(0);">
-                    分享到微博
-                </a>
+            <div class="text-right pb-10 f12 col-md-12">
+                <span class="step1">
+                    <a class="border-block-blue ml-5 pl-5 pr-5 pt-2 pb-2 question-share-qq" href="javascript: void(0);">
+                        分享到QQ
+                    </a>
+                    <a class="border-block-red ml-5 pl-5 pr-5 pt-2 pb-2 question-share-sina" href="javascript: void(0);">
+                        分享到微博
+                    </a>
+                </span>
                 <span class="pl-15 question-date hidden-xs">{{question.create_time}}</span>
             </div>
             <div class="col-md-3 col-xs-12">
@@ -100,7 +139,7 @@ $(document).ready(function(){
                         删除
                     </a>
                     {% endif %}
-                    <a class="invite" href="javascript: void(0);">
+                    <a class="invite step2" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-transfer"></span>
                         邀请回答
                     </a>
@@ -189,7 +228,7 @@ $(document).ready(function(){
                     <h4 class="mt-0 mb-0 line-height-30">共 {{good_answers_count}} 个回答</h4>
                 </div>
                 <div class="col-md-3 col-xs-6 pull-right">
-                    <select class="form-control input-sm sort-answers">
+                    <select class="form-control input-sm sort-answers step3">
                         <option value="like_count" {% if sort == "like_count" %}selected{% endif %}>按赞数排序</option>
                         <option value="create_time" {% if sort == "create_time" %}selected{% endif %}>按时间排序</option>
                     </select>
@@ -272,7 +311,7 @@ $(document).ready(function(){
     <div class="not-login row">
         
             <div class="col-md-offset-3 col-md-6 col-xs-offset-1 col-xs-10 links pt-25 pr">
-                <a href="/regist" class="pt-15 pb-15 f14 bgc-zx co3 register" style="border-radius: 2px; box-shadow: 1px 1px 1px #999; padding-left: 45px; padding-right: 35px;">
+                <a href="/regist" class="pt-15 pb-15 pl-45 pr-35 f14 bgc-zx co3 register" style="border-radius: 2px; box-shadow: 1px 1px 1px #999;">
                     <!-- <button type="button" class="btn btn-danger btn-regist">免费注册</button> -->
                     <span class="glyphicon glyphicon-registration-mark pa f18" style="left: 38px; top: 25px;"></span>
                     免费注册

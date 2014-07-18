@@ -15,7 +15,7 @@
             </span>
         </div>
         <div class="col-md-3 col-xs-3 text-right">
-            <span class="answer-like-border flash-border">
+            <span class="answer-like-border flash-border step4">
                 <span title="赞一下" class="glyphicon {% if answer.is_request_user_like %}glyphicon-heart{% else %}glyphicon-heart-empty{% endif %} auto-hide answer-like " ></span>
                 <span class="answer-like-count">{{answer.like_count}}</span>
             </span>
@@ -43,7 +43,7 @@
     </div>
     <div class="reply-tools gray-a">
         <span class="co8">{{answer.create_time|time_format}}</span>
-        <a class="answer-share" href="javascript: void(0);">
+        <a class="answer-share step5" href="javascript: void(0);">
             <span class="glyphicon glyphicon-share-alt"></span>
             分享
         </a>
