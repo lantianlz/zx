@@ -18,7 +18,7 @@ $(document).ready(function(){
     <li class="list-group-item no-l-r-bd bdc-eee">
         <a href="{{stock.get_url}}"><img class="pa avatar-65 avatar-square" alt="{{stock.name}}" src="{{stock.img}}"></a>
         <div class="pl-75">
-            <div class="f14 pt-5"> <a href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a></div>
+            <div class="f14 pt-5"> <a class="stock-title" href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a></div>
             <div class="co8 f13 pt-5">{{stock.des|default:"暂无简介"|str_display:72}}</div>
         </div>
     </li>
