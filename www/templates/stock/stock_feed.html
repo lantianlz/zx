@@ -12,13 +12,13 @@
     <span class="pa pl-25 pr-25 pb-25 pt-25 bgc-e9e9e9 img-circle"></span>
     <span class="pa co3 f40 fa fa-question pl-12 pt-5"></span>
     <div class="pl-60 f14 bdc-eee bottom-border pb-5">
-        <p class="fb">{{stock_feed.question_content}}</p>
+        <p class="fb min-h40">{{stock_feed.question_content}}</p>
     </div>
 
     <a href="{{stock_feed.stock.get_url}}"><img class="pa avatar-45 avatar-square mt-15" title="{{stock_feed.stock.name}}" alt="{{stock_feed.stock.name}}" src="{{stock_feed.stock.img}}"></a>
     <div class="pl-60 f13 pt-15 line-height-22">
         <div>
-            <a href="{{stock_feed.get_url}}" class="f12">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
+            <a href="{{stock_feed.stock.get_url}}" class="f12">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
             <span class="co8 f12 pull-right">{{stock_feed.create_time}}</span>
         </div>
         <p class="pt-5">{{stock_feed.answer_content}}</p>

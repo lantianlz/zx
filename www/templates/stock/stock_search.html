@@ -12,15 +12,19 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block stock_main%}
+{% if stocks %}
 <ul class="list-group">
     {% for stock in stocks %}
     <li class="list-group-item no-l-r-bd bdc-eee">
         <a href="{{stock.get_url}}"><img class="pa avatar-65 avatar-square" alt="{{stock.name}}" src="{{stock.img}}"></a>
         <div class="pl-75">
-            <div class="f14 pt-5"> <a href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a></div>
+            <div class="f14 pt-5"> <a class="stock-title" href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a></div>
             <div class="co8 f13 pt-5">{{stock.des|default:"暂无简介"|str_display:72}}</div>
         </div>
     </li>
     {% endfor %}
 </ul>
+{% else %}
+<div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂无</div>
+{% endif %}
 {% endblock stock_main%}

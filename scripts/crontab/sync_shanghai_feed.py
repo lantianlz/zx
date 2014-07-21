@@ -47,6 +47,8 @@ def get_shanghai_feed():
         if u"小时" in origin_time:
             hour = int(origin_time.split(u"小时")[0])
             return now - datetime.timedelta(hours=hour)
+        if u"秒" in origin_time:
+            return now
 
         raise Exception, (u"time error:%s" % origin_time).encode("utf8")
 
