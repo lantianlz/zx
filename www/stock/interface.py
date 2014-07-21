@@ -40,8 +40,8 @@ class StockBase(object):
             ps.update(state=state)
         return Stock.objects.filter(**ps)
 
-    def get_stocks_by_name(self, name):
-        stocks = self.get_all_stocks(None)
+    def get_stocks_by_name(self, name, state):
+        stocks = self.get_all_stocks(state)
 
         if name:
             stocks = stocks.filter(name__contains=name)
