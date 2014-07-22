@@ -36,7 +36,7 @@ $(document).ready(function(){
             </div>
             <div class="co8 f12 pt-5">
                 <a href="{{stock_feed.stock.get_url}}" class="">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
-                <span class="f12 pull-right">{{stock_feed.create_time}}</span>
+                <span class="f12 pull-right">{{stock_feed.create_time|time_format}}</span>
             </div>
             <div class="pt-15 f13 line-height-22 {% if stock_feed.answer_content_length > 150 %}pointer show-detail{% endif %}" data-content="{{stock_feed.answer_content}}">
                 {{stock_feed.answer_content|str_display:150}}
