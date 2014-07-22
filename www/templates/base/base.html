@@ -8,7 +8,6 @@
         <meta name="sogou_site_verification" content="j857uWTpYV"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="author" content="simplejoy" />
-        <!-- 兼容 双核浏览器 -->
         <meta name="renderer" content="webkit" />
         <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
         <meta name="keywords" content="{% block keywords %}智选,股票问答,投资问答,炒股问答,投资社区,股票,债券,期货,期权,投资{% endblock keywords %}" />
@@ -36,7 +35,6 @@
         </style>
         <![endif]-->
         {% block base_css %}{% endblock %}
-
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery-1.7.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/backbone/underscore-min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/backbone/backbone-min.js"></script>
@@ -77,12 +75,9 @@
         </div>
         {% endblock base_container%}
 
-        {% block footer %}
-        {% include "include/_footer.html" %}
-        {% endblock footer %}
+        {% block footer %}{% include "include/_footer.html" %}{% endblock footer %}
 
         {% block body_tail %}{% endblock body_tail %}
-
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery/jquery.easing.1.3.min.js"></script>

@@ -21,12 +21,10 @@
             </button>
             <a class="zx-logo" href="{{MAIN_DOMAIN}}">
                 智选
-                <!-- <img title="智选" alt="智选" src="{{MEDIA_URL}}img/common/logo.png"> -->
             </a>
             <span class="zx-beta pa f12 co-zx">Beta</span>
 
             {% if request.sub_domain == "www" %}
-            <!-- 手机访问时搜索框 -->
             <div class="pa xs-search-container hidden-sm hidden-md hidden-lg" style="left: 100px; top: 13px; width: 160px;">
                 <form class="" action="/search">
                     <input type="text" class="form-control input-sm pr-30" name="key_words" placeholder="搜索提问、回答或人..." value="{{key_words}}" maxlength="50">
@@ -56,7 +54,6 @@
                 </li>
 
                 {% if request.sub_domain == "www" %}
-                <!-- 非手机搜索框 -->
                 <div class="pa search-container hidden-xs" style="right: -130px; top: 11px; width: 130px;">
                     <form class="" action="/search">
                         <input type="text" class="form-control input-sm search-input pr-30" name="key_words" placeholder="搜索..." value="{{key_words}}" maxlength="50">
@@ -69,7 +66,6 @@
             
             <ul class="nav navbar-nav navbar-right login-user">
                 {% if request.user.is_authenticated %}
-                <!-- 菜单 -->
                 <li class="user-menu dropdown">
                     <a href="/p/{{request.user.id}}" class="dropdown-toggle user w140" data-toggle="dropdown"  title="{{request.user.nick}}">
                         <img alt="{{request.user.nick}}" class='avatar-25 avatar-circle user mt--2' src="{{request.user.get_avatar_25}}">
@@ -101,13 +97,9 @@
                     </ul>
                 </li>
 
-                <!-- 消息中心 -->
                 <li class="user-notice dropdown ml--10">
                     <a href="#" class="dropdown-toggle user" data-toggle="dropdown" data-target="#" title="">
-                        <!-- 有消息则会显示具体消息数量 -->
                         <span class="badge flash-badge none" id="unread_count_total_nav_1">0</span>
-                        
-                        <!-- 没有消息显示铃铛 -->
                         <span class="glyphicon glyphicon-bell f16 mt--4" id="unread_count_total_nav_none"></span>
                     </a>
                     <ul class="dropdown-menu text-left min-w140" role="menu">
@@ -154,8 +146,8 @@
                 {% else %}
                 <li>
                     <div class="un-login-user">
-                        <a class='regist' href="{{MAIN_DOMAIN}}/regist">免费注册</a>
-                        <a class='login' href="{{MAIN_DOMAIN}}/login">立即登录</a>
+                        <a class='regist' href="{{MAIN_DOMAIN}}/regist" rel="nofollow">免费注册</a>
+                        <a class='login' href="{{MAIN_DOMAIN}}/login" rel="nofollow">立即登录</a>
                     </div>
                 </li>
                 {% endif %}

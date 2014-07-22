@@ -11,13 +11,10 @@
 {% endblock %}
 
 {% block container_content %}
-<!--左侧主体开始-->
 <div class="col-xs-12 col-md-8 ">
     {% block stock_main%}{% endblock %}
 </div>
-<!--左侧主体结束-->
 
-<!--右侧主体开始-->
 <div class="col-xs-12 col-md-4 pl-50">
     <div class="bottom-border bdc-eee pb-5">
         <form action="/stock/search" class="pt-15 pb-5">
@@ -25,8 +22,6 @@
             <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 15px; top: 22px;"><span class="fa fa-search co8" ></span></button>
         </form>
     </div>
-
     {% block stock_right %}{% hot_stock %}{% endblock %}
 </div>
-<!--右侧主体开始-->
 {% endblock container_content %}

@@ -298,11 +298,15 @@ $(document).ready(function(){
         toggleInvite: function(){
             var target = this.$el;
             
-            // 是否首次加载
-            if(target.find('.invite-persons').children().length == 0){
-                this.getAllInvitePerson();
+            // 禁止匿名用户访问
+            if(CURRENT_USER_ID)
+            {
+                // 是否首次加载
+                if(target.find('.invite-persons').children().length == 0){
+                    this.getAllInvitePerson();
+                }
+                target.css('display') === 'block' ? target.hide() : target.show();
             }
-            target.css('display') === 'block' ? target.hide() : target.show();
         },
 
         // 查询邀请人
