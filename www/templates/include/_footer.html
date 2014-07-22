@@ -4,15 +4,19 @@
             <span class="co3 f22">智选</span>
             <span class="co8 ml-10">投资是一门学问，善学善问</span>
         </div>
-        <div class="pt-15" style="width: 80%; height: 35px;">
-        	{% if flinks %}
-            <span class="co3 f12 pr-10">友情链接</span>
-            {% for flink in flinks %}
-            <a href="{{flink.href}}" target="_blank" class="pr-10 gray-white">{{flink.name}}</a>
-            {% endfor %}
-        	{% endif %}
+        <div class="pt-15 row pl-5" style="">
+            <ul class="list-inline col-md-10">
+                {% if flinks %}
+                <span class="co3 f12 pr-10">友情链接</span>
+                {% for flink in flinks %}
+                <li>
+                    <a href="{{flink.href}}" target="_blank" class=" gray-white">{{flink.name}}</a>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
         </div>
-        <div class="pt-15">
+        <div class="pt-0">
             <a class="pr-10 gray-white" href="{{MAIN_DOMAIN}}/s/about" rel="nofollow">关于我们</a> |
             <a class="pr-10 pl-10 gray-white" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}">股票开户</a> |
             <a class="pr-10 pl-10 gray-white" href="{{MAIN_DOMAIN}}/s/business" rel="nofollow">商务合作</a> |
