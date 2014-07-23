@@ -1,37 +1,35 @@
+{% load custom_tags %}
+{% load custom_filters %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
     <head>
         <meta charset="utf-8" />
         <title>百度绿色通道 - 智选</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <!-- 兼容 双核浏览器 -->
-        <meta name="renderer" content="webkit" />
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
         <link rel="shortcut icon" href="/static/img/common/favicon.ico" />
-        <style type="text/css">
-        body{
-            font-family: "Helvetica Neue",Helvetica,"Lucida Grande","Luxi Sans",Arial,"Hiragino Sans GB",STHeiti,"Microsoft YaHei","Wenquanyi Micro Hei","WenQuanYi Micro Hei Mono","WenQuanYi Zen Hei","WenQuanYi Zen Hei Mono",LiGothicMed;
-        }
-        </style>
     </head>
     <body>
         <h2>最新问答</h2>
         <ul>
-            <li><a href="http://www.a.com:8000/question/193">大家来讨论一下关于新股的涨停规则！</a></li>
-            <li><a href="http://www.a.com:8000/question/193">大家来讨论一下关于新股的涨停规则！</a></li>
-            <li><a href="http://www.a.com:8000/question/193">大家来讨论一下关于新股的涨停规则！</a></li>
+            {% for question in questions %}
+            <li><a href="{{question.get_url}}">{{question.title}}</a></li>
+            {% endfor %}
+            <li><a href="/question/">其他最新问答</a></li>
         </ul>
         <h2>股票动态</h2>
         <ul>
-            <li><a href="http://www.a.com:8000/question/193">网上有说公司参股25%的长飞光纤要在香港上市，是真的吗，如是能说说到什么程度了？谢谢！</a></li>
-            <li><a href="http://www.a.com:8000/question/193">网上有说公司参股25%的长飞光纤要在香港上市，是真的吗，如是能说说到什么程度了？谢谢！</a></li>
-            <li><a href="http://www.a.com:8000/question/193">网上有说公司参股25%的长飞光纤要在香港上市，是真的吗，如是能说说到什么程度了？谢谢！</a></li>
+            {% for stock_feed in stock_feeds %}
+            <li><a href="{{stock_feed.get_url}}">{{stock_feed.question_content|str_display:50}}</a></li>
+            {% endfor %}
+            
+            <li><a href="/stock/">其他股票动态</a></li>
+            <li><a href="/stock/all">最新股票</a></li>
         </ul>
         <h2>营业部</h2>
         <ul>
-            <li><a href="http://www.a.com:8000/question/193">国泰君安证券成都北一环路证券营业部</a></li>
-            <li><a href="http://www.a.com:8000/question/193">国泰君安证券成都北一环路证券营业部</a></li>
-            <li><a href="http://www.a.com:8000/question/193">国泰君安证券成都北一环路证券营业部</a></li>
+            <li><a href="http://chengdu.{{SERVER_DOMAIN}}">成都股票开户</a></li>
+            <li><a href="http://chongqing.{{SERVER_DOMAIN}}">重庆股票开户</a></li>
+            <li><a href="http://chengdu.{{SERVER_DOMAIN}}/kaihu/article">成都理财资讯</a></li>
+            <li><a href="http://chongqing.{{SERVER_DOMAIN}}/kaihu/article">重庆理财资讯</a></li>
         </ul>
     </body>
 </html>

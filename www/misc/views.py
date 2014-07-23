@@ -4,6 +4,7 @@ import base64
 import json
 import urllib
 import os
+import datetime
 
 from django.http import HttpResponse, Http404
 from django.template import RequestContext
@@ -48,6 +49,14 @@ def baidu_map(request, template_name="other/baidu_map.html"):
     '''
     @note: 网站地图，给百度准备
     '''
+    from www.question.interface import QuestionBase
+    from www.stock.interface import StockFeedBase
+
+    now = datetime.datetime.now().date()
+
+    questions = QuestionBase().get_questions_by_range_date(now, now + datetime.timedelta(days=1))
+    stock_feeds = StockFeedBase().get_all_stock_feeds()[:10]
+
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
