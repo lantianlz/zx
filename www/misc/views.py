@@ -44,6 +44,13 @@ def sitemap(request):
     return HttpResponse(generate_sitemap(), mimetype='application/xml')
 
 
+def baidu_map(request, template_name="other/baidu_map.html"):
+    '''
+    @note: 网站地图，给百度准备
+    '''
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
 def link_view(request):
     '''
     @note: 交换友链等验证链接
