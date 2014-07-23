@@ -21,7 +21,10 @@ class Company(models.Model):
         p = re.compile(u'.+?证券', re.DOTALL | re.IGNORECASE)
         names = p.findall(self.name or "")
         if names:
-            return names[0]
+            name = names[0]
+            if len(name) > 5:
+                name = name.replace(u"证券", u"")
+            return name
         return self.name
 
 
@@ -54,7 +57,7 @@ class Department(models.Model):
         return '/kaihu/department_detail/%s' % self.id
 
     def get_short_name(self):
-        return self.name.replace(self.company.name, self.company.get_short_name())
+        return self.name.replace(self.company.name, self.company.get_short_name()).replace(u"证券营业部", u"营业部")
 
 
 class City(models.Model):
