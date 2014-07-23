@@ -36,6 +36,7 @@ def generate_sitemap(must_update_cache=False):
 def get_sitemap_url():
     from www.question.interface import TopicBase
     from www.question.models import Question
+    from www.stock.models import StockFeed
 
     data = []
     for question in Question.objects.filter(state=True).order_by('-id'):
@@ -43,5 +44,8 @@ def get_sitemap_url():
 
     for topic in TopicBase().get_all_topics_for_show():
         data.append([u'%s/topic/%s\n' % (settings.MAIN_DOMAIN, topic.domain), datetime.datetime.now().strftime('%Y-%m-%d')])
+
+    for stock_feed in StockFeed.objects.filter(state=True).order_by("-create_time")[:2000]:
+        data.append([u'%s%s\n' % (settings.MAIN_DOMAIN, stock_feed.get_url()), stock_feed.create_time.strftime('%Y-%m-%d')])
 
     return data

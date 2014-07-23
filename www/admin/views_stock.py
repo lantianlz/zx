@@ -81,9 +81,12 @@ def search(request):
     sb = StockBase()
 
     name = request.REQUEST.get('name')
+    state = request.REQUEST.get('state', '0')
+    state = {'0': None, '1': True, '2': False}[state]
+
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = sb.get_stocks_by_name(name)
+    objs = sb.get_stocks_by_name(name, state)
 
     page_objs = page.Cpt(objs, count=10, page=page_index).info
 

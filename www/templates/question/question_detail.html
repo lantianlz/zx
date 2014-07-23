@@ -20,41 +20,62 @@ $(document).ready(function(){
     .animate({'width': '102px', 'height': '88px', 'opacity': '0.99'}, 50);
     {% endif %}
 
-    var intro = introJs();
-    intro.setOptions({
-        steps: [{
-            intro: "智选问答使用引导"
-        }, {
-            element: '.step6',
-            intro: "有不懂的可以点此提问",
-            position: 'left'
-        }, {
-            element: '.step1',
-            intro: "问得好，将这个提问分享给小伙伴",
-        }, {
-            element: '.step2',
-            intro: "点此可以邀请大神回答",
-            position: 'right'
-        }, {
-            element: '.step3',
-            intro: '点此切换排序方式',
-            position: 'left'
-        }, {
-            element: '.step4',
-            intro: "回答的不错，点个赞",
-            position: 'left'
-        }, {
-            element: '.step5',
-            intro: "精彩的回复，我要分享给小伙伴",
-            position: 'right'
-        }],
-        nextLabel: "下一步",
-        prevLabel: "上一步",
-        skipLabel: "跳过",
-        doneLabel: "关闭"
+    
+    
+    var registDate = new Date('{{request.user.create_time}}'),
+        days = (new Date() - registDate)/1000/60/60/24;
+    
+    // 7天之内会自动显示引导提示
+    if(days <= 7 && !$.cookie('needIntro')){
+
+        // 已经看过之后 设置cookie
+        $.cookie('needIntro', 'true');
+
+        var intro = introJs();
+        intro.setOptions({
+            steps: [{
+                intro: "智选问答使用引导"
+            }, {
+                element: '.step6',
+                intro: "有不懂的可以点此提问",
+                position: 'left'
+            }, {
+                element: '.step1',
+                intro: "问得好，将这个提问分享给小伙伴",
+            }, {
+                element: '.step2',
+                intro: "点此可以邀请大神回答",
+                position: 'right'
+            }, {
+                element: '.step3',
+                intro: '点此切换排序方式',
+                position: 'left'
+            }, {
+                element: '.step4',
+                intro: "回答的不错，点个赞",
+                position: 'left'
+            }, {
+                element: '.step5',
+                intro: "精彩的回复，我要分享给小伙伴",
+                position: 'right'
+            }],
+            nextLabel: "下一步",
+            prevLabel: "上一步",
+            skipLabel: "跳过",
+            doneLabel: "关闭"
+        });
+
+        intro.start();
+    }
+
+
+    // 显示帮助
+    $('.intro').bind('click', function(){
+        intro.start();
+        $('html,body').animate({scrollTop: 0}, 300);
     });
 
-    intro.start();
+
 });
 </script>
 
@@ -311,13 +332,13 @@ $(document).ready(function(){
     <div class="not-login row">
         
             <div class="col-md-offset-3 col-md-6 col-xs-offset-1 col-xs-10 links pt-25 pr">
-                <a href="/regist" class="pt-15 pb-15 pl-45 pr-35 f14 bgc-zx co3 register" style="border-radius: 2px; box-shadow: 1px 1px 1px #999;">
-                    <!-- <button type="button" class="btn btn-danger btn-regist">免费注册</button> -->
+                <a href="/regist" class="pt-15 pb-15 pl-45 pr-35 f14 bgc-zx co3 register" rel="nofollow"
+                    style="border-radius: 2px; box-shadow: 1px 1px 1px #999;">
                     <span class="glyphicon glyphicon-registration-mark pa f18" style="left: 38px; top: 25px;"></span>
                     免费注册
                 </a>
-                <a href="/login" class="pt-15 pb-15 pl-35 pr-25 f14 bgc-zx co3 login" style="border-radius: 2px; box-shadow: 1px 1px 1px #999;">
-                    <!-- <button type="button" class="btn btn-primary btn-login">立即登录</button> -->
+                <a href="/login" class="pt-15 pb-15 pl-35 pr-25 f14 bgc-zx co3 login" rel="nofollow"
+                    style="border-radius: 2px; box-shadow: 1px 1px 1px #999;">
                     立即登录
                     <span class="glyphicon glyphicon-log-in"></span>
                 </a>

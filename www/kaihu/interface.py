@@ -410,7 +410,7 @@ class ArticleBase(object):
         return objs
 
     def get_article_by_title(self, title):
-        return self.get_all_articles(state=None).filter(title=title)
+        return self.get_all_articles(state=None).filter(title__contains=title)
 
     def get_articles_by_city_id(self, city_id, order_by=None):
         articles = Article.objects.filter(state=True, city_id=city_id)

@@ -42,16 +42,17 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, pageIndex){
+        search: function(name, state, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/stock/stock/search", 
-                {'name': name||'', 'page_index': pageIndex||1}, 
+                {'name': name||'', 'state': state||0, 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
                     me.name = name||'';
+                    me.state = state||0;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
@@ -101,7 +102,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name
+                'search/' + this.collection.name + '/' + this.collection.state
             );
         },
 
@@ -111,9 +112,10 @@ $(document).ready(function(){
         },
 
         searchStock: function(){
-            var name = this.$('.key-word').val();
+            var name = this.$('.key-word').val(),
+                state = this.$('.state').val();
 
-            router.navigate(String.format('/search/{0}/1', name), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/1', name, state), {trigger: true});
         },
 
         modifyStock: function(sender){
@@ -210,13 +212,13 @@ $(document).ready(function(){
         routes: {
             "":                             "search",
             "modify/:stockId":              "modify",
-            "search/(:name)/:pageIndex":    "search",
+            "search/(:name)/(:state)/:pageIndex":    "search",
             "add":                          "add"
         },
 
         // 查询
-        search: function(name, pageIndex){
-            stocks.search(name||'', pageIndex||1);
+        search: function(name, state, pageIndex){
+            stocks.search(name||'', state||0, pageIndex||1);
         },
 
         // 显示修改界面
@@ -264,6 +266,13 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="stock_list">
+        <div class="pl-0 pb-10 col-md-2">
+            <select class="form-control input-sm state">
+                <option value="0">全部股票</option>
+                <option value="1">有效股票</option>
+                <option value="2">无效股票</option>
+            </select>
+        </div>
         <div class="pl-0 pr-0 pb-10 col-md-3">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入个股名称..." />
