@@ -21,47 +21,53 @@ $(document).ready(function(){
     {% endif %}
 
     
-    var registDate = new Date('{{request.user.create_time}}'),
-        days = (new Date() - registDate)/1000/60/60/24,
-        intro = introJs()
-        steps = [];
+    // 登陆用户引导
+    {% if request.user.is_authenticated %}
+    if($.ZXUtils.isDesktop()){
 
-    steps.push({intro: "智选问答使用引导"});
-    steps.push({element: '.step1', intro: "有不懂的可以点此提问", position: 'left'});
-    steps.push({element: '.step2', intro: "问得好，将这个提问分享给小伙伴", position: 'right'});
-    steps.push({element: '.step3', intro: "点此可以邀请大神回答", position: 'left'});
-    steps.push({element: '.step4', intro: "点此切换排序方式", position: 'left'});
-    // 有些问题可能没有回复
-    if($('.replies li:not(.auto-hide,.replay-header,.replay-collapse)').length > 0){
-        steps.push({element: '.step5', intro: "回答的不错，点个赞", position: 'left'});
-        steps.push({element: '.step6', intro: "精彩的回复，我要分享给小伙伴", position: 'right'});
+        $(".intro").show();
+        var registDate = new Date('{{request.user.create_time|date:"Y"}}', '{{request.user.create_time|date:"m"}}', '{{request.user.create_time|date:"d"}}'),
+            days = (new Date() - registDate)/1000/60/60/24,
+            intro = introJs()
+            steps = [];
+
+        steps.push({intro: "欢迎来到智选，来探索一下吧"});
+        steps.push({element: '.step1', intro: "有关于投资的任何问题，可立即点此开始提问", position: 'left'});
+        steps.push({element: '.step2', intro: "情不自禁想分享？点此可轻松分享给到QQ或者微博", position: 'right'});
+        steps.push({element: '.step3', intro: "没有满意的回答怎么办？邀请各路大神吧，高质量回答马上到来", position: 'left'});
+        steps.push({element: '.step4', intro: "排序方式由你决定", position: 'left'});
+        // 有些问题可能没有回复
+        if($('.replies li:not(.auto-hide,.replay-header,.replay-collapse)').length > 0){
+            steps.push({element: '.step5', intro: "这个回答真不错，那就点个赞吧，及时表扬他人是一种美德", position: 'left'});
+            steps.push({element: '.step6', intro: "独乐乐不如众乐乐，好的回答可以分享给小伙伴们", position: 'right'});
+        }
+        steps.push({element: '.step7', intro: "没看够？点击此处再看一遍", position: 'left'});
+
+        intro.setOptions({
+            steps: steps,
+            nextLabel: "下一步",
+            prevLabel: "上一步",
+            skipLabel: "关闭",
+            doneLabel: "关闭",
+            exitOnOverlayClick: false
+        });
+        
+        // 7天之内会自动显示引导提示
+        if(days <= 180 && !$.cookie('needIntro')){
+
+            // 已经看过之后 设置cookie
+            $.cookie('needIntro', 'true', {expires: 180});
+
+            intro.start();
+        }
+
+        // 显示帮助
+        $('.intro').bind('click', function(){
+            intro.start();
+            $('html,body').animate({scrollTop: 0}, 300);
+        });
     }
-    steps.push({element: '.step7', intro: "再看一遍", position: 'left'});
-
-    intro.setOptions({
-        steps: steps,
-        nextLabel: "下一步",
-        prevLabel: "上一步",
-        skipLabel: "关闭",
-        doneLabel: "关闭",
-        exitOnOverlayClick: false
-    });
-    
-    // 7天之内会自动显示引导提示
-    if(days <= 7 && !$.cookie('needIntro')){
-
-        // 已经看过之后 设置cookie
-        $.cookie('needIntro', 'true');
-
-        intro.start();
-    }
-
-
-    // 显示帮助
-    $('.intro').bind('click', function(){
-        intro.start();
-        $('html,body').animate({scrollTop: 0}, 300);
-    });
+    {% endif %}
 
 
 });
@@ -70,9 +76,6 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block css %}
-<style type="text/css">
-.intro{display: block;}
-</style>
 {% endblock %}
 
 {% block question_main%}
