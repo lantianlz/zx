@@ -21,49 +21,35 @@ $(document).ready(function(){
     {% endif %}
 
     
-    
     var registDate = new Date('{{request.user.create_time}}'),
-        days = (new Date() - registDate)/1000/60/60/24;
+        days = (new Date() - registDate)/1000/60/60/24,
+        intro = introJs()
+        steps = [];
+
+    steps.push({intro: "智选问答使用引导"});
+    steps.push({element: '.step1', intro: "有不懂的可以点此提问", position: 'left'});
+    steps.push({element: '.step2', intro: "问得好，将这个提问分享给小伙伴", position: 'right'});
+    steps.push({element: '.step3', intro: "点此可以邀请大神回答", position: 'left'});
+    steps.push({element: '.step4', intro: "点此切换排序方式", position: 'left'});
+    // 有些问题可能没有回复
+    if($('.replies li:not(.auto-hide,.replay-header,.replay-collapse)').length > 0){
+        steps.push({element: '.step5', intro: "回答的不错，点个赞", position: 'left'});
+        steps.push({element: '.step6', intro: "精彩的回复，我要分享给小伙伴", position: 'right'});
+    }
+
+    intro.setOptions({
+        steps: steps,
+        nextLabel: "下一步",
+        prevLabel: "上一步",
+        skipLabel: "跳过",
+        doneLabel: "关闭"
+    });
     
     // 7天之内会自动显示引导提示
     if(days <= 7 && !$.cookie('needIntro')){
 
         // 已经看过之后 设置cookie
         $.cookie('needIntro', 'true');
-
-        var intro = introJs();
-        intro.setOptions({
-            steps: [{
-                intro: "智选问答使用引导"
-            }, {
-                element: '.step6',
-                intro: "有不懂的可以点此提问",
-                position: 'left'
-            }, {
-                element: '.step1',
-                intro: "问得好，将这个提问分享给小伙伴",
-            }, {
-                element: '.step2',
-                intro: "点此可以邀请大神回答",
-                position: 'right'
-            }, {
-                element: '.step3',
-                intro: '点此切换排序方式',
-                position: 'left'
-            }, {
-                element: '.step4',
-                intro: "回答的不错，点个赞",
-                position: 'left'
-            }, {
-                element: '.step5',
-                intro: "精彩的回复，我要分享给小伙伴",
-                position: 'right'
-            }],
-            nextLabel: "下一步",
-            prevLabel: "上一步",
-            skipLabel: "跳过",
-            doneLabel: "关闭"
-        });
 
         intro.start();
     }
@@ -81,7 +67,11 @@ $(document).ready(function(){
 
 {% endblock %}
 
-{% block css %}{% endblock %}
+{% block css %}
+<style type="text/css">
+.intro{display: block;}
+</style>
+{% endblock %}
 
 {% block question_main%}
 <span class="jinghua">
@@ -110,7 +100,7 @@ $(document).ready(function(){
         </div>
         <div class="topic-footer row" data-question_id="{{question.id}}">
             <div class="text-right pb-10 f12 col-md-12">
-                <span class="step1">
+                <span class="step2">
                     <a class="border-block-blue ml-5 pl-5 pr-5 pt-2 pb-2 question-share-qq" href="javascript: void(0);">
                         分享到QQ
                     </a>
@@ -160,7 +150,7 @@ $(document).ready(function(){
                         删除
                     </a>
                     {% endif %}
-                    <a class="invite step2" href="javascript: void(0);">
+                    <a class="invite step3" href="javascript: void(0);">
                         <span class="glyphicon glyphicon-transfer"></span>
                         邀请回答
                     </a>
@@ -243,13 +233,13 @@ $(document).ready(function(){
 
 <div class="replies w">
     <ul class="list-group top-border bdc-eee" id="ul_replies">
-        <li class="list-group-item no-l-r-bd bdc-eee">
+        <li class="list-group-item no-l-r-bd bdc-eee replay-header">
             <div class="row">
                 <div class="col-md-6 col-xs-6">
                     <h4 class="mt-0 mb-0 line-height-30">共 {{good_answers_count}} 个回答</h4>
                 </div>
                 <div class="col-md-3 col-xs-6 pull-right">
-                    <select class="form-control input-sm sort-answers step3">
+                    <select class="form-control input-sm sort-answers step4">
                         <option value="like_count" {% if sort == "like_count" %}selected{% endif %}>按赞数排序</option>
                         <option value="create_time" {% if sort == "create_time" %}selected{% endif %}>按时间排序</option>
                     </select>
@@ -260,7 +250,7 @@ $(document).ready(function(){
             {% include "question/_question_answer.html" %}
         {% endfor %}
         {% if bad_answers %}
-        <li class="list-group-item no-l-r-bd bdc-eee">
+        <li class="list-group-item no-l-r-bd bdc-eee replay-collapse">
             <div class="gray-a">
                 <a class="answer-collapse" href="javascript: void(0)">
                     共有 {{bad_answers_count}} 个回答被折叠
