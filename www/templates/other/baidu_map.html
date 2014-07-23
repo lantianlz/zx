@@ -13,7 +13,7 @@
             {% for question in questions %}
             <li><a href="{{question.get_url}}">{{question.title}}</a></li>
             {% endfor %}
-            <li><a href="/question/">其他最新问答</a></li>
+            <li><a href="/question/">股票问答</a></li>
         </ul>
         <h2>股票动态</h2>
         <ul>
@@ -21,7 +21,7 @@
             <li><a href="{{stock_feed.get_url}}">{{stock_feed.question_content|str_display:50}}</a></li>
             {% endfor %}
             
-            <li><a href="/stock/">其他股票动态</a></li>
+            <li><a href="/stock/">最新股票消息动态</a></li>
             <li><a href="/stock/all">最新股票</a></li>
         </ul>
         <h2>营业部</h2>
