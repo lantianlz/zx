@@ -37,41 +37,38 @@
 .login-form{
     background: rgb(165, 186, 197);
     background: rgba(165, 186, 197, 0.3);
-    min-height: 300px;
-    min-width: 240px;
-    position: absolute;
-    top: 6%;
+    min-height: 250px;
+    width: 350px;
     filter: alpha(opacity=30); /*IE*/
-    right: 25%;
-    border-radius: 5px;
-    box-shadow: 0px 0px 15px #363636;
+    border-radius: 4px;
+    box-shadow: 0px 0px 10px #707070;
 }
 
 .btn-login{
     letter-spacing: 12px;
     background-color: #B1431E;
     color: #fff;
-    border-color: #795151;
-    box-shadow: 0px 2px 5px #5A4F4F;
+    border-color: #A85656;
+    box-shadow: 0px 2px 5px #707070;
     transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s;
 }
 
 .btn-login:hover{
     background-color: #863114;
     border-color: #795151;
-    box-shadow: 0px 4px 10px #5A4F4F;
+    box-shadow: 0px 4px 10px #707070;
 }
 
 .btn-regist{
     letter-spacing: 12px;
-    box-shadow: 0px 2px 5px #706767;
-    background-color: #6FA1BB;
-    border-color: #7B99B4;
+    box-shadow: 0px 2px 5px #707070;
+    background-color: #128AC9;
+    border-color: #2E88D8;
     transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s;
 }
 
 .btn-regist:hover{
-    box-shadow: 0px 4px 10px #706767;
+    box-shadow: 0px 4px 10px #707070;
     background-color: #377B9E;
     border-color: #4D79A0;
 }

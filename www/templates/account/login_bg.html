@@ -15,12 +15,20 @@
     }
 
     .form-control{
-        background-color: #E0E0E0;
+        border-color: transparent;
+        background-color: rgba(255,255,255,0.5);
+        border-radius: 2px;
     }
 
     .login-text{
         top: 20%;
         left: 33%;
+    }
+
+    .split{
+        border-left: solid 2px #ddd;
+        font-size: 28px;
+        padding-left: 10px;
     }
 </style>
 {% endblock %}
@@ -32,56 +40,56 @@
 {% block base_container %}
 <div class="p0">
     <div class="login-bg-1">
-        <img class="w h" src="{{MEDIA_URL}}img/common/login-bg-1.png">
-        <div class="pa login-text row">
-            <div class="f65 co3 col-md-7 pl-0 pr-0">智选</div>
-            <div class="co3 col-md-5 pl-0 pr-0 pt-25">
-                <div class="f20">zhixuan.com</div>
-                <div class="f15 fb">投资问答社区</div>
-            </div>
-        </div>
+        <img class="w h" src="{{MEDIA_URL}}img/common/login-bg-1.jpg">
     </div>
-    <div class="login-bg-2"><img class="w h" src="{{MEDIA_URL}}/img/common/login-bg-2.jpg"></div>
+    <div class="login-bg-2">
+        <img class="w h" src="{{MEDIA_URL}}img/common/login-bg-2.jpg">
+    </div>
 </div>
-<div class="login-form">
-    <form class="form-horizontal" role="form" method="post" action="/login">
-        <div class="form-group mb-5">
-            <div class="col-md-offset-1 col-md-10 pt-20 co3">
-                <label>登录智选</label>
+<div class="pa w" style="top: 8%;">
+    <div class="login-form row" style="margin: 0 auto;">
+        <form class="form-horizontal" role="form" method="post" action="/login">
+            <div class="form-group mb-5">
+                <div class="col-md-6 pt-20 co3 text-right pr-0">
+                    <span class="f35 pr-8">智选</span>
+                    <span class="split"></span>
+                </div>
+                <div class="col-md-6 pt-24 co3 text-left pl-0">
+                    <div><span class="f15">zhixuan.com</span></div>
+                    <div><span class="f14 co24">投资</span><span class="f14">问答社区</span></div>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-1 col-md-10">
-                <input type="email" required maxlength='50' name="email" class="form-control" placeholder="登录邮箱" value='{{email}}' >
+            <div class="form-group pt-20">
+                <div class="col-md-offset-1 col-md-10 pr">
+                    <input type="email" required maxlength='50' name="email" class="form-control" placeholder="邮箱" value='{{email}}'>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-1 col-md-10">
-                <input type="password" required maxlength='32' name="password" class="form-control" placeholder="密码">
+            <div class="form-group">
+                <div class="col-md-offset-1 col-md-10">
+                    <input type="password" required maxlength='32' name="password" class="form-control" placeholder="密码">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-1 col-md-10">
-                <button type="submit" class="btn btn-primary btn-block btn-login login">登录</button>
+            <div class="form-group">
+                <div class="col-md-offset-1 col-md-5">
+                    <button type="submit" class="btn btn-primary btn-block btn-login login pl-10">登录</button>
+                </div>
+                <div class="col-md-5">
+                    <button type="button" class="btn btn-primary btn-block btn-regist regist pl-10">注册</button>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-1 col-md-10">
-                <button type="button" class="btn btn-primary btn-block btn-regist regist">注册</button>
+            <div class="form-group">
+                <div class="col-md-offset-1 col-md-10">
+                    <a href="/account/oauth/qq" class="no-hover-unl hide">
+                        <img class="avatar-20 img-fade-hover" alt="使用腾讯QQ登录" title="使用腾讯QQ登录" data-change_img="{{MEDIA_URL}}img/common/qq-active.png" src="{{MEDIA_URL}}img/common/qq.png">
+                    </a>
+                    <a href="/account/oauth/sina" class="no-hover-unl hide">
+                        <img class="avatar-20 img-fade-hover ml-15" alt="使用新浪微博登录" title="使用新浪微博登录" data-change_img="{{MEDIA_URL}}img/common/sina-active.png" src="{{MEDIA_URL}}img/common/sina.png">
+                    </a>
+                    <a class="pull-right co17 f12 pt-8 forget-pwd" href="/forget_password">忘记密码?</a>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-1 col-md-10">
-                <a href="/account/oauth/qq" class="no-hover-unl hide">
-                    <img class="avatar-20 img-fade-hover" alt="使用腾讯QQ登录" title="使用腾讯QQ登录" data-change_img="{{MEDIA_URL}}img/common/qq-active.png" src="{{MEDIA_URL}}img/common/qq.png">
-                </a>
-                <a href="/account/oauth/sina" class="no-hover-unl hide">
-                    <img class="avatar-20 img-fade-hover ml-15" alt="使用新浪微博登录" title="使用新浪微博登录" data-change_img="{{MEDIA_URL}}img/common/sina-active.png" src="{{MEDIA_URL}}img/common/sina.png">
-                </a>
-                <a class="pull-right co17 f12 pt-8 forget-pwd" href="/forget_password">忘记密码?</a>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 {% endblock %}
 

@@ -188,6 +188,7 @@
 .pr-2{padding-right: 2px;}
 .pr-3{padding-right: 3px;}
 .pr-5{padding-right: 5px;}
+.pr-8{padding-right: 8px;}
 .pr-10{padding-right: 10px;}
 .pr-15{padding-right: 15px;}
 .pr-20{padding-right: 20px;}
@@ -206,6 +207,7 @@
 .pt-10{padding-top: 10px;}
 .pt-15{padding-top: 15px;}
 .pt-20{padding-top: 20px;}
+.pt-24{padding-top: 24px;}
 .pt-25{padding-top: 25px;}
 .pt-30{padding-top: 30px;}
 .pt-80{padding-top: 80px;}
@@ -253,6 +255,7 @@
 .co21{color: #555;}
 .co22{color: #bbb;}
 .co23{color: #C20A0A}
+.co24{color: #8ED0F3}
 
 .textindent2{text-indent:32px;}
 .textindent0{text-indent: 0;}
