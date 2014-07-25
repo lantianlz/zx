@@ -1,0 +1,250 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}当日蜘蛛访问统计{% endblock %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+    var AccessLog = Backbone.Model.extend({
+        defaults: {
+            'num': 1,
+            'ip': '',
+            'url': '',
+            'state': '',
+            'count': '',
+            'date': ''
+        }
+    });
+
+    var AccessLogs = Backbone.Collection.extend({
+        model: AccessLog,
+
+        _modelMaps: {
+            'num': 'num',
+            'ip': 'ip',
+            'url': 'url',
+            'state': 'state',
+            'date': 'date',
+            'count': 'count'
+        },
+
+        search: function(pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/statistics/statistics_spider_access_logs", 
+                {}, 
+                function(data){
+                    me.logs = data.logs;
+                    me.invalid_logs = data.invalid_logs;
+                    me.all_logs = data.all_logs;
+
+                    me.reset($.ZXUtils.dictMapParse(data.logs, me._modelMaps));
+                }
+            );
+        }
+        
+    });
+
+
+    // listView
+    var LogsView = Backbone.View.extend({
+        el: '#logs_list',
+
+        template: _.template($('#logs_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        // 渲染函数
+        render: function(){
+
+            this.$('tbody').html(this.template({'logs': this.collection.logs}));
+
+        }
+
+    });
+
+    var InvalidLogsView = Backbone.View.extend({
+        el: '#invalid_logs_list',
+
+        template: _.template($('#invalid_logs_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        // 渲染函数
+        render: function(){
+
+            this.$('tbody').html(this.template({'invalidLogs': this.collection.invalid_logs}));
+
+        }
+
+    });
+
+    var AllLogsView = Backbone.View.extend({
+        el: '#all_logs_list',
+
+        template: _.template($('#all_logs_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        // 渲染函数
+        render: function(){
+
+            this.$('tbody').html(this.template({'allLogs': this.collection.all_logs}));
+
+        }
+
+    });
+
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "": "search"
+        },
+
+        // 查询
+        search: function(pageIndex){
+            
+            accessLogs.search();
+        }
+
+    });
+    
+    // 初始化
+    var accessLogs = new AccessLogs(),
+        logsView = new LogsView({'collection': accessLogs}),
+        invalidLogsView = new InvalidLogsView({'collection': accessLogs}),
+        allLogsView = new AllLogsView({'collection': accessLogs}),
+        router = new Router();
+    
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#logs_list" class="black-blue" data-toggle="pill">访问汇总</a>
+    </li>
+    <li>
+        <a href="#invalid_logs_list" class="black-blue" data-toggle="pill">无效访问</a>
+    </li>
+    <li>
+        <a href="#all_logs_list" class="black-blue" data-toggle="pill">所有访问</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="logs_list">
+        <!-- <div class="pl-0 pr-0 pb-10 col-md-4">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入资讯名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search" type="button">查询</button>
+                </span>
+            </div>
+        </div> -->
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>访问路径</th>
+                    <th>访问次数</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 修改客户经理信息 -->
+    <div class="tab-pane fade" id="invalid_logs_list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>访问ip</th>
+                    <th>访问时间</th>
+                    <th>访问路径</th>
+                    <th>访问状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane fade" id="all_logs_list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>访问ip</th>
+                    <th>访问时间</th>
+                    <th>访问路径</th>
+                    <th>访问状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script type="text/template" id="logs_template">
+    <% _.each(logs, function(log){ %>
+        <tr>
+            <td><%= log.num %></td>
+            <td><%= log.url %></td>
+            <td><%= log.count %></td>
+        </tr>
+    <% }) %>
+</script>
+
+<script type="text/template" id="invalid_logs_template">
+    <% _.each(invalidLogs, function(invalidLog){ %>
+        <tr>
+            <td><%= invalidLog.num %></td>
+            <td><%= invalidLog.ip %></td>
+            <td><%= invalidLog.date %></td>
+            <td><%= invalidLog.url %></td>
+            <td><%= invalidLog.state %></td>
+        </tr>
+    <% }) %>
+</script>
+
+<script type="text/template" id="all_logs_template">
+    <% _.each(allLogs, function(allLog){ %>
+        <tr>
+            <td><%= allLog.num %></td>
+            <td><%= allLog.ip %></td>
+            <td><%= allLog.date %></td>
+            <td><%= allLog.url %></td>
+            <td><%= allLog.state %></td>
+        </tr>
+    <% }) %>
+</script>
+
+{% endblock admin-right %}

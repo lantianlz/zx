@@ -9,10 +9,9 @@ from django.conf import settings
 
 from www.misc.decorators import staff_required, common_ajax_response, verify_permission
 from www.misc import qiniu_client
-from common import utils, page
+from common import utils, page, get_baidu_spider_info
 from www.custom_tags.templatetags.custom_filters import str_display
 
-from www.kaihu.interface import CityBase, DepartmentBase, CustomerManagerBase, FriendlyLinkBase
 from www.account.interface import UserBase
 from www.question.interface import QuestionBase, AnswerBase
 
@@ -157,5 +156,61 @@ def statistics_answers(request):
 
     return HttpResponse(
         json.dumps(data),
+        mimetype='application/json'
+    )
+
+
+@verify_permission('')
+def statistics_spider_access(request, template_name='admin/statistics_spider_access.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@verify_permission('statistics_spider_access')
+def statistics_spider_access_logs(request):
+    '''
+    提问统计
+    '''
+    lst_all_info, lst_invalid_info, lst_info_group_by_url = get_baidu_spider_info.get_baidu_spider_info()
+
+    logs = []
+    invalid_logs = []
+    all_logs = []
+
+    num = 0
+    for x in lst_info_group_by_url:
+        num += 1
+
+        logs.append({
+            'num': num,
+            'url': x[0],
+            'count': x[1]
+        })
+
+    num = 0
+    for x in lst_invalid_info:
+        num += 1
+
+        invalid_logs.append({
+            'num': num,
+            'ip': x[0],
+            'date': x[1],
+            'url': x[2],
+            'state': x[3]
+        })
+
+    num = 0
+    for x in lst_all_info:
+        num += 1
+
+        all_logs.append({
+            'num': num,
+            'ip': x[0],
+            'date': x[1],
+            'url': x[2],
+            'state': x[3]
+        })
+
+    return HttpResponse(
+        json.dumps({'logs': logs, 'invalid_logs': invalid_logs, 'all_logs': all_logs}),
         mimetype='application/json'
     )

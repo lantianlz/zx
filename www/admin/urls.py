@@ -116,6 +116,8 @@ urlpatterns += patterns('www.admin.views_article',
 # 统计
 urlpatterns += patterns('www.admin.views_statistics',
 
+                        url(r'^statistics/statistics_spider_access_logs$', 'statistics_spider_access_logs'),
+                        url(r'^statistics/statistics_spider_access$', 'statistics_spider_access'),
                         url(r'^statistics/statistics_answers$', 'statistics_answers'),
                         url(r'^statistics/statistics_questions$', 'statistics_questions'),
                         url(r'^statistics/statistics_register_user$', 'statistics_register_user'),

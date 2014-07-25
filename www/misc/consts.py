@@ -62,6 +62,7 @@ PERMISSIONS = [
     {'code': 'statistics_register_user', 'name': u'注册用户统计', 'parent': 'statistics_manage'},
     {'code': 'statistics_questions', 'name': u'提问统计', 'parent': 'statistics_manage'},
     {'code': 'statistics_answers', 'name': u'回答统计', 'parent': 'statistics_manage'},
+    {'code': 'statistics_spider_access', 'name': u'蜘蛛访问统计', 'parent': 'statistics_manage'},
 
     {'code': 'tools', 'name': u'常用工具', 'parent': None},
     {'code': 'get_cache', 'name': u'查询缓存', 'parent': 'tools'},
