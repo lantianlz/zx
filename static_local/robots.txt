@@ -4,6 +4,7 @@ Disallow: /p/*
 Disallow: /message/*
 Disallow: /account/*
 Disallow: /n/*
+Disallow: /admin/*
 Disallow: /500
 Disallow: /search
 Disallow: /logout
