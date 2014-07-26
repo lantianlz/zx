@@ -16,12 +16,14 @@
 </div>
 
 <div class="col-xs-12 col-md-4 pl-50">
+	{% block stock_right_search %}
     <div class="bottom-border bdc-eee pb-5">
         <form action="/stock/search" class="pt-15 pb-5">
             <input type="text" class="form-control input-sm pr-30" name="key_words" placeholder="输入上市公司名称 / 代码" value="{{stock_key_words}}" maxlength="50">
             <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 15px; top: 22px;"><span class="fa fa-search co8" ></span></button>
         </form>
     </div>
+    {% endblock %}
     {% block stock_right %}{% hot_stock %}{% endblock %}
 </div>
 {% endblock container_content %}
