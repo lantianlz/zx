@@ -217,7 +217,7 @@ $(document).ready(function(){
     <% _.each(logs, function(log){ %>
         <tr>
             <td><%= log.num %></td>
-            <td><%= log.url %></td>
+            <td><a target="_blank" href="<%= log.url %>"><%= log.url %></a></td>
             <td><%= log.count %></td>
         </tr>
     <% }) %>
@@ -229,7 +229,7 @@ $(document).ready(function(){
             <td><%= invalidLog.num %></td>
             <td><%= invalidLog.ip %></td>
             <td><%= invalidLog.date %></td>
-            <td><%= invalidLog.url %></td>
+            <td><a target="_blank" href="<%= invalidLog.url %>"><%= invalidLog.url %></a></td>
             <td><%= invalidLog.state %></td>
         </tr>
     <% }) %>
@@ -241,7 +241,7 @@ $(document).ready(function(){
             <td><%= allLog.num %></td>
             <td><%= allLog.ip %></td>
             <td><%= allLog.date %></td>
-            <td><%= allLog.url %></td>
+            <td><a target="_blank" href="<%= allLog.url %>"><%= allLog.url %></a></td>
             <td><%= allLog.state %></td>
         </tr>
     <% }) %>
