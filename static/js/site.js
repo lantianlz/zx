@@ -1776,12 +1776,19 @@ function createEditor(selector){
                             }
                         }
                     }
+
+                    me.sync();
                 });
 
 
                 // ctrl + enter 回复
                 KindEditor.ctrl(me.edit.doc, 13, function() {
-                    $(selector).parents('form').submit();
+                    me.sync();
+                    
+                    _.delay(function(){
+                        $(selector).parents('form').submit();
+                    }, 300);
+                    // $(selector).parents('form').submit();
                 });
                 me.sync();
             }, 
