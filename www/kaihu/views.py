@@ -81,6 +81,15 @@ def article_detail(request, article_id, template_name='kaihu/article_detail.html
     city = cb.get_city_by_id(article.city_id)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
+def news_list(request, template_name='kaihu/news_list.html'):
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def news_detail(request, news_id, template_name='kaihu/news_detail.html'):
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 # ===================================================ajax部分=================================================================#
 
 

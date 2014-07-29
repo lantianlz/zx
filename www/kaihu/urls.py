@@ -8,6 +8,8 @@ urlpatterns = patterns('www.kaihu.views',
                        url(r'^get_customer_manager$', 'get_customer_manager'),
                        url(r'^article$', 'article_list'),
                        url(r'^article/(?P<article_id>\d+)$', 'article_detail'),
+                       url(r'^news$', 'news_list'),
+                       url(r'^news/(?P<news_id>\d+)$', 'news_detail'),
 
                        url(r'^(?P<city_abbr>\w+)$', 'department_list'),  # 此处必须放到最后，避免被误匹配
                        )

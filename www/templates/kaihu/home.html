@@ -50,46 +50,99 @@ $(document).ready(function(){
 
 {% block container_content %}
 <div class="zx-kaihu-main col-md-12 row pt-10 min-h600">
-<div class="col-md-2 pr-0">
-    <div class="pt-3 pb-5 bottom-border bdc-ddd text-center f16">按区域查找券商信息</div>
-    <ul class="list-group area bottom-border bdc-ddd">
-        {% for area in areas %}
-        <li class="list-group-item no-l-r-bd text-center {% if forloop.counter0 == 0 %}active{% endif %}">
-            <a href="#area_{{area.id}}" data-toggle="tab" class="no-unl no-hover-unl">
-                {{area.area}}
-                <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-
-<div class="col-md-10 tab-content pl-0 pr-0 mt-30 border-1 bdc-ddd box-shadow-559">
-    {% for cba in citys_by_area %}
-    <div class="tab-pane in {% if forloop.first %}active{% endif %} col-md-12" id="area_{{cba.0.id}}">
-        <ul class="list-inline">
-            {% for cbp in cba.1 %}
-            <li class="col-md-12 col-xs-12">
-                <div class="pt-10 pl-25">
-                    <span class="pr-10 line-height-25 h25 f14 fb">{{cbp.0.province}}</span>
-                </div>
-                <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
-                    {% for city in cbp.1 %}
-                    {% if city.is_show %}
-                    <a href="{{city.get_url}}" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">{{city.city}}</a>
-                    {% else %}
-                    <span class="no-unl no-hover-unl pr-10 line-height-25 h25 ws-nowrap">{{city.city}}</span>
-                    {% endif %}
-                    {% if not forloop.last %}<span class="co17 pr-10">|</span>{% endif %}
-                    {% endfor %}
-                </div>
+    <div class="col-md-2 pr-0">
+        <div class="pt-3 pb-5 bottom-border bdc-ddd text-center f16">按区域查找券商信息</div>
+        <ul class="list-group area bottom-border bdc-ddd">
+            {% for area in areas %}
+            <li class="list-group-item no-l-r-bd text-center {% if forloop.counter0 == 0 %}active{% endif %}">
+                <a href="#area_{{area.id}}" data-toggle="tab" class="no-unl no-hover-unl">
+                    {{area.area}}
+                    <span class="glyphicon glyphicon-chevron-right area-arrow pull-right f12 co3 pt-3"></span>
+                </a>
             </li>
             {% endfor %}
         </ul>
     </div>
-    {% endfor %}
+
+    <div class="col-md-10 tab-content pl-0 pr-0 mt-30 border-1 bdc-ddd box-shadow-559">
+        {% for cba in citys_by_area %}
+        <div class="tab-pane in {% if forloop.first %}active{% endif %} col-md-12" id="area_{{cba.0.id}}">
+            <ul class="list-inline">
+                {% for cbp in cba.1 %}
+                <li class="col-md-12 col-xs-12">
+                    <div class="pt-10 pl-25">
+                        <span class="pr-10 line-height-25 h25 f14 fb">{{cbp.0.province}}</span>
+                    </div>
+                    <div class="pt-5 pb-15 pl-15 pr-25 f13 bottom-border bdc-eee ml-10">
+                        {% for city in cbp.1 %}
+                        {% if city.is_show %}
+                        <a href="{{city.get_url}}" class="no-unl no-hover-unl pr-10 line-height-25 h25 black-blue ws-nowrap">{{city.city}}</a>
+                        {% else %}
+                        <span class="no-unl no-hover-unl pr-10 line-height-25 h25 ws-nowrap">{{city.city}}</span>
+                        {% endif %}
+                        {% if not forloop.last %}<span class="co17 pr-10">|</span>{% endif %}
+                        {% endfor %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
+<div class="row pl-15 pr-15">
+    <div class="col-md-6">
+        <div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
+            <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">转载新闻</span>
+            <a href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news" class="f12 co8 pull-right">更多 »</a>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
+                <div class="left-border-4 bdc-light-zx pl-15">
+                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">禁止驾车时候使用手机，也不见得能减少事故发生</a></div>
+                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
+                </div>
+            </li>
+            <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
+                <div class="left-border-4 bdc-light-zx pl-15">
+                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">中国银行业协会：2013年银行托管资产达35万亿 托管业成互联网金融</a></div>
+                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
+                </div>
+            </li>
+            <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
+                <div class="left-border-4 bdc-light-zx pl-15">
+                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">CERO：2013年日本家用游戏市场规模缩水至40.95亿美元 </a></div>
+                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
+            <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">原创新闻</span>
+            <a href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news" class="f12 co8 pull-right">更多 »</a>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
+                <div class="left-border-4 bdc-light-zx pl-15">
+                    <div><a class="black-blue" href="#">微信公众号刷点击量生意火:15元刷千个</a></div>
+                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
+                </div>
+            </li>
+            <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
+                <div class="left-border-4 bdc-light-zx pl-15">
+                    <div><a class="black-blue" href="#">点评饭馆也用短视频 Yelp推出消费体验视频上传</a></div>
+                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
+                </div>
+            </li>
+            <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
+                <div class="left-border-4 bdc-light-zx pl-15">
+                    <div><a class="black-blue" href="#">GBTA：2013年中国商务旅行支出2250亿美元 市场份额达25%</a></div>
+                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
-
 {% endblock %}
