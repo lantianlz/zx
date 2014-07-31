@@ -40,6 +40,7 @@ urlpatterns = patterns('',
                        url(r'^stock/', include('www.stock.urls')),
 
                        url(r'^baidu_map$', 'www.misc.views.baidu_map'),
+                       url(r'^baidu_map.html$', 'www.misc.views.baidu_map'),
                        url(r'^sitemap.xml$', 'www.misc.views.sitemap'),
                        # url(r'^8efc199540223825b0fb2026cc9b8e39\.html$', 'www.misc.views.link_view'),
                        url(r'^(?P<txt_file_name>\w+)\.txt$', 'www.misc.views.txt_view'),
