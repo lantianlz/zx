@@ -14,6 +14,7 @@ db = interface.DepartmentBase()
 cmb = interface.CustomerManagerBase()
 flb = interface.FriendlyLinkBase()
 atb = interface.ArticleBase()
+nb = interface.NewsBase()
 
 
 def home(request, template_name='kaihu/home.html'):
@@ -21,6 +22,7 @@ def home(request, template_name='kaihu/home.html'):
     citys_by_area = cb.get_all_city_group_by_province()
     flinks = flb.get_friendly_link_by_link_type(link_type=1)
 
+    newses = nb.get_all_newses()[:10]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -83,11 +85,24 @@ def article_detail(request, article_id, template_name='kaihu/article_detail.html
 
 
 def news_list(request, template_name='kaihu/news_list.html'):
+    newses = nb.get_all_newses()
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(newses, count=20, page=page_num).info
+    newses = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def news_detail(request, news_id, template_name='kaihu/news_detail.html'):
+    news = nb.get_news_by_id(news_id)
+    if not news:
+        raise Http404
+
+    news_next = nb.get_next_news(news)
+    news_pre = nb.get_pre_news(news)
+    newses_related = nb.get_related_newses(news)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 # ===================================================ajax部分=================================================================#

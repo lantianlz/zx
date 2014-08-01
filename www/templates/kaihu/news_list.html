@@ -13,36 +13,23 @@
 {% block javascript %}
 {% endblock %}
 
-{% block title %}{{city.get_city_name_for_seo}}理财资讯{% endblock %}
+{% block title %}营业部新闻{% endblock %}
+{% block description %}营业部最新新闻{% endblock description %}
 
 {% block info_left %}
 <ul class="list-group pt-0">
+    {% for news in newses %}
     <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
         <div class="left-border-4 bdc-light-zx pl-15">
             <div>
-                <a class="black-blue f16" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">机器人抢了人类的工作？是人类自己在抢</a>
-                <span class="f12 co8 pull-right">2014-07-29 15:03:12</span>
+                <a class="black-blue f16" href="{{news.get_url}}">{{news.title}}</a>
+                <span class="f12 co8 pull-right">{{news.create_time|date:"Y-m-d"}}</span>
             </div>
-            <div class="co8 f12 pt-10 pb-5">2020年东京夏季奥运会似乎还有一段时间，不过日本首相安倍晋三已经开始策划，希望能把此次奥运会办成一届让人印象深刻的奥运会。他的妙招是什么？根据法新社报道，安倍希望...</div>
+            <div class="co8 f12 pt-10 pb-5">{{news.get_summary|safe}}</div>
         </div>
     </li>
-    <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
-        <div class="left-border-4 bdc-light-zx pl-15">
-            <div>
-                <a class="black-blue f16" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">中国银行业协会：2013年银行托管资产达35万亿 托管业成互联网金融</a>
-                <span class="f12 co8 pull-right">2014-07-29 15:03:12</span>
-            </div>
-            <div class="co8 f12 pt-10 pb-5">国际航空运输协会（以下简称“国际航协”）发布的最新两舱数据报告显示，5月份，全球两舱（头等舱、商务舱）客运量同比增长6.5%，航空客运需求在经历数月低迷后再度回弹...</div>
-        </div>
-    </li>
-    <li class="list-group-item pl-0 pr-0 no-l-r-bd bdc-eee">
-        <div class="left-border-4 bdc-light-zx pl-15">
-            <div>
-                <a class="black-blue f16" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">华尔街分析师眼中最有价值的信息图原来都长这样？</a>
-                <span class="f12 co8 pull-right">2014-07-29 15:03:12</span>
-            </div>
-            <div class="co8 f12 pt-10 pb-5">数据可视化已经成为了当下最热门的学科之一，随着大数据概念的兴起，现如今报告里不放几张图形花哨、配色艳丽的信息图都不好意思发布。...</div>
-        </div>
-    </li>
+    {% endfor %}
 </ul>
+<div class="blank10"></div>
+{{page_params|paging:request}}
 {% endblock info_left %}

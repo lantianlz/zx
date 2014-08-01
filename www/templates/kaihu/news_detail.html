@@ -9,93 +9,49 @@
 {% block javascript %}
 {% endblock %}
 
-{% block title %}{% endblock %}
 {% block keywords %}{% endblock %}
-{% block description %}{% endblock %}
+{% block title %}{{news.title}}{% endblock title %}
+{% block description %}{{news.title}}，智选{% endblock description %}
 
 {% block info_left %}
 <div class="text-center">
-	<h3 class="fb">Visual Works：日本地区乙女类游戏用户占比达86%</h3>
+	<h3 class="fb">{{news.title}}</h3>
 </div>
 <div>
-	<span class="pull-right co8 f12">2014-07-07 15:23:56</span>
+	<span class="pull-right co8 f12">{{news.create_time|date:"Y-m-d"}}</span>
 </div>
-<div class="f15 pt-25 line-height-25">
-	<p style="color: #333333;">
-		Visual Works最新的调查数据显示，乙女类手游的付费率达到34%，并且有67%的用户希望那些还没有推出手游版的乙女游戏也能够尽快登陆手游平台。
-	</p>
-	<p style="color: #333333;">
-		乙女类游戏是女性向游戏中的一支，其特点是玩家所扮演的主人公是女性。而那种主人公和其他可攻略角色都是男性的BL游戏虽然是女性向游戏，但不是乙女类游戏。而今天这组数据则是Visual Works于7月9日～24日，对Appmart的Android用户调查后得出的。
-	</p>
-	<p style="color: #333333;"> <strong>86%的用户玩过乙女类游戏，付费率达34%</strong>
-	</p>
-	<p style="color: #333333;">
-		直奔主题，调查数据显示受访用户中有86%曾经玩过乙女类手游，而在“是否曾在乙女类手游上有过付费行为”这一问题上，34%的用户选择了“是”。从这两个数据不难看出，在日本地区乙女类游戏除了拥有广泛的用户群之外，还有着颇高的付费率。当然，考虑到2014年上半年日本地区手游整体的付费率超过40%，乙女类手游的付费率也就显得不那么夸张了。
-	</p>
-	<p style="color: #333333; text-align: center;">
-		<img title="" src="http://www.199it.com/wp-content/uploads/2014/07/201407291109568091.jpg" alt="图片说明文字" data-bd-imgshare-binded="1"></p>
-	<p style="color: #333333; text-align: center;">是否玩过乙女游戏？（左）是否有过付费行为（右）</p>
-	<p style="color: #333333;"> <strong>插画比剧本和声优更重要</strong>
-	</p>
-	<p style="color: #333333;">
-		从了解渠道上来说，“WEB信息以及广告”以42%的比例成为用户知晓一款乙女类手游的最大契机，其次是应用商店的榜单（21%）。而就像男人爱看美女一样，女人同样爱看美男，而对于一款乙女类手游来说，游戏插画是用户下载与否的最重要因素，因为“喜欢游戏中的插画而下载“的用户占34%，这一比例甚至超过了“喜欢游戏中的剧情”（29%）和“喜欢游戏中登场的声优”（23%）。所以说，这个世界真的是看脸的，包括游戏世界。
-	</p>
-	<p style="color: #333333;">
-		<img class="aligncenter" title="" src="http://www.199it.com/wp-content/uploads/2014/07/201407291110075361.jpg" alt="图片说明文字" data-bd-imgshare-binded="1"></p>
-	<p style="color: #333333; text-align: center;">怎么了解乙女手游的？（左）选择下载的决定性因素是什么？（右）</p>
-	<p style="color: #333333;">
-		<strong>半数用户爱交流乙女手游信息</strong>
-	</p>
-	<p style="color: #333333;">
-		调查数据显示，57%的用户玩过“1～5款”乙女类手游，但值得注意的是“11～15款”（16%）、“15～20款”（4%）、“21款以上”（10%）这三项相加我们可以得出“30%的用户玩过10款以上乙女类手游”。这表明用户对乙女类手游的涉猎范围较为广泛并且有着较强的持续性。此外，用户之间的口碑营销也是乙女类手游的一个重要宣传渠道，56%的用户表示“会和身边的朋友谈及自己玩乙女类手游的事情”。
-	</p>
-	<p style="color: #333333; text-align: center;">
-		<img title="" src="http://www.199it.com/wp-content/uploads/2014/07/20140729111018681.jpg" alt="图片说明文字" data-bd-imgshare-binded="1"></p>
-	<p style="color: #333333; text-align: center;">玩过的乙女手游数量（左）、身边的人是否知晓（右）</p>
-	<p style="color: #333333;">
-		<strong>乙女手游仍然供不应求</strong>
-	</p>
-	<p style="color: #333333;">
-		最后在“是否想在手机上玩那些尚未APP化的乙女类游戏”这个问题上，67%的用户给予了肯定答案。这表明包括移植其他平台的乙女类游戏这种方式在内，乙女手游市场仍然对作品有着旺盛的需求。同时，还有15%的用户表示自己只玩乙女手游。
-	</p>
-	<p style="color: #333333; text-align: center;">
-		<img title="" src="http://www.199it.com/wp-content/uploads/2014/07/201407291110355071.jpg" alt="图片说明文字" data-bd-imgshare-binded="1"></p>
-	<p style="color: #333333; text-align: center;">是否想在手机平台上玩那些尚未APP化的作品？（左）、除了乙女类手游之外还玩其他手游吗？（右）</p>
-
-</div>
+<div class="f15 pt-25 line-height-25">{{news.content|safe}}</div>
 
 <!-- 上一篇 下一篇 -->
 <div class="bgc-fff top-border bottom-border bdc-eee row ml-0 mr-0 mt-35">
+	{% if news_pre %}
 	<div class="col-md-6 pt-20 pb-20 pl-50 pr">
-		<a href="#" class="black-blue">
+		<a href="{{news_pre.get_url}}" class="black-blue">
 			<span class="pa fa fa-angle-left f40 co8" style="left:15px;"></span>
-			<span class="f16 fb">HotelWifiTest：根据Wi-Fi速度来排名的酒店搜索</span>
+			<span class="f16 fb">{{news_pre.title}}</span>
 		</a>
 	</div>
+	{% endif %}
+	{% if news_next %}
 	<div class="col-md-6 pt-20 pb-20 pr-50 pr left-border bdc-eee">
-		<a href="#" class="black-blue">
+		<a href="{{news_next.get_url}}" class="black-blue">
 			<span class="pa fa fa-angle-right f40 co8" style="right:15px;"></span>
-			<span class="f16 fb">Google最新“登月”计划：利用基因数据解码人类健康</span>
+			<span class="f16 fb">{{news_next.title}}</span>
 		</a>
 	</div>
+	{% endif %}
 </div>
 
 <!-- 相关新闻 -->
 <div class="pt-20">
 	<div class="f16 pb-10">相关新闻</div>
 	<ul class="list-unstyled">
+		{% for news in newses_related %}
 		<li class="pb-5">
 			<span class="fa fa-caret-right"></span>
-			<a href="#" class="pl-5">Uber和Airbnb让共享经济走进商旅市场</a>
+			<a href="{{news.get_url}}" class="pl-5">{{news.title}}</a>
 		</li>
-		<li class="pb-5">
-			<span class="fa fa-caret-right"></span>
-			<a href="#" class="pl-5">为了提升购物体验，亚马逊做了这五件事</a>
-		</li>
-		<li class="pb-5">
-			<span class="fa fa-caret-right"></span>
-			<a href="#" class="pl-5">乔布斯曾预言用电脑延续天才大脑,实现人工智能</a>
-		</li>
+		{% endfor %}
 	</ul>
 </div>
 {% endblock info_left %}

@@ -8,7 +8,7 @@ from common import cache, debug, utils
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
-from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article
+from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article, News
 
 
 dict_err = {
@@ -465,3 +465,35 @@ class ArticleBase(object):
             return 99900, dict_err.get(99900)
 
         return 0, dict_err.get(0)
+
+
+class NewsBase(object):
+
+    def get_news_by_id(self, news_id, state=None):
+        try:
+            ps = dict(id=news_id)
+            if state is not None:
+                ps.update(dict(state=state))
+            return News.objects.get(**ps)
+        except News.DoesNotExist:
+            return None
+
+    def get_next_news(self, news):
+        newses = News.objects.filter(id__lt=news.id)
+        if newses:
+            return newses[0]
+
+    def get_pre_news(self, news):
+        newses = News.objects.filter(id__gt=news.id).order_by("id")
+        if newses:
+            return newses[0]
+
+    def get_related_newses(self, news):
+        return News.objects.filter(id__lt=news.id)[:3]
+
+    def get_all_newses(self, state=True):
+        objs = News.objects.all()
+        if state is not None:
+            objs = objs.filter(state=state)
+
+        return objs

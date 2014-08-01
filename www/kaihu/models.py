@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.conf import settings
+import datetime
 
 
 class Company(models.Model):
@@ -151,6 +152,30 @@ class Article(models.Model):
 
     def get_url(self):
         return '/kaihu/article/%s' % self.id
+
+    def get_summary(self):
+        """
+        @attention: 通过内容获取摘要
+        """
+        from common import utils
+        return utils.get_summary_from_html_by_sub(self.content)
+
+
+class News(models.Model):
+    title = models.CharField(max_length=64, unique=True)
+    content = models.TextField()
+    department_name = models.CharField(max_length=32, db_index=True)
+    from_url = models.CharField(max_length=250, unique=True)
+
+    sort_num = models.IntegerField(default=0, db_index=True)
+    state = models.BooleanField(default=True, db_index=True)
+    create_time = models.DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        ordering = ["-sort_num", "-create_time", "-id"]
+
+    def get_url(self):
+        return '/kaihu/news/%s' % self.id
 
     def get_summary(self):
         """

@@ -99,42 +99,14 @@ $(document).ready(function(){
         </div>
             
         <ul class="list-inline row pl-15 pr-15">
+            {% for news in newses %}
             <li class="pl-0 pr-0 pt-10 pb-10 no-l-r-bd bottom-border bdc-eee col-md-6">
                 <div class="left-border-4 bdc-light-zx pl-15">
-                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">禁止驾车时候使用手机，也不见得能减少事故发生</a></div>
-                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
+                    <div><a class="black-blue" href="{{news.get_url}}">{{news.title}}</a></div>
+                    <div class="co8 f12 pt-5">{{news.create_time|date:"Y-m-d"}}</div>
                 </div>
             </li>
-            <li class="pl-0 pr-0 pt-10 pb-10 no-l-r-bd bottom-border bdc-eee col-md-6">
-                <div class="left-border-4 bdc-light-zx pl-15">
-                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">禁止驾车时候使用手机，也不见得能减少事故发生</a></div>
-                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
-                </div>
-            </li>
-            <li class="pl-0 pr-0 pt-10 pb-10 no-l-r-bd bottom-border bdc-eee col-md-6">
-                <div class="left-border-4 bdc-light-zx pl-15">
-                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">禁止驾车时候使用手机，也不见得能减少事故发生</a></div>
-                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
-                </div>
-            </li>
-            <li class="pl-0 pr-0 pt-10 pb-10 no-l-r-bd bottom-border bdc-eee col-md-6">
-                <div class="left-border-4 bdc-light-zx pl-15">
-                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">禁止驾车时候使用手机，也不见得能减少事故发生</a></div>
-                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
-                </div>
-            </li>
-            <li class="pl-0 pr-0 pt-10 pb-10 no-l-r-bd bottom-border bdc-eee col-md-6">
-                <div class="left-border-4 bdc-light-zx pl-15">
-                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">禁止驾车时候使用手机，也不见得能减少事故发生</a></div>
-                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
-                </div>
-            </li>
-            <li class="pl-0 pr-0 pt-10 pb-10 no-l-r-bd bottom-border bdc-eee col-md-6">
-                <div class="left-border-4 bdc-light-zx pl-15">
-                    <div><a class="black-blue" href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}/kaihu/news/1">禁止驾车时候使用手机，也不见得能减少事故发生</a></div>
-                    <div class="co8 f12 pt-5">2014-07-29 15:03:12</div>
-                </div>
-            </li>
+            {% endfor %}
         </ul>
     </div>
     
