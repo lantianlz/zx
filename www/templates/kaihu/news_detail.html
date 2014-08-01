@@ -24,22 +24,22 @@
 
 <!-- 上一篇 下一篇 -->
 <div class="bgc-fff top-border bottom-border bdc-eee row ml-0 mr-0 mt-35">
-	{% if news_pre %}
 	<div class="col-md-6 pt-20 pb-20 pl-50 pr">
+		{% if news_pre %}
 		<a href="{{news_pre.get_url}}" class="black-blue">
 			<span class="pa fa fa-angle-left f40 co8" style="left:15px;"></span>
 			<span class="f16 fb">{{news_pre.title}}</span>
 		</a>
+		{% endif %}
 	</div>
-	{% endif %}
-	{% if news_next %}
 	<div class="col-md-6 pt-20 pb-20 pr-50 pr left-border bdc-eee">
+		{% if news_next %}
 		<a href="{{news_next.get_url}}" class="black-blue">
 			<span class="pa fa fa-angle-right f40 co8" style="right:15px;"></span>
 			<span class="f16 fb">{{news_next.title}}</span>
 		</a>
+		{% endif %}
 	</div>
-	{% endif %}
 </div>
 
 <!-- 相关新闻 -->
