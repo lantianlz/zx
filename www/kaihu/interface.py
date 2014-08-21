@@ -127,6 +127,16 @@ class DepartmentBase(object):
         if not department:
             return 50101, dict_err.get(50101)
 
+        company_id = kwargs.get("company_id")
+        if company_id and str(company_id) != str(department.company_id):
+            old_company = department.company
+            old_company.department_count -= 1
+            old_company.save()
+
+            new_company = CompanyBase().get_company_by_id(company_id)
+            new_company.department_count += 1
+            new_company.save()
+
         try:
             for k, v in kwargs.items():
                 setattr(department, k, v)
@@ -389,6 +399,15 @@ class CompanyBase(object):
         if company_name:
             companys = Company.objects.filter(name__contains=company_name)
         return companys
+
+    def get_company_by_id(self, company_id, state=True):
+        try:
+            ps = dict(id=company_id)
+            if state is not None:
+                ps.update(dict(state=True))
+            return Company.objects.get(**ps)
+        except Company.DoesNotExist:
+            return None
 
 
 class ArticleBase(object):

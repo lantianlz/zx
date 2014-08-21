@@ -60,7 +60,7 @@ def question_admin_required(func):
 def answer_required(func):
     def _decorator(self, answer_id_or_object, *args, **kwargs):
         answer = answer_id_or_object
-        if not isinstance(answer_id_or_object, Question):
+        if not isinstance(answer_id_or_object, Answer):
             try:
                 answer = Answer.objects.select_related('question').get(id=answer_id_or_object, state=True)
             except Answer.DoesNotExist:
@@ -107,7 +107,7 @@ class QuestionBase(object):
             return 20103, dict_err.get(20103)
         return 0, dict_err.get(0)
 
-    def validata_question_element(self, question_title, question_content):
+    def validate_question_element(self, question_title, question_content):
         errcode, errmsg = self.validate_title(question_title)
         if not errcode == 0:
             return errcode, errmsg
@@ -129,7 +129,7 @@ class QuestionBase(object):
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            errcode, errmsg = self.validata_question_element(question_title, question_content)
+            errcode, errmsg = self.validate_question_element(question_title, question_content)
             if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
                 return errcode, errmsg
@@ -165,7 +165,7 @@ class QuestionBase(object):
             question_title = utils.filter_script(question_title)
             question_content = utils.filter_script(question_content)
 
-            errcode, errmsg = self.validata_question_element(question_title, question_content)
+            errcode, errmsg = self.validate_question_element(question_title, question_content)
             if not errcode == 0:
                 transaction.rollback(using=QUESTION_DB)
                 return errcode, errmsg

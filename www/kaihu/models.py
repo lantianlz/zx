@@ -90,7 +90,7 @@ class City(models.Model):
         '''
         @note: 临时使用，只展示部分城市
         '''
-        return self.city[:2] in (u'成都', u'重庆')
+        return self.city[:2] in (u'成都', u'重庆', u'绵阳')
 
 
 class CustomerManager(models.Model):
