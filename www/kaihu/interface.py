@@ -85,7 +85,8 @@ class DepartmentBase(object):
         return Department.objects.select_related('company').all()
 
     def get_departments_by_city_id(self, city_id):
-        return list(self.get_all_departments().filter(city_id=city_id))
+        # return list(self.get_all_departments().filter(city_id=city_id))
+        return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None))
 
     def get_departments_by_random(self, city_id):
         return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None).order_by('?'))

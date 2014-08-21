@@ -74,6 +74,7 @@ class City(models.Model):
     location_type = models.IntegerField(choices=location_type_choices, db_index=True, null=True)
     province_type = models.IntegerField(choices=province_type_choices, db_index=True, null=True)
     sort_num = models.IntegerField(default=0, db_index=True)
+    is_show = models.BooleanField(default=False, db_index=True)
 
     class Meta:
         ordering = ["-sort_num", "id"]
@@ -86,11 +87,11 @@ class City(models.Model):
     def get_city_name_for_seo(self):
         return self.city.replace(u'市', '')
 
-    def is_show(self):
-        '''
-        @note: 临时使用，只展示部分城市
-        '''
-        return self.city[:2] in (u'成都', u'重庆', u'绵阳')
+    # def is_show(self):
+    #     '''
+    #     @note: 临时使用，只展示部分城市
+    #     '''
+    #     return self.city[:2] in (u'成都', u'重庆')
 
 
 class CustomerManager(models.Model):
