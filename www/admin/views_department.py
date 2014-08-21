@@ -120,11 +120,11 @@ def modify_department(request):
     name = request.REQUEST.get('name')
     sort_num = request.REQUEST.get('sort')
     tel = request.REQUEST.get('tel')
-    # city_id = request.REQUEST.get('belong_city')
+    city_id = request.REQUEST.get('belong_city')
     # company_id = request.REQUEST.get('belong_company')
     addr = request.REQUEST.get('addr')
     des = request.REQUEST.get('des')
 
     return DepartmentBase().modify_department(
-        department_id, name=name, sort_num=sort_num, tel=tel, addr=addr, des=des
+        department_id, name=name, sort_num=sort_num, tel=tel, addr=addr, des=des, city_id=city_id
     )
