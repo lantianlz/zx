@@ -79,6 +79,12 @@ PERMISSIONS = [
     {'code': 'modify_topic', 'name': u'修改话题', 'parent': 'topic_manage'},
     #{'code': 'remove_topic', 'name': u'查询全站通告', 'parent': 'topic_manage'},
 
+    {'code': 'city_manage', 'name': u'城市管理', 'parent': None},
+    #{'code': 'add_city', 'name': u'添加城市', 'parent': 'city_manage'},
+    {'code': 'query_city', 'name': u'查询城市', 'parent': 'city_manage'},
+    {'code': 'modify_city', 'name': u'修改城市', 'parent': 'city_manage'},
+    #{'code': 'remove_city', 'name': u'删除营业部', 'parent': 'city_manage'},
+
     {'code': 'department_manage', 'name': u'营业部管理', 'parent': None},
     #{'code': 'add_department', 'name': u'添加营业部', 'parent': 'department_manage'},
     {'code': 'query_department', 'name': u'查询营业部', 'parent': 'department_manage'},

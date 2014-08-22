@@ -42,7 +42,7 @@ def format_city(objs, num):
     return data
 
 
-@verify_permission('query_department')
+@verify_permission('query_city')
 def search(request):
     data = []
 
@@ -64,7 +64,7 @@ def search(request):
     )
 
 
-@verify_permission('query_department')
+@verify_permission('query_city')
 def get_city_by_id(request):
     city_id = request.REQUEST.get('city_id')
 
@@ -73,7 +73,7 @@ def get_city_by_id(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@verify_permission('modify_department')
+@verify_permission('modify_city')
 @common_ajax_response
 def modify_city(request):
     city_id = request.REQUEST.get('city_id')

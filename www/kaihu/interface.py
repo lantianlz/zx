@@ -17,6 +17,8 @@ dict_err = {
     50102: u'找不到指定客户经理',
     50103: u'找不到指定友情链接',
     50104: u'找不到指定资讯',
+    50105: u'城市拼音重复',
+    50106: u'城市拼音简写重复',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -55,6 +57,12 @@ class CityBase(object):
     def get_city_by_pinyin_abbr(self, pinyin_abbr):
         if pinyin_abbr:
             citys = self.get_all_citys().filter(pinyin_abbr=pinyin_abbr)
+            if citys:
+                return citys[0]
+
+    def get_city_by_pinyin(self, pinyin):
+        if pinyin:
+            citys = self.get_all_citys().filter(pinyin=pinyin)
             if citys:
                 return citys[0]
 
@@ -100,6 +108,16 @@ class CityBase(object):
 
         if not city:
             return 99800, dict_err.get(99800)
+
+        if kwargs.get('pinyin'):
+            temp = self.get_city_by_pinyin(kwargs.get('pinyin'))
+            if temp and temp.id != city.id:
+                return 50105, dict_err.get(50105)
+
+        if kwargs.get('pinyin_abbr'):
+            temp = self.get_city_by_pinyin_abbr(kwargs.get('pinyin_abbr'))
+            if temp and temp.id != city.id:
+                return 50106, dict_err.get(50106)
 
         try:
             for k, v in kwargs.items():
