@@ -92,6 +92,15 @@ urlpatterns += patterns('www.admin.views_friendly_link',
                         url(r'^kaihu/friendly_link/search$', 'search'),
                         url(r'^kaihu/friendly_link$', 'friendly_link'),
                         )
+# 城市
+urlpatterns += patterns('www.admin.views_city',
+
+                        url(r'^kaihu/city/modify_city$', 'modify_city'),
+                        url(r'^kaihu/city/get_city_by_id$', 'get_city_by_id'),
+                        url(r'^kaihu/city/search$', 'search'),
+                        url(r'^kaihu/city$', 'city'),
+                        )
+
 # 营业部
 urlpatterns += patterns('www.admin.views_department',
 

@@ -31,6 +31,9 @@ class CityBase(object):
     def get_all_areas(self):
         return City.objects.filter(location_type=0)
 
+    def get_all_provinces(self):
+        return City.objects.filter(location_type=1)
+
     def get_all_citys(self):
         return City.objects.filter(location_type=2)
 
@@ -74,6 +77,41 @@ class CityBase(object):
         if objs:
             return objs[0]
         return None
+
+    def get_province_by_id(self, province_id):
+        objs = self.get_all_provinces().filter(id=province_id)
+        if objs:
+            return objs[0]
+
+    def search_citys_for_admin(self, city_name):
+        citys = self.get_all_citys()
+
+        if city_name:
+            citys = citys.filter(city__contains=city_name)
+
+        return citys
+
+    def modify_city(self, city_id, **kwargs):
+
+        if not city_id:
+            return 99800, dict_err.get(99800)
+
+        city = self.get_city_by_id(city_id)
+
+        if not city:
+            return 99800, dict_err.get(99800)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(city, k, v)
+
+            city.save()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
 
 
 class DepartmentBase(object):

@@ -105,9 +105,9 @@
 }
 .min-w140{min-width: 140px;}
 .min-w100{min-width: 100px;}
-.min-w600{min-width: 600px;}
+.min-w400{min-width: 400px;}
 @media(max-width: 768px){
-    .min-w600{
+    .min-w400{
         width: auto;
         min-width: 0;
     }

@@ -1476,7 +1476,7 @@ if (!String.format) {
     */
     $.ZXNotice.TopNotice = function(type, content, closeSeconds){
         var noticeHtml = [
-                '<div class="alert alert-dismissable pf box-shadow-224 border-radius-2 co3 min-w600 zx-top-notice zx-{0}-notice">',
+                '<div class="alert alert-dismissable pf box-shadow-224 border-radius-2 co3 min-w400 zx-top-notice zx-{0}-notice">',
                     '<button type="button" class="close" aria-hidden="true">',
                         '<span class="glyphicon glyphicon-remove-circle co3 f18 pointer"></span>',
                     '</button>',
