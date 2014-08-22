@@ -17,7 +17,7 @@ def stock_home(request, template_name='stock/stock_home.html'):
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(stock_feeds, count=100, page=page_num).info
+    page_objs = page.Cpt(stock_feeds, count=10, page=page_num).info
     stock_feeds = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
@@ -34,7 +34,7 @@ def stock_detail(request, stock_code, template_name='stock/stock_detail.html'):
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(stock_feeds, count=100, page=page_num).info
+    page_objs = page.Cpt(stock_feeds, count=10, page=page_num).info
     stock_feeds = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
@@ -54,7 +54,7 @@ def stock_all(request, template_name='stock/stock_all.html'):
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(stocks, count=50, page=page_num).info
+    page_objs = page.Cpt(stocks, count=20, page=page_num).info
     stocks = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
