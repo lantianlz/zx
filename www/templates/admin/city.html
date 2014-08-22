@@ -294,7 +294,13 @@ $(document).ready(function(){
             <td><%= city.pinyin %></td>
             <td><%= city.pinyinAbbr %></td>
             <td><%= city.sort %></td>
-            <td><%= city.isShow %></td>
+            <td>
+                <% if(!city.isShow){ %>
+                <span class="glyphicon glyphicon-remove cl_red" title="未开放"></span>
+                <% } else { %>
+                <span class="glyphicon glyphicon-ok co-zx" title="已开放"></span>
+                <% } %>
+            </td>
         </tr>
     <% }) %>
 </script>
