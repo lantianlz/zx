@@ -85,13 +85,11 @@ class City(models.Model):
         return ''
 
     def get_city_name_for_seo(self):
-        return self.city.replace(u'市', '')
-
-    # def is_show(self):
-    #     '''
-    #     @note: 临时使用，只展示部分城市
-    #     '''
-    #     return self.city[:2] in (u'成都', u'重庆')
+        keys = [u"市", u"自治州", u"地区"]
+        name = self.city
+        for key in keys:
+            name = name.replace(key, '')
+        return name
 
 
 class CustomerManager(models.Model):
