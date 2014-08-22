@@ -38,6 +38,7 @@ urlpatterns = patterns('',
                        url(r'^kaihu/', include('www.kaihu.urls')),
                        url(r'^admin/', include('www.admin.urls')),
                        url(r'^stock/', include('www.stock.urls')),
+                       url(r'^toutiao/', include('www.toutiao.urls')),
 
                        url(r'^baidu_map$', 'www.misc.views.baidu_map'),
                        url(r'^baidu_map.html$', 'www.misc.views.baidu_map'),

@@ -1,0 +1,8 @@
+# -*- coding: utf-8 -*-
+
+from django.conf.urls import patterns, url
+
+urlpatterns = patterns('www.toutiao.views',
+                       url(r'^$', 'toutiao_list'),
+                       url(r'^(?P<toutiao_id>\d+)$', 'toutiao_detail'),
+                       )

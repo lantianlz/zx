@@ -46,6 +46,7 @@
 .f22{font-size: 22px}
 .f24{font-size: 24px}
 .f25{font-size: 25px}
+.f28{font-size: 28px}
 .f30{font-size: 30px;}
 .f35{font-size: 35px;}
 .f37{font-size: 37px;}
@@ -254,8 +255,9 @@
 .co20{color: #eee;}
 .co21{color: #555;}
 .co22{color: #bbb;}
-.co23{color: #C20A0A}
-.co24{color: #8ED0F3}
+.co23{color: #C20A0A;}
+.co24{color: #8ED0F3;}
+.co25{color: #db4c3b;}
 
 .textindent2{text-indent:32px;}
 .textindent0{text-indent: 0;}

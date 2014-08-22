@@ -50,7 +50,10 @@
                     <a href="{{MAIN_DOMAIN}}/zt/">专题</a>
                 </li>
                 <li {% if '/stock' in request.path %} class="active" {% endif %}>
-                    <a href="{{MAIN_DOMAIN}}/stock/">股票动态</a>
+                    <a href="{{MAIN_DOMAIN}}/stock/">股票</a>
+                </li>
+                <li>
+                    <a href="{{MAIN_DOMAIN}}/toutiao/" target="_blank" >头条</a>
                 </li>
 
                 {% if request.sub_domain == "www" %}

@@ -52,23 +52,6 @@
     <body>
         {% block container_head %}{% endblock container_head %}
 
-        <div class="zx-alert">
-            {% if success_msg %}
-            <div class="alert alert-success popmsg container zx-container box-shadow-224 border-radius-0 none">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{success_msg}}
-            </div>
-            {% endif %}
-
-            {% if error_msg %}
-                <div class="alert alert-danger alert-dismissable container zx-container box-shadow-224 border-radius-0 none">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{error_msg}}
-                </div>
-            {% endif %}
-            {% block alert %}{% endblock %}
-        </div>
-
         <div class="scroll-top"></div>
 
         {% block base_container %}
@@ -96,6 +79,28 @@
         <script type="text/javascript" src="{{MEDIA_URL}}js/common.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/site.js?v={{MEDIA_VERSION}}"></script>
         <script type="text/javascript">
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         佛祖保佑       永无BUG
+*/
             var MEDIA_URL = '{{MEDIA_URL|default:''}}',
                 CURRENT_USER_ID = "{{request.user.id|default:''}}",
                 ERROR_MSG = '{{error_msg|default:''}}',
