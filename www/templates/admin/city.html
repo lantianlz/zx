@@ -287,12 +287,12 @@ $(document).ready(function(){
 <!-- 客户经理列表 -->
 <script type="text/template" id="city_template">
     <% _.each(citys, function(city){ %>
-        <tr class="pointer" data-city_id="<%= city.cityId %>">
+        <tr>
             <td><%= city.num %></td>
-            <td><%= city.cityName %></td>
-            <td><%= city.provinceName %></td>
-            <td><%= city.pinyin %></td>
-            <td><%= city.pinyinAbbr %></td>
+            <td><a href="http://<%= city.pinyinAbbr %>.{{SERVER_DOMAIN}}" target="_blank"><%= city.cityName %></a></td>
+            <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.provinceName %></td>
+            <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.pinyin %></td>
+            <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.pinyinAbbr %></td>
             <td><%= city.sort %></td>
             <td>
                 <% if(!city.isShow){ %>
