@@ -50,17 +50,18 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, city, pageIndex){
+        search: function(name, city, linkType, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/kaihu/friendly_link/search", 
-                {'name': name||'', 'city_name': city||'', 'page_index': pageIndex||1}, 
+                {'name': name||'', 'city_name': city||'', 'link_type': linkType||0, 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
                     me.name = name||'';
                     me.city = city||'';
+                    me.linkType = linkType||0;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
@@ -152,7 +153,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name + '/' + this.collection.city
+                'search/' + this.collection.name + '/' + this.collection.city + '/' + this.collection.linkType
             );
         },
 
@@ -162,10 +163,11 @@ $(document).ready(function(){
         },
 
         searchFriendlyLink: function(){
-            var name = this.$('.key-word-name').val(),
+            var linkType = this.$('.linkType').val(),
+                name = this.$('.key-word-name').val(),
                 city = this.$('.key-word-city').val();
 
-            router.navigate(String.format('/search/{0}/{1}/1', name, city), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/{2}/1', name, city, linkType), {trigger: true});
         },
 
         modifyFriendlyLink: function(sender){
@@ -339,13 +341,13 @@ $(document).ready(function(){
         routes: {
             "":                                     "search",
             "modify/:linkId":                       "modify",
-            "search/(:name)/(:city)/:pageIndex":    "search",
+            "search/(:name)/(:city)/(:linkType)/:pageIndex":    "search",
             "add":                                  "add"
         },
 
         // 查询
-        search: function(name, city, pageIndex){
-            friendlyLinks.search(name||'', city||'', pageIndex||1);
+        search: function(name, city, linkType, pageIndex){
+            friendlyLinks.search(name||'', city||'', linkType||0, pageIndex||1);
         },
 
         // 显示修改界面
@@ -389,6 +391,13 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="friendly_link_list">
+        <div class="pl-5 pr-5 pb-10 col-md-3">
+            <select class="form-control input-sm linkType">
+                {% for i in link_types %}
+                    <option value="{{i.value}}">{{i.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="pl-0 pr-0 pb-10 col-md-2">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control key-word-name" placeholder="输入链接名称..." />

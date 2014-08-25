@@ -91,8 +91,8 @@ class CityBase(object):
         if objs:
             return objs[0]
 
-    def search_citys_for_admin(self, city_name):
-        citys = self.get_all_citys()
+    def search_citys_for_admin(self, city_name, is_show=0):
+        citys = self.get_all_citys().filter(is_show=is_show)
 
         if city_name:
             citys = citys.filter(city__contains=city_name)
@@ -444,6 +444,18 @@ class FriendlyLinkBase(object):
 
         self.get_all_friendly_link(must_update_cache=True)
         return 0, dict_err.get(0)
+
+    def search_links_for_admin(self, link_type=0, name=None, city_id=None):
+
+        objs = self.get_all_friendly_link(state=None).filter(link_type=link_type)
+
+        if name:
+            objs = objs.filter(name__contains=name)
+
+        if city_id:
+            objs = objs.filter(city_id=city_id)
+
+        return objs
 
 
 class CompanyBase(object):
