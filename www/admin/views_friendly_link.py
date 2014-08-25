@@ -64,23 +64,18 @@ def search(request):
     flb = FriendlyLinkBase()
     fls = []
 
+    link_type = request.REQUEST.get('link_type')
     name = request.REQUEST.get('name')
     city_name = request.REQUEST.get('city_name')
     page_index = int(request.REQUEST.get('page_index'))
 
-    if name:
-        fls = FriendlyLinkBase().get_friendly_link_by_name(name)
-    else:
-        # 获取所有正常与不正常的客户经理
-        fls = flb.get_all_friendly_link(state=None)
+    city_id = None
+    if city_name:
+        temp = CityBase().get_one_city_by_name(city_name)
+        if temp:
+            city_id = temp.id
 
-        # 城市
-        if city_name:
-            city = CityBase().get_one_city_by_name(city_name)
-            if city:
-                fls = fls.filter(city_id=city.id)
-            else:
-                fls = []
+    fls = flb.search_links_for_admin(link_type, name, city_id)
 
     page_objs = page.Cpt(fls, count=10, page=page_index).info
 
