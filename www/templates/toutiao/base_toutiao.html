@@ -1,6 +1,8 @@
 {% extends "base/base.html" %}
 {% load custom_filters %}
 
+{% block title_tail %} - 智选头条{% endblock title_tail %}
+
 {% block base_css %}
 <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/site/_toutiao.css?v={{MEDIA_VERSION}}" />
 {% block css %}{% endblock %}
