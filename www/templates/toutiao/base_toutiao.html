@@ -56,15 +56,15 @@
 {% endblock container_head %}
 
 {% block container %}
-<div class="container_content row pt-10">
-    <div class="zx-container-main col-xs-12 col-md-8">
+<div class="container_content row pt-0 pr">
+    <div class="zx-container-main box-shadow-016 bgc-fff col-xs-12 col-md-8 pl-0 pr-0">
         {% block main %}
 
         {% endblock %}
     </div>
-    <div class="zx-container-main col-xs-12 col-md-4 pl-50">
+    <div class="zx-container-right pa col-xs-12 col-md-offset-8 col-md-4 pl-0" style="right: -10px;">
         {% block right %}
-        <div class="pr">
+        <div class="pr pt-15 box-shadow-016 bgc-fff pl-15 pr-15">
             <img class="avatar-45 pa" alt="股票行情资讯" src="http://img01.sogoucdn.com/app/a/100520090/oIWsFtx2GIhkF1ZS1GqZ6Uowr3nY">
             <div class="pl-55">
                 <div>
@@ -84,27 +84,33 @@
             </div>
         </div>
 
-        <div class="pb-5 pt-25">
-            <span class="f16 fb">热门头条</span>
+        <div class="box-shadow-016 bgc-fff mt-15 pl-15 pr-15">
+            <div class="pb-5 pt-15 bottom-border bdc-ddd">
+                <span class="f16 fb">热门头条</span>
+            </div>
+            <ul class="list-group f13 pt-5 pb-10">
+                <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
+                    <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
+                    <a href="#" class="pl-5">且看“面痴”陈克明如何用29年把挂面做到中国第一</a>
+                </li>
+                <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
+                    <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
+                    <a href="#" class="pl-5">一个537亿的并购帝国是如何建成的?</a>
+                </li>
+                <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
+                    <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
+                    <a href="#" class="pl-5">全球商讯汇编 三星现金胜苹果; 手游大蛋糕; 麦当劳店被关</a>
+                </li>
+                <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
+                    <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
+                    <a href="#" class="pl-5">顺丰CEO王卫:我25岁赚到人生第一桶金之后</a>
+                </li>
+                <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
+                    <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
+                    <a href="#" class="pl-5">全面解读——中国各大银行机构</a>
+                </li>
+            </ul>
         </div>
-        <ul class="list-group f13">
-            <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
-                <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
-                <a href="#" class="pl-5">且看“面痴”陈克明如何用29年把挂面做到中国第一</a>
-            </li>
-            <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
-                <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
-                <a href="#" class="pl-5">一个537亿的并购帝国是如何建成的?</a>
-            </li>
-            <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
-                <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
-                <a href="#" class="pl-5">全球商讯汇编 三星现金胜苹果; 手游大蛋糕; 麦当劳店被关</a>
-            </li>
-            <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
-                <span class="glyphicon glyphicon-fire co25 f12 pt-3"></span>
-                <a href="#" class="pl-5">顺丰CEO王卫:我25岁赚到人生第一桶金之后</a>
-            </li>
-        </ul>
         {% endblock %}
     </div>
 </div>
