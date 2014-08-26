@@ -232,6 +232,7 @@
 .cl_black{color: #000;}
 .cl_gray{color: gray;}
 .cl_red{color: red;}
+.cl_green{color: green;}
 .co-zx{color: #428bca;}
 .co1{color: #919191;}
 .co2{color: #545454;}
@@ -273,7 +274,7 @@
 .line-height-30{line-height: 30px;}
 .line-height-45{line-height: 45px;}
 
-a{color: #259;transition: color 0.5s;}
+a{color: #259;transition: color 0.3s;}
 a:focus {outline: none;-moz-outline: none;}
 a:hover{color: #259;}
 

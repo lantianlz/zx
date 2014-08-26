@@ -130,6 +130,11 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
     height: 100px;
 }
 
+.avatar-110{
+    width: 110px;
+    height: 110px;
+}
+
 .avatar-300{
     width: 300px;
     height: 300px;
@@ -215,7 +220,7 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
 .gray-a>a{
     color: #999999;
     padding-left: 10px;
-    transition: color 0.5s;
+    transition: color 0.3s;
 }
 
 .gary-a>a:hover{
@@ -225,7 +230,7 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
 .gray-a>li>a{
     color: #999999;
     padding-right: 10px;
-    transition: color 0.5s;
+    transition: color 0.3s;
 }
 
 .gary-a>li>a:hover{
@@ -234,7 +239,7 @@ body {padding-top: 0px; font-family: "Helvetica Neue",Helvetica,"Lucida Grande",
 
 .blue-a>a{
     color: #224e73;
-    transition: color 0.5s;
+    transition: color 0.3s;
 }
 
 .blue-a>a:hover{
