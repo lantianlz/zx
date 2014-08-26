@@ -1,16 +1,30 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
+# -*- coding: utf-8 -*-
+import sys
+import os
+from pprint import pprint
 
-Replace this with more appropriate tests for your application.
-"""
+# 引入父目录来引入其他模块
+SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
+                 os.path.abspath(os.path.join(SITE_ROOT, '../../')),
+                 os.path.abspath(os.path.join(SITE_ROOT, '../../../')),
+                 ])
+os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
-from django.test import TestCase
+import datetime
+from common import utils
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+from www.toutiao import interface
+wmp = interface.WeixinMpBase()
+atb = interface.ArticleTypeBase()
+
+
+def test():
+    ts = wmp.get_mp_info_by_open_id("oIWsFt9BhOlk3j8cZi8xcqMzc26c")
+    # print wmp.add_mp(*ts)
+    print atb.add_article_type(name="综合财经", domain="zhcj")
+
+
+if __name__ == '__main__':
+    test()
