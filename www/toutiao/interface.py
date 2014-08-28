@@ -54,6 +54,12 @@ class ArticleTypeBase(object):
 
         return objs
 
+    def get_type_by_domain(self, domain):
+        try:
+            return ArticleType.objects.get(domain=domain)
+        except ArticleType.DoesNotExist:
+            return None
+
     def get_type_by_id(self, type_id, state=None):
         if not type_id:
             return None
@@ -152,3 +158,6 @@ class ArticleBase(object):
         if state is not None:
             ps.update(dict(state=state))
         return Article.objects.select_related("weixin_mp").filter(**ps)
+
+    def get_articles_by_type(self, article_type):
+        return Article.objects.select_related("weixin_mp").filter(article_type=article_type)

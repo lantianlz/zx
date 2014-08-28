@@ -2,7 +2,8 @@
 {% load custom_filters %}
 {% load custom_tags %}
 
-{% block title %}首页{% endblock %}
+{% block title %}财经微头条{% endblock %}
+{% block title_tail %}{% endblock title_tail %}
 
 {% block css %}
 <style type="text/css">
@@ -28,7 +29,7 @@
 				<h4 class="mt-5">
 	                <a class="black-blue fb" href="{{article.get_url}}">{{article.title|str_display:23}}</a>
 	            </h4>
-	            <div class="f13 line-height-22">{{article.get_summary|str_display:60}}</div>
+	            <div class="f13 line-height-22">{{article.get_summary|str_display:65}}</div>
 	            <div class="pt-5">
 	            	<a class="f12" href="{{article.weixin_mp.get_url}}">{{article.weixin_mp.name}}</a>
 	            	<span class="f12 co8 pl-10">{{article.create_time}}</span>
@@ -43,94 +44,7 @@
 		</div>
 	</li>
 	{% endfor %}
-
-	<li class="list-group-item bdc-ccc pb-10">
-		<div class="row pl-0 pr-0">
-			<div class="col-md-9">
-				<h4 class="mt-5">
-	                <a class="black-blue fb" href="/toutiao/421">长江观点 廖建文:不一样的创业时代</a>
-	            </h4>
-	            <div class="f13 line-height-22">
-	            	编者按:2014年8月16日,深圳, 在“如日之升 产融互兴”长江商学院FMBA五周年庆典论坛中,长江FMBA用独特的方式来纪念自己...
-	            </div>
-	            <div class="pt-5">
-	            	<a class="f12" href="/topic/ggfx">长江商学院</a>
-	            	<span class="f12 co8 pl-10">2014-08-20 14:45:12</span>
-	            	<span class="glyphicon glyphicon-fire pull-right co25 f12 pt-3">235</span>
-	            </div>
-			</div>
-			<div class="col-md-3 pl-5">
-				<a href="#">
-					<img class="w" src="http://wttcollect-public.stor.sinaapp.com/Public/article_thumb/5831.jpg">
-				</a>
-			</div>
-		</div>
-	</li>
-	<li class="list-group-item bdc-ccc pb-10">
-		<div class="row pl-0 pr-0">
-			<div class="col-md-9">
-				<h4 class="mt-5">
-	                <a class="black-blue fb" href="/toutiao/421">私募股权投资公司“占领”华尔街</a>
-	            </h4>
-	            <div class="f13 line-height-22">
-	            	外媒近日刊文称，私募股权投资公司已经在华尔街占据了重要地位，其服务费和利润都在增长。外媒称，私募股权投资公司...
-	            </div>
-	            <div class="pt-5">
-	            	<a class="f12" href="/topic/ggfx">华尔街俱乐部</a>
-	            	<span class="f12 co8 pl-10">2014-08-20 14:45:12</span>
-	            	<span class="glyphicon glyphicon-fire pull-right co25 f12 pt-3">168</span>
-	            </div>
-			</div>
-			<div class="col-md-3 pl-5">
-				<a href="#">
-					<img class="w" src="http://mmbiz.qpic.cn/mmbiz/C4Qh133eV8fzzJE8n2qfODyHjuJnbIOjBSRQtMyc2DFK0oyFpobPmlIUnyC1MFB4icUUQG8xialricibIkKhmxwqicA/0">
-				</a>
-			</div>
-		</div>
-	</li>
-	<li class="list-group-item bdc-ccc pb-10">
-		<div class="row pl-0 pr-0">
-			<div class="col-md-9">
-				<h4 class="mt-5">
-	                <a class="black-blue fb" href="/toutiao/421">金融业，混圈子真的那么重要？</a>
-	            </h4>
-	            <div class="f13 line-height-22">
-	            	导读：在金融业混，谁以没有几个知心的哥们，谁又不想去抱下“粗腿”。有人认为，在金融业混，资源很重要，资源多的...
-	            </div>
-	            <div class="pt-5">
-	            	<a class="f12" href="/topic/ggfx">金融八卦女</a>
-	            	<span class="f12 co8 pl-10">2014-08-20 14:45:12</span>
-	            	<span class="glyphicon glyphicon-fire pull-right co25 f12 pt-3">361</span>
-	            </div>
-			</div>
-			<div class="col-md-3 pl-5">
-				<a href="#">
-					<img class="w" src="http://mmbiz.qpic.cn/mmbiz/6goBerXib5GyQ9Q0Lk0RwuU89wpibHpLoIsicwreib7tDicVHpfFWm7NnqZp7cFX71kLjpPwkCn5gywVcbfbhActgjQ/0">
-				</a>
-			</div>
-		</div>
-	</li>
-	<li class="list-group-item bdc-ccc pb-10">
-		<div class="row pl-0 pr-0">
-			<div class="col-md-9">
-				<h4 class="mt-5">
-	                <a class="black-blue fb" href="/toutiao/421">中国私募股权投资新玩法涌现 交易结构运作手法日渐成熟</a>
-	            </h4>
-	            <div class="f13 line-height-22">
-	            	中国证券网讯(记者 黄蕾)交易结构是指交易双方以合同条款的形式所确定的、协调与实现交易双方最终利益关系的...
-	            </div>
-	            <div class="pt-5">
-	            	<a class="f12" href="/topic/ggfx">华尔街俱乐部</a>
-	            	<span class="f12 co8 pl-10">2014-08-20 14:45:12</span>
-	            	<span class="glyphicon glyphicon-fire pull-right co25 f12 pt-3">143</span>
-	            </div>
-			</div>
-			<div class="col-md-3 pl-5">
-				<a href="#">
-					<img class="w" src="http://mmbiz.qpic.cn/mmbiz/C4Qh133eV8fzzJE8n2qfODyHjuJnbIOjZMDVFHuLrN78PKx50kYHtb1e2GXibnCAsNSz0e3IMGn6P6pM4bzfZiag/0">
-				</a>
-			</div>
-		</div>
-	</li>
 </ul>
+<div class="blank10"></div>
+{{page_params|paging:request}}
 {% endblock %}
