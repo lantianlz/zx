@@ -155,3 +155,14 @@ def hot_stock(context):
     stocks = StockBase().get_all_stocks()[:10]
 
     return render_to_response('stock/_hot_stock.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def toutiao_acticle_type_nav_display(context):
+    """
+    @note: 头条导航
+    """
+    from www.toutiao.interface import ArticleTypeBase
+    article_type = ArticleTypeBase().get_all_valid_article_type()
+    return render_to_response('toutiao/_toutiao_article_type_nav_display.html', locals(),
+                              context_instance=context).content

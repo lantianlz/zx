@@ -1,5 +1,6 @@
 {% extends "toutiao/base_toutiao.html" %}
 {% load custom_filters %}
+{% load custom_tags %}
 
 {% block title %}首页{% endblock %}
 
@@ -20,28 +21,29 @@
 
 {% block main %}
 <ul class="list-group toutiao-list mb-0">
+	{% for article in articles %}
 	<li class="list-group-item bdc-ccc pb-10">
 		<div class="row pl-0 pr-0">
 			<div class="col-md-9">
 				<h4 class="mt-5">
-	                <a class="black-blue fb" href="/toutiao/421">哈佛最重要一课:你要如何衡量你的人生</a>
+	                <a class="black-blue fb" href="{{article.get_url}}">{{article.title|str_display:23}}</a>
 	            </h4>
-	            <div class="f13 line-height-22">
-	            	我在哈佛商学院的课程体系是为了帮助我的学生们理解什么是好的管理理论，以及它是怎样构建的。在每一章，我们带着...
-	            </div>
+	            <div class="f13 line-height-22">{{article.get_summary|str_display:60}}</div>
 	            <div class="pt-5">
-	            	<a class="f12" href="/topic/ggfx">雪球投资</a>
-	            	<span class="f12 co8 pl-10">2014-08-20 14:45:12</span>
-	            	<span class="glyphicon glyphicon-fire pull-right co25 f12 pt-3">188</span>
+	            	<a class="f12" href="{{article.weixin_mp.get_url}}">{{article.weixin_mp.name}}</a>
+	            	<span class="f12 co8 pl-10">{{article.create_time}}</span>
+	            	<span class="glyphicon glyphicon-fire pull-right co25 f12 pt-3">{{article.views_count}}</span>
 	            </div>
 			</div>
 			<div class="col-md-3 pl-5">
-				<a href="#">
-					<img class="w" src="http://wttcollect-public.stor.sinaapp.com/Public/article_thumb/5834.jpg">
+				<a href="{{article.get_url}}">
+					<img class="w" src="{{article.img}}">
 				</a>
 			</div>
 		</div>
 	</li>
+	{% endfor %}
+
 	<li class="list-group-item bdc-ccc pb-10">
 		<div class="row pl-0 pr-0">
 			<div class="col-md-9">

@@ -3,9 +3,10 @@
 import requests
 from pyquery import PyQuery as pq
 
-# from common import cache, debug
+from common import cache
+from www.misc.decorators import cache_required
 from www.misc import consts
-from www.toutiao.models import ArticleType, WeixinMp
+from www.toutiao.models import ArticleType, WeixinMp, Article
 
 
 dict_err = {
@@ -36,7 +37,13 @@ class ArticleTypeBase(object):
             return 90104, dict_err.get(90104)
 
         at = ArticleType.objects.create(name=name, domain=domain, sort_num=sort_num)
+
+        self.get_all_valid_article_type(must_update_cache=True)
         return 0, at
+
+    @cache_required(cache_key='all_toutiao_article_type', expire=0, cache_config=cache.CACHE_STATIC)
+    def get_all_valid_article_type(self, must_update_cache=False):
+        return ArticleType.objects.filter(state=True)
 
 
 class WeixinMpBase(object):
@@ -85,3 +92,9 @@ class ArticleBase(object):
 
     def __init__(self):
         pass
+
+    def get_all_articles(self, state=True):
+        ps = dict()
+        if state is not None:
+            ps.update(dict(state=state))
+        return Article.objects.select_related("weixin_mp").filter(**ps)

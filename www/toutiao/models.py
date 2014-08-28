@@ -13,6 +13,9 @@ class ArticleType(models.Model):
     class Meta:
         ordering = ["-sort_num", "-id"]
 
+    def get_url(self):
+        return '/toutiao/type/%s' % self.domain
+
 
 class WeixinMp(models.Model):
     open_id = models.CharField(max_length=128, unique=True)
@@ -30,8 +33,8 @@ class WeixinMp(models.Model):
     class Meta:
         ordering = ["-sort_num", "-id"]
 
-    def get_sougou_url(self):
-        return u"http://weixin.sogou.com/gzh?openid=%s" % self.open_id
+    def get_url(self):
+        return '/toutiao/mp/%s' % self.id
 
 
 class Article(models.Model):
@@ -43,6 +46,7 @@ class Article(models.Model):
     from_url = models.CharField(max_length=250, unique=True, null=True)
     is_silence = models.BooleanField(default=False, db_index=True)  # 是否显示在首页中
     img = models.CharField(max_length=256)
+    views_count = models.IntegerField(default=0)
     sort_num = models.IntegerField(default=0, db_index=True)
     state = models.BooleanField(default=True, db_index=True)
     create_time = models.DateTimeField(default=datetime.datetime)
@@ -51,7 +55,7 @@ class Article(models.Model):
         ordering = ["-sort_num", "-id"]
 
     def get_url(self):
-        return '/kaihu/article/%s' % self.id
+        return '/toutiao/article/%s' % self.id
 
     def get_summary(self):
         """

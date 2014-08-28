@@ -1,0 +1,3 @@
+{% for at in article_type %}
+<li {% if request.path == at.get_url %} class="active"{% endif %}><a href="{{at.get_url}}">{{at.name}}</a></li>
+{% endfor %}
