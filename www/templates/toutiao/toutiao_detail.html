@@ -5,6 +5,9 @@
 {% block title %}{{article.title}}{% endblock %}
 
 {% block css %}
+<style type="text/css">
+    .content_body img{max-width: 100%;}
+</style>
 {% endblock %}
 
 {% block js %}
@@ -18,7 +21,7 @@
         <span class="pl-10">热度: {{article.views_count}}</span>
         <span class="pl-10">来源: <a href="{{article.weixin_mp.get_url}}" class="gray-gray">{{article.weixin_mp.name}}</a></span>
     </div>
-    <div class="line-height-25 pt-15 f16 pl-5 pr-5">{{article.content|safe}}</div>
+    <div class="line-height-25 pt-15 f16 pl-5 pr-5 content_body">{{article.content|safe}}</div>
     <div class="f12 pt-15">
         <div class="fb f14">
             <a href="{{article.from_url}}" target="_blank">微信原文链接</a> 

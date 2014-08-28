@@ -33,6 +33,7 @@ def toutiao_detail(request, article_id, template_name='toutiao/toutiao_detail.ht
     article = ab.get_article_by_id(article_id)
     if not article:
         raise Http404
+    article = ab.format_articles([article, ])[0]
     newsest_articles = ab.get_newsest_articles_by_weixin_mp(article)[:5]
     ab.add_article_view_count(article_id)
 

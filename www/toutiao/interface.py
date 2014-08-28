@@ -155,6 +155,11 @@ class ArticleBase(object):
     def __init__(self):
         pass
 
+    def format_articles(self, articles):
+        for article in articles:
+            article.content = article.content.replace("data-src=", "src=")
+        return articles
+
     def get_all_articles(self, state=True):
         ps = dict()
         if state is not None:
