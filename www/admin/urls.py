@@ -174,3 +174,13 @@ urlpatterns += patterns('www.admin.views_stock',
                         url(r'^stock/stock/search$', 'search'),
                         url(r'^stock/stock$', 'stock'),
                         )
+
+# 类型
+urlpatterns += patterns('www.admin.views_toutiao_type',
+
+                        url(r'^toutiao/toutiao_type/modify_type$', 'modify_type'),
+                        url(r'^toutiao/toutiao_type/get_type_by_id$', 'get_type_by_id'),
+                        url(r'^toutiao/toutiao_type/add_type$', 'add_type'),
+                        url(r'^toutiao/toutiao_type/search$', 'search'),
+                        url(r'^toutiao/toutiao_type$', 'toutiao_type'),
+                        )
