@@ -3,7 +3,7 @@
 import requests
 from pyquery import PyQuery as pq
 
-from common import cache
+from common import cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.toutiao.models import ArticleType, WeixinMp, Article
@@ -15,6 +15,7 @@ dict_err = {
     90102: u'公众号id重复',
     90103: u'类型名称重复',
     90104: u'类型域名重复',
+    90105: u'找不到对应的头条类型',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -44,6 +45,59 @@ class ArticleTypeBase(object):
     @cache_required(cache_key='all_toutiao_article_type', expire=0, cache_config=cache.CACHE_STATIC)
     def get_all_valid_article_type(self, must_update_cache=False):
         return ArticleType.objects.filter(state=True)
+
+    def get_article_types(self, state=None):
+        objs = ArticleType.objects.all()
+
+        if state is not None:
+            objs = objs.filter(state=state)
+
+        return objs
+
+    def get_type_by_id(self, type_id, state=None):
+        if not type_id:
+            return None
+
+        objs = ArticleType.objects.filter(id=type_id)
+
+        if state:
+            objs = objs.filter(state=state)
+
+        if not objs:
+            return None
+
+        return objs[0]
+
+    def modify_article_type(self, type_id, name, domain, sort_num=0, state=True):
+        if None in (name, domain):
+            return 99800, dict_err.get(99800)
+
+        objs = ArticleType.objects.filter(id=type_id)
+        if not objs:
+            return 90105, dict_err.get(90105)
+
+        objs = objs[0]
+
+        temp = ArticleType.objects.filter(name=name)
+        if temp and objs.id != temp[0].id:
+            return 90103, dict_err.get(90103)
+
+        temp = ArticleType.objects.filter(domain=domain)
+        if temp and objs.id != temp[0].id:
+            return 90104, dict_err.get(90104)
+
+        try:
+            objs.name = name
+            objs.domain = domain
+            objs.sort_num = sort_num
+            objs.state = state
+            objs.save()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
 
 
 class WeixinMpBase(object):
