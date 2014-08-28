@@ -1,7 +1,8 @@
 {% extends "toutiao/base_toutiao.html" %}
 {% load custom_filters %}
+{% load custom_tags %}
 
-{% block title %}Note 4基本就这样了,你买苹果6还是买它?{% endblock %}
+{% block title %}{{article.title}}{% endblock %}
 
 {% block css %}
 {% endblock %}
@@ -11,75 +12,46 @@
 
 {% block main %}
 <div class="pl-20 pr-20 pb-20">
-	<h3 class="text-center f28 pb-5">Note 4基本就这样了,你买苹果6还是买它?</h3>
-	<div class="bottom-border bdc-ddd co8 f13 text-right pb-10 pr-10">
-		<span class="">2014-08-24 10:38</span>
-		<span class="pl-10">热度: 125</span>
-		<span class="pl-10">来源: <a href="#" class="gray-gray">智选投资</a></span>
-	</div>
-	<div class="line-height-25 pt-15 f16 pl-5 pr-5">
-		<p style=""> <strong style="max-width: 100%; word-wrap: break-word !important; box-sizing: border-box !important; ">作者:克莱顿·克里斯滕森，哈佛商学院著名教授，转自蓝橡树。</strong> <strong style="max-width: 100%; word-wrap: break-word !important; box-sizing: border-box !important; "><strong style="max-width: 100%; word-wrap: break-word !important; box-sizing: border-box !important; ">由高管读物“解读标杆”（微信号jiedubiaogan）推荐。</strong></strong> 
-		<p style="">
-			我在哈佛商学院的课程体系是为了帮助我的学生们理解什么是好的管理理论，以及它是怎样构建的。在每一章，我们带着不同的模型或理论视角观察一家企业——应用它们来解释这家企业是如何走到这一步的，并审视什么样的管理行动可能产生希望得到的结果。
-		</p>
-		<p style="">
-			现在，在最后一天的课堂上，我要求我的学生们把这些理论的聚焦镜对准自己，并针对下列三个问题寻找令人信服的答案：
-			<strong style="max-width: 100%; word-wrap: break-word !important; box-sizing: border-box !important; ">♦ 我怎样确保我在职业生涯中会快乐？</strong>
-		</p>
-		<p style="">
-			<strong style="max-width: 100%; word-wrap: break-word !important; box-sizing: border-box !important; ">♦ 我怎样确保我和我的配偶及家人的关系将成为一种持久的快乐源泉？</strong>
-		</p>
-		<p style="">
-			我在哈佛商学院的课程体系是为了帮助我的学生们理解什么是好的管理理论，以及它是怎样构建的。在每一章，我们带着不同的模型或理论视角观察一家企业——应用它们来解释这家企业是如何走到这一步的，并审视什么样的管理行动可能产生希望得到的结果。
-		</p>
-	</div>
-	<div class="f12 pt-15">
-		<div class="fb f14">
-			<a href="#">微信原文</a> 
-			<span class="pl-15">文章为作者独立观点，不代表智选微头条立场</span>
-		</div>
-		<div class="co8">此文章来自微信公众号，如需删除或申请收录，请联系微信号：zhixuanribao</div>
-	</div>
-	<div class="pt-25 pr">
-		<h4 class="fb bottom-border bdc-ddd pb-10"><a href="#" class="pr-5">智选</a>的最新微信</h4>
-		<ul class="list-unstyled pl-5 pr-5">
-			<li class="pb-5">
-				<span class="fa fa-caret-right"></span>
-				<a href="/kaihu/news/1575" class="pl-5">沪港通存三大制度套利空间</a>
-			</li>
-			<li class="pb-5">
-				<span class="fa fa-caret-right"></span>
-				<a href="/kaihu/news/1574" class="pl-5">&lt;长江证券首选&gt;  A股将放开“一人一户”限制</a>
-			</li>
-			<li class="pb-5">
-				<span class="fa fa-caret-right"></span>
-				<a href="/kaihu/news/1573" class="pl-5">强势整理后股指有望再度新高</a>
-			</li>
-			<li class="pb-5">
-				<span class="fa fa-caret-right"></span>
-				<a href="/kaihu/news/1573" class="pl-5">P2P产品现身超市揽生意</a>
-			</li>
-			<li class="pb-5">
-				<span class="fa fa-caret-right"></span>
-				<a href="/kaihu/news/1573" class="pl-5">工商信托万向信托增加注册资本 30亿门槛难再独领风骚</a>
-			</li>
-		</ul>
+    <h3 class="text-center f28 pb-5">{{article.title}}</h3>
+    <div class="bottom-border bdc-ddd co8 f13 text-right pb-10 pr-10">
+        <span class="">{{article.create_time}}</span>
+        <span class="pl-10">热度: {{article.views_count}}</span>
+        <span class="pl-10">来源: <a href="{{article.weixin_mp.get_url}}" class="gray-gray">{{article.weixin_mp.name}}</a></span>
+    </div>
+    <div class="line-height-25 pt-15 f16 pl-5 pr-5">{{article.content|safe}}</div>
+    <div class="f12 pt-15">
+        <div class="fb f14">
+            <a href="{{article.from_url}}" target="_blank">微信原文链接</a> 
+        </div>
+        <div class="co8">文章为作者独立观点，不代表智选微头条立场</div>
+        <div class="co8">此文章来自微信公众号，如需删除或申请收录，请联系微信号：zhixuanribao</div>
+    </div>
+    <div class="pt-25 pr">
+        <h4 class="fb bottom-border bdc-ddd pb-10"><a href="{{article.weixin_mp.get_url}}" class="pr-5">{{article.weixin_mp.name}}</a>的最新微信</h4>
+        <ul class="list-unstyled pl-5 pr-5">
+            {% for article in newsest_articles %}
+            <li class="pb-5">
+                <span class="fa fa-caret-right"></span>
+                <a href="{{article.get_url}}" class="pl-5">{{article.title|str_display:28}}</a>
+            </li>
+            {% endfor %}
+        </ul>
 
-		<!-- 手机端显示样式开始 -->
-		<div class="visible-xs text-center pr">
-            <img class="avatar-110" alt="股票行情资讯二维码" src="http://img03.sogoucdn.com/app/a/100520105/03VaVVjEQWY_h0k2nyD3">
-            <img class="avatar-25 pa" style="left: 45%; top: 35%;" alt="股票行情资讯" src="http://img01.sogoucdn.com/app/a/100520090/oIWsFtx2GIhkF1ZS1GqZ6Uowr3nY">
+        <!-- 手机端显示样式开始 -->
+        <div class="visible-xs text-center pr">
+            <img class="avatar-110" alt="{{article.weixin_mp.title}}二维码" src="{{article.weixin_mp.qrimg}}">
+            <!-- <img class="avatar-25 pa" style="left: 45%; top: 35%;" alt="{{article.weixin_mp.title}}" src="{{article.weixin_mp.img}}"> -->
             <div class="text-center pt-3 f13"><span class="fa fa-weixin pr-5 cl_green f14"></span>微信扫一扫关注</div>
         </div>
         <!-- 手机端显示样式结束 -->
 
         <!-- PC端显示样式开始 -->
-		<div class="pa hidden-xs" style="right: 2px; top: 75px;">
-            <img class="avatar-110" alt="股票行情资讯二维码" src="http://img03.sogoucdn.com/app/a/100520105/03VaVVjEQWY_h0k2nyD3">
-            <img class="avatar-25 pa" style="left: 35%; top: 35%;" alt="股票行情资讯" src="http://img01.sogoucdn.com/app/a/100520090/oIWsFtx2GIhkF1ZS1GqZ6Uowr3nY">
+        <div class="pa hidden-xs" style="right: 2px; top: 75px;">
+            <img class="avatar-110" alt="{{article.weixin_mp.title}}二维码" src="{{article.weixin_mp.qrimg}}">
+            <!-- <img class="avatar-25 pa" style="left: 35%; top: 35%;" alt="{{article.weixin_mp.title}}" src="{{article.weixin_mp.img}}"> -->
             <div class="text-center pt-3 f13"><span class="fa fa-weixin pr-5 cl_green f14"></span>微信扫一扫关注</div>
         </div>
         <!-- PC端显示样式结束 -->
-	</div>
+    </div>
 </div>
 {% endblock %}

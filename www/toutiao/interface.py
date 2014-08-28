@@ -2,6 +2,7 @@
 
 import requests
 from pyquery import PyQuery as pq
+from django.db.models import F
 
 from common import cache, debug
 from www.misc.decorators import cache_required
@@ -103,6 +104,7 @@ class ArticleTypeBase(object):
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
 
+        self.get_all_valid_article_type(must_update_cache=True)
         return 0, dict_err.get(0)
 
 
@@ -161,3 +163,22 @@ class ArticleBase(object):
 
     def get_articles_by_type(self, article_type):
         return Article.objects.select_related("weixin_mp").filter(article_type=article_type)
+
+    def get_article_by_id(self, article_id, state=True):
+        try:
+            ps = dict(id=article_id)
+            if state is not None:
+                ps.update(state=state)
+            return Article.objects.select_related("weixin_mp").get(**ps)
+        except Article.DoesNotExist:
+            return None
+
+    def get_newsest_articles_by_weixin_mp(self, article):
+        ps = dict(weixin_mp=article.weixin_mp)
+        return Article.objects.filter(**ps).exclude(id=article.id).order_by("-create_time")
+
+    def add_article_view_count(self, article_id):
+        '''
+        @note: 更新浏览次数
+        '''
+        Article.objects.filter(id=article_id).update(views_count=F('views_count') + 1)

@@ -29,6 +29,11 @@ def toutiao_list(request, article_type=None, template_name='toutiao/toutiao_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def toutiao_detail(request, toutiao_id=None, template_name='toutiao/toutiao_detail.html'):
+def toutiao_detail(request, article_id, template_name='toutiao/toutiao_detail.html'):
+    article = ab.get_article_by_id(article_id)
+    if not article:
+        raise Http404
+    newsest_articles = ab.get_newsest_articles_by_weixin_mp(article)[:5]
+    ab.add_article_view_count(article_id)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
