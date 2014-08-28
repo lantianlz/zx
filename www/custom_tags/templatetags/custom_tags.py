@@ -164,5 +164,15 @@ def toutiao_acticle_type_nav_display(context):
     """
     from www.toutiao.interface import ArticleTypeBase
     article_type = ArticleTypeBase().get_all_valid_article_type()
-    return render_to_response('toutiao/_toutiao_article_type_nav_display.html', locals(),
-                              context_instance=context).content
+    return render_to_response('toutiao/_toutiao_article_type_nav_display.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def toutiao_hotest_articles(context):
+    """
+    @note: 头条最新热榜
+    """
+    from www.toutiao.interface import ArticleBase
+    articles = ArticleBase().get_hotest_articles()[:10]
+
+    return render_to_response('toutiao/_toutiao_hotest_articles.html', locals(), context_instance=context).content

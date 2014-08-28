@@ -50,23 +50,23 @@
 
 
 {% block weixin_mp %}
+{% if weixin_mp %}
 <div class="pr pt-15 bdc-ccc top-border left-border right-border bottom-border box-shadow-016 bgc-fff pl-15 pr-15 mb-15">
-    <img class="avatar-45 pa" alt="股票行情资讯" src="http://img01.sogoucdn.com/app/a/100520090/oIWsFtx2GIhkF1ZS1GqZ6Uowr3nY">
+    <img class="avatar-45 pa" alt="{{weixin_mp.name}}" src="{{weixin_mp.img}}">
     <div class="pl-55">
         <div>
-            <span class="f16 fb">股票行情资讯</span>
+            <span class="f16 fb">{{weixin_mp.name}}</span>
         </div>
-        <div class="f12 co8 pt-5">
-            微信号：gupiaohqzx
-        </div>
+        <div class="f12 co8 pt-5">微信号：{{weixin_mp.weixin_id}}</div>
     </div>
     <div class="f13 line-height-22 pt-15">
-        <span class="fb">功能介绍：</span>股票好似人生,总会有起起伏伏.股票行情资讯助你了解股票与投资,让你的人生旅途更加精彩.这里有最专业的股票证券资讯,有最新的股票财经热点.股票行情资讯,让你的股票人生熠熠出彩.
+        <span class="fb">功能介绍：</span>{{weixin_mp.des}}
     </div>
     <div class="pl-45 pr-45 pt-15 bottom-border bdc-eee pb-15 pr">
-        <img class="w" alt="股票行情资讯二维码" src="http://img03.sogoucdn.com/app/a/100520105/03VaVVjEQWY_h0k2nyD3">
-        <img class="avatar-45 pa" style="left: 40%; top: 40%;" alt="股票行情资讯" src="http://img01.sogoucdn.com/app/a/100520090/oIWsFtx2GIhkF1ZS1GqZ6Uowr3nY">
+        <img class="w" alt="{{weixin_mp.name}}二维码" src="{{weixin_mp.qrimg}}">
+        <img class="avatar-45 pa" style="left: 40%; top: 40%;" alt="{{weixin_mp.name}}" src="{{weixin_mp.img}}">
         <div class="text-center pt-3 f13"><span class="fa fa-weixin pr-5 cl_green f14"></span>微信扫一扫关注</div>
     </div>
 </div>
+{% endif %}
 {% endblock %}

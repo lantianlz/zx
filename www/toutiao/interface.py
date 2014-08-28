@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import requests
 from pyquery import PyQuery as pq
 from django.db.models import F
@@ -145,6 +146,9 @@ class WeixinMpBase(object):
         if WeixinMp.objects.filter(weixin_id=weixin_id):
             return 90102, dict_err.get(90102)
 
+        if article_type and not isinstance(article_type, ArticleType):
+            article_type = ArticleTypeBase().get_type_by_id(article_type)
+
         mp = WeixinMp.objects.create(open_id=open_id, name=name, weixin_id=weixin_id, des=des,
                                      vip_info=vip_info, img=img, qrimg=qrimg,
                                      article_type=article_type, is_silence=is_silence, sort_num=sort_num)
@@ -194,6 +198,10 @@ class ArticleBase(object):
     def get_newsest_articles_related(self, article):
         ps = dict(weixin_mp=article.weixin_mp)
         return Article.objects.filter(**ps).exclude(id=article.id).order_by("-create_time")
+
+    def get_hotest_articles(self):
+        now = datetime.datetime.now()
+        return Article.objects.filter(create_time__gt=now - datetime.timedelta(hours=48)).order_by("-views_count", "-create_time")
 
     def add_article_view_count(self, article_id):
         '''
