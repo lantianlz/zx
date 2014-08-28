@@ -122,7 +122,8 @@ class WeixinMpBase(object):
         weixin_id = jq(".txt-box>h4>span").html().split(u"：")[1].strip()
         des = jq(".sp-txt:eq(0)").html().strip()
         vip_info = (jq(".sp-txt:eq(1)").html() or '').strip()
-        img = jq(".img-box img").attr("extra").split("url=")[1].strip().replace("'", "")
+        # img = jq(".img-box img").attr("extra").split("url=")[1].strip().replace("'", "")
+        img = jq(".img-box img").attr("src").strip()
         qrimg = jq(".pos-box>img").attr("src").strip()
 
         return open_id, name, weixin_id, des, vip_info, img, qrimg
@@ -149,6 +150,15 @@ class WeixinMpBase(object):
                                      article_type=article_type, is_silence=is_silence, sort_num=sort_num)
         return 0, mp
 
+    def get_weixin_mp_by_id(self, weixin_mp_id, state=True):
+        try:
+            ps = dict(id=weixin_mp_id)
+            if state is not None:
+                ps.update(state=state)
+            return WeixinMp.objects.get(**ps)
+        except WeixinMp.DoesNotExist:
+            return None
+
 
 class ArticleBase(object):
 
@@ -169,6 +179,9 @@ class ArticleBase(object):
     def get_articles_by_type(self, article_type):
         return Article.objects.select_related("weixin_mp").filter(article_type=article_type)
 
+    def get_articles_by_weixin_mp(self, weixin_mp):
+        return Article.objects.select_related("weixin_mp").filter(weixin_mp=weixin_mp)
+
     def get_article_by_id(self, article_id, state=True):
         try:
             ps = dict(id=article_id)
@@ -178,7 +191,7 @@ class ArticleBase(object):
         except Article.DoesNotExist:
             return None
 
-    def get_newsest_articles_by_weixin_mp(self, article):
+    def get_newsest_articles_related(self, article):
         ps = dict(weixin_mp=article.weixin_mp)
         return Article.objects.filter(**ps).exclude(id=article.id).order_by("-create_time")
 

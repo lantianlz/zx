@@ -22,8 +22,9 @@ atb = interface.ArticleTypeBase()
 
 def test():
     ts = wmp.get_mp_info_by_open_id("oIWsFt9BhOlk3j8cZi8xcqMzc26c")
+    print ts
     # print wmp.add_mp(*ts)
-    print atb.add_article_type(name="综合财经", domain="zhcj")
+    # print atb.add_article_type(name="综合财经", domain="zhcj")
 
 
 if __name__ == '__main__':
