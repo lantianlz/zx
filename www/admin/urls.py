@@ -175,7 +175,7 @@ urlpatterns += patterns('www.admin.views_stock',
                         url(r'^stock/stock$', 'stock'),
                         )
 
-# 类型
+# 头条类型
 urlpatterns += patterns('www.admin.views_toutiao_type',
 
                         url(r'^toutiao/toutiao_type/modify_type$', 'modify_type'),
@@ -183,4 +183,23 @@ urlpatterns += patterns('www.admin.views_toutiao_type',
                         url(r'^toutiao/toutiao_type/add_type$', 'add_type'),
                         url(r'^toutiao/toutiao_type/search$', 'search'),
                         url(r'^toutiao/toutiao_type$', 'toutiao_type'),
+                        )
+
+# 头条类型
+urlpatterns += patterns('www.admin.views_toutiao_type',
+
+                        url(r'^toutiao/toutiao_type/modify_type$', 'modify_type'),
+                        url(r'^toutiao/toutiao_type/get_type_by_id$', 'get_type_by_id'),
+                        url(r'^toutiao/toutiao_type/add_type$', 'add_type'),
+                        url(r'^toutiao/toutiao_type/search$', 'search'),
+                        url(r'^toutiao/toutiao_type$', 'toutiao_type'),
+                        )
+
+urlpatterns += patterns('www.admin.views_weixin_mp',
+
+                        url(r'^toutiao/weixin_mp/modify_type$', 'modify_weixin_mp'),
+                        url(r'^toutiao/weixin_mp/get_type_by_id$', 'get_weixin_mp_by_id'),
+                        url(r'^toutiao/weixin_mp/add_type$', 'add_weixin_mp'),
+                        url(r'^toutiao/weixin_mp/search$', 'search'),
+                        url(r'^toutiao/weixin_mp$', 'weixin_mp'),
                         )
