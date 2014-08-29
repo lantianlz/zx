@@ -89,7 +89,7 @@ def format_weixin_wp(objs, num):
             'qrimg': x.qrimg,
             'is_silence': x.is_silence,
             'sort_num': x.sort_num,
-            'article_type': x.article_type.id,
+            'article_type': x.article_type.id if x.article_type else '',
             'state': x.state
         })
 
