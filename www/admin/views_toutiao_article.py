@@ -47,7 +47,7 @@ def format_article(objs, num):
             'article_id': x.id,
             'title': x.title,
             'content': x.content,
-            'article_type': x.article_type.id,
+            'article_type': x.article_type.id if x.article_type else '',
             'weixin_id': x.weixin_mp.id,
             'weixin_name': x.weixin_mp.name,
             'from_url': x.from_url,
