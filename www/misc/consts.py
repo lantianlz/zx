@@ -128,8 +128,8 @@ PERMISSIONS = [
     # {'code': 'remove_weixin_mp', 'name': u'删除微信号', 'parent': 'weixin_mp_manage'},
 
     {'code': 'toutiao_article_manage', 'name': u'头条文章管理', 'parent': None},
-    {'code': 'add_toutiao_article', 'name': u'添加头条文章', 'parent': 'toutiao_manage'},
-    {'code': 'query_toutiao_article', 'name': u'查询头条文章', 'parent': 'toutiao_manage'},
-    {'code': 'modify_toutiao_article', 'name': u'修改头条文章', 'parent': 'toutiao_manage'},
-    # {'code': 'remove_toutiao_article', 'name': u'删除微信号', 'parent': 'toutiao_manage'},
+    {'code': 'add_toutiao_article', 'name': u'添加头条文章', 'parent': 'toutiao_article_manage'},
+    {'code': 'query_toutiao_article', 'name': u'查询头条文章', 'parent': 'toutiao_article_manage'},
+    {'code': 'modify_toutiao_article', 'name': u'修改头条文章', 'parent': 'toutiao_article_manage'},
+    # {'code': 'remove_toutiao_article', 'name': u'删除微信号', 'parent': 'toutiao_article_manage'},
 ]
