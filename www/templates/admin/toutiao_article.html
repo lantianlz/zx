@@ -1,0 +1,606 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}头条文章管理{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var Article = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': ''
+        }
+
+    });
+
+    // collections
+    var Articles = Backbone.Collection.extend({
+        model: Article,
+
+        _modelMaps: {
+            'num': 'num',
+            'articleId': 'article_id',
+            'title': 'title',
+            'content': 'content',
+            'articleType': 'article_type',
+            'weixinId': 'weixin_id',
+            'weixinName': 'weixin_name',
+            'fromUrl': 'from_url',
+            'isSilence': 'is_silence',
+            'img': 'img',
+            'viewsCount': 'views_count',
+            'sortNum': 'sort_num',
+            'state': 'state'
+        },
+
+        // 查询
+        search: function(title, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/toutiao/article/search", 
+                {'title': title||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+                    me.name = name||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
+                }
+            );
+        },
+
+        // 获取一个提问的model
+        getOne: function(articleId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/toutiao/article/get_article_by_id", 
+                {'article_id': articleId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        addArticle: function(postData, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/toutiao/article/add_article", 
+                postData,
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        //
+        modifyArticle: function(postData, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/toutiao/article/modify_article", 
+                postData,
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#article_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#article_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search': 'search',
+            'click .pointer': 'modifyArticle'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+
+            this.$('tbody').html(this.template({'articles': data}));
+
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.name
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#article_list"]').tab('show');
+        },
+
+        search: function(){
+            var title = this.$('.key-word').val();
+
+            router.navigate(String.format('/search/{0}/1', title), {trigger: true});
+        },
+
+        modifyArticle: function(sender){
+            var target = $(sender.currentTarget),
+                articleId = target.data('article_id');
+
+            router.navigate('/modify/' + articleId, {trigger: true});
+        }
+
+    });
+
+    // modifyView
+    var ModifyView = Backbone.View.extend({
+        
+        el: '#modify_article',
+
+        template: _.template($('#modify_article_template').html()),
+
+        events: {
+            'click .save': 'save'
+        },
+
+        weixinTextBox: null,
+        initWeixinTextBox: function(name, value){
+            this.weixinTextBox = $.ZXTextboxList.create('#belong_weixin_modify', {
+                max: 1,
+                placeholder: '选择所属微信号',
+                url: '/admin/toutiao/weixin_mp/get_weixin_mp_by_name',
+                param: 'weixin_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.weixinTextBox.add(name, value);
+            }
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_article"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+            console.log(data)
+            this.initWeixinTextBox(data.weixinName, data.weixinId);
+
+            createEditor('#content_editor_modify');
+        },
+
+        // 显示提问信息
+        modifyArticle: function(articleId){
+            var me = this;
+
+            this.collection.getOne(articleId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的文章!');
+                }
+            });
+        },
+
+        // 保存
+        save: function(){
+            var articleId = this.$('form').data('article_id'),
+                me = this;
+
+            me.collection.modifyArticle(this.$('form').serializeArray(), function(data){
+                if(data.errcode === 0){
+                    $.ZXNotice.SuccessTopNotice('操作成功!');
+                    router.navigate('modify/' + articleId, {'trigger': true});
+                } else {
+                    $.ZXNotice.ErrorTopNotice(data.errmsg);
+                }
+            })
+        }
+
+
+    });
+
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_article_template').html()),
+
+        weixinTextBox: null,
+        initWeixinTextBox: function(name, value){
+            this.weixinTextBox = $.ZXTextboxList.create('#belong_weixin_add', {
+                max: 1,
+                placeholder: '选择所属微信号',
+                url: '/admin/toutiao/weixin_mp/get_weixin_mp_by_name',
+                param: 'weixin_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.weixinTextBox.add(name, value);
+            }
+        },
+
+        showPanel: function(){
+            var me = this;
+
+            me.render();
+        },
+
+        render: function(){
+            var me = this;
+
+            $('#add_article_modal').remove();
+            
+            $('body').append(this.template());
+
+            // 绑定事件
+            $('#add_article_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_article_modal .ok').bind('click', function(){
+                me.addArticle();
+            });
+            
+            $('#add_article_modal').modal({'show': true, 'backdrop': 'static'});
+
+            this.initWeixinTextBox();
+            createEditor('#content_editor_add');
+        },
+
+        addArticle: function(){
+            var articleId = this.$('form').data('article_id'),
+                me = this;
+
+            articles.addArticle($.ZXUtils.formToDict('form'), function(data){
+                if(data.errcode === 0){
+                    router.navigate('modify/' + data.errmsg, {trigger: true});
+                    $('#add_article_modal').modal('hide');
+                    $.ZXMsg.alert('提示', '添加成功!');
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            })
+        }
+
+    });
+
+    
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                             "search",
+            "modify/:departmentId":         "modify",
+            "search/(:name)/:pageIndex":    "search",
+            "add":                          "add"
+        },
+
+        // 查询
+        search: function(name, pageIndex){
+            articles.search(name||'', pageIndex||1);
+        },
+
+        // 显示修改界面
+        modify: function(articleId){
+            modifyView.modifyArticle(articleId);
+        },
+
+        add: function(){
+            addView.showPanel();
+        }
+
+    });
+    
+    // 初始化
+    var articles = new Articles(),
+        listView = new ListView({'collection': articles}),
+        modifyView = new ModifyView({'collection': articles}),
+        addView = new AddView
+        router = new Router();
+ 
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#article_list" class="black-blue" data-toggle="pill">文章列表</a>
+    </li>
+    <li>
+        <a href="#modify_article" class="black-blue" data-toggle="pill">修改文章信息</a>
+    </li>
+    <li class="pull-right">
+        <a href="#add" class="black-blue">添加文章</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="article_list">
+        <div class="pl-0 pb-10 col-md-5">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入文章名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>图片</th>
+                    <th>文章标题</th>
+                    <th>类型</th>
+                    <th>所属微信号</th>
+                    <th>阅读量</th>
+                    <th>排序</th>
+                    <th>首页显示</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改客户经理信息 -->
+    <div class="tab-pane fade" id="modify_article">
+        
+    </div>
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="article_template">
+    <% _.each(articles, function(article){ %>
+        <tr class="pointer" data-article_id="<%= article.articleId %>">
+            <td><%= article.num %></td>
+            <td><img src="<%= article.img %>" class="w140" /></td>
+            <td><%= article.title %></td>
+            <td><%= article.articleType %></td>
+            <td><%= article.weixinName %></td>
+            <td><%= article.viewsCount %></td>
+            <td><%= article.sortNum %></td>
+            <td>
+                <% if(article.isSilence){ %>
+                <span class="glyphicon glyphicon-remove cl_red" title="未开放"></span>
+                <% } else { %>
+                <span class="glyphicon glyphicon-ok co-zx" title="正常"></span>
+                <% } %>
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="modify_article_template">
+    <form class="form-horizontal" data-article_id="<%= articleId %>" role="form" method="post" action="">
+        <input type="hidden" name="article_id" value="<%= articleId %>" />
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">文章标题</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="title" value='<%= title %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">内容</label>
+            <div class="col-sm-9">
+                <textarea style="height: 200px;" class="form-control" id="content_editor_modify" name="content"><%= content %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">文章类型</label>
+            <div class="col-sm-3">
+                <select class="form-control input-sm" name="article_type">
+                    {% for type in types %}
+                    <option value="{{type.value}}" <% if("{{type.value}}" == articleType){ %>selected="selected"<% } %> >{{type.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">所属微信</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="weixin_id" id="belong_weixin_modify" value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">来源</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="from_url" value='<%= fromUrl %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">首页显示</label>
+            <div class="col-sm-6">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="is_silence" value="1" <% if(!isSilence){ %>checked="checked"<% } %> >
+                        显示
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="is_silence" value="0" <% if(isSilence){ %>checked="checked"<% } %> >
+                        不显示
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">图片</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="img" value='<%= img %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">排序</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="sort_num" value='<%= sortNum %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">状态</label>
+            <div class="col-sm-6">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="state" value="1" <% if(state){ %>checked="checked"<% } %> >
+                        正常
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="state" value="0" <% if(!state){ %>checked="checked"<% } %> >
+                        无效
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save">提交你的修改</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<script type="text/template" id="add_article_template">
+<div class="modal fade" id="add_article_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+                <h4 class="modal-title">添加文章</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" method="post" action="">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">文章标题</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="title" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">内容</label>
+                        <div class="col-sm-9">
+                            <textarea style="height: 200px;" class="form-control" id="content_editor_add" name="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">文章类型</label>
+                        <div class="col-sm-3">
+                            <select class="form-control input-sm" name="article_type">
+                                {% for type in types %}
+                                <option value="{{type.value}}">{{type.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">所属微信</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="weixin_id" id="belong_weixin_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">来源</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="from_url" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">首页显示</label>
+                        <div class="col-sm-6">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="is_silence" value="1" checked="checked">
+                                    显示
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="is_silence" value="0">
+                                    不显示
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">图片</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="img" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">排序</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="sort_num" value='0'>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">状态</label>
+                        <div class="col-sm-6">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="state" value="1" checked="checked">
+                                    正常
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="state" value="0">
+                                    无效
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock admin-right %}

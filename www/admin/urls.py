@@ -195,12 +195,24 @@ urlpatterns += patterns('www.admin.views_toutiao_type',
                         url(r'^toutiao/toutiao_type$', 'toutiao_type'),
                         )
 
+# 微信号
 urlpatterns += patterns('www.admin.views_weixin_mp',
 
+                        url(r'^toutiao/weixin_mp/get_weixin_mp_by_name$', 'get_weixin_mp_by_name'),
                         url(r'^toutiao/weixin_mp/get_weixin_info$', 'get_weixin_info'),
                         url(r'^toutiao/weixin_mp/modify_weixin_mp$', 'modify_weixin_mp'),
                         url(r'^toutiao/weixin_mp/get_weixin_mp_by_id$', 'get_weixin_mp_by_id'),
                         url(r'^toutiao/weixin_mp/add_weixin_mp$', 'add_weixin_mp'),
                         url(r'^toutiao/weixin_mp/search$', 'search'),
                         url(r'^toutiao/weixin_mp$', 'weixin_mp'),
+                        )
+
+# 头条文章
+urlpatterns += patterns('www.admin.views_toutiao_article',
+
+                        url(r'^toutiao/article/modify_article$', 'modify_article'),
+                        url(r'^toutiao/article/get_article_by_id$', 'get_article_by_id'),
+                        url(r'^toutiao/article/add_article$', 'add_article'),
+                        url(r'^toutiao/article/search$', 'search'),
+                        url(r'^toutiao/article$', 'article'),
                         )

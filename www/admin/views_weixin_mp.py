@@ -19,6 +19,20 @@ def weixin_mp(request, template_name='admin/weixin_mp.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+def get_weixin_mp_by_name(request):
+    weixin_name = request.REQUEST.get('weixin_name')
+
+    result = []
+
+    objs = WeixinMpBase().get_weixin_mp_by_name(weixin_name)
+
+    if objs:
+        for x in objs:
+            result.append([x.id, x.name, None, x.name])
+
+    return HttpResponse(json.dumps(result), mimetype='application/json')
+
+
 @verify_permission('query_weixin_mp')
 def get_weixin_info(request):
     open_id = request.REQUEST.get('open_id')

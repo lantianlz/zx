@@ -19,6 +19,8 @@ dict_err = {
     90104: u'类型域名重复',
     90105: u'找不到对应的头条类型',
     90106: u'找不到对应的微信号',
+    90107: u'文章标题已经存在',
+    90108: u'找不到对应的文章',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -172,6 +174,14 @@ class WeixinMpBase(object):
 
         return objs
 
+    def get_weixin_mp_by_name(self, name):
+        objs = self.get_all_weixin_mp(state=True)
+
+        if name:
+            objs = objs.filter(name__contains=name)
+
+        return objs
+
     def search_weixin_mp_for_admin(self, name, state=None):
         objs = self.get_all_weixin_mp(state)
 
@@ -264,3 +274,61 @@ class ArticleBase(object):
         @note: 更新浏览次数
         '''
         Article.objects.filter(id=article_id).update(views_count=F('views_count') + 1)
+
+    def add_article(self, title, content, article_type, weixin_mp_id, from_url, img, sort_num=0, is_silence=False):
+        if None in (title, content, article_type, weixin_mp_id, from_url, img):
+            return 99800, dict_err.get(99800)
+
+        if Article.objects.filter(title=title):
+            return 90107, dict_err.get(90107)
+
+        obj = None
+        try:
+            obj = Article.objects.create(
+                title=title,
+                content=content,
+                article_type_id=article_type,
+                weixin_mp_id=weixin_mp_id,
+                from_url=from_url,
+                img=img,
+                sort_num=sort_num,
+                is_silence=is_silence
+            )
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, obj
+
+    def search_article_for_admin(self, title):
+        objs = self.get_all_articles(state=None)
+
+        if title:
+            objs = objs.filter(title=title)
+
+        return objs
+
+    def modify_article(self, article_id, **kwargs):
+        if not article_id:
+            return 99800, dict_err.get(99800)
+
+        obj = self.get_article_by_id(article_id, None)
+        if not obj:
+            return 90108, dict_err.get(90108)
+
+        if kwargs.get('title'):
+            temp = Article.objects.filter(title=kwargs.get('title'))
+            if temp and temp[0].id != obj.id:
+                return 90107, dict_err.get(90107)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(obj, k, v)
+
+            obj.save()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
