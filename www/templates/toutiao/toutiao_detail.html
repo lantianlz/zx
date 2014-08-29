@@ -22,15 +22,16 @@
         <span class="pl-10">来源: <a href="{{article.weixin_mp.get_url}}" class="gray-gray">{{article.weixin_mp.name}}</a></span>
     </div>
     <div class="line-height-25 pt-15 f16 pl-5 pr-5 content_body">{{article.content|safe}}</div>
+    <div class="blank20"></div>
     <div class="f12 pt-15">
         <div class="fb f14">
-            <a href="{{article.from_url}}" target="_blank">微信原文链接</a> 
+            <a href="{{article.from_url}}" target="_blank" rel="nofollow">微信原文链接</a> 
         </div>
-        <div class="co8">文章为作者独立观点，不代表智选微头条立场</div>
+        <div class="co8">文章为作者独立观点，不代表智选的观点和立场</div>
         <div class="co8">此文章来自微信公众号，如需删除或申请收录，请联系微信号：zhixuanribao</div>
     </div>
     <div class="pt-25 pr">
-        <h4 class="fb bottom-border bdc-ddd pb-10"><a href="{{article.weixin_mp.get_url}}" class="pr-5">{{article.weixin_mp.name}}</a>的最新微信</h4>
+        <h4 class="fb bottom-border bdc-ddd pb-10"><a href="{{article.weixin_mp.get_url}}" class="pr-5">{{article.weixin_mp.name}}</a>的最新文章</h4>
         <ul class="list-unstyled pl-5 pr-5">
             {% for article in newsest_articles %}
             <li class="pb-5">

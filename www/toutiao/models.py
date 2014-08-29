@@ -52,7 +52,7 @@ class Article(models.Model):
     create_time = models.DateTimeField(default=datetime.datetime)
 
     class Meta:
-        ordering = ["-sort_num", "-id"]
+        ordering = ["-sort_num", "-create_time"]
 
     def get_url(self):
         return '/toutiao/article/%s' % self.id

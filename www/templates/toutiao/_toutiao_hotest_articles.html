@@ -1,0 +1,14 @@
+{% load custom_filters %}
+<div class="box-shadow-016 bgc-fff bdc-ccc top-border left-border right-border bottom-border pl-15 pr-15">
+    <div class="pb-5 pt-15 bottom-border bdc-ddd">
+        <span class="f16 fb">24小时最热门</span>
+    </div>
+    <ul class="list-group f13 pt-5 pb-10">
+    	{% for article in articles %}
+        <li class="list-group-item pl-0 pr-0 pt-5 pb-5 no-l-r-bd bdc-transparent">
+            <span class="glyphicon glyphicon-fire co25 f12 pt-3">{{article.views_count}}</span>
+            <a href="{{article.get_url}}" class="pl-5">{{article.title}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
