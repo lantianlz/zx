@@ -17,6 +17,7 @@ dict_err = {
     90103: u'类型名称重复',
     90104: u'类型域名重复',
     90105: u'找不到对应的头条类型',
+    90106: u'找不到对应的微信号',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -147,7 +148,7 @@ class WeixinMpBase(object):
 
         mp = WeixinMp.objects.create(open_id=open_id, name=name, weixin_id=weixin_id, des=des,
                                      vip_info=vip_info, img=img, qrimg=qrimg,
-                                     article_type=article_type, is_silence=is_silence, sort_num=sort_num)
+                                     article_type_id=article_type, is_silence=is_silence, sort_num=sort_num)
         return 0, mp
 
     def get_weixin_mp_by_id(self, weixin_mp_id, state=True):
@@ -158,6 +159,61 @@ class WeixinMpBase(object):
             return WeixinMp.objects.get(**ps)
         except WeixinMp.DoesNotExist:
             return None
+
+    def get_all_weixin_mp(self, state=None):
+        objs = WeixinMp.objects.all()
+
+        if state is not None:
+            objs = objs.filter(state=state)
+
+        return objs
+
+    def search_weixin_mp_for_admin(self, name, state=None):
+        objs = self.get_all_weixin_mp(state)
+
+        if name:
+            objs = objs.filter(name__contains=name)
+
+        return objs
+
+    def modify_weixin_mp(self, weixin_mp_id, **kwargs):
+        if not weixin_mp_id:
+            return 99800, dict_err.get(99800)
+
+        obj = self.get_weixin_mp_by_id(weixin_mp_id, None)
+        if not obj:
+            return 95106, dict_err.get(95106)
+
+        open_id = kwargs.get('open_id')
+        name = kwargs.get('name')
+        weixin_id = kwargs.get('weixin_id')
+
+        if open_id is not None:
+            temp = WeixinMp.objects.filter(open_id=open_id)
+            if temp and temp[0].id != obj.id:
+                return 90100, dict_err.get(90100)
+
+        if name is not None:
+            temp = WeixinMp.objects.filter(name=name)
+            if temp and temp[0].id != obj.id:
+                return 90101, dict_err.get(90101)
+
+        if weixin_id is not None:
+            temp = WeixinMp.objects.filter(weixin_id=weixin_id)
+            if temp and temp[0].id != obj.id:
+                return 90102, dict_err.get(90102)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(obj, k, v)
+
+            obj.save()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
 
 
 class ArticleBase(object):

@@ -20,6 +20,7 @@ def toutiao_type(request, template_name='admin/toutiao_type.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+@verify_permission('add_toutiao_type')
 @common_ajax_response
 def add_type(request):
     name = request.REQUEST.get('name')
@@ -49,7 +50,7 @@ def format_type(objs, num):
     return data
 
 
-@verify_permission('query_city')
+@verify_permission('query_toutiao_type')
 def search(request):
     data = []
 
@@ -61,7 +62,7 @@ def search(request):
     )
 
 
-@verify_permission('query_city')
+@verify_permission('query_toutiao_type')
 def get_type_by_id(request):
     type_id = request.REQUEST.get('type_id')
 
@@ -70,7 +71,7 @@ def get_type_by_id(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@verify_permission('modify_city')
+@verify_permission('modify_toutiao_type')
 @common_ajax_response
 def modify_type(request):
     type_id = request.REQUEST.get('type_id')

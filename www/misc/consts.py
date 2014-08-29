@@ -114,4 +114,22 @@ PERMISSIONS = [
     {'code': 'query_stock_feed', 'name': u'查询股票动态', 'parent': 'stock_feed_manage'},
     {'code': 'modify_stock_feed', 'name': u'修改股票动态', 'parent': 'stock_feed_manage'},
     {'code': 'remove_stock_feed', 'name': u'删除股票动态', 'parent': 'stock_feed_manage'},
+
+    {'code': 'toutiao_type_manage', 'name': u'头条类型管理', 'parent': None},
+    {'code': 'add_toutiao_type', 'name': u'添加头条类型', 'parent': 'toutiao_type_manage'},
+    {'code': 'query_toutiao_type', 'name': u'查询头条类型', 'parent': 'toutiao_type_manage'},
+    {'code': 'modify_toutiao_type', 'name': u'修改头条类型', 'parent': 'toutiao_type_manage'},
+    # {'code': 'remove_toutiao_type', 'name': u'删除头条类型', 'parent': 'toutiao_type_manage'},
+
+    {'code': 'weixin_mp_manage', 'name': u'微信号管理', 'parent': None},
+    {'code': 'add_weixin_mp', 'name': u'添加微信号', 'parent': 'weixin_mp_manage'},
+    {'code': 'query_weixin_mp', 'name': u'查询微信号', 'parent': 'weixin_mp_manage'},
+    {'code': 'modify_weixin_mp', 'name': u'修改微信号', 'parent': 'weixin_mp_manage'},
+    # {'code': 'remove_weixin_mp', 'name': u'删除微信号', 'parent': 'weixin_mp_manage'},
+
+    {'code': 'toutiao_article_manage', 'name': u'头条文章管理', 'parent': None},
+    {'code': 'add_toutiao_article', 'name': u'添加头条文章', 'parent': 'toutiao_manage'},
+    {'code': 'query_toutiao_article', 'name': u'查询头条文章', 'parent': 'toutiao_manage'},
+    {'code': 'modify_toutiao_article', 'name': u'修改头条文章', 'parent': 'toutiao_manage'},
+    # {'code': 'remove_toutiao_article', 'name': u'删除微信号', 'parent': 'toutiao_manage'},
 ]
