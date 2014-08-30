@@ -255,15 +255,18 @@ $(document).ready(function(){
         },
 
         getWeixinInfo: function(){
-            var openId = this.$('.open-id').val(),
+            var openId = $('#add_weixin_modal .open-id').val(),
                 me = this;
 
             if(openId){
                 weixins.getWeixinInfo(openId, function(data){
                     
                     _.map(me.$('form input'), function(i){
-                        var temp = $(i);
-                        temp.val(data[temp.attr('name')]);
+                        var temp = $(i), v = data[temp.attr('name')]
+                        if(v){
+                            temp.val(v);
+                        }
+                        
                     });
 
                     me.$('form textarea').val(data['des']);
@@ -276,7 +279,7 @@ $(document).ready(function(){
             var typeId = this.$('form').data('weixin_id'),
                 me = this;
 
-            weixins.addWeixin(me.$('form').serialize(), function(data){
+            weixins.addWeixin($('#add_weixin_modal form').serialize(), function(data){
                 if(data.errcode === 0){
                     router.navigate('modify/' + data.errmsg, {trigger: true});
                     $('#add_weixin_modal').modal('hide');

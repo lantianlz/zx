@@ -69,10 +69,12 @@ def search(request):
     title = request.REQUEST.get('title')
     state = request.REQUEST.get('state')
     state = True if state == "1" else False
+    is_silence = request.REQUEST.get('is_silence')
+    is_silence = True if is_silence == "1" else False
 
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = ArticleBase().search_article_for_admin(title, state)
+    objs = ArticleBase().search_article_for_admin(title, state, is_silence)
 
     page_objs = page.Cpt(objs, count=50, page=page_index).info
 

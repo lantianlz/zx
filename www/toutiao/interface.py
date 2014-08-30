@@ -306,8 +306,8 @@ class ArticleBase(object):
 
         return 0, obj
 
-    def search_article_for_admin(self, title, state):
-        objs = self.get_all_articles(state=state)
+    def search_article_for_admin(self, title, state, is_silence=False):
+        objs = self.get_all_articles(state=state).filter(is_silence=is_silence)
 
         if title:
             objs = objs.filter(title=title)

@@ -41,17 +41,18 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(title, state, pageIndex){
+        search: function(title, state, isSilence, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/toutiao/article/search", 
-                {'title': title||'', 'state': state||1, 'page_index': pageIndex||1}, 
+                {'title': title||'', 'state': state||1, 'is_silence': isSilence||0, 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
                     me.title = title||'';
                     me.state = state||1;
+                    me.isSilence = isSilence||0;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
                 }
@@ -147,7 +148,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.title + '/' + this.collection.state
+                'search/' + this.collection.title + '/' + this.collection.state + '/' + this.collection.isSilence
             );
         },
 
@@ -158,9 +159,10 @@ $(document).ready(function(){
 
         search: function(){
             var title = this.$('.key-word').val(),
-                state = this.$('.state').val();
+                state = this.$('.state').val(),
+                isSilence = this.$('.is-silence').val();
 
-            router.navigate(String.format('/search/{0}/{1}/1', title, state), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/{2}/1', title, state, isSilence), {trigger: true});
         },
 
         modifyArticle: function(sender){
@@ -219,7 +221,7 @@ $(document).ready(function(){
         // 渲染
         render: function(data){
             this.$el.html(this.template(data));
-            console.log(data)
+            
             this.initWeixinTextBox(data.weixinName, data.weixinId);
 
             createEditor('#content_editor_modify');
@@ -329,13 +331,13 @@ $(document).ready(function(){
         routes: {
             "":                             "search",
             "modify/:departmentId":         "modify",
-            "search/(:title)/(:state)/:pageIndex":    "search",
+            "search/(:title)/(:state)/(:isSilence)/:pageIndex":    "search",
             "add":                          "add"
         },
 
         // 查询
-        search: function(title, state, pageIndex){
-            articles.search(title||'', state||1, pageIndex||1);
+        search: function(title, state, isSilence, pageIndex){
+            articles.search(title||'', state||1, isSilence||0, pageIndex||1);
         },
 
         // 显示修改界面
@@ -383,6 +385,12 @@ $(document).ready(function(){
             <select class="form-control input-sm state">
                 <option value="1">有效文章</option>
                 <option value="0">无效文章</option>
+            </select>
+        </div>
+        <div class="pl-0 pb-10 col-md-2">
+            <select class="form-control input-sm is-silence">
+                <option value="0">首页显示</option>
+                <option value="1">首页不显示</option>
             </select>
         </div>
         <div class="pl-0 pb-10 col-md-5">
