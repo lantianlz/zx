@@ -2,7 +2,7 @@
 {% load custom_filters %}
 {% load custom_tags %}
 
-{% block title %}财经微头条{% endblock %}
+{% block title %}{{article_type.name}}{{weixin_mp.name}} - 财经微头条{% endblock %}
 {% block title_tail %}{% endblock title_tail %}
 
 {% block css %}
@@ -38,7 +38,7 @@
 			</div>
 			<div class="col-md-3 pl-5">
 				<a href="{{article.get_url}}">
-					<img class="w" src="{{article.img}}" alt="{{article.title}}">
+					<img class="w max-h100" src="{{article.img}}" alt="{{article.title}}">
 				</a>
 			</div>
 		</div>

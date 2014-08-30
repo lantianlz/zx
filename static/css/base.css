@@ -84,6 +84,7 @@
 .min-h400{min-height: 400px;}
 .min-h600{min-height: 600px;}
 .min-h700{min-height: 700px;}
+.max-h100{max-height: 100px;}
 
 .w{width:100%}
 .w15{width: 15px;}

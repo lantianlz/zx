@@ -154,7 +154,7 @@ class WeixinMpBase(object):
 
         mp = WeixinMp.objects.create(open_id=open_id, name=name, weixin_id=weixin_id, des=des,
                                      vip_info=vip_info, img=img, qrimg=qrimg,
-                                     article_type_id=article_type, is_silence=is_silence, sort_num=sort_num)
+                                     article_type=article_type, is_silence=is_silence, sort_num=sort_num)
         return 0, mp
 
     def get_weixin_mp_by_id(self, weixin_mp_id, state=True):
