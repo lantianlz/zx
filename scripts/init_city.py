@@ -43,7 +43,7 @@ def get_city_pinyin(city_name):
         u'榆林市': u'yulin1',
         u'抚州市': u'fuzhou1',
         u'宿州市': u'suzhou1',
-        u'台州市': u'taizho1',
+        u'台州市': u'taizhou1',
         u'重庆市': u'chongqing',
 
     }.get(city_name)
