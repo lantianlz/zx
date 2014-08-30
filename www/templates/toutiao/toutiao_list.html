@@ -2,6 +2,8 @@
 {% load custom_filters %}
 {% load custom_tags %}
 
+{% block description %}{% if weixin_mp %}{{weixin_mp.des|str_display:70}}{% else %}财经微头条，精选聚合微信财经类头条，不再需要订阅，即可知道财经类微信全网头条。{% endif %}{% endblock %}
+
 {% block title %}{% if request.path == "/toutiao/" %}财经微头条{% else %}{{article_type.name}}{{weixin_mp.name}} - 财经微头条{% endif %}{% endblock %}
 {% block title_tail %}{% endblock title_tail %}
 

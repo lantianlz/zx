@@ -2,6 +2,8 @@
 {% load custom_filters %}
 {% load custom_tags %}
 
+{% block description %}{{article.get_summary|str_display:70}}{% endblock %}
+
 {% block title %}{{article.title}}{% endblock %}
 
 {% block css %}
