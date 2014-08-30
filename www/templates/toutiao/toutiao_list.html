@@ -2,7 +2,7 @@
 {% load custom_filters %}
 {% load custom_tags %}
 
-{% block title %}{{article_type.name}}{{weixin_mp.name}} - 财经微头条{% endblock %}
+{% block title %}{% if request.path == "/toutiao/" %}财经微头条{% else %}{{article_type.name}}{{weixin_mp.name}} - 财经微头条{% endif %}{% endblock %}
 {% block title_tail %}{% endblock title_tail %}
 
 {% block css %}
