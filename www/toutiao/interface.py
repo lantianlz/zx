@@ -306,8 +306,8 @@ class ArticleBase(object):
 
         return 0, obj
 
-    def search_article_for_admin(self, title):
-        objs = self.get_all_articles(state=None)
+    def search_article_for_admin(self, title, state):
+        objs = self.get_all_articles(state=state)
 
         if title:
             objs = objs.filter(title=title)
@@ -331,6 +331,24 @@ class ArticleBase(object):
             for k, v in kwargs.items():
                 setattr(obj, k, v)
 
+            obj.save()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
+    def toggle_state(self, article_id):
+        if not article_id:
+            return 99800, dict_err.get(99800)
+
+        obj = self.get_article_by_id(article_id, None)
+        if not obj:
+            return 90108, dict_err.get(90108)
+
+        try:
+            obj.state = False if obj.state else True
             obj.save()
 
         except Exception, e:

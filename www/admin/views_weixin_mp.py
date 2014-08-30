@@ -65,8 +65,9 @@ def add_weixin_mp(request):
     qrimg = request.REQUEST.get('qrimg')
     article_type = request.REQUEST.get('article_type')
     sort_num = request.REQUEST.get('sort_num')
+    is_silence = request.REQUEST.get('is_silence')
 
-    code, msg = WeixinMpBase().add_mp(open_id, name, weixin_id, des, vip_info, img, qrimg, article_type, False, sort_num)
+    code, msg = WeixinMpBase().add_mp(open_id, name, weixin_id, des, vip_info, img, qrimg, article_type, is_silence, sort_num)
 
     return code, msg if code else msg.id
 
@@ -101,11 +102,10 @@ def search(request):
     data = []
 
     name = request.REQUEST.get('name')
-    state = request.REQUEST.get('state')
 
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = WeixinMpBase().search_weixin_mp_for_admin(name, state)
+    objs = WeixinMpBase().search_weixin_mp_for_admin(name)
 
     page_objs = page.Cpt(objs, count=10, page=page_index).info
 
@@ -141,11 +141,12 @@ def modify_weixin_mp(request):
     qrimg = request.REQUEST.get('qrimg')
     article_type = request.REQUEST.get('article_type')
     sort_num = request.REQUEST.get('sort_num')
+    is_silence = request.REQUEST.get('is_silence')
     state = request.REQUEST.get('state')
     state = True if state == "1" else False
 
     return WeixinMpBase().modify_weixin_mp(
         weixin_mp_id, open_id=open_id, name=name, weixin_id=weixin_id,
         des=des, vip_info=vip_info, img=img, qrimg=qrimg, article_type_id=article_type,
-        sort_num=sort_num, state=state
+        sort_num=sort_num, state=state, is_silence=is_silence
     )

@@ -8,7 +8,7 @@ $(document).ready(function(){
 
         me.attr('placeholder', '搜索提问、回答或者人...');
 
-        $('.navbar .search-container').stop(1,1).animate({'width': 500}, 450, 'easeOutQuart', function(){
+        $('.navbar .search-container').stop(1,1).animate({'width': 540}, 450, 'easeOutQuart', function(){
             me.select();
 
             if(isInit){
@@ -110,7 +110,7 @@ $(document).ready(function(){
     })
     .bind('blur', function(){
         $(this).attr('placeholder', '搜索...');
-        $('.navbar .search-container').stop(1,1).animate({'width': 130}, 500, 'easeOutQuart');
+        $('.navbar .search-container').stop(1,1).animate({'width': 110}, 500, 'easeOutQuart');
     });
 
     // 手机端搜索框大小控制

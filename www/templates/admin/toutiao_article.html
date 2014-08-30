@@ -36,20 +36,22 @@ $(document).ready(function(){
             'img': 'img',
             'viewsCount': 'views_count',
             'sortNum': 'sort_num',
-            'state': 'state'
+            'state': 'state',
+            'createDate': 'create_date'
         },
 
         // 查询
-        search: function(title, pageIndex){
+        search: function(title, state, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/toutiao/article/search", 
-                {'title': title||'', 'page_index': pageIndex||1}, 
+                {'title': title||'', 'state': state||1, 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
-                    me.name = name||'';
+                    me.title = title||'';
+                    me.state = state||1;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
                 }
@@ -98,6 +100,20 @@ $(document).ready(function(){
                     }
                 }
             );
+        },
+
+        toggleState: function(articleId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/toutiao/article/toggle_state", 
+                {'article_id': articleId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
         }
 
     });
@@ -116,7 +132,8 @@ $(document).ready(function(){
 
         events: {
             'click .search': 'search',
-            'click .pointer': 'modifyArticle'
+            'click .pointer': 'modifyArticle',
+            'click .toggle-state': 'toggleState'
         },
 
         // 渲染函数
@@ -130,7 +147,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name
+                'search/' + this.collection.title + '/' + this.collection.state
             );
         },
 
@@ -140,9 +157,10 @@ $(document).ready(function(){
         },
 
         search: function(){
-            var title = this.$('.key-word').val();
+            var title = this.$('.key-word').val(),
+                state = this.$('.state').val();
 
-            router.navigate(String.format('/search/{0}/1', title), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/1', title, state), {trigger: true});
         },
 
         modifyArticle: function(sender){
@@ -150,6 +168,19 @@ $(document).ready(function(){
                 articleId = target.data('article_id');
 
             router.navigate('/modify/' + articleId, {trigger: true});
+        },
+
+        toggleState: function(sender){
+            var target = $(sender.currentTarget),
+                articleId = target.data('article_id');
+
+            this.collection.toggleState(articleId, function(data){
+                if(data.errcode === 0){
+                    target.parent().remove();
+                } else {
+                    $.ZXNotice.ErrorTopNotice(data.errmsg);
+                }
+            });
         }
 
     });
@@ -298,13 +329,13 @@ $(document).ready(function(){
         routes: {
             "":                             "search",
             "modify/:departmentId":         "modify",
-            "search/(:name)/:pageIndex":    "search",
+            "search/(:title)/(:state)/:pageIndex":    "search",
             "add":                          "add"
         },
 
         // 查询
-        search: function(name, pageIndex){
-            articles.search(name||'', pageIndex||1);
+        search: function(title, state, pageIndex){
+            articles.search(title||'', state||1, pageIndex||1);
         },
 
         // 显示修改界面
@@ -348,6 +379,12 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="article_list">
+        <div class="pl-0 pb-10 col-md-2">
+            <select class="form-control input-sm state">
+                <option value="1">有效文章</option>
+                <option value="0">无效文章</option>
+            </select>
+        </div>
         <div class="pl-0 pb-10 col-md-5">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control border-radius-0 key-word" placeholder="输入文章名称..." />
@@ -360,13 +397,13 @@ $(document).ready(function(){
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>图片</th>
                     <th>文章标题</th>
                     <th>类型</th>
                     <th>所属微信号</th>
                     <th>阅读量</th>
                     <th>排序</th>
-                    <th>首页显示</th>
+                    <th>时间</th>
+                    <th>状态</th>
                 </tr>
             </thead>
             <tbody>
@@ -390,17 +427,17 @@ $(document).ready(function(){
 <!-- 客户经理列表 -->
 <script type="text/template" id="article_template">
     <% _.each(articles, function(article){ %>
-        <tr class="pointer" data-article_id="<%= article.articleId %>">
+        <tr>
             <td><%= article.num %></td>
-            <td><img src="<%= article.img %>" class="w140" /></td>
-            <td><%= article.title %></td>
+            <td class="pointer" data-article_id="<%= article.articleId %>"><%= article.title %></td>
             <td><%= article.articleType %></td>
             <td><%= article.weixinName %></td>
             <td><%= article.viewsCount %></td>
             <td><%= article.sortNum %></td>
-            <td>
-                <% if(article.isSilence){ %>
-                <span class="glyphicon glyphicon-remove cl_red" title="未开放"></span>
+            <td><%= article.createDate %></td>
+            <td class="toggle-state" style="cursor: pointer;" data-article_id="<%= article.articleId %>">
+                <% if(!article.state){ %>
+                <span class="glyphicon glyphicon-remove cl_red" title="已删除"></span>
                 <% } else { %>
                 <span class="glyphicon glyphicon-ok co-zx" title="正常"></span>
                 <% } %>

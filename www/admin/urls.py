@@ -210,6 +210,7 @@ urlpatterns += patterns('www.admin.views_weixin_mp',
 # 头条文章
 urlpatterns += patterns('www.admin.views_toutiao_article',
 
+                        url(r'^toutiao/article/toggle_state$', 'toggle_state'),
                         url(r'^toutiao/article/modify_article$', 'modify_article'),
                         url(r'^toutiao/article/get_article_by_id$', 'get_article_by_id'),
                         url(r'^toutiao/article/add_article$', 'add_article'),
