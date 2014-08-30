@@ -42,17 +42,16 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, state, pageIndex){
+        search: function(name, pageIndex){
             var me = this;
-            console.log(name, state, pageIndex)
+
             ajaxSend(
                 "/admin/toutiao/weixin_mp/search", 
-                {'name': name||'', 'state': state||1, 'page_index': pageIndex||1}, 
+                {'name': name||'', 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
                     me.name = name||'';
-                    me.state = state||1;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
@@ -141,7 +140,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name + '/' + this.collection.state
+                'search/' + this.collection.name
             );
 
         },
@@ -156,6 +155,12 @@ $(document).ready(function(){
                 weixinId = target.data('weixin_mp_id');
 
             router.navigate('/modify/' + weixinId, {trigger: true});
+        },
+
+        search: function(){
+            var name = this.$('.key-word').val();
+
+            router.navigate(String.format('/search/{0}/1', name), {trigger: true});
         }
 
     });
@@ -291,7 +296,7 @@ $(document).ready(function(){
             "":                                     "search",
             "modify/:weixinMpId":                       "modify",
             "add":                                  "add",
-            "search/(:name)/(:state)/pageIndex":    "search"
+            "search/(:name)/:pageIndex":    "search"
         },
 
         // 查询
@@ -461,6 +466,23 @@ $(document).ready(function(){
                 </select>
             </div>
         </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">首页显示</label>
+            <div class="col-sm-6">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="is_silence" value="1" <% if(!isSilence){ %>checked="checked"<% } %> >
+                        显示
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="is_silence" value="0" <% if(isSilence){ %>checked="checked"<% } %> >
+                        不显示
+                    </label>
+                </div>
+            </div>
+        </div>
         <div class="form-group pt-20 pb-20 mb-0">
             <label class="col-sm-2 control-label">排序</label>
             <div class="col-sm-2">
@@ -542,6 +564,23 @@ $(document).ready(function(){
                                 <option value="{{type.value}}">{{type.name}}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">首页显示</label>
+                        <div class="col-sm-6">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="is_silence" value="1" checked="checked">
+                                    显示
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="is_silence" value="0">
+                                    不显示
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0">

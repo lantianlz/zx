@@ -55,7 +55,8 @@ def format_article(objs, num):
             'img': x.img,
             'views_count': x.views_count,
             'sort_num': x.sort_num,
-            'state': x.state
+            'state': x.state,
+            'create_date': str(x.create_time)
         })
 
     return data
@@ -66,10 +67,12 @@ def search(request):
     data = []
 
     title = request.REQUEST.get('title')
+    state = request.REQUEST.get('state')
+    state = True if state == "1" else False
 
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = ArticleBase().search_article_for_admin(title)
+    objs = ArticleBase().search_article_for_admin(title, state)
 
     page_objs = page.Cpt(objs, count=10, page=page_index).info
 
@@ -112,3 +115,11 @@ def modify_article(request):
         weixin_mp_id=weixin_mp_id, from_url=from_url, img=img, is_silence=is_silence,
         sort_num=sort_num, state=state
     )
+
+
+@verify_permission('modify_toutiao_article')
+@common_ajax_response
+def toggle_state(request):
+    article_id = request.REQUEST.get('article_id')
+
+    return ArticleBase().toggle_state(article_id)
