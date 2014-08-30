@@ -74,10 +74,10 @@ def search(request):
 
     objs = ArticleBase().search_article_for_admin(title, state)
 
-    page_objs = page.Cpt(objs, count=10, page=page_index).info
+    page_objs = page.Cpt(objs, count=50, page=page_index).info
 
     # 格式化json
-    num = 10 * (page_index - 1)
+    num = 50 * (page_index - 1)
     data = format_article(page_objs[0], num)
 
     return HttpResponse(
