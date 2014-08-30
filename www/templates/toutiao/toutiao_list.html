@@ -30,16 +30,16 @@
 {% block main %}
 <ul class="list-group toutiao-list mb-0">
 	{% for article in articles %}
-	<li class="list-group-item bdc-ccc pb-10">
-		<div class="row pl-0 pr-0">
+	<li class="list-group-item bdc-ccc pb-15">
+		<div class="row pl-3 pr-3 pt-5">
 			<div class="col-md-9">
 				<h4 class="mt-5">
 	                <a class="black-blue fb" href="{{article.get_url}}">{{article.title|str_display:23}}</a>
 	            </h4>
-	            <div class="f13 line-height-22">{{article.get_summary|str_display:65}}</div>
+	            <div class="f13 line-height-22 co6">{{article.get_summary|str_display:55}}</div>
 	            <div class="pt-5">
 	            	<a class="f12" href="{{article.weixin_mp.get_url}}">{{article.weixin_mp.name}}</a>
-	            	<span class="f12 co8 pl-10">{{article.create_time}}</span>
+	            	<span class="f12 co17 pl-10">{{article.create_time}}</span>
 	            	<span class="glyphicon glyphicon-fire pull-right co25 f12 pt-3">{{article.views_count}}</span>
 	            </div>
 			</div>
