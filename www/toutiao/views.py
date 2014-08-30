@@ -14,7 +14,7 @@ wmb = interface.WeixinMpBase()
 
 def toutiao_list(request, article_type=None, template_name='toutiao/toutiao_list.html'):
     if not article_type:
-        articles = ab.get_all_articles()
+        articles = ab.get_all_valid_articles()
     else:
         article_type = atb.get_type_by_domain(article_type)
         if not article_type:

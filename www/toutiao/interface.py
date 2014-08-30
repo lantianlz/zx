@@ -246,6 +246,12 @@ class ArticleBase(object):
             ps.update(dict(state=state))
         return Article.objects.select_related("weixin_mp").filter(**ps)
 
+    def get_all_valid_articles(self, state=True):
+        ps = dict(is_silence=False)
+        if state is not None:
+            ps.update(dict(state=state))
+        return Article.objects.select_related("weixin_mp").filter(**ps)
+
     def get_articles_by_type(self, article_type):
         return Article.objects.select_related("weixin_mp").filter(article_type=article_type)
 
