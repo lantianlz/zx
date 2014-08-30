@@ -74,6 +74,7 @@
 .h35{height: 35px;}
 .h40{height: 40px;}
 .h90{height: 90px;}
+.h100{height: 100px;}
 .min-h22{min-height: 22px;}
 .min-h40{min-height: 40px;}
 .min-h50{min-height: 50px;}
@@ -84,6 +85,7 @@
 .min-h400{min-height: 400px;}
 .min-h600{min-height: 600px;}
 .min-h700{min-height: 700px;}
+.max-h100{max-height: 100px;}
 
 .w{width:100%}
 .w15{width: 15px;}
