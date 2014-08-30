@@ -253,10 +253,10 @@ class ArticleBase(object):
         return Article.objects.select_related("weixin_mp").filter(**ps)
 
     def get_articles_by_type(self, article_type):
-        return Article.objects.select_related("weixin_mp").filter(article_type=article_type)
+        return Article.objects.select_related("weixin_mp").filter(article_type=article_type, state=True)
 
     def get_articles_by_weixin_mp(self, weixin_mp):
-        return Article.objects.select_related("weixin_mp").filter(weixin_mp=weixin_mp)
+        return Article.objects.select_related("weixin_mp").filter(weixin_mp=weixin_mp, state=True)
 
     def get_article_by_id(self, article_id, state=True):
         try:
@@ -268,12 +268,12 @@ class ArticleBase(object):
             return None
 
     def get_newsest_articles_related(self, article):
-        ps = dict(weixin_mp=article.weixin_mp)
+        ps = dict(weixin_mp=article.weixin_mp, state=True)
         return Article.objects.filter(**ps).exclude(id=article.id).order_by("-create_time")
 
     def get_hotest_articles(self):
         now = datetime.datetime.now()
-        return Article.objects.filter(create_time__gt=now - datetime.timedelta(hours=48)).order_by("-views_count", "-create_time")
+        return Article.objects.filter(create_time__gt=now - datetime.timedelta(hours=24), is_silence=False, state=True).order_by("-views_count", "-create_time")
 
     def add_article_view_count(self, article_id):
         '''
