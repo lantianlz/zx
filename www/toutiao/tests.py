@@ -25,7 +25,7 @@ def test():
     # ts = wmp.get_mp_info_by_open_id("oIWsFtzU9XFaZY7vsx3qkvrDQ86A")
     # print wmp.add_mp(*ts, article_type=1)
     # print atb.add_article_type(name="综合财经", domain="zhcj")
-    print bb.add_ban_key(u"测试")
+    print bb.add_ban_key(u"耗资")
 
 
 if __name__ == '__main__':

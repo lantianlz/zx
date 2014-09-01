@@ -16,9 +16,16 @@ import re
 import time
 import requests
 from pyquery import PyQuery as pq
-from www.toutiao.models import WeixinMp, Article
+from www.toutiao.models import WeixinMp, Article, BanKey
 
 headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:29.0) Gecko/20100101 Firefox/29.0"}
+
+
+def check_ban_key(title, ban_keys):
+    for bk in ban_keys:
+        if bk.key in title:
+            return False
+    return True
 
 
 def sync_toutiao():
@@ -32,6 +39,7 @@ def sync_toutiao():
     start_time = time.time()
     all_count = 0
     mp_count = 0
+    ban_keys = list(BanKey.objects.all())
 
     # 文章字数少于300的过滤，每天更新一次
     for mp in WeixinMp.objects.filter(state=True):
@@ -52,6 +60,9 @@ def sync_toutiao():
             content = article_detail("#js_content").html()
             format_content = _replace_html_tag(content).strip()
             if len(format_content) < 300:
+                continue
+
+            if mp.is_silence == False and check_ban_key(title, ban_keys) == False:
                 continue
 
             # print url
