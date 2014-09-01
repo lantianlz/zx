@@ -120,7 +120,7 @@ class WeixinMpBase(object):
     def get_mp_info_by_open_id(self, open_id):
 
         headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:29.0) Gecko/20100101 Firefox/29.0"}
-        resp = requests.get(u"http://weixin.sogou.com/gzh?openid=%s" % open_id, headers=headers)
+        resp = requests.get(u"http://weixin.sogou.com/gzh?openid=%s" % open_id, headers=headers, timeout=30)
         jq = pq(resp.text)
         name = jq("#weixinname").html().strip()
         weixin_id = jq(".txt-box>h4>span").html().split(u"：")[1].strip()

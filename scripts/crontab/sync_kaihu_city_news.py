@@ -37,7 +37,7 @@ def sync_kaihu_news():
     # 文章字数少于300的过滤，每天更新一次
     for city in City.objects.filter(is_show=True, location_type=2):
         url = u"http://weixin.sogou.com/weixin?query=%s证券营业部&type=1&ie=utf8&page=%s" % (city.get_city_name_for_seo(), 1)
-        resp = requests.get(url, headers=headers)
+        resp = requests.get(url, headers=headers, timeout=30)
         text = resp.text
         # print text.encode("utf8")
 
@@ -50,7 +50,7 @@ def sync_kaihu_news():
         for href in news_hrefs:
             if href is not None:
                 href = pq(href).attr("href").strip()
-                news = pq(requests.get(href, headers=headers).text)
+                news = pq(requests.get(href, headers=headers, timeout=30).text)
 
                 # department_name = news("#post-user").html().strip()
                 title = news("#activity-name").html().split("<em")[0].strip()
