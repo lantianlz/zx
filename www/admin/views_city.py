@@ -36,7 +36,9 @@ def format_city(objs, num):
             'is_show': x.is_show,
             'pinyin': x.pinyin,
             'pinyin_abbr': x.pinyin_abbr,
-            'sort_num': x.sort_num
+            'sort_num': x.sort_num,
+            'rank': CityBase().get_city_baidu_rank(x) if x.is_show else '未开放',
+            'rank_url': x.get_baidu_search_url() if x.is_show else '#'
         })
 
     return data

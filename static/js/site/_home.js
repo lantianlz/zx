@@ -18,7 +18,7 @@ $(document).ready(function(){
             $('.navbar .search-input').autocomplete({
                 serviceUrl: '/search_auto_complete',
                 paramName: 'key',
-                width: 500,
+                width: 540,
                 deferRequestBy: 300,
                 showDelay: 500,
                 isLocal: false,

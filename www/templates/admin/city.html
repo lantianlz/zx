@@ -37,7 +37,9 @@ $(document).ready(function(){
             'isShow': 'is_show',
             'pinyin': 'pinyin',
             'pinyinAbbr': 'pinyin_abbr',
-            'sort': 'sort_num'
+            'sort': 'sort_num',
+            'rank': 'rank',
+            'rankUrl': 'rank_url'
         },
 
         // 查询
@@ -267,6 +269,7 @@ $(document).ready(function(){
                 <tr>
                     <th>#</th>
                     <th>城市名称</th>
+                    <th>百度排名</th>
                     <th>所属省份</th>
                     <th>拼音</th>
                     <th>拼音简写</th>
@@ -298,6 +301,11 @@ $(document).ready(function(){
         <tr>
             <td><%= city.num %></td>
             <td><a href="http://<%= city.pinyinAbbr %>.{{SERVER_DOMAIN}}" target="_blank"><%= city.cityName %></a></td>
+            <% if(city.isShow){ %>
+                <td><a href="<%= city.rankUrl %>" target="_blank"><%= city.rank %></a></td>
+            <% } else { %>
+                <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.rank %></td>
+            <% } %>
             <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.provinceName %></td>
             <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.pinyin %></td>
             <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.pinyinAbbr %></td>
