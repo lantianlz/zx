@@ -58,7 +58,7 @@ def get_shanghai_feed():
     new_count = 0
     for i in range(1, 10):
         url = "http://sns.sseinfo.com/ajax/feeds.do?type=11&pageSize=100&lastid=-1&show=-1&page=%s" % i
-        resp = requests.get(url)
+        resp = requests.get(url, timeout=30)
         text = resp.text
         # print text.encode("utf8")
 

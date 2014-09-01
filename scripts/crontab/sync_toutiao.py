@@ -36,7 +36,7 @@ def sync_toutiao():
     # 文章字数少于300的过滤，每天更新一次
     for mp in WeixinMp.objects.filter(state=True):
         url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp.open_id
-        resp = requests.get(url, headers=headers)
+        resp = requests.get(url, headers=headers, timeout=30)
         text = resp.text
         lst_article = eval(re.compile('gzh\((.+)\)').findall(text)[0])["items"]
 
@@ -47,7 +47,7 @@ def sync_toutiao():
             img = re.compile('<imglink>(.+)</imglink>').findall(article)[0][9:-3]
             create_time = datetime.datetime.fromtimestamp(float(timestamp))
 
-            article_detail = pq(requests.get(url, headers=headers).text)
+            article_detail = pq(requests.get(url, headers=headers, timeout=30).text)
             title = article_detail("#activity-name").html().split("<em")[0].strip()
             content = article_detail("#js_content").html()
             format_content = _replace_html_tag(content).strip()
