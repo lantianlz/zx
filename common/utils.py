@@ -329,3 +329,23 @@ def get_chinese_length(text):
         else:
             str_count += 1
     return str_count / 2
+
+
+def get_baidu_rank(key):
+    """
+    @note: 获取关键词在百度中的排名 
+    """
+    import requests
+    from pyquery import PyQuery as pq
+
+    for page in range(0, 1):
+        url = u"http://www.baidu.com/s?wd=" + key + "&pn=" + \
+            str(page) + u"&oq=" + key + "&ie=utf-8&usm=2&rn=100"
+        rep = requests.get(url, timeout=30)
+        text = rep.text
+
+        text = pq(text)
+        for i, div in enumerate(text(".c-container")):
+            if "zhixuan" in pq(div).html():
+                return i + 1
+    return "100+"

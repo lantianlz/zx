@@ -91,6 +91,9 @@ class City(models.Model):
             name = name.replace(key, '')
         return name
 
+    def get_baidu_search_url(self):
+        return (u"http://www.baidu.com/s?wd=%s&rn=100" % self.get_city_name_for_seo()).encode("utf8")
+
 
 class CustomerManager(models.Model):
     pay_type_choices = ((0, u'未付费'), (1, u'付费'))

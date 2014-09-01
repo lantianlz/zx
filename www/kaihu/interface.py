@@ -131,6 +131,15 @@ class CityBase(object):
 
         return 0, dict_err.get(0)
 
+    @cache_required(cache_key='city_baidu_rank_%s', expire=3600 * 24)
+    def get_city_baidu_rank(self, city_id_or_object):
+        from common.utils import get_baidu_rank
+
+        city = city_id_or_object
+        if not isinstance(city_id_or_object, City):
+            city = self.get_city_by_id(city_id_or_object)
+        return get_baidu_rank(key=u"%s股票开户" % city.get_city_name_for_seo())
+
 
 class DepartmentBase(object):
 

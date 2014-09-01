@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import requests
 
+import sys
+import os
 
-def touch_baidu(key):
-    for page in range(0, 100, 10):
-        # print (page / 10 + 1)
-        url = u"http://www.baidu.com/s?wd=" + key + "&pn=" + \
-            str(page) + u"&oq=" + key + "&tn=63090008_1_hao_pg&ie=utf-8&usm=2"
-        rep = requests.get(url)
-        text = rep.text
-        if "zhixuan" in text or u"智选" in text:
-            # print u"page num is %s" % (page / 10 + 1)
-            break
-    # print rep.text.encode('utf8')
-    return (page / 10 + 1)
+# 引入父目录来引入其他模块
+SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.extend([os.path.abspath(os.path.join(SITE_ROOT, '../')),
+                 os.path.abspath(os.path.join(SITE_ROOT, '../../')),
+                 ])
+os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
+
+from common.utils import get_baidu_rank
 
 if __name__ == '__main__':
-    key = u"喀什股票开户"
-    print touch_baidu(key)
+    key = u"广元股票开户"
+    print get_baidu_rank(key)
