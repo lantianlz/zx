@@ -92,7 +92,7 @@ class City(models.Model):
         return name
 
     def get_baidu_search_url(self):
-        return (u"http://www.baidu.com/s?wd=%s&rn=100" % self.get_city_name_for_seo()).encode("utf8")
+        return (u"http://www.baidu.com/s?wd=%s股票开户&rn=100" % self.get_city_name_for_seo()).encode("utf8")
 
 
 class CustomerManager(models.Model):
