@@ -66,6 +66,7 @@ def add_weixin_mp(request):
     article_type = request.REQUEST.get('article_type')
     sort_num = request.REQUEST.get('sort_num')
     is_silence = request.REQUEST.get('is_silence')
+    is_silence = True if is_silence == "1" else False
 
     code, msg = WeixinMpBase().add_mp(open_id, name, weixin_id, des, vip_info, img, qrimg, article_type, is_silence, sort_num)
 
@@ -142,6 +143,7 @@ def modify_weixin_mp(request):
     article_type = request.REQUEST.get('article_type')
     sort_num = request.REQUEST.get('sort_num')
     is_silence = request.REQUEST.get('is_silence')
+    is_silence = True if is_silence == "1" else False
     state = request.REQUEST.get('state')
     state = True if state == "1" else False
 
