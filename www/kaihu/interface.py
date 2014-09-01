@@ -138,7 +138,10 @@ class CityBase(object):
         city = city_id_or_object
         if not isinstance(city_id_or_object, City):
             city = self.get_city_by_id(city_id_or_object)
-        return get_baidu_rank(key=u"%s股票开户" % city.get_city_name_for_seo())
+        if city.is_show:
+            return get_baidu_rank(key=u"%s股票开户" % city.get_city_name_for_seo())
+        else:
+            return u"暂无"
 
 
 class DepartmentBase(object):
