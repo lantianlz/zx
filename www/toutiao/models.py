@@ -63,3 +63,11 @@ class Article(models.Model):
         """
         from common import utils
         return utils.get_summary_from_html_by_sub(self.content)
+
+
+class BanKey(models.Model):
+
+    """
+    @note：抓取禁止关键词维护
+    """
+    key = models.CharField(max_length=16, unique=True)

@@ -18,12 +18,14 @@ from common import utils
 from www.toutiao import interface
 wmp = interface.WeixinMpBase()
 atb = interface.ArticleTypeBase()
+bb = interface.BanKeyBase()
 
 
 def test():
-    ts = wmp.get_mp_info_by_open_id("oIWsFtzU9XFaZY7vsx3qkvrDQ86A")
-    print wmp.add_mp(*ts, article_type=1)
+    # ts = wmp.get_mp_info_by_open_id("oIWsFtzU9XFaZY7vsx3qkvrDQ86A")
+    # print wmp.add_mp(*ts, article_type=1)
     # print atb.add_article_type(name="综合财经", domain="zhcj")
+    print bb.add_ban_key(u"测试")
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ from django.db.models import F
 from common import cache, debug
 from www.misc.decorators import cache_required
 from www.misc import consts
-from www.toutiao.models import ArticleType, WeixinMp, Article
+from www.toutiao.models import ArticleType, WeixinMp, Article, BanKey
 
 
 dict_err = {
@@ -22,6 +22,7 @@ dict_err = {
     90106: u'找不到对应的微信号',
     90107: u'文章标题已经存在',
     90108: u'找不到对应的文章',
+    90109: u'key已存在',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -363,4 +364,16 @@ class ArticleBase(object):
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
 
+        return 0, dict_err.get(0)
+
+
+class BanKeyBase(object):
+
+    def __init__(self):
+        pass
+
+    def add_ban_key(self, key):
+        if BanKey.objects.filter(key=key):
+            return 90109, dict_err.get(90109)
+        BanKey.objects.create(key=key)
         return 0, dict_err.get(0)
