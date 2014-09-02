@@ -377,3 +377,18 @@ class BanKeyBase(object):
             return 90109, dict_err.get(90109)
         BanKey.objects.create(key=key)
         return 0, dict_err.get(0)
+
+    def get_all_bankeys(self):
+        return BanKey.objects.all()
+
+    def remove_bankey(self, key_id):
+        if not key_id:
+            return 90109, dict_err.get(90109)
+
+        try:
+            BanKey.objects.filter(id=key_id).delete()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)

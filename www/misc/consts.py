@@ -132,4 +132,9 @@ PERMISSIONS = [
     {'code': 'query_toutiao_article', 'name': u'查询头条文章', 'parent': 'toutiao_article_manage'},
     {'code': 'modify_toutiao_article', 'name': u'修改头条文章', 'parent': 'toutiao_article_manage'},
     # {'code': 'remove_toutiao_article', 'name': u'删除微信号', 'parent': 'toutiao_article_manage'},
+
+    {'code': 'toutiao_bankey_manage', 'name': u'头条关键字管理', 'parent': None},
+    {'code': 'add_toutiao_bankey', 'name': u'添加关键字', 'parent': 'toutiao_bankey_manage'},
+    {'code': 'query_toutiao_bankey', 'name': u'查询关键字', 'parent': 'toutiao_bankey_manage'},
+    {'code': 'remove_toutiao_bankey', 'name': u'修改关键字', 'parent': 'toutiao_bankey_manage'},
 ]

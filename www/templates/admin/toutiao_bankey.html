@@ -1,0 +1,240 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}抓取关键字管理{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var Bankey = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': ''
+        }
+
+    });
+
+    // collections
+    var Bankeys = Backbone.Collection.extend({
+        model: Bankey,
+
+        _modelMaps: {
+            'num': 'num',
+            'bankeyId': 'bankey_id',
+            'key': 'key'
+        },
+
+        // 查询
+        search: function(key, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/toutiao/bankey/search", 
+                {'key': key||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+                    me.key = key||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
+                }
+            );
+        },
+        
+        addBankey: function(key, callback){
+
+            ajaxSend(
+                "/admin/toutiao/bankey/add_bankey", 
+                {'key': key},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        removeBankey: function(bankeyId, callback){
+
+            ajaxSend(
+                "/admin/toutiao/bankey/remove_bankey", 
+                {'benkey_id': bankeyId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#bankey_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#bankey_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search': 'search',
+            'click .add': 'addBankey',
+            'click .pointer': 'removeBankey'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+
+            this.$('tbody').html(this.template({'bankeys': data}));
+
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.key
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#bankey_list"]').tab('show');
+        },
+
+        search: function(){
+            var key = this.$('.key-word').val();
+
+            router.navigate(String.format('/search/{0}/1', key), {trigger: true});
+        },
+
+        removeBankey: function(sender){
+            var target = $(sender.currentTarget),
+                bankeyId = target.data('bankey_id');
+
+            this.collection.removeBankey(bankeyId, function(data){
+                if(data.errcode === 0){
+                    $.ZXNotice.SuccessTopNotice('操作成功!');
+                    target.parent().parent().remove();
+                } else {
+                    $.ZXNotice.ErrorTopNotice(data.errmsg);
+                }
+            });
+        },
+
+        addBankey: function(){
+
+            var key = this.$('.ban-key').val();
+
+            if(key){
+                this.collection.addBankey(key, function(data){
+                    if(data.errcode === 0){
+                        $.ZXNotice.SuccessTopNotice('操作成功!');
+                        bankeys.search('', 1);
+                    } else {
+                        $.ZXNotice.ErrorTopNotice(data.errmsg);
+                    }
+                });
+            }
+            
+        }
+
+    });
+
+    
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                         "search",
+            "search/(:key)/:pageIndex": "search"
+        },
+
+        // 查询
+        search: function(key, pageIndex){
+            bankeys.search(key||'', pageIndex||1);
+        }
+
+    });
+    
+    // 初始化
+    var bankeys = new Bankeys(),
+        listView = new ListView({'collection': bankeys}),
+        router = new Router();
+ 
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#bankey_list" class="black-blue" data-toggle="pill">关键字列表</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="bankey_list">
+        <div class="pl-0 pb-10 col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入关键字名称..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-default search" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <div class="pl-0 pb-10 pull-right col-md-3">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control border-radius-0 ban-key" placeholder="输入要添加的关键字" />
+                <span class="input-group-btn">
+                    <button class="btn btn-default add" type="button">添加</button>
+                </span>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>关键字</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="bankey_template">
+    <% _.each(bankeys, function(bankey){ %>
+        <tr>
+            <td><%= bankey.num %></td>
+            <td><%= bankey.key %></td>
+            <td><span data-bankey_id="<%= bankey.bankeyId %>" class="pointer glyphicon glyphicon-remove cl_red" title="未开放"></span></td>
+        </tr>
+    <% }) %>
+</script>
+
+{% endblock admin-right %}

@@ -185,16 +185,6 @@ urlpatterns += patterns('www.admin.views_toutiao_type',
                         url(r'^toutiao/toutiao_type$', 'toutiao_type'),
                         )
 
-# 头条类型
-urlpatterns += patterns('www.admin.views_toutiao_type',
-
-                        url(r'^toutiao/toutiao_type/modify_type$', 'modify_type'),
-                        url(r'^toutiao/toutiao_type/get_type_by_id$', 'get_type_by_id'),
-                        url(r'^toutiao/toutiao_type/add_type$', 'add_type'),
-                        url(r'^toutiao/toutiao_type/search$', 'search'),
-                        url(r'^toutiao/toutiao_type$', 'toutiao_type'),
-                        )
-
 # 微信号
 urlpatterns += patterns('www.admin.views_weixin_mp',
 
@@ -216,4 +206,13 @@ urlpatterns += patterns('www.admin.views_toutiao_article',
                         url(r'^toutiao/article/add_article$', 'add_article'),
                         url(r'^toutiao/article/search$', 'search'),
                         url(r'^toutiao/article$', 'article'),
+                        )
+
+# 头条文章
+urlpatterns += patterns('www.admin.views_toutiao_bankey',
+
+                        url(r'^toutiao/bankey/remove_bankey$', 'remove_bankey'),
+                        url(r'^toutiao/bankey/add_bankey$', 'add_bankey'),
+                        url(r'^toutiao/bankey/search$', 'search'),
+                        url(r'^toutiao/bankey$', 'bankey'),
                         )
