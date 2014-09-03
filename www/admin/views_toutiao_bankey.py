@@ -37,9 +37,9 @@ def search(request):
     key = request.REQUEST.get('key')
     page_index = int(request.REQUEST.get('page_index'))
 
-    page_objs = page.Cpt(BanKeyBase().get_all_bankeys(), count=10, page=page_index).info
+    page_objs = page.Cpt(BanKeyBase().get_all_bankeys(), count=50, page=page_index).info
 
-    num = 10 * (page_index - 1)
+    num = 50 * (page_index - 1)
 
     data = []
     for x in page_objs[0]:
