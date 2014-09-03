@@ -23,10 +23,12 @@
             <button type="submit" class="pa f16 pointer no-border bgc-0" style="right: 15px; top: 22px;"><span class="fa fa-search co8" ></span></button>
         </form>
     </div>
+    {% endblock %}
 
+    {% block stock_right %}
+    {% hot_stock %}
     <!-- 百度站内搜索 -->
     <script type="text/javascript">document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E%3Cscript charset="utf-8" src="http://rp.baidu.com/rp3w/3w.js?sid=6625555038042837712') + '&t=' + (Math.ceil(new Date()/3600000)) + unescape('"%3E%3C/script%3E'));</script>
     {% endblock %}
-    {% block stock_right %}{% hot_stock %}{% endblock %}
 </div>
 {% endblock container_content %}
