@@ -74,11 +74,12 @@ def global_statistic(context):
         account_count = User.objects.all().count()
         stock_feed_count = StockFeed.objects.all().count()
 
+        now = datetime.datetime.now()
+        stock_feed_latest_time = now.strftime('%Y-%m-%d %H:%M:%S')
         sfs = StockFeed.objects.all().order_by("-create_time")[:1]
         if sfs:
             stock_feed_latest_time = sfs[0].create_time
 
-        now = datetime.datetime.now()
         gs = dict(answer_count=answer_count, question_count=question_count,
                   account_count=account_count, update_time=now.strftime('%Y-%m-%d %H:%M:%S'),
                   stock_feed_count=stock_feed_count, stock_feed_latest_time=stock_feed_latest_time,

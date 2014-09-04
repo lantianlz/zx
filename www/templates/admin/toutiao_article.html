@@ -381,26 +381,28 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="article_list">
-        <div class="pl-0 pb-10 col-md-2">
-            <select class="form-control input-sm state">
-                <option value="1">有效文章</option>
-                <option value="0">无效文章</option>
-            </select>
-        </div>
-        <div class="pl-0 pb-10 col-md-2">
-            <select class="form-control input-sm is-silence">
-                <option value="0">首页显示</option>
-                <option value="1">首页不显示</option>
-            </select>
-        </div>
-        <div class="pl-0 pb-10 col-md-5">
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入文章名称..." />
-                <span class="input-group-btn">
-                    <button class="btn btn-default search" type="button">查询</button>
-                </span>
+        <form action="." onsubmit="javascript: return false;">
+            <div class="pl-0 pb-10 col-md-2">
+                <select class="form-control input-sm state">
+                    <option value="1">有效文章</option>
+                    <option value="0">无效文章</option>
+                </select>
             </div>
-        </div>
+            <div class="pl-0 pb-10 col-md-2">
+                <select class="form-control input-sm is-silence">
+                    <option value="0">首页显示</option>
+                    <option value="1">首页不显示</option>
+                </select>
+            </div>
+            <div class="pl-0 pb-10 col-md-5">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control border-radius-0 key-word" placeholder="输入文章名称..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search" type="submit">查询</button>
+                    </span>
+                </div>
+            </div>
+        </form>
         <table class="table table-hover">
             <thead>
                 <tr>

@@ -340,12 +340,14 @@ $(document).ready(function(){
     <!-- 用户列表 -->
     <div class="tab-pane fade pt-15" id="user_list">
         <div class="pl-0 pb-10 col-md-3">
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入用户名称..." />
-                <span class="input-group-btn">
-                    <button class="btn btn-default search-user" type="button">查询</button>
-                </span>
-            </div>
+            <form action="." onsubmit="javascript: return false;">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control border-radius-0 key-word" placeholder="输入用户名称..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search-user" type="submit">查询</button>
+                    </span>
+                </div>
+            </form>
         </div>
         <table class="table table-hover">
             <thead>

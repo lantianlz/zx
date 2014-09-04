@@ -289,21 +289,23 @@ $(document).ready(function(){
 <div class="tab-content">
     <!-- 提问列表 -->
     <div class="tab-pane fade pt-15 in active" id="question_list">
-        <div class="pl-0 pb-10 col-md-2">
-            <select class="form-control input-sm order">
-                <option value="create_time">按 提问时间 排序</option>
-                <option value="views_count">按 浏览次数 排序</option>
-                <option value="answer_count">按 回答个数 排序</option>
-            </select>
-        </div>
-        <div class="pl-0 pb-10 col-md-3">
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control border-radius-0 key-word" placeholder="输入提问标题..." />
-                <span class="input-group-btn">
-                    <button class="btn btn-default search-question" type="button">查询</button>
-                </span>
+        <form action="." onsubmit="javascript: return false;">
+            <div class="pl-0 pb-10 col-md-2">
+                <select class="form-control input-sm order">
+                    <option value="create_time">按 提问时间 排序</option>
+                    <option value="views_count">按 浏览次数 排序</option>
+                    <option value="answer_count">按 回答个数 排序</option>
+                </select>
             </div>
-        </div>
+            <div class="pl-0 pb-10 col-md-3">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control border-radius-0 key-word" placeholder="输入提问标题..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search-question" type="submit">查询</button>
+                    </span>
+                </div>
+            </div>
+        </form>
         <table class="table table-hover">
             <thead>
                 <tr>
