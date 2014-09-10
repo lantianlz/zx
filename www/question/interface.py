@@ -546,7 +546,7 @@ class AnswerBase(object):
             answer.question.answer_count -= 1
             answer.question.save()
 
-            AtAnswer.objects.filter(user_id=user.id).delete()
+            AtAnswer.objects.filter(answer=answer).delete()
 
             # 更新用户回答统计总数
             UserCountBase().update_user_count(user_id=answer.from_user_id, code='user_answer_count', operate='minus')
