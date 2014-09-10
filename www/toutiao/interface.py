@@ -241,11 +241,15 @@ class ArticleBase(object):
         for article in articles:
             article.content = article.content.replace("data-src=", "src=")
 
-            # def _re_sub(match):
-            #     em = match.group(0)
-            #     return ''
+            def _ifrmame_sub(match):
+                em = match.group(0)
+                return em.replace("/>", "></iframe>")
+
             tag_em = re.compile('<em [^\<]+?/>')
             article.content = tag_em.sub('', article.content)   # 未正确关闭的em标签处理
+
+            tag_iframe = re.compile('<iframe [^\<]+?/>')
+            article.content = tag_iframe.sub(_ifrmame_sub, article.content)
 
         return articles
 
