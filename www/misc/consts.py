@@ -85,6 +85,12 @@ PERMISSIONS = [
     {'code': 'modify_city', 'name': u'修改城市', 'parent': 'city_manage'},
     #{'code': 'remove_city', 'name': u'删除营业部', 'parent': 'city_manage'},
 
+    {'code': 'district_manage', 'name': u'区管理', 'parent': None},
+    #{'code': 'add_district', 'name': u'添加区', 'parent': 'district_manage'},
+    {'code': 'query_district', 'name': u'查询区', 'parent': 'district_manage'},
+    {'code': 'modify_district', 'name': u'修改区', 'parent': 'district_manage'},
+    #{'code': 'remove_district', 'name': u'删除区', 'parent': 'district_manage'},
+
     {'code': 'department_manage', 'name': u'营业部管理', 'parent': None},
     #{'code': 'add_department', 'name': u'添加营业部', 'parent': 'department_manage'},
     {'code': 'query_department', 'name': u'查询营业部', 'parent': 'department_manage'},

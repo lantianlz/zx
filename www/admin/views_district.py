@@ -46,7 +46,7 @@ def format_district(objs, num):
     return data
 
 
-@verify_permission('query_city')
+@verify_permission('query_district')
 def search(request):
     data = []
 
@@ -69,7 +69,7 @@ def search(request):
     )
 
 
-@verify_permission('query_city')
+@verify_permission('query_district')
 def get_district_by_id(request):
     district_id = request.REQUEST.get('district_id')
 
@@ -78,7 +78,7 @@ def get_district_by_id(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@verify_permission('modify_city')
+@verify_permission('modify_district')
 @common_ajax_response
 def modify_district(request):
     district_id = request.REQUEST.get('district_id')
