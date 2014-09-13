@@ -39,7 +39,8 @@ $(document).ready(function(){
             'pinyinAbbr': 'pinyin_abbr',
             'sort': 'sort_num',
             'rank': 'rank',
-            'rankUrl': 'rank_url'
+            'rankUrl': 'rank_url',
+            'departmentCount': 'department_count'
         },
 
         // 查询
@@ -276,6 +277,7 @@ $(document).ready(function(){
                     <th>拼音</th>
                     <th>拼音简写</th>
                     <th>排序</th>
+                    <th>营业部数</th>
                     <th>状态</th>
                 </tr>
             </thead>
@@ -312,6 +314,7 @@ $(document).ready(function(){
             <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.pinyin %></td>
             <td class="pointer" data-city_id="<%= city.cityId %>"><%= city.pinyinAbbr %></td>
             <td><%= city.sort %></td>
+            <td><%= city.departmentCount %></td>
             <td>
                 <% if(!city.isShow){ %>
                 <span class="glyphicon glyphicon-remove cl_red" title="未开放"></span>
