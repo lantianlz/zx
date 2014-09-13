@@ -42,6 +42,7 @@ def format_department(objs, num):
     for x in objs:
         num += 1
         city = CityBase().get_city_by_id(x.city_id) if x.city_id else None
+        district = CityBase().get_district_by_id(x.district_id) if x.district_id else None
 
         data.append({
             'num': num,
@@ -56,7 +57,9 @@ def format_department(objs, num):
             'sort_num': x.sort_num,
             'city_id': city.id if city else '',
             'city_name': city.city if city else '',
-            'city_pinyin_abbr': city.pinyin_abbr if city else ''
+            'city_pinyin_abbr': city.pinyin_abbr if city else '',
+            'district_id': district.id if district else '',
+            'district_name': district.district if district else ''
         })
 
     return data
@@ -124,7 +127,9 @@ def modify_department(request):
     # company_id = request.REQUEST.get('belong_company')
     addr = request.REQUEST.get('addr')
     des = request.REQUEST.get('des')
+    district_id = request.REQUEST.get('district_id')
+    district_id = district_id if district_id else None
 
     return DepartmentBase().modify_department(
-        department_id, name=name, sort_num=sort_num, tel=tel, addr=addr, des=des, city_id=city_id
+        department_id, name=name, sort_num=sort_num, tel=tel, addr=addr, des=des, city_id=city_id, district_id=district_id
     )

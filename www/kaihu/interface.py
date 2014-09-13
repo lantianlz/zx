@@ -39,6 +39,9 @@ class CityBase(object):
     def get_all_citys(self):
         return City.objects.filter(location_type=2)
 
+    def get_all_districts(self):
+        return City.objects.filter(location_type=3)
+
     def get_all_city_group_by_province(self):
         data = []
         areas = self.get_all_areas()
@@ -142,6 +145,59 @@ class CityBase(object):
             return get_baidu_rank(key=u"%s股票开户" % city.get_city_name_for_seo())
         else:
             return u"暂无"
+
+    def get_district_by_id(self, district_id):
+        if district_id:
+            districts = self.get_all_districts().filter(id=district_id)
+            if districts:
+                return districts[0]
+
+    def get_districts_by_city(self, city_id):
+        districts = []
+        if city_id:
+            districts = self.get_all_districts().filter(city=city_id, is_show=1)
+
+        return districts
+
+    def search_districts_for_admin(self, district_name, is_show=0):
+        districts = self.get_all_districts().filter(is_show=is_show)
+
+        if district_name:
+            districts = districts.filter(district__contains=district_name)
+
+        return districts
+
+    def modify_district(self, district_id, **kwargs):
+
+        if not district_id:
+            return 99800, dict_err.get(99800)
+
+        district = self.get_district_by_id(district_id)
+
+        if not district:
+            return 99800, dict_err.get(99800)
+
+        # if kwargs.get('pinyin'):
+        #     temp = self.get_city_by_pinyin(kwargs.get('pinyin'))
+        #     if temp and temp.id != city.id:
+        #         return 50105, dict_err.get(50105)
+
+        # if kwargs.get('pinyin_abbr'):
+        #     temp = self.get_city_by_pinyin_abbr(kwargs.get('pinyin_abbr'))
+        #     if temp and temp.id != city.id:
+        #         return 50106, dict_err.get(50106)
+
+        try:
+            for k, v in kwargs.items():
+                setattr(district, k, v)
+
+            district.save()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
 
 
 class DepartmentBase(object):

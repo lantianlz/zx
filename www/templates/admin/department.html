@@ -33,6 +33,8 @@ $(document).ready(function(){
             'tel': '',
             'cityId': '',
             'cityName': '',
+            'districtId': '',
+            'districtName': '',
             'sort': ''
         }
 
@@ -55,6 +57,8 @@ $(document).ready(function(){
             'cityId': 'city_id',
             'cityName': 'city_name',
             'cityPinyin': 'city_pinyin_abbr',
+            'districtId': 'district_id',
+            'districtName': 'district_name',
             'sort': 'sort_num'
         },
 
@@ -188,6 +192,8 @@ $(document).ready(function(){
 
         cityTextBox: null,
         initCityTextBox: function(name, value){
+            var me = this;
+
             this.cityTextBox = $.ZXTextboxList.create('#belong_city_modify', {
                 max: 1,
                 placeholder: '选择所属城市',
@@ -198,6 +204,11 @@ $(document).ready(function(){
 
             if(value){
                 this.cityTextBox.add(name, value);
+            }
+
+            // 绑定添加城市事件，用于自动取出城市下面的所有区域
+            this.cityTextBox.target.onAdd = function(target){
+                me.initDistrict(target.getValue()[0]);
             }
         },
 
@@ -216,6 +227,27 @@ $(document).ready(function(){
             }
         },
 
+        initDistrict: function(cityId, districtId){
+            var me = this;
+            ajaxSend(
+                "/admin/kaihu/city/get_districts_by_city", 
+                {'city_id': cityId},
+                function(data){
+                    var html = [];
+                    html.push('<option value="0">未选择</option>');
+
+                    $.map(data, function(i){
+                        
+                        html.push(String.format('<option value="{0}">{1}</option>', i.district_id, i.district_name));
+                    });
+                    me.$('.district').html(html.join(''));
+
+                    me.$('.district').val(districtId);
+                }
+            );
+
+        },
+
         // 显示面板
         showPanel: function(){
             $('.zx-nav-pills a[href="#modify_department"]').tab('show');
@@ -227,7 +259,7 @@ $(document).ready(function(){
 
             this.initCityTextBox(data.cityName, data.cityId);
             this.initCompanyTextBox(data.companyName, data.companyId);
-
+            this.initDistrict(data.cityId, data.districtId);
             createEditor('#dec_editor_modify');
         },
 
@@ -412,6 +444,14 @@ $(document).ready(function(){
             <div class="col-sm-3">
                 <input type="text" class="form-control" name="belong_city" id="belong_city_modify" value=''>
                 <!-- <p class="form-control-static"><%= cityName %></p> -->
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">所属区</label>
+            <div class="col-sm-3">
+                <select class="form-control input-sm district" name="district_id">
+                    
+                </select>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

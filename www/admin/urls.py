@@ -95,10 +95,20 @@ urlpatterns += patterns('www.admin.views_friendly_link',
 # 城市
 urlpatterns += patterns('www.admin.views_city',
 
+                        url(r'^kaihu/city/get_districts_by_city$', 'get_districts_by_city'),
                         url(r'^kaihu/city/modify_city$', 'modify_city'),
                         url(r'^kaihu/city/get_city_by_id$', 'get_city_by_id'),
                         url(r'^kaihu/city/search$', 'search'),
                         url(r'^kaihu/city$', 'city'),
+                        )
+
+# 区
+urlpatterns += patterns('www.admin.views_district',
+
+                        url(r'^kaihu/district/modify_district$', 'modify_district'),
+                        url(r'^kaihu/district/get_district_by_id$', 'get_district_by_id'),
+                        url(r'^kaihu/district/search$', 'search'),
+                        url(r'^kaihu/district$', 'district'),
                         )
 
 # 营业部

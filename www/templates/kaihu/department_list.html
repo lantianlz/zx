@@ -21,6 +21,19 @@
     border-color: #fff;
     box-shadow: none;
 }
+
+.districts a{
+    transition: none;
+}
+
+.districts a:hover{
+    background-color: #428bca;
+    color: white;
+}
+.districts a.active{
+    background-color: #428bca;
+    color: white;
+}
 </style>
 {% endblock %}
 
@@ -203,10 +216,22 @@ $(document).ready(function(){
 </script>
 
 <!-- 最新动态 -->
-<div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
-    <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">最新动态</span>
+<div class="bottom-border bdc-zx pb-3 pl-10 mt-25 pt-15">
+    <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">区域过滤</span>
 </div>
-<ul class="list-group">
+
+<div class="pr pl-10 f13 districts pb-10">
+    <a class="pa mt-12  pt-3 pb-3 pl-3 pr-3 no-hover-unl" href="#">全部</a>
+    <ul class="pl-45 list-inline pt-15">
+        <li class="pb-5"><a class="pt-3 pb-3 pl-3 pr-3 no-hover-unl" href="#">武侯区(15)</a></li>
+        <li class="pb-5"><a class="pt-3 pb-3 pl-3 pr-3 no-hover-unl active" href="#">龙泉驿区(12)</a></li>
+        <li class="pb-5"><a class="pt-3 pb-3 pl-3 pr-3 no-hover-unl" href="#">青羊区(9)</a></li>
+        <li class="pb-5"><a class="pt-3 pb-3 pl-3 pr-3 no-hover-unl" href="#">温江区(8)</a></li>
+        <li class="pb-5"><a class="pt-3 pb-3 pl-3 pr-3 no-hover-unl" href="#">高新西区(6)</a></li>
+    </ul>
+</div>
+
+<ul class="list-group none">
     {% for feed in feeds %}
     <li class="list-group-item no-l-r-bd bdc-eee">
         <a href="{{MAIN_DOMAIN}}/p/{{feed.user_id}}"><img class="pa avatar-45 avatar-circle" alt="{{feed.user_nick}}" src="{{feed.user_avatar}}"></a>
