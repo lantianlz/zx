@@ -43,16 +43,17 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, isShow, pageIndex){
+        search: function(name, cityName, isShow, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/kaihu/district/search", 
-                {'name': name||'', 'is_show': isShow||0, 'page_index': pageIndex||1}, 
+                {'name': name||'', 'city_name': cityName||'', 'is_show': isShow||0, 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
                     me.name = name||'';
+                    me.cityName = cityName||'';
                     me.isShow = isShow||0;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
@@ -123,7 +124,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name + '/' + this.collection.isShow
+                'search/' + this.collection.name + '/' + this.collection.cityName + '/' + this.collection.isShow
             );
         },
 
@@ -133,10 +134,11 @@ $(document).ready(function(){
         },
 
         search: function(){
-            var isShow = this.$('.is-show').val();
-                name = this.$('.key-word').val();
+            var isShow = this.$('.is-show').val(),
+                name = this.$('.key-word').val(),
+                cityName = this.$('.key-word-city').val();
 
-            router.navigate(String.format('/search/{0}/{1}/1', name, isShow), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/{2}/1', name, cityName, isShow), {trigger: true});
         },
 
         modifyDistrict: function(sender){
@@ -209,12 +211,12 @@ $(document).ready(function(){
         routes: {
             "":                             "search",
             "modify/:districtId":         "modify",
-            "search/(:name)/(:isShow)/:pageIndex":    "search",
+            "search/(:name)/(:cityName)/(:isShow)/:pageIndex":    "search",
         },
 
         // 查询
-        search: function(name, isShow, pageIndex){
-            districts.search(name||'', isShow||0, pageIndex||1);
+        search: function(name, cityName, isShow, pageIndex){
+            districts.search(name||'', cityName||'', isShow||0, pageIndex||1);
         },
 
         // 显示修改界面
@@ -256,6 +258,11 @@ $(document).ready(function(){
                     <option value="0">未开放</option>
                     <option value="1">已经开放</option>
                 </select>
+            </div>
+            <div class="pl-0 pr-0 pb-10 col-md-2">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control key-word-city" placeholder="输入城市名称">
+                </div>
             </div>
             <div class="pl-0 pb-10 col-md-3">
                 <div class="input-group input-group-sm">

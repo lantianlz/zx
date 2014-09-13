@@ -51,11 +51,12 @@ def search(request):
     data = []
 
     name = request.REQUEST.get('name')
+    city_name = request.REQUEST.get('city_name')
     is_show = request.REQUEST.get('is_show')
 
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = CityBase().search_districts_for_admin(name, is_show)
+    objs = CityBase().search_districts_for_admin(name, city_name, is_show)
 
     page_objs = page.Cpt(objs, count=10, page=page_index).info
 
