@@ -85,7 +85,9 @@ def modify_district(request):
     district_id = request.REQUEST.get('district_id')
     district = request.REQUEST.get('name')
     pinyin = request.REQUEST.get('pinyin')
+    pinyin = pinyin if pinyin else None
     pinyin_abbr = request.REQUEST.get('pinyin_abbr')
+    pinyin_abbr = pinyin_abbr if pinyin_abbr else None
     sort_num = int(request.REQUEST.get('sort'))
     is_show = int(request.REQUEST.get('is_show'))
 
