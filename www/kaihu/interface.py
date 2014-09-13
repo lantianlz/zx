@@ -152,10 +152,13 @@ class CityBase(object):
             if districts:
                 return districts[0]
 
-    def get_districts_by_city(self, city_id):
+    def get_districts_by_city(self, city_id, is_show=1):
         districts = []
         if city_id:
-            districts = self.get_all_districts().filter(city=city_id, is_show=1)
+            ps = dict(city=city_id)
+            if is_show is not None:
+                ps.update(dict(is_show=is_show))
+            districts = self.get_all_districts().filter(**ps)
 
         return districts
 
@@ -209,8 +212,10 @@ class DepartmentBase(object):
         return Department.objects.select_related('company').all()
 
     def get_departments_by_city_id(self, city_id):
-        # return list(self.get_all_departments().filter(city_id=city_id))
         return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None))
+
+    def get_departments_by_district_id(self, district_id):
+        return list(self.get_all_departments().filter(district_id=district_id).exclude(des=None))
 
     def get_departments_by_random(self, city_id):
         return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None).order_by('?'))

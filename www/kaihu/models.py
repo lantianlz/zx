@@ -82,11 +82,17 @@ class City(models.Model):
     def get_url(self):
         if self.location_type == 2:
             return 'http://%s.%s' % (self.pinyin_abbr, settings.SERVER_DOMAIN)
+        if self.location_type == 3:
+            return '/kaihu/d/%s' % self.id
         return ''
 
     def get_city_name_for_seo(self):
-        keys = [u"市", u"自治州", u"地区"]
-        name = self.city
+        keys = [u"市", u"自治州", u"地区", u"区"]
+        name = u"未知类型"
+        if self.location_type == 2:
+            name = self.city
+        elif self.location_type == 3:
+            name = self.district
         for key in keys:
             name = name.replace(key, '')
         return name

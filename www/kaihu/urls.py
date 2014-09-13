@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('www.kaihu.views',
                        url(r'^$', 'home'),
+                       url(r'^d/(?P<district_id>\d+)$', 'department_list_by_district'),
                        url(r'^department_detail/(?P<department_id>\d+)$', 'department_detail'),
                        url(r'^get_customer_manager$', 'get_customer_manager'),
                        url(r'^article$', 'article_list'),
