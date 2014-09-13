@@ -239,8 +239,13 @@ class DepartmentBase(object):
             departments = departments.filter(name__contains=department_name)
         return departments
 
-    def search_departments_for_admin(self, department_name, des_state):
+    def search_departments_for_admin(self, department_name, city_name, des_state):
         departments = self.get_departments_by_name(department_name)
+
+        if city_name:
+            city = CityBase().get_one_city_by_name(city_name)
+            if city:
+                departments = departments.filter(city_id=city.id)
 
         total = departments.count()
 

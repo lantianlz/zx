@@ -72,11 +72,12 @@ def search(request):
     objs = []
 
     name = request.REQUEST.get('name')
+    city_name = request.REQUEST.get('city_name')
     order = request.REQUEST.get('order', '0')
 
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs, all_count = db.search_departments_for_admin(name, order)
+    objs, all_count = db.search_departments_for_admin(name, city_name, order)
 
     page_objs = page.Cpt(objs, count=10, page=page_index).info
 
