@@ -159,8 +159,13 @@ class CityBase(object):
 
         return districts
 
-    def search_districts_for_admin(self, district_name, is_show=0):
+    def search_districts_for_admin(self, district_name, city_name, is_show=0):
         districts = self.get_all_districts().filter(is_show=is_show)
+
+        if city_name:
+            city = self.get_one_city_by_name(city_name)
+            if city:
+                districts = districts.filter(city=city.id)
 
         if district_name:
             districts = districts.filter(district__contains=district_name)
