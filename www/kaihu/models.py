@@ -87,7 +87,7 @@ class City(models.Model):
         return ''
 
     def get_city_name_for_seo(self):
-        keys = [u"市", u"自治州", u"地区", u"区"]
+        keys = [u"市", u"自治州", u"地区", u"区", u"县"]
         name = u"未知类型"
         if self.location_type == 2:
             name = self.city
