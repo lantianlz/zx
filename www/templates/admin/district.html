@@ -37,6 +37,7 @@ $(document).ready(function(){
             'isShow': 'is_show',
             'pinyin': 'pinyin',
             'pinyinAbbr': 'pinyin_abbr',
+            'cityPinyinAbbr': 'city_pinyin_abbr',
             'sort': 'sort_num',
             'rank': 'rank',
             'rankUrl': 'rank_url'
@@ -309,7 +310,7 @@ $(document).ready(function(){
     <% _.each(districts, function(district){ %>
         <tr>
             <td><%= district.num %></td>
-            <td><a href="http://<%= district.pinyinAbbr %>.{{SERVER_DOMAIN}}" target="_blank"><%= district.districtName %></a></td>
+            <td><a href="http://<%= district.cityPinyinAbbr %>.{{SERVER_DOMAIN}}/kaihu/d/<%= district.districtId %>" target="_blank"><%= district.districtName %></a></td>
             <% if(district.isShow){ %>
                 <td><a href="<%= district.rankUrl %>" target="_blank"><%= district.rank %></a></td>
             <% } else { %>

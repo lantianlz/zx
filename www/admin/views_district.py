@@ -33,6 +33,7 @@ def format_district(objs, num):
             'district_name': x.district,
             'city_id': city.id if city else '',
             'city_name': city.city if city else '',
+            'city_pinyin_abbr': city.pinyin_abbr if city else '',
             'is_show': x.is_show,
             'pinyin': x.pinyin,
             'pinyin_abbr': x.pinyin_abbr,
