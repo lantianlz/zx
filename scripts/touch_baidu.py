@@ -14,5 +14,5 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 from common.utils import get_baidu_rank
 
 if __name__ == '__main__':
-    key = u"重庆股票开户"
+    key = u"北京股票开户"
     print get_baidu_rank(key)
