@@ -229,6 +229,7 @@ class DepartmentBase(object):
         try:
             department = self.get_all_departments().filter(id=department_id)[0]
             department.city = CityBase().get_city_by_id(department.city_id)
+            department.district = CityBase().get_district_by_id(department.district_id)
         except Exception:
             department = None
         return department

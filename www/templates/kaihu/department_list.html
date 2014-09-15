@@ -125,13 +125,18 @@ $(document).ready(function(){
 
 {% block kaihu-main %}
 <!-- 面包屑导航 -->
-<ol class="breadcrumb border-radius-0 bgc-0 bottom-border bdc-ddd mb-10">
+<ol class="breadcrumb border-radius-0 bgc-0 bottom-border bdc-ddd mb-10 pl-0">
     <li>
         <a href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}">全国股票开户</a>
     </li>
     <li>
         <a href="{{city.get_url}}">{{city.get_city_name_for_seo}}股票开户</a>
     </li>
+    {% if district %}
+    <li>
+        <a href="{{district.get_url}}">{{district.district}}股票开户</a>
+    </li>
+    {% endif %}
 </ol>
 
 <!-- 推荐客户经理 -->

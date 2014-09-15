@@ -31,13 +31,18 @@ $(document).ready(function(){
 
 {% block kaihu-main %}
 <!-- 面包屑导航 -->
-<ol class="breadcrumb border-radius-0 bgc-0 bottom-border bdc-ddd mb-10">
+<ol class="breadcrumb border-radius-0 bgc-0 bottom-border bdc-ddd mb-10 pl-0">
     <li>
         <a href="http://kaihu.{{SERVER_DOMAIN|default:'zhixuan.com'}}">全国股票开户</a>
     </li>
     <li>
         <a href="{{department.city.get_url}}">{{department.city.get_city_name_for_seo}}股票开户</a>
     </li>
+    {% if department.district %}
+    <li>
+        <a href="{{department.district.get_url}}">{{department.district.district}}股票开户</a>
+    </li>
+    {% endif %}
     <li>
         <a href="{{department.get_url}}">{{department.get_short_name}}</a>
     </li>
