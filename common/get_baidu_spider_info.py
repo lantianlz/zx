@@ -20,6 +20,7 @@ from pprint import pprint
 
 
 def get_baidu_spider_info():
+    # cmd_baidu = """grep -i a ~/log/www.log"""
     cmd_baidu = """grep -i Baiduspider /var/log/nginx/www.log"""
     datas = commands.getoutput(cmd_baidu)
     lst_all_info = []
@@ -31,10 +32,11 @@ def get_baidu_spider_info():
         if data:
             # print data
             state = data[8]
+            uri = ('http://%s%s' % (data[-1], data[6])) if not data[-1].startswith('"') else data[6]
             access_time = datetime.datetime.strptime(data[3].split()[0][1:], '%d/%b/%Y:%H:%M:%S')
-            lst_all_info.append([data[0], access_time.strftime("%Y-%m-%d %H:%M:%S"), data[6], state])
+            lst_all_info.append([data[0], access_time.strftime("%Y-%m-%d %H:%M:%S"), uri, state])
             if state != "200":
-                lst_invalid_info.append([data[0], access_time.strftime("%Y-%m-%d %H:%M:%S"), data[6], state])
+                lst_invalid_info.append([data[0], access_time.strftime("%Y-%m-%d %H:%M:%S"), uri, state])
 
     for info in lst_all_info:
         count = dict_info_group_by_url.get(info[2], 0)
