@@ -374,6 +374,7 @@ $(document).ready(function(){
                     <th>排序</th>
                     <th>类型</th>
                     <th>状态</th>
+                    <th>首页显示</th>
                 </tr>
             </thead>
             <tbody>
@@ -415,6 +416,13 @@ $(document).ready(function(){
                 <span class="glyphicon glyphicon-remove cl_red" title="未开放"></span>
                 <% } else { %>
                 <span class="glyphicon glyphicon-ok co-zx" title="正常"></span>
+                <% } %>
+            </td>
+            <td>
+                <% if(weixin.isSilence){ %>
+                <span class="glyphicon glyphicon-remove cl_red" title="首页不显示"></span>
+                <% } else { %>
+                <span class="glyphicon glyphicon-ok co-zx" title="首页显示"></span>
                 <% } %>
             </td>
         </tr>
