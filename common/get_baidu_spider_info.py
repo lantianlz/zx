@@ -32,7 +32,7 @@ def get_baidu_spider_info():
         if data:
             # print data
             state = data[8]
-            uri = ('http://%s%s' % (data[-1], data[6])) if not data[-1].startswith('"') else data[6]
+            uri = ('http://%s%s' % (data[-1], data[6])) if not (data[-1].startswith('"') or data[-1].startswith('www')) else data[6]
             access_time = datetime.datetime.strptime(data[3].split()[0][1:], '%d/%b/%Y:%H:%M:%S')
             lst_all_info.append([data[0], access_time.strftime("%Y-%m-%d %H:%M:%S"), uri, state])
             if state != "200":
