@@ -39,7 +39,9 @@ def question_home(request, question_type=None, template_name='question/question_
     if not request.REQUEST.has_key('page') and not question_type:
         flinks = FriendlyLinkBase().get_friendly_link_by_link_type(link_type=3)  # 首页友链
 
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    response = render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    response['Cache-Control'] = 'no-siteapp'
+    return response
 
 
 def question_detail(request, question_id, template_name='question/question_detail.html'):
