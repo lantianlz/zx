@@ -17,6 +17,16 @@ atb = interface.ArticleBase()
 nb = interface.NewsBase()
 
 
+def _need_city_decorator(func):
+    def _decorator(request, *args, **kwargs):
+        city_abbr = utils.get_sub_domain_from_http_host(request.META.get('HTTP_HOST', ''))
+        city = cb.get_city_by_pinyin_abbr(city_abbr)
+        if not city:
+            raise Http404
+        return func(request, *args, **kwargs)
+    return _decorator
+
+
 def home(request, template_name='kaihu/home.html'):
     areas = cb.get_all_areas()
     citys_by_area = cb.get_all_city_group_by_province()
@@ -57,6 +67,7 @@ def department_list(request, city_abbr, template_name='kaihu/department_list.htm
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+@_need_city_decorator
 def department_list_by_district(request, district_id, template_name='kaihu/department_list.html'):
     district = cb.get_district_by_id(district_id)
     if not district:
@@ -84,6 +95,7 @@ def department_list_by_district(request, district_id, template_name='kaihu/depar
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+@_need_city_decorator
 def department_detail(request, department_id, template_name='kaihu/department_detail.html'):
     department = db.get_department_by_id(department_id)
     if not department:
@@ -114,6 +126,7 @@ def article_list(request, template_name='kaihu/article_list.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+@_need_city_decorator
 def article_detail(request, article_id, template_name='kaihu/article_detail.html'):
     article = atb.get_article_by_id(article_id)
     if not article:
