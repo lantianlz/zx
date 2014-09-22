@@ -38,7 +38,7 @@ def format_district(objs, num):
             'pinyin': x.pinyin,
             'pinyin_abbr': x.pinyin_abbr,
             'sort_num': x.sort_num,
-            # 'rank': CityBase().get_city_baidu_rank(x) if x.is_show else '未开放',
+            # 'rank': x.baidu_rank if x.is_show else '未开放',
             # 'rank_url': x.get_baidu_search_url() if x.is_show else '#'
             'rank': u'未开放',
             'rank_url': ''

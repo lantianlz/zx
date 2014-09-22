@@ -134,17 +134,17 @@ class CityBase(object):
 
         return 0, dict_err.get(0)
 
-    @cache_required(cache_key='city_baidu_rank_%s', expire=3600 * 24)
-    def get_city_baidu_rank(self, city_id_or_object):
-        from common.utils import get_baidu_rank
+    # @cache_required(cache_key='city_baidu_rank_%s', expire=3600 * 24)
+    # def get_city_baidu_rank(self, city_id_or_object):
+    #     from common.utils import get_baidu_rank
 
-        city = city_id_or_object
-        if not isinstance(city_id_or_object, City):
-            city = self.get_city_by_id(city_id_or_object)
-        if city.is_show:
-            return get_baidu_rank(key=u"%s股票开户" % city.get_city_name_for_seo())
-        else:
-            return u"暂无"
+    #     city = city_id_or_object
+    #     if not isinstance(city_id_or_object, City):
+    #         city = self.get_city_by_id(city_id_or_object)
+    #     if city.is_show:
+    #         return get_baidu_rank(key=u"%s股票开户" % city.get_city_name_for_seo())
+    #     else:
+    #         return u"暂无"
 
     def get_district_by_id(self, district_id):
         if district_id:

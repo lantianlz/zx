@@ -75,9 +75,11 @@ class City(models.Model):
     province_type = models.IntegerField(choices=province_type_choices, db_index=True, null=True)
     sort_num = models.IntegerField(default=0, db_index=True)
     is_show = models.BooleanField(default=False, db_index=True)
+    baidu_rank = models.IntegerField(default=999, db_index=True)
+    department_count = models.IntegerField(default=0, db_index=True)
 
     class Meta:
-        ordering = ["-sort_num", "id"]
+        ordering = ["baidu_rank", "-sort_num"]
 
     def get_url(self):
         if self.location_type == 2:

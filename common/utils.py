@@ -341,11 +341,11 @@ def get_baidu_rank(key):
     for page in range(0, 1):
         url = u"http://www.baidu.com/s?wd=" + key + "&pn=" + \
             str(page) + u"&oq=" + key + "&ie=utf-8&usm=2&rn=100"
-        rep = requests.get(url, timeout=30)
+        rep = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:29.0) Gecko/20100101 Firefox/29.0"})
         text = rep.text
 
         text = pq(text)
         for i, div in enumerate(text(".c-container")):
             if "zhixuan" in pq(div).html():
                 return i + 1
-    return "100+"
+    return "101"

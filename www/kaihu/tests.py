@@ -26,7 +26,6 @@ def main():
 
     atb = interface.ArticleBase()
     # atb.add_article(u"手游概念股有哪些？页游，端游呢？", u"asdfasdfasdfads", city_id="1932")
-    print cb.get_city_baidu_rank(2001)
 
 
 if __name__ == '__main__':
