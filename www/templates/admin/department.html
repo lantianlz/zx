@@ -114,6 +114,20 @@ $(document).ready(function(){
                     }
                 }
             );
+        },
+
+        addDepartment: function(postData, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/department/add_department", 
+                postData,
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
         }
 
     });
@@ -298,6 +312,117 @@ $(document).ready(function(){
 
     });
 
+
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_department_template').html()),
+
+        cityTextBox: null,
+        initCityTextBox: function(name, value){
+            var me = this;
+
+            this.cityTextBox = $.ZXTextboxList.create('#belong_city_add', {
+                max: 1,
+                placeholder: '选择所属城市',
+                url: '/admin/user/customer_manager/get_citys_by_name',
+                param: 'city_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.cityTextBox.add(name, value);
+            }
+
+            // 绑定添加城市事件，用于自动取出城市下面的所有区域
+            this.cityTextBox.target.onAdd = function(target){
+                me.initDistrict(target.getValue()[0]);
+            }
+        },
+
+        companyTextBox: null,
+        initCompanyTextBox: function(name, value){
+            this.companyTextBox = $.ZXTextboxList.create('#belong_company_add', {
+                max: 1,
+                placeholder: '选择所属公司',
+                url: '/admin/kaihu/department/get_company_by_name',
+                param: 'company_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.companyTextBox.add(name, value);
+            }
+        },
+
+        initDistrict: function(cityId, districtId){
+            var me = this;
+            ajaxSend(
+                "/admin/kaihu/city/get_districts_by_city", 
+                {'city_id': cityId},
+                function(data){
+                    var html = [];
+                    html.push('<option value="0">未选择</option>');
+
+                    $.map(data, function(i){
+                        
+                        html.push(String.format('<option value="{0}">{1}</option>', i.district_id, i.district_name));
+                    });
+                    me.$('.district').html(html.join(''));
+
+                    me.$('.district').val(districtId);
+                }
+            );
+
+        },
+
+        showPanel: function(){
+            var me = this;
+
+            me.render();
+        },
+
+        render: function(){
+            var me = this;
+
+            $('#add_department_modal').remove();
+            
+            $('body').append(this.template());
+
+            // 绑定事件
+            $('#add_department_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_department_modal .ok').bind('click', function(){
+                me.addDepartment();
+            });
+            
+            $('#add_department_modal').modal({'show': true, 'backdrop': 'static'});
+
+
+            this.initCityTextBox();
+            this.initCompanyTextBox();
+            this.initDistrict();
+            createEditor('#dec_editor_add');
+        },
+
+        addDepartment: function(){
+            var userId = this.$('form').data('user_id'),
+                me = this;
+
+            departments.addDepartment($.ZXUtils.formToDict(this.$('form')), function(data){
+                if(data.errcode === 0){
+                    router.navigate('modify/' + data.errmsg, {trigger: true});
+                    $('#add_department_modal').modal('hide');
+                    $.ZXMsg.alert('提示', '添加成功!');
+                } else {
+                    $.ZXMsg.alert('提示', data.errmsg);
+                }
+            })
+        }
+
+    });
+
     
     // router
     var Router = Backbone.Router.extend({
@@ -306,6 +431,7 @@ $(document).ready(function(){
             "":                             "search",
             "modify/:departmentId":         "modify",
             "search/(:name)/(:cityName)/(:order)/:pageIndex":    "search",
+            "add":                          "add"
         },
 
         // 查询
@@ -316,6 +442,10 @@ $(document).ready(function(){
         // 显示修改界面
         modify: function(departmentId){
             modifyView.modifyDepartment(departmentId);
+        },
+
+        add: function(){
+            addView.showPanel();
         }
 
     });
@@ -324,6 +454,7 @@ $(document).ready(function(){
     var departments = new Departments(),
         listView = new ListView({'collection': departments}),
         modifyView = new ModifyView({'collection': departments}),
+        addView = new AddView(),
         router = new Router();
  
     Backbone.history.start();
@@ -340,6 +471,9 @@ $(document).ready(function(){
     </li>
     <li>
         <a href="#modify_department" class="black-blue" data-toggle="pill">修改营业部信息</a>
+    </li>
+    <li class="pull-right">
+        <a href="#add" class="black-blue">添加营业部</a>
     </li>
 </ul>
 
@@ -479,7 +613,7 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">营业部描述</label>
             <div class="col-sm-9">
-                <textarea name="des" rows="6" id="dec_editor_modify" class="form-control" style="height: 300px;"><%= des %></textarea>
+                <textarea name="des" rows="6" id="dec_editor_add" class="form-control" style="height: 300px;"><%= des %></textarea>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -497,4 +631,76 @@ $(document).ready(function(){
     </form>
 </script>
 
+
+<script type="text/template" id="add_department_template">
+<div class="modal fade" id="add_department_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <h4 class="modal-title">添加营业部</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" data-department_id="" role="form" method="post" action="">
+
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">营业部名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="name" value=''>
+                        </div>
+                        
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">排序</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="sort" value='0'>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">电话</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="tel" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">所属城市</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="belong_city" id="belong_city_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">所属区</label>
+                        <div class="col-sm-3">
+                            <select class="form-control input-sm district" name="district_id">
+                                
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">所属公司</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="belong_company" id="belong_company_add" value=''> 
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="addr" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-2 control-label">营业部描述</label>
+                        <div class="col-sm-9">
+                            <textarea name="des" rows="6" id="dec_editor_modify" class="form-control" style="height: 300px;"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
 {% endblock admin-right %}

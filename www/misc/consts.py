@@ -92,7 +92,7 @@ PERMISSIONS = [
     #{'code': 'remove_district', 'name': u'删除区', 'parent': 'district_manage'},
 
     {'code': 'department_manage', 'name': u'营业部管理', 'parent': None},
-    #{'code': 'add_department', 'name': u'添加营业部', 'parent': 'department_manage'},
+    {'code': 'add_department', 'name': u'添加营业部', 'parent': 'department_manage'},
     {'code': 'query_department', 'name': u'查询营业部', 'parent': 'department_manage'},
     {'code': 'modify_department', 'name': u'修改营业部', 'parent': 'department_manage'},
     #{'code': 'remove_department', 'name': u'删除营业部', 'parent': 'department_manage'},

@@ -134,3 +134,24 @@ def modify_department(request):
     return DepartmentBase().modify_department(
         department_id, name=name, sort_num=sort_num, tel=tel, addr=addr, des=des, city_id=city_id, district_id=district_id
     )
+
+
+@verify_permission('add_department')
+@common_ajax_response
+def add_department(request):
+    name = request.REQUEST.get('name')
+    sort_num = request.REQUEST.get('sort')
+    tel = request.REQUEST.get('tel')
+    city_id = request.REQUEST.get('belong_city')
+    company_id = request.REQUEST.get('belong_company')
+    addr = request.REQUEST.get('addr')
+    des = request.REQUEST.get('des')
+    district_id = request.REQUEST.get('district_id')
+    district_id = district_id if district_id else None
+
+    code, obj = DepartmentBase().add_department(
+        name=name, sort_num=sort_num, tel=tel, addr=addr, des=des,
+        city_id=city_id, district_id=district_id, company_id=company_id,
+    )
+
+    return code, obj.id if code == 0 else obj

@@ -114,6 +114,7 @@ urlpatterns += patterns('www.admin.views_district',
 # 营业部
 urlpatterns += patterns('www.admin.views_department',
 
+                        url(r'^kaihu/department/add_department$', 'add_department'),
                         url(r'^kaihu/department/modify_department$', 'modify_department'),
                         url(r'^kaihu/department/get_company_by_name$', 'get_company_by_name'),
                         url(r'^kaihu/department/get_department_by_id$', 'get_department_by_id'),

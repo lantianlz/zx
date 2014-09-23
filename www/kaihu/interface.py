@@ -289,6 +289,26 @@ class DepartmentBase(object):
 
         return 0, dict_err.get(0)
 
+    def add_department(self, company_id, name, des, addr, tel, city_id, district_id, sort_num=0):
+        if None in (company_id, name):
+            return 99800, dict_err.get(99800)
+        import time
+        try:
+            obj = Department.objects.create(
+                company_id=company_id, name=name, des=des, addr=addr, tel=tel,
+                city_id=city_id, district_id=district_id, sort_num=sort_num, unique_id=int(time.time())
+            )
+
+            company = CompanyBase().get_company_by_id(company_id)
+            company.department_count += 1
+            company.save()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, obj
+
 
 class CustomerManagerBase(object):
 
