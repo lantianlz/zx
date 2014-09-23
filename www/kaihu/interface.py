@@ -328,19 +328,20 @@ class CustomerManagerBase(object):
                 return 50100, dict_err.get(50100)
 
             department = department_id_or_obj if isinstance(department_id_or_obj, Department) else DepartmentBase().get_department_by_id(department_id_or_obj)
+
             if not department:
                 return 50101, dict_err.get(50101)
 
-            CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id,
-                                           qq=qq, entry_time=entry_time, mobile=mobile, vip_info=vip_info,
-                                           real_name=real_name, id_card=id_card, id_cert=id_cert, des=des, pay_type=pay_type)
+            cm = CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id,
+                                                qq=qq, entry_time=entry_time, mobile=mobile, vip_info=vip_info,
+                                                real_name=real_name, id_card=id_card, id_cert=id_cert, des=des, pay_type=pay_type)
 
             # 更新营业部冗余字段
             department.cm_count += 1
             department.save()
 
             transaction.commit(using=KAIHU_DB)
-            return 0, dict_err.get(0)
+            return 0, cm
         except Exception, e:
             debug.get_debug_detail(e)
             transaction.rollback(using=KAIHU_DB)

@@ -65,10 +65,12 @@ def add_customer_manager(request):
     mobile = request.REQUEST.get('mobile')
     pay_type = request.REQUEST.get('pay_type', 0)
 
-    return CustomerManagerBase().add_customer_manager(
+    code, obj = CustomerManagerBase().add_customer_manager(
         user_id, department_id, end_date, vip_info,
         sort_num, qq=qq, mobile=mobile, pay_type=pay_type
     )
+
+    return code, obj.user_id if code == 0 else obj
 
 
 def format_customer_managers(objs, num):

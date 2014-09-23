@@ -365,7 +365,7 @@ $(document).ready(function(){
 
             customerManagers.addCustomerManager(me.$('form').serialize(), function(data){
                 if(data.errcode === 0){
-                    router.navigate('modify/' + userId, {trigger: true});
+                    router.navigate('modify/' + data.errmsg, {trigger: true});
                     $('#add_customer_manager_modal').modal('hide');
                     $.ZXMsg.alert('提示', '添加成功!');
                 } else {
