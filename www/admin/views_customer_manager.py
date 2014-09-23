@@ -110,7 +110,9 @@ def search(request):
     if user_nick:
         user = UserBase().get_user_by_nick(user_nick)
         if user:
-            cms = [cmb.get_customer_manager_by_user_id(user.id)]
+            cm = cmb.get_customer_manager_by_user_id(user.id)
+            if cm:
+                cms = [cm, ]
     else:
         # 获取所有正常于不正常的客户经理
         cms = cmb.get_all_customer_managers(active=False, state=None)
@@ -142,7 +144,9 @@ def get_customer_manager_by_user_id(request):
     user_id = request.REQUEST.get('user_id')
     cmb = CustomerManagerBase()
     obj = cmb.get_customer_manager_by_user_id(user_id)
-    obj = cmb.format_customer_managers([obj])
+
+    if obj:
+        obj = cmb.format_customer_managers([obj])
 
     data = format_customer_managers(obj, 1)[0]
     return HttpResponse(json.dumps(data), mimetype='application/json')
