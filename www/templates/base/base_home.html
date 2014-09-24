@@ -52,8 +52,9 @@
                 <li {% if '/stock' in request.path %} class="active" {% endif %}>
                     <a href="{{MAIN_DOMAIN}}/stock/">股票</a>
                 </li>
-                <li>
+                <li class="pr">
                     <a href="{{MAIN_DOMAIN}}/toutiao/" target="_blank">微头条</a>
+                    <img class="pa" style="right: 7px; top: 3px;" src="{{MEDIA_URL}}/img/common/ico_new.png">
                 </li>
 
                 {% if request.sub_domain == "www" %}
