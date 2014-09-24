@@ -290,7 +290,9 @@ $(document).ready(function(){
             <td><%= externalCM.cityName %></td>
             <td><%= externalCM.departmentName %></td>
             <td><%= externalCM.payType %></td>
-            <td><%= externalCM.qq %></td>
+            <td>
+                <a href="tencent://message/?uin=<%= externalCM.qq %>" target="_blank"><%= externalCM.qq %></a>
+            </td>
             <td><%= externalCM.mobile %></td>
             <td>
                 <input type="checkbox" class="toggle-state" value="<%= externalCM.state %>" <% if(externalCM.state){ %> checked="checked" <% } %> /> 
