@@ -80,6 +80,13 @@ urlpatterns += patterns('www.admin.views_customer_manager',
                         url(r'^user/customer_manager/get_citys_by_name$', 'get_citys_by_name'),
                         url(r'^user/customer_manager$', 'customer_manager'),
                         )
+# 外部客户经理
+urlpatterns += patterns('www.admin.views_externalCM',
+
+                        url(r'^user/externalCM/saveState$', 'save_state'),
+                        url(r'^user/externalCM/search$', 'search'),
+                        url(r'^user/externalCM$', 'externalCM'),
+                        )
 
 
 # 友情链接

@@ -8,7 +8,7 @@ from common import cache, debug, utils
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
-from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article, News
+from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article, News, Jfzcm
 
 
 dict_err = {
@@ -690,3 +690,42 @@ class NewsBase(object):
             objs = objs.filter(state=state)
 
         return objs
+
+
+class ExternalCMBase(object):
+
+    """
+    """
+
+    def get_externalCM_for_admin(self, name, city_name, department_name, state=0):
+        objs = Jfzcm.objects.filter(state=state)
+
+        if name:
+            objs = objs.filter(name__contains=name)
+
+        if city_name:
+            objs = objs.filter(city_name__contains=city_name)
+
+        if department_name:
+            objs = objs.filter(department_name__contains=department_name)
+
+        return objs
+
+    def save_state(self, externalCM_id, state, note=""):
+        if not externalCM_id:
+            return 99800, dict_err.get(99800)
+
+        obj = Jfzcm.objects.filter(id=externalCM_id)
+
+        if not obj:
+            return 99800, dict_err.get(99800)
+        obj = obj[0]
+        try:
+            obj.state = state
+            obj.note = note
+            obj.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)

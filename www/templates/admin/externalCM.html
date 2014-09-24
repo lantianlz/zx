@@ -1,0 +1,306 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}区管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.preview{
+    right: 135px;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var ExternalCM = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': ''
+        }
+
+    });
+
+    // collections
+    var ExternalCMs = Backbone.Collection.extend({
+        model: ExternalCM,
+
+        _modelMaps: {
+            'num': 'num',
+            'externalCMId': 'externalCM_id',
+            'name': 'name',
+            'href': 'href',
+            'payType': 'pay_type',
+            'cityName': 'city_name',
+            'departmentName': 'department_name',
+            'qq': 'qq',
+            'mobile': 'mobile',
+            'note': 'note',
+            'state': 'state'
+        },
+
+        // 查询
+        search: function(name, cityName, departmentName, state, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/user/externalCM/search", 
+                {'name': name||'', 'city_name': cityName||'', 'department_name': departmentName||'', 'state':state||0, 'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+                    me.name = name||'';
+                    me.cityName = cityName||'';
+                    me.departmentName = departmentName||'';
+                    me.state = state||0;
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
+                }
+            );
+        },
+
+        // 获取一个提问的model
+        getOne: function(districtId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/district/get_district_by_id", 
+                {'district_id': districtId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        //
+        modifyDistrict: function(data, callback){
+            var me = this, postData = {};
+
+            // 转换
+            _.map(data, function(i){postData[i.name] = i.value});
+
+            ajaxSend(
+                "/admin/kaihu/district/modify_district", 
+                postData,
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#externalCM_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#externalCM_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search': 'search',
+            'click .toggle-state': 'toggleState',
+            'blur .note': 'saveState'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+
+            this.$('tbody').html(this.template({'externalCMs': data}));
+
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.name + '/' + this.collection.cityName + '/' + this.collection.departmentName + '/' + this.collection.state
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#externalCM_list"]').tab('show');
+        },
+
+        search: function(){
+            var departmentName = this.$('.key-word-department').val(),
+                name = this.$('.key-word').val(),
+                cityName = this.$('.key-word-city').val(),
+                state = this.$('.state').val();
+
+            router.navigate(String.format('/search/{0}/{1}/{2}/{3}/1', name, cityName, departmentName, state), {trigger: true});
+        },
+
+        toggleState: function(sender){
+            var target = $(sender.currentTarget),
+                next = target.parent().next();
+
+            if(target.attr('checked')){
+                next.find('span').hide();
+                next.find('input').show().focus();
+            } else {
+                next.find('span').show();
+                next.find('input').hide();
+            }
+        },
+
+        saveState: function(sender){
+            var target = $(sender.currentTarget),
+                externalCMId = target.data('externalcm_id'),
+                state = target.parent().prev().find('input').attr('checked'),
+                note = target.val(),
+                me = this;
+
+            ajaxSend(
+                "/admin/user/externalCM/saveState", 
+                {'externalCM_id': externalCMId, 'state': state ? 1 : 0, 'note': note},
+                function(data){
+                    if(data.errcode === 0){
+                        $.ZXNotice.SuccessTopNotice('操作成功!');
+                        if(me.$('.state').val() == "0"){
+                            target.parents('tr').remove();
+                        }
+                        
+                    } else {
+                        $.ZXNotice.ErrorTopNotice(data.errmsg);
+                    }
+                }
+            );
+        }
+
+
+    });
+
+    
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                             "search",
+            "search/(:name)/(:cityName)/(:departmentName)/(:state)/:pageIndex":    "search",
+        },
+
+        // 查询
+        search: function(name, cityName, departmentName, state, pageIndex){
+            externalCMs.search(name||'', cityName||'', departmentName||'', state||0, pageIndex||1);
+        },
+
+        // 显示修改界面
+        modify: function(externalCMId){
+            listView.modifyExternalCM(externalCMId);
+        }
+
+    });
+    
+    // 初始化
+    var externalCMs = new ExternalCMs(),
+        listView = new ListView({'collection': externalCMs}),
+        router = new Router();
+ 
+    Backbone.history.start();
+
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#externalCM_list" class="black-blue" data-toggle="pill">区列表</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="externalCM_list">
+        <form action="." onsubmit="javascript: return false;">
+            <div class="pl-0 pr-5 pb-10 col-md-2">
+                <select class="form-control input-sm state">
+                    <option value="0">未营销</option>
+                    <option value="1">已经营销</option>
+                </select>
+            </div>
+            <div class="pl-0 pr-5 pb-10 col-md-2">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control key-word-department" placeholder="输入营业部名称">
+                </div>
+            </div>
+            <div class="pl-0 pr-0 pb-10 col-md-2">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control key-word-city" placeholder="输入城市名称">
+                </div>
+            </div>
+            <div class="pl-0 pb-10 col-md-3">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control border-radius-0 key-word" placeholder="输入客户经理名称..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search" type="submit">查询</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>姓名</th>
+                    <th>所属城市</th>
+                    <th>所属营业部</th>
+                    <th>收费类型</th>
+                    <th>QQ</th>
+                    <th>手机</th>
+                    <th>状态</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="externalCM_template">
+    <% _.each(externalCMs, function(externalCM){ %>
+        <tr>
+            <td><%= externalCM.num %></td>
+            <td><a href="<%= externalCM.href %>" target="_blank"><%= externalCM.name %></a></td>
+            <td><%= externalCM.cityName %></td>
+            <td><%= externalCM.departmentName %></td>
+            <td><%= externalCM.payType %></td>
+            <td><%= externalCM.qq %></td>
+            <td><%= externalCM.mobile %></td>
+            <td>
+                <input type="checkbox" class="toggle-state" value="<%= externalCM.state %>" <% if(externalCM.state){ %> checked="checked" <% } %> /> 
+            </td>
+            <td>
+                <span class="<% if(externalCM.state){ %> none <% } %>"><%= externalCM.note %></span>
+                <input type="text" class="note <% if(!externalCM.state){ %> none <% } %>" data-externalcm_id="<%= externalCM.externalCMId %>" value="<%= externalCM.note %>" />
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+{% endblock admin-right %}
