@@ -42,7 +42,7 @@ def format_external_cm(objs, num):
     return data
 
 
-@verify_permission('')
+@verify_permission('query_external_cm')
 def search(request):
     data = []
 
@@ -66,7 +66,7 @@ def search(request):
     )
 
 
-@verify_permission('')
+@verify_permission('modify_external_cm')
 @common_ajax_response
 def save_state(request):
     external_cm_id = request.REQUEST.get('externalCM_id')

@@ -143,4 +143,10 @@ PERMISSIONS = [
     {'code': 'add_toutiao_bankey', 'name': u'添加关键字', 'parent': 'toutiao_bankey_manage'},
     {'code': 'query_toutiao_bankey', 'name': u'查询关键字', 'parent': 'toutiao_bankey_manage'},
     {'code': 'remove_toutiao_bankey', 'name': u'修改关键字', 'parent': 'toutiao_bankey_manage'},
+
+    {'code': 'external_cm_manage', 'name': u'外部客户经理管理', 'parent': None},
+    #{'code': 'add_customer_manager', 'name': u'添加客户经理', 'parent': 'external_cm_manage'},
+    {'code': 'query_external_cm', 'name': u'查询外部客户经理', 'parent': 'external_cm_manage'},
+    {'code': 'modify_external_cm', 'name': u'修改外部客户经理', 'parent': 'external_cm_manage'},
+    #{'code': 'remove_customer_manager', 'name': u'删除客户经理', 'parent': 'external_cm_manage'},
 ]
