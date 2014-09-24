@@ -195,3 +195,19 @@ class News(models.Model):
         """
         from common import utils
         return utils.get_summary_from_html_by_sub(self.content)
+
+
+class Jfzcm(models.Model):
+
+    """
+    @note: 从金斧子处抓取的客户信息
+    """
+    name = models.CharField(max_length=64)
+    href = models.CharField(max_length=128, unique=True)
+    pay_type = models.CharField(max_length=16)
+    city_name = models.CharField(max_length=64)
+    department_name = models.CharField(max_length=64)
+    qq = models.CharField(max_length=32, null=True)
+    mobile = models.CharField(max_length=32, null=True)
+    note = models.TextField(null=True)
+    state = models.IntegerField(default=0, db_index=True)
