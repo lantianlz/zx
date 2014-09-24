@@ -697,7 +697,7 @@ class ExternalCMBase(object):
     """
     """
 
-    def get_externalCM_for_admin(self, name, city_name, department_name, state=0):
+    def get_external_cm_for_admin(self, name, city_name, department_name, state=0):
         objs = Jfzcm.objects.filter(state=state)
 
         if name:
@@ -711,11 +711,11 @@ class ExternalCMBase(object):
 
         return objs
 
-    def save_state(self, externalCM_id, state, note=""):
-        if not externalCM_id:
+    def save_state(self, external_cm_id, state, note=""):
+        if not external_cm_id:
             return 99800, dict_err.get(99800)
 
-        obj = Jfzcm.objects.filter(id=externalCM_id)
+        obj = Jfzcm.objects.filter(id=external_cm_id)
 
         if not obj:
             return 99800, dict_err.get(99800)

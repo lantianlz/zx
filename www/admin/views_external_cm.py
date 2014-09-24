@@ -14,12 +14,12 @@ from www.kaihu.interface import ExternalCMBase
 
 
 @verify_permission('')
-def externalCM(request, template_name='admin/externalCM.html'):
+def external_cm(request, template_name='admin/external_cm.html'):
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-def format_externalCM(objs, num):
+def format_external_cm(objs, num):
     data = []
 
     for x in objs:
@@ -52,13 +52,13 @@ def search(request):
     state = request.REQUEST.get('state')
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = ExternalCMBase().get_externalCM_for_admin(name, city_name, department_name, state)
+    objs = ExternalCMBase().get_external_cm_for_admin(name, city_name, department_name, state)
 
     page_objs = page.Cpt(objs, count=20, page=page_index).info
 
     # 格式化json
     num = 20 * (page_index - 1)
-    data = format_externalCM(page_objs[0], num)
+    data = format_external_cm(page_objs[0], num)
 
     return HttpResponse(
         json.dumps({'data': data, 'page_count': page_objs[4], 'total_count': page_objs[5]}),
@@ -69,7 +69,7 @@ def search(request):
 @verify_permission('')
 @common_ajax_response
 def save_state(request):
-    externalCM_id = request.REQUEST.get('externalCM_id')
+    external_cm_id = request.REQUEST.get('externalCM_id')
     note = request.REQUEST.get('note')
     state = request.REQUEST.get('state')
-    return ExternalCMBase().save_state(externalCM_id, state, note)
+    return ExternalCMBase().save_state(external_cm_id, state, note)
