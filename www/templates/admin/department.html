@@ -277,6 +277,7 @@ $(document).ready(function(){
             this.initCompanyTextBox(data.companyName, data.companyId);
             this.initDistrict(data.cityId, data.districtId);
             createEditor('#dec_editor_modify');
+            console.log('111')
         },
 
         // 显示提问信息
@@ -613,7 +614,7 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">营业部描述</label>
             <div class="col-sm-9">
-                <textarea name="des" rows="6" id="dec_editor_add" class="form-control" style="height: 300px;"><%= des %></textarea>
+                <textarea name="des" rows="6" id="dec_editor_modify" class="form-control" style="height: 300px;"><%= des %></textarea>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -690,7 +691,7 @@ $(document).ready(function(){
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-2 control-label">营业部描述</label>
                         <div class="col-sm-9">
-                            <textarea name="des" rows="6" id="dec_editor_modify" class="form-control" style="height: 300px;"></textarea>
+                            <textarea name="des" rows="6" id="dec_editor_add" class="form-control" style="height: 300px;"></textarea>
                         </div>
                     </div>
                 </form>
