@@ -112,6 +112,18 @@ def common_ajax_response(func):
     return _decorator
 
 
+def common_ajax_response_for_api(func):
+    """
+    @note: 通用的ajax返回值格式化未api准备，格式为：dict(errcode=errcode, errmsg=errmsg, data=data)
+    """
+    def _decorator(request, *args, **kwargs):
+        r = dict(errcode=0, errmsg="ok")
+        params = func(request, *args, **kwargs)
+        r.update(params)
+        return HttpResponse(json.dumps(r), mimetype='application/json')
+    return _decorator
+
+
 def verify_permission(permission):
     '''
     权限验证装饰器

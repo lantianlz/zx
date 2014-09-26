@@ -11,6 +11,13 @@ urlpatterns = patterns('www.kaihu.views',
                        url(r'^article/(?P<article_id>\d+)$', 'article_detail'),
                        url(r'^news$', 'news_list'),
                        url(r'^news/(?P<news_id>\d+)$', 'news_detail'),
-
-                       url(r'^(?P<city_abbr>\w+)$', 'department_list'),  # 此处必须放到最后，避免被误匹配
                        )
+
+
+urlpatterns += patterns('www.kaihu.views_api',
+                        url(r'^api_get_department_list$', 'api_get_department_list'),
+                        )
+
+urlpatterns += patterns('www.kaihu.views',
+                        url(r'^(?P<city_abbr>\w+)$', 'department_list'),  # 此处必须放到最后，避免被误匹配
+                        )
