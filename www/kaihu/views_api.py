@@ -31,10 +31,10 @@ def api_get_department_list(request, template_name='kaihu/department_list.html')
     if not city:
         raise Http404
     departments = db.get_departments_by_city_id(city.id)
-    # departments_count = len(departments)
+    department_count = len(departments)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
     page_objs = page.Cpt(departments, count=10, page=page_num).info
     departments = page_objs[0]
-    return dict(departments=_format_api_departments(departments))
+    return dict(departments=_format_api_departments(departments), department_count=department_count)
