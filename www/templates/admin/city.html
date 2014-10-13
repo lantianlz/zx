@@ -45,17 +45,18 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, isShow, pageIndex){
+        search: function(name, isShow, sortByProvince, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/kaihu/city/search", 
-                {'name': name||'', 'is_show': isShow||0, 'page_index': pageIndex||1}, 
+                {'name': name||'', 'is_show': isShow||0, 'sort_by_province': sortByProvince||0, 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
                     me.name = name||'';
                     me.isShow = isShow||0;
+                    me.sortByProvince = sortByProvince||0;
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
                 }
@@ -148,10 +149,11 @@ $(document).ready(function(){
         },
 
         search: function(){
-            var isShow = this.$('.is-show').val();
-                name = this.$('.key-word').val();
+            var isShow = this.$('.is-show').val(),
+                name = this.$('.key-word').val(),
+                sortByProvince = this.$('.sort-by-province').attr('checked') ? 1 : 0;
 
-            router.navigate(String.format('/search/{0}/{1}/1', name, isShow), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/{2}/1', name, isShow, sortByProvince), {trigger: true});
         },
 
         modifyCity: function(sender){
@@ -238,12 +240,12 @@ $(document).ready(function(){
         routes: {
             "":                             "search",
             "modify/:cityId":         "modify",
-            "search/(:name)/(:isShow)/:pageIndex":    "search",
+            "search/(:name)/(:isShow)/(:sortByProvince)/:pageIndex":    "search",
         },
 
         // 查询
-        search: function(name, isShow, pageIndex){
-            citys.search(name||'', isShow||1, pageIndex||1);
+        search: function(name, isShow, sortByProvince, pageIndex){
+            citys.search(name||'', isShow||1, sortByProvince||0, pageIndex||1);
         },
 
         // 显示修改界面
@@ -280,6 +282,14 @@ $(document).ready(function(){
     <!-- 客户经理列表 -->
     <div class="tab-pane fade pt-15 in active" id="city_list">
         <form action="." onsubmit="javascript: return false;">
+            <div class="pl-0 pr-0 pb-10 col-md-2">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="sort-by-province" name="sort_by_province" value="1">
+                        按省份排序
+                    </label>
+                </div>
+            </div>
             <div class="pl-0 pr-5 pb-10 col-md-2">
                 <select class="form-control input-sm is-show">
                     <option value="0">未开放</option>

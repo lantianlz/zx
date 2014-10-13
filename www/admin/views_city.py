@@ -52,10 +52,12 @@ def search(request):
 
     name = request.REQUEST.get('name')
     is_show = request.REQUEST.get('is_show')
+    sort_by_province = request.REQUEST.get('sort_by_province')
+    sort_by_province = True if sort_by_province == "1" else False
 
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = CityBase().search_citys_for_admin(name, is_show)
+    objs = CityBase().search_citys_for_admin(name, is_show, sort_by_province)
 
     page_objs = page.Cpt(objs, count=500, page=page_index).info
 
