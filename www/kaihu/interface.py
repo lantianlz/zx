@@ -327,7 +327,7 @@ class CustomerManagerBase(object):
         for obj in objs:
             user = UserBase().get_user_by_id(obj.user_id)
             user_count_info = UserCountBase().get_user_count_info(obj.user_id)
-            data.append(dict(user_id=user.id, user_nick=user.nick, user_avatar=user.get_avatar_65(),
+            data.append(dict(user_id=user.id, user_nick=user.nick, user_avatar=user.get_avatar_100(),
                              department_name=obj.department.get_short_name(), company_short_name=obj.department.company.get_short_name(),
                              department_id=obj.department.id, city_id=obj.city_id,
                              sort_num=obj.sort_num, vip_info=obj.vip_info, qq=obj.qq, mobile=obj.mobile, pay_type=obj.pay_type,
