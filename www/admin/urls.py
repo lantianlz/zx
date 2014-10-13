@@ -103,6 +103,7 @@ urlpatterns += patterns('www.admin.views_friendly_link',
 urlpatterns += patterns('www.admin.views_city',
 
                         url(r'^kaihu/city/get_districts_by_city$', 'get_districts_by_city'),
+                        url(r'^kaihu/city/modify_note$', 'modify_note'),
                         url(r'^kaihu/city/modify_city$', 'modify_city'),
                         url(r'^kaihu/city/get_city_by_id$', 'get_city_by_id'),
                         url(r'^kaihu/city/search$', 'search'),

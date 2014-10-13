@@ -40,7 +40,8 @@ $(document).ready(function(){
             'sort': 'sort_num',
             'rank': 'rank',
             'rankUrl': 'rank_url',
-            'departmentCount': 'department_count'
+            'departmentCount': 'department_count',
+            'note': 'note'
         },
 
         // 查询
@@ -92,6 +93,18 @@ $(document).ready(function(){
                     }
                 }
             );
+        },
+
+        modifyNote: function(cityId, note, callback){
+            ajaxSend(
+                "/admin/kaihu/city/modify_note", 
+                {'city_id': cityId, 'note': note},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
         }
 
     });
@@ -110,7 +123,8 @@ $(document).ready(function(){
 
         events: {
             'click .search': 'search',
-            'click .pointer': 'modifyCity'
+            'click .pointer': 'modifyCity',
+            'blur .note': 'changeNote'
         },
 
         // 渲染函数
@@ -145,6 +159,20 @@ $(document).ready(function(){
                 cityId = target.data('city_id');
 
             router.navigate('/modify/' + cityId, {trigger: true});
+        },
+
+        changeNote: function(sender){
+            var target = $(sender.currentTarget),
+                cityId = target.data('city_id');
+
+            this.collection.modifyNote(cityId, target.val(), function(data){
+                if(data.errcode === 0){
+                    $.ZXNotice.SuccessTopNotice('操作成功!');
+                    
+                } else {
+                    $.ZXNotice.ErrorTopNotice(data.errmsg);
+                }
+            });
         }
 
     });
@@ -215,7 +243,7 @@ $(document).ready(function(){
 
         // 查询
         search: function(name, isShow, pageIndex){
-            citys.search(name||'', isShow||0, pageIndex||1);
+            citys.search(name||'', isShow||1, pageIndex||1);
         },
 
         // 显示修改界面
@@ -279,6 +307,7 @@ $(document).ready(function(){
                     <th>排序</th>
                     <th>营业部数</th>
                     <th>状态</th>
+                    <th>备注</th>
                 </tr>
             </thead>
             <tbody>
@@ -322,6 +351,9 @@ $(document).ready(function(){
                 <span class="glyphicon glyphicon-ok co-zx" title="已开放"></span>
                 <% } %>
             </td>
+            <td>
+                <input type="text" data-city_id="<%= city.cityId %>" class="note form-control input-sm" value="<%= city.note %>" />
+            </td>
         </tr>
     <% }) %>
 </script>
@@ -358,6 +390,12 @@ $(document).ready(function(){
             <label class="col-sm-2 control-label">排序</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" name="sort" value='<%= sort %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">备注</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="note" value='<%= note %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

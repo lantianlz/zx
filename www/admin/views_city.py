@@ -39,7 +39,8 @@ def format_city(objs, num):
             'sort_num': x.sort_num,
             'rank': x.baidu_rank if x.is_show else '未开放',
             'rank_url': x.get_baidu_search_url() if x.is_show else '#',
-            'department_count': len(DepartmentBase().get_departments_by_city_id(x.id))
+            'department_count': len(DepartmentBase().get_departments_by_city_id(x.id)),
+            'note': x.note or ''
         })
 
     return data
@@ -56,10 +57,10 @@ def search(request):
 
     objs = CityBase().search_citys_for_admin(name, is_show)
 
-    page_objs = page.Cpt(objs, count=10, page=page_index).info
+    page_objs = page.Cpt(objs, count=500, page=page_index).info
 
     # 格式化json
-    num = 10 * (page_index - 1)
+    num = 500 * (page_index - 1)
     data = format_city(page_objs[0], num)
 
     return HttpResponse(
@@ -86,11 +87,22 @@ def modify_city(request):
     pinyin_abbr = request.REQUEST.get('pinyin_abbr')
     sort_num = int(request.REQUEST.get('sort'))
     is_show = int(request.REQUEST.get('is_show'))
+    note = request.REQUEST.get('note')
 
     return CityBase().modify_city(
-        city_id, pinyin=pinyin, sort_num=sort_num, pinyin_abbr=pinyin_abbr, is_show=is_show, city=city
+        city_id, pinyin=pinyin, sort_num=sort_num, pinyin_abbr=pinyin_abbr, 
+        is_show=is_show, city=city, note=note
     )
 
+@verify_permission('modify_city')
+@common_ajax_response
+def modify_note(request):
+    city_id = request.REQUEST.get('city_id')
+    note = request.REQUEST.get('note')
+
+    return CityBase().modify_city(
+        city_id, note=note
+    )
 
 @verify_permission('query_city')
 def get_districts_by_city(request):
