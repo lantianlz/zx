@@ -89,6 +89,7 @@ class CityBase(object):
             return objs[0]
         return None
 
+    @cache_required(cache_key='province_by_id_%s', expire=3600 * 24)
     def get_province_by_id(self, province_id):
         objs = self.get_all_provinces().filter(id=province_id)
         if objs:
