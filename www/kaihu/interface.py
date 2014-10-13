@@ -94,11 +94,14 @@ class CityBase(object):
         if objs:
             return objs[0]
 
-    def search_citys_for_admin(self, city_name, is_show=0):
+    def search_citys_for_admin(self, city_name, is_show=0, sort_by_province=True):
         citys = self.get_all_citys().filter(is_show=is_show)
 
         if city_name:
             citys = citys.filter(city__contains=city_name)
+
+        if sort_by_province:
+            citys = citys.order_by('-province')
 
         return citys
 
