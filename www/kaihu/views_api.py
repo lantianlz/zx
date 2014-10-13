@@ -21,7 +21,7 @@ def _format_api_departments(departments):
     results = []
     for department in departments:
         results.append({"id": department.id, "short_name": department.get_short_name(), "cm_count": department.cm_count, "img": department.company.img,
-                        "tel": department.tel, "addr": department.addr})
+                        "tel": department.tel, "addr": department.addr, "company_name": department.company.get_short_name(), "des":department.des})
     return results
 
 

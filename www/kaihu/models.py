@@ -77,6 +77,7 @@ class City(models.Model):
     is_show = models.BooleanField(default=False, db_index=True)
     baidu_rank = models.IntegerField(default=999, db_index=True)
     department_count = models.IntegerField(default=0, db_index=True)
+    note = models.TextField(null=True)
 
     class Meta:
         ordering = ["baidu_rank", "-sort_num"]
