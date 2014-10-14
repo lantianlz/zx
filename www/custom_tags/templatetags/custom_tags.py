@@ -180,3 +180,12 @@ def toutiao_hotest_articles(context):
     articles = ArticleBase().get_hotest_articles()[:10]
 
     return render_to_response('toutiao/_toutiao_hotest_articles.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
+def kaihu_ad(context):
+    """
+    @note: 头条最新热榜
+    """
+
+    return render_to_response('kaihu/_kaihu_ad.html', locals(), context_instance=context).content
