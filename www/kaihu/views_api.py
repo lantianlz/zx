@@ -38,3 +38,32 @@ def api_get_department_list(request, template_name='kaihu/department_list.html')
     page_objs = page.Cpt(departments, count=10, page=page_num).info
     departments = page_objs[0]
     return dict(departments=_format_api_departments(departments), department_count=department_count)
+    
+
+def _format_api_custom_managers(custom_managers):
+    results = []
+    for custom_manager in custom_managers:
+        results.append({
+            "id": custom_manager["user_id"], 
+            "name": custom_manager["user_nick"],
+            "img": custom_manager["user_avatar"],
+            "company_name": custom_manager["company_short_name"],
+            "vip_info": custom_manager["vip_info"],
+            "qq": custom_manager["qq"],
+            "mobile": custom_manager["mobile"],
+        })
+    return results
+    
+@common_ajax_response_for_api
+def api_get_custom_manager_list(request):
+    city = cb.get_city_by_pinyin_abbr("chengdu")
+    if not city:
+        raise Http404
+    custom_managers = cmb.get_customer_managers_by_city_id(city.id)
+    custom_managers_count = len(custom_managers)
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(custom_managers, count=10, page=page_num).info
+    custom_managers = page_objs[0]
+    return dict(departments=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
