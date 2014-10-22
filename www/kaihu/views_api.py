@@ -27,7 +27,7 @@ def _format_api_departments(departments):
 
 @common_ajax_response_for_api
 def api_get_department_list(request, template_name='kaihu/department_list.html'):
-    city = cb.get_city_by_id("1974")
+    city = cb.get_city_by_id(request.REQUEST.get('city_id', 1974))
     if not city:
         raise Http404
     departments = db.get_departments_by_city_id(city.id)
@@ -56,7 +56,7 @@ def _format_api_custom_managers(custom_managers):
     
 @common_ajax_response_for_api
 def api_get_custom_manager_list(request):
-    city = cb.get_city_by_id("1974")
+    city = cb.get_city_by_id(request.REQUEST.get('city_id', 1974))
     if not city:
         raise Http404
     custom_managers = cmb.get_customer_managers_by_city_id(city.id)
