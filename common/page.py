@@ -51,5 +51,6 @@ class Cpt(object):
         self.Contacts = Contacts
         Ct = self.Contacts
         CurrentPage = Ct.number
-        self.info = [list(self.Contacts.object_list), CurrentPage, Ct.previous_page_number(), Ct.next_page_number(), Ct.paginator.num_pages, Ct.paginator.count]
+        obj_list = list(self.Contacts.object_list) if Page <= Ct.paginator.num_pages else []
+        self.info = [obj_list, CurrentPage, Ct.previous_page_number(), Ct.next_page_number(), Ct.paginator.num_pages, Ct.paginator.count]
 
