@@ -86,8 +86,6 @@ def api_get_province_and_city(request):
             })
         
         data.append(temp)
-    f = open('a.txt', 'wb')
-    f.write(json.dumps(dict(data=data)))
-    f.close()
+    
     return dict(data=data)
 
