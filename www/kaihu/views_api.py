@@ -45,7 +45,7 @@ def _format_api_custom_managers(custom_managers):
     for custom_manager in custom_managers:
         results.append({
             "id": custom_manager["user_id"], 
-            "name": custom_manager["user_nick"],
+            "nick": custom_manager["user_nick"],
             "img": custom_manager["user_avatar"],
             "company_name": custom_manager["company_short_name"],
             "vip_info": custom_manager["vip_info"],
@@ -66,7 +66,8 @@ def api_get_custom_manager_list(request):
     page_num = int(request.REQUEST.get('page', 1))
     page_objs = page.Cpt(custom_managers, count=10, page=page_num).info
     custom_managers = page_objs[0]
-    return dict(departments=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
+
+    return dict(custom_managers=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
     
     
 @common_ajax_response_for_api
@@ -89,3 +90,4 @@ def api_get_province_and_city(request):
     f.write(json.dumps(dict(data=data)))
     f.close()
     return dict(data=data)
+
