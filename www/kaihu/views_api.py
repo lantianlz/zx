@@ -73,7 +73,7 @@ def api_get_custom_manager_list(request):
 @common_ajax_response_for_api
 def api_get_province_and_city(request):
     data = []
-    for province in cb.get_all_provinces():
+    for province in cb.get_all_provinces().order_by("id"):
         temp = {
             "id": province.id,
             "name": province.province,
