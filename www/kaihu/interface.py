@@ -56,6 +56,9 @@ class CityBase(object):
                 data_citys.append([ap, province_citys])
             data.append([area, data_citys])
         return data
+    
+    def get_citys_by_province(self, province_id):
+        return self.get_all_citys().filter(province=province_id)
 
     def get_city_by_pinyin_abbr(self, pinyin_abbr):
         if pinyin_abbr:

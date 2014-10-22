@@ -27,7 +27,7 @@ def _format_api_departments(departments):
 
 @common_ajax_response_for_api
 def api_get_department_list(request, template_name='kaihu/department_list.html'):
-    city = cb.get_city_by_pinyin_abbr("chengdu")
+    city = cb.get_city_by_id("1974")
     if not city:
         raise Http404
     departments = db.get_departments_by_city_id(city.id)
@@ -56,7 +56,7 @@ def _format_api_custom_managers(custom_managers):
     
 @common_ajax_response_for_api
 def api_get_custom_manager_list(request):
-    city = cb.get_city_by_pinyin_abbr("chengdu")
+    city = cb.get_city_by_id("1974")
     if not city:
         raise Http404
     custom_managers = cmb.get_customer_managers_by_city_id(city.id)
@@ -67,3 +67,25 @@ def api_get_custom_manager_list(request):
     page_objs = page.Cpt(custom_managers, count=10, page=page_num).info
     custom_managers = page_objs[0]
     return dict(departments=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
+    
+    
+@common_ajax_response_for_api
+def api_get_province_and_city(request):
+    data = []
+    for province in cb.get_all_provinces():
+        temp = {
+            "id": province.id,
+            "name": province.province,
+            "cities": []
+        }
+        for city in cb.get_citys_by_province(province.id):
+            temp["cities"].append({
+                "id": city.id,
+                "name": city.city
+            })
+        
+        data.append(temp)
+    f = open('a.txt', 'wb')
+    f.write(json.dumps(dict(data=data)))
+    f.close()
+    return dict(data=data)
