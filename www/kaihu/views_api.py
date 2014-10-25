@@ -69,6 +69,17 @@ def api_get_custom_manager_list(request):
 
     return dict(custom_managers=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
     
+@common_ajax_response_for_api
+def api_get_custom_manager_list_of_department(request):
+    department = db.get_department_by_id(request.REQUEST.get('department_id'))
+    if not department:
+        raise Http404
+    custom_managers = cmb.get_customer_managers_by_department(department)
+    custom_managers = cmb.format_customer_managers_for_ajax(custom_managers)
+    custom_managers_count = len(custom_managers)
+
+
+    return dict(custom_managers=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
     
 @common_ajax_response_for_api
 def api_get_province_and_city(request):
