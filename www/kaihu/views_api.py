@@ -44,14 +44,14 @@ def api_get_department_list(request):
 def api_get_city_by_ip(request):
     ip = utils.get_clientip(request)
     city_info = utils.get_city_by_ip_from_taobao(ip)
-    city_name = "成都"
+    city_name = "成都市"
     city_id = 1974
     if city_info["country"] == u"中国":
         city = cb.get_one_city_by_name(city_info["city"])
         if city:
             city_name = city.city
             city_id = city.id
-
+    
     return dict(ip=ip, city_name=city_name, city_id=city_id)
 
 
