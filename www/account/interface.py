@@ -444,7 +444,7 @@ class UserBase(object):
         '''
         格式化完整用户信息
         '''
-        format_user = self.get_user_by_id(user_id)
+        format_user = self.get_user_by_id(user_id, state=[0, 1, 2])
 
         # 判断是否已经是推荐用户了
         if RecommendUser.objects.filter(user_id=user_id).count() > 0:
