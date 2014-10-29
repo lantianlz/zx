@@ -79,7 +79,7 @@ def api_get_custom_manager_list(request):
         raise Http404
     custom_managers = cmb.get_customer_managers_by_city_id(city.id)
     if not custom_managers:
-        defualt_user_id = "f762a6f5d2b711e39a09685b35d0bf16" if settings.DEBUG else ""
+        defualt_user_id = "f762a6f5d2b711e39a09685b35d0bf16" if settings.DEBUG else "d1baa40e5f3a11e4813d00163e003240"
         custom_managers = cmb.format_customer_managers_for_ajax([cmb.get_customer_manager_by_user_id(user_id=defualt_user_id), ])
 
     custom_managers_count = len(custom_managers)
