@@ -10,6 +10,8 @@
 import re
 import datetime
 import random
+import requests
+import json
 
 from django.conf import settings
 
@@ -335,7 +337,6 @@ def get_baidu_rank(key):
     """
     @note: 获取关键词在百度中的排名 
     """
-    import requests
     from pyquery import PyQuery as pq
 
     for page in range(0, 1):
@@ -349,3 +350,18 @@ def get_baidu_rank(key):
             if "zhixuan" in pq(div).html():
                 return i + 1
     return "101"
+
+
+def get_city_by_ip_from_taobao(ip):
+    url = "http://ip.taobao.com/service/getIpInfo.php?ip=%s" % ip
+    data = dict(city="", country="")
+    for i in range(2):
+        try:
+            resp = requests.get(url, timeout=3)
+            city_info = json.loads(resp.text)
+            assert city_info["code"] == 0
+            data = dict(city=city_info["data"]["city"], country=city_info["data"]["country"])
+        except Exception:
+            pass
+        break
+    return data

@@ -26,7 +26,7 @@ def _format_api_departments(departments):
 
 
 @common_ajax_response_for_api
-def api_get_department_list(request, template_name='kaihu/department_list.html'):
+def api_get_department_list(request):
     city = cb.get_city_by_id(int(request.REQUEST.get('city_id', '0')) or 1974)
     if not city:
         raise Http404
@@ -38,6 +38,21 @@ def api_get_department_list(request, template_name='kaihu/department_list.html')
     page_objs = page.Cpt(departments, count=10, page=page_num).info
     departments = page_objs[0]
     return dict(departments=_format_api_departments(departments), department_count=department_count)
+
+
+@common_ajax_response_for_api
+def api_get_city_by_ip(request):
+    ip = utils.get_clientip(request)
+    city_info = utils.get_city_by_ip_from_taobao(ip)
+    city_name = "成都"
+    city_id = 1974
+    if city_info["country"] == u"中国":
+        city = cb.get_one_city_by_name(city_info["city"])
+        if city:
+            city_name = city.city
+            city_id = city.id
+
+    return dict(ip=ip, city_name=city_name, city_id=city_id)
 
 
 def _format_api_custom_managers(custom_managers):

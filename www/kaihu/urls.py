@@ -19,6 +19,7 @@ urlpatterns += patterns('www.kaihu.views_api',
                         url(r'^api_get_custom_manager_list$', 'api_get_custom_manager_list'),
                         url(r'^api_get_custom_manager_list_of_department$', 'api_get_custom_manager_list_of_department'),
                         url(r'^api_get_province_and_city$', 'api_get_province_and_city'),
+                        url(r'^api_get_city_by_ip$', 'api_get_city_by_ip'),
                         )
 
 urlpatterns += patterns('www.kaihu.views',
