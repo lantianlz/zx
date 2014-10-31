@@ -51,7 +51,7 @@ def api_get_city_by_ip(request):
         if city:
             city_name = city.city
             city_id = city.id
-    
+
     return dict(ip=ip, city_name=city_name, city_id=city_id)
 
 
