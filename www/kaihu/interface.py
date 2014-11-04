@@ -377,6 +377,7 @@ class CustomerManagerBase(object):
             transaction.rollback(using=KAIHU_DB)
             return 99900, dict_err.get(99900)
 
+    @transaction.commit_manually(using=KAIHU_DB)
     def modify_customer_manager(self, user_id, **kwargs):
         if not user_id:
             return 99800, dict_err.get(99800)
@@ -388,6 +389,10 @@ class CustomerManagerBase(object):
         customer_manager = self.get_customer_manager_by_user_id(user_id)
         if not customer_manager:
             return 50102, dict_err.get(50102)
+        
+        # 旧营业部个数减1
+        customer_manager.department.cm_count -= 1
+        customer_manager.department.save()
 
         # 如果修改了营业部，所属城市也要一并修改
         department_id = kwargs.get('department_id')
@@ -397,14 +402,20 @@ class CustomerManagerBase(object):
                 return 50101, dict_err.get(50101)
             else:
                 kwargs.update({'city_id': temp.city_id})
+                
+                # 新营业部个数加1
+                temp.cm_count += 1
+                temp.save()
 
         try:
             for k, v in kwargs.items():
                 setattr(customer_manager, k, v)
 
             customer_manager.save()
+            transaction.commit(using=KAIHU_DB)
         except Exception, e:
             debug.get_debug_detail(e)
+            transaction.rollback(using=KAIHU_DB)
             return 99900, dict_err.get(99900)
 
         return 0, dict_err.get(0)
