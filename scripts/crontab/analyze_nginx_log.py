@@ -22,7 +22,9 @@ from django.conf import settings
 
 
 def main(limit):
-
+    """
+    /usr/bin/tail -n 500000 /var/log/nginx/www.log | grep 61.140.150.163 | awk -F"HTTP" {'print $1'} | awk -F"\"" {'print $2'}| sort |uniq -c |sort -rn |awk '{ if($1>1) print count $1 " url "$2" "$3}'
+    """
     t1 = time.time()
     cmd_www = """/usr/bin/tail -n 500000 /var/log/nginx/www.log | grep -v 127.0.0.1 | awk -F"-" {'print $1'} | sort |uniq -c |sort -rn |awk '{ if($1>%s) print "count " $1 " ip "$2 }' """ % limit
 
