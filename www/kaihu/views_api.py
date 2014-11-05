@@ -86,7 +86,8 @@ def api_get_custom_manager_list(request):
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(custom_managers, count=10, page=page_num).info
+    page_count = int(request.REQUEST.get('page_count', 30))
+    page_objs = page.Cpt(custom_managers, count=page_count, page=page_num).info
     custom_managers = page_objs[0]
 
     return dict(custom_managers=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
