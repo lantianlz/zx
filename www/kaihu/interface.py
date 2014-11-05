@@ -19,6 +19,7 @@ dict_err = {
     50104: u'找不到指定资讯',
     50105: u'城市拼音重复',
     50106: u'城市拼音简写重复',
+    50107: u'已经是客户经理，无法重复申请',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -347,8 +348,8 @@ class CustomerManagerBase(object):
         return data
 
     @transaction.commit_manually(using=KAIHU_DB)
-    def add_customer_manager(self, user_id, department_id_or_obj, end_date, vip_info='', sort_num=0, qq=None, entry_time=None, mobile=None,
-                             real_name=None, id_card=None, id_cert=None, des=None, pay_type=0):
+    def add_customer_manager(self, user_id, department_id_or_obj, end_date, vip_info='', sort_num=0, img=None, qq=None, entry_time=None, mobile=None,
+                             real_name=None, id_card=None, id_cert=None, des=None, pay_type=0, state=True):
         try:
             if not (user_id and department_id_or_obj and end_date):
                 return 99800, dict_err.get(99800)
@@ -364,10 +365,10 @@ class CustomerManagerBase(object):
 
             cm = CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id,
                                                 qq=qq, entry_time=entry_time, mobile=mobile, vip_info=vip_info,
-                                                real_name=real_name, id_card=id_card, id_cert=id_cert, des=des, pay_type=pay_type)
+                                                real_name=real_name, id_card=id_card, id_cert=id_cert, des=des, pay_type=pay_type, state=state)
 
             # 更新营业部冗余字段
-            department.cm_count += 1
+            department.cm_count += department.get_active_custom_managers_count()
             department.save()
 
             transaction.commit(using=KAIHU_DB)
@@ -390,12 +391,10 @@ class CustomerManagerBase(object):
         if not customer_manager:
             return 50102, dict_err.get(50102)
         
-        # 旧营业部个数减1
-        customer_manager.department.cm_count -= 1
-        customer_manager.department.save()
-
         # 如果修改了营业部，所属城市也要一并修改
         department_id = kwargs.get('department_id')
+        old_department_id = customer_manager.department.id
+        
         if department_id:
             temp = DepartmentBase().get_department_by_id(department_id)
             if not temp:
@@ -403,15 +402,22 @@ class CustomerManagerBase(object):
             else:
                 kwargs.update({'city_id': temp.city_id})
                 
-                # 新营业部个数加1
-                temp.cm_count += 1
-                temp.save()
-
         try:
             for k, v in kwargs.items():
                 setattr(customer_manager, k, v)
-
+            
             customer_manager.save()
+            
+            # 新营业部客户经理个数
+            new_department = DepartmentBase().get_department_by_id(department_id)
+            new_department.cm_count = new_department.get_active_custom_managers_count()
+            new_department.save()
+            
+            # 新营业部客户经理个数
+            old_department = DepartmentBase().get_department_by_id(old_department_id)
+            old_department.cm_count = old_department.get_active_custom_managers_count()
+            old_department.save()
+            
             transaction.commit(using=KAIHU_DB)
         except Exception, e:
             debug.get_debug_detail(e)
@@ -457,11 +463,12 @@ class CustomerManagerBase(object):
         try:
             obj = self.get_customer_manager_by_user_id(user_id)
             if obj:
-                obj.delete()
-
                 # 更新营业部冗余字段
                 department = obj.department
-                department.cm_count -= 1
+                
+                obj.delete()
+                
+                department.cm_count = department.get_active_custom_managers_count()
                 department.save()
 
                 transaction.commit(using=KAIHU_DB)
@@ -473,6 +480,31 @@ class CustomerManagerBase(object):
             debug.get_debug_detail(e)
             transaction.rollback(using=KAIHU_DB)
             return 99900, dict_err.get(99900)
+            
+    
+    def get_custom_managers_for_admin(self, nick, city_name, state=True):
+        objs = self.get_all_customer_managers(False, state)
+        
+        if nick:
+            user = UserBase().get_user_by_nick(nick)
+            if user:
+                temp = self.get_customer_manager_by_user_id(user.id)
+                if temp:
+                    return [temp,]
+        
+        if city_name:
+            city = CityBase().get_one_city_by_name(city_name)
+            if city:
+                objs = objs.filter(city_id=city.id)
+        
+        return objs
+    
+    
+    def auth_customer_manager(self, user_id, department_id, vip_info, qq, mobile):
+        if not self.get_customer_manager_by_user_id(user_id):
+            return self.add_customer_manager(user_id, department_id, datetime.datetime.now(), vip_info=vip_info, qq=qq, mobile=mobile, state=False)
+        else:
+            return 50107, dict_err.get(50107)
 
 
 class FriendlyLinkBase(object):

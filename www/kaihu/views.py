@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import page, utils
+from www.misc.decorators import common_ajax_response, member_required
 from www.timeline.interface import FeedBase
 from www.kaihu import interface
 
@@ -171,3 +172,36 @@ def get_customer_manager(request):
     customer_managers = cmb.get_customer_managers_by_city_id(city_id)[(page_num - 1) * page_count:page_num * page_count]
 
     return HttpResponse(json.dumps(customer_managers), mimetype='application/json')
+    
+    
+def get_departments_by_name(request):
+    '''
+    根据名字查询营业部
+    '''
+    department_name = request.REQUEST.get('department_name')
+
+    result = []
+
+    departments = db.get_departments_by_name(department_name)
+
+    if departments:
+        for x in departments[:10]:
+            result.append([x.id, x.name, None, x.name])
+
+    return HttpResponse(json.dumps(result), mimetype='application/json')
+    
+
+@member_required
+@common_ajax_response
+def auth_customer_manager(request):
+    '''
+    @note: 申请验证客户经理
+    '''
+    department_id = request.REQUEST.get('belong_department')
+    vip_info = request.REQUEST.get('vip_info', 1)
+    mobile = request.REQUEST.get('mobile', 1)
+    qq = request.REQUEST.get('qq', 1)
+
+    return cmb.auth_customer_manager(request.user.id, department_id, vip_info, qq, mobile)  
+    
+    

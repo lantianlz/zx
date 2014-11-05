@@ -59,6 +59,12 @@ class Department(models.Model):
 
     def get_short_name(self):
         return self.name.replace(self.company.name, self.company.get_short_name()).replace(u"证券营业部", u"营业部")
+        
+    def get_active_custom_managers_count(self):
+        '''
+        获取此营业部下有效的客户经理数量
+        '''
+        return self.custom_managers.all().filter(state=True, end_date__gt=datetime.datetime.now()).count()
 
 
 class City(models.Model):
@@ -109,12 +115,12 @@ class CustomerManager(models.Model):
 
     user_id = models.CharField(max_length=32, unique=True)
     city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True)
-    department = models.ForeignKey(Department)
+    department = models.ForeignKey(Department, related_name="custom_managers")
     end_date = models.DateField(verbose_name=u'到期时间', db_index=True)
     vip_info = models.CharField(verbose_name=u'认证信息', max_length=64)
     pay_type = models.IntegerField(choices=pay_type_choices, db_index=True, default=0)
 
-    img = models.CharField(verbose_name=u'个人真实照片', max_length=64, null=True)
+    img = models.CharField(verbose_name=u'个人真实照片', max_length=128, null=True)
     qq = models.CharField(verbose_name=u'qq号码', max_length=32, null=True)
     entry_time = models.DateField(verbose_name=u'入行时间', null=True)
     mobile = models.CharField(verbose_name=u'手机号', max_length=32, null=True)

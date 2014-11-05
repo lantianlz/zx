@@ -26,6 +26,7 @@ $.TextboxList = function(element, _options){
     	inBetweenEditableBits: true,
 		keys: {previous: 37, next: 39},
 		bitsOptions: {editable: {}, box: {}},
+		inputPlaceholder: '',
     	plugins: {},
 		// tip: you can change encode/decode with JSON.stringify and JSON.parse
 		encode: function(o){ 
@@ -307,7 +308,7 @@ $.TextboxListBit = function(type, value, textboxlist, _options){
 			}
 			bit.children().click(function(e){ e.stopPropagation(); e.preventDefault(); });
 		} else {
-			element = $('<input type="text" class="'+ typeprefix +'-input" autocomplete="off" placeholder="话题" />').val(self.value ? self.value[1] : '').appendTo(bit);
+			element = $('<input type="text" class="'+ typeprefix +'-input" autocomplete="off" placeholder="'+textboxlist.getOptions().inputPlaceholder+'" />').val(self.value ? self.value[1] : '').appendTo(bit);
 			if (chk(options.tabIndex)) element.tabIndex = options.tabIndex;
 			if (options.growing) new $.GrowingInput(element, options.growingOptions);		
 			element.focus(function(){ focus(true); }).blur(function(){

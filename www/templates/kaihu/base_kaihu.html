@@ -8,11 +8,18 @@
     border-top: 0;
 }
 </style>
+
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.css" />
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/textboxlist/TextboxList.Autocomplete.css" />
 {% block css %}{% endblock %}
 {% endblock %}
 
 {% block home_js%}
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Euh1QN3IbOinInNNq9lWnQPB"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/GrowingInput.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.Autocomplete.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}js/textboxlist/TextboxList.Autocomplete.Binary.js"></script>
 {% block javascript %}{% endblock %}
 {% endblock %}
 

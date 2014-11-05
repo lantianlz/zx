@@ -54,23 +54,30 @@ $(document).ready(function(){
             'qq': 'qq',
             'mobile': 'mobile',
             'state': 'state',
-            'payType': 'pay_type'
+            'payType': 'pay_type',
+            'realName': 'real_name',
+            'entryTime': 'entry_time',
+            'idCard': 'id_card',
+            'idCert': 'id_cert',
+            'des': 'des',
+            'img': 'img'
         },
 
         // 查询
-        search: function(nick, city, pageIndex){
+        search: function(nick, city, state, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/user/customer_manager/search", 
-                {'user_nick': nick||'', 'city_name': city||'', 'page_index': pageIndex||1}, 
+                {'user_nick': nick||'', 'city_name': city||'', 'state': state||1, 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
+                    me.state = state||1;
                     me.nick = nick||'';
                     me.city = city||'';
 
-                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
                 }
             );
         },
@@ -160,7 +167,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.nick + '/' + this.collection.city
+                'search/' + this.collection.nick + '/' + this.collection.city + '/' + this.collection.state
             );
         },
 
@@ -171,9 +178,10 @@ $(document).ready(function(){
 
         searchCustomerManager: function(){
             var nick = this.$('.key-word-nick').val(),
-                city = this.$('.key-word-city').val();
+                city = this.$('.key-word-city').val(),
+                state = this.$('.key-word-state').attr('checked') ? 1 : 0;
 
-            router.navigate(String.format('/search/{0}/{1}/1', nick, city), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/{2}/1', nick, city, state), {trigger: true});
         },
 
         modifyCustomerManager: function(sender){
@@ -203,6 +211,7 @@ $(document).ready(function(){
             this.departmentTextBox = $.ZXTextboxList.create('#belong_department_modify', {
                 max: 1,
                 placeholder: '选择营业部',
+                inputPlaceholder: '营业部',
                 url: '/admin/user/customer_manager/get_departments_by_name',
                 param: 'department_name',
                 loadPlaceholder: '正在加载...'
@@ -215,6 +224,12 @@ $(document).ready(function(){
 
         initDate: function(){
             $('#end_date_modify').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+            $('#entry_time_modify').datetimepicker({
                 format: 'yyyy-mm-dd',
                 language: 'zh-CN',
                 minView: 2,
@@ -253,9 +268,9 @@ $(document).ready(function(){
 
         // 保存
         save: function(){
-            var userId = this.$('form').data('user_id'),
-                me = this;
+            this.$('form').submit();
 
+            /*
             me.collection.modifyCustomerManager(this.$('form').serialize(), function(data){
                 if(data.errcode === 0){
                     $.ZXMsg.alert('提示', '操作成功');
@@ -264,6 +279,7 @@ $(document).ready(function(){
                     $.ZXMsg.alert('提示', data.errmsg);
                 }
             })
+            */
         },
 
         // 删除
@@ -317,6 +333,13 @@ $(document).ready(function(){
                 minView: 2,
                 autoclose: true
             });
+            
+            $('#entry_time_add').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
         },
 
         showPanel: function(userId){
@@ -360,9 +383,8 @@ $(document).ready(function(){
         },
 
         addCustomerManager: function(){
-            var userId = this.$('form').data('user_id'),
-                me = this;
-
+            this.$('form').submit();
+            /*
             customerManagers.addCustomerManager(me.$('form').serialize(), function(data){
                 if(data.errcode === 0){
                     router.navigate('modify/' + data.errmsg, {trigger: true});
@@ -372,6 +394,8 @@ $(document).ready(function(){
                     $.ZXMsg.alert('提示', data.errmsg);
                 }
             })
+            */
+            
         }
 
     });
@@ -382,13 +406,13 @@ $(document).ready(function(){
         routes: {
             "":                                     "search",
             "modify/:userId":                       "modify",
-            "search/(:nick)/(:city)/:pageIndex":    "search",
+            "search/(:nick)/(:city)/(:state)/:pageIndex":    "search",
             "add/:userId":                          "add"
         },
 
         // 查询
-        search: function(nick, city, pageIndex){
-            customerManagers.search(nick||'', city||'', pageIndex||1);
+        search: function(nick, city, state, pageIndex){
+            customerManagers.search(nick||'', city||'', state||1, pageIndex||1);
         },
 
         // 显示修改界面
@@ -431,6 +455,14 @@ $(document).ready(function(){
     <div class="tab-pane fade pt-15 in active" id="customer_manager_list">
         <form action="." onsubmit="javascript: return false;">
             <div class="pl-0 pr-0 pb-10 col-md-2">
+                <label class="radio-inline">
+                  <input type="radio" name="state" class="key-word-state" value="1" checked="checked"> 正常
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="state" value="0"> 未审核
+                </label>
+            </div>
+            <div class="pl-0 pr-0 pb-10 col-md-2">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control key-word-nick" placeholder="输入客户经理昵称..." />
                 </div>
@@ -450,10 +482,12 @@ $(document).ready(function(){
                     <th>#</th>
                     <th>头像</th>
                     <th>客户经理</th>
-                    <th>所属城市</th>
+                    <th>真实照片</th>
+                    <th>真实姓名</th>
                     <th>所属营业部</th>
                     <th>排序</th>
                     <th>认证到期时间</th>
+                    <th>状态</th>
                 </tr>
             </thead>
             <tbody>
@@ -481,22 +515,43 @@ $(document).ready(function(){
             <td><%= customerManager.num %></td>
             <td><a target="_blank" href="/p/<%= customerManager.userId %>"><img src="<%= customerManager.userAvatar %>" class="avatar-35 avatar-circle" ></a></td>
             <td class="pointer" data-user_id="<%= customerManager.userId %>"><%= customerManager.userNick %></td>
-            <td><%= customerManager.cityName %></td>
+            <td><img src="<%= customerManager.img %>" class="avatar-35 avatar-circle" ></td>
+            <td><%= customerManager.realName %></td>
             <td><%= customerManager.departmentName %></td>
             <td><%= customerManager.sort %></td>
             <td><%= customerManager.endDate %></td>
+            <td>
+                <% if(!customerManager.state){ %>
+                <span class="glyphicon glyphicon-remove cl_red" title="未审核"></span>
+                <% } else { %>
+                <span class="glyphicon glyphicon-ok co-zx" title="正常"></span>
+                <% } %>
+            </td>
         </tr>
     <% }) %>
 </script>
 
 <!-- 修改问题模板 -->
 <script type="text/template" id="modify_customer_manager_template">
-    <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" action="">
+    <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" action="/admin/user/customer_manager/modify_customer_manager" enctype="multipart/form-data">
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">客户经理名称</label>
             <div class="col-sm-6">
                 <p class="form-control-static"><%= userNick %></p>
                 <input type="hidden" name="user_id" value="<%= userId %>" />
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">真实姓名</label>
+            <div class="col-sm-3">
+                <input type="text" name="real_name" class="form-control" value='<%= realName %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">真实照片</label>
+            <div class="col-sm-6">
+                <img class="avatar-75 avatar-circle mb-10" src="<%= img %>" />
+                <input name="img" type="file" />图片尺寸为 75(宽) X 75(长)
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
@@ -536,6 +591,30 @@ $(document).ready(function(){
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">入行时间</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="entry_time" id="entry_time_modify" value='<%= entryTime %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">身份证号</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="id_card" value='<%= idCard %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">从业资格证编号</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="id_cert" value='<%= idCert %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">个人简介</label>
+            <div class="col-sm-9">
+                <textarea style="height: 200px;" class="form-control" name="des"><%= des %></textarea>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">付费类型</label>
             <div class="col-sm-9">
                 <label class="checkbox-inline pl-40">
@@ -543,6 +622,17 @@ $(document).ready(function(){
                 </label>
                 <label class="checkbox-inline pl-40">
                     <input type="radio" name="pay_type" value="1" <% if(payType=="1"){ %>checked<% } %> > 普通付费
+                </label>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">状态</label>
+            <div class="col-sm-9">
+                <label class="checkbox-inline pl-40">
+                    <input type="radio" name="state" value="0" <% if(state=="0"){ %>checked<% } %> > 未审核
+                </label>
+                <label class="checkbox-inline pl-40">
+                    <input type="radio" name="state" value="1" <% if(state=="1"){ %>checked<% } %> > 正常
                 </label>
             </div>
         </div>
@@ -565,7 +655,7 @@ $(document).ready(function(){
                 <h4 class="modal-title">认证客户经理</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" action="">
+                <form class="form-horizontal" data-user_id="<%= userId %>" role="form" method="post" action="/admin/user/customer_manager/add_customer_manager" enctype="multipart/form-data">
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-3 control-label">客户经理名称</label>
                         <div class="col-sm-6">
@@ -574,11 +664,25 @@ $(document).ready(function(){
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">真实姓名</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="real_name" class="form-control" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">真实照片</label>
+                        <div class="col-sm-6">
+                            <img class="avatar-75 avatar-circle mb-10" src="" />
+                            <input name="img" type="file" />图片尺寸为 75(宽) X 75(长)
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-3 control-label">所属营业部</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="belong_department" id="belong_department_add" value=''>
                         </div>
                     </div>
+                    
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
                         <label class="col-sm-3 control-label">排序</label>
                         <div class="col-sm-3">
@@ -610,6 +714,30 @@ $(document).ready(function(){
                         </div>
                     </div>
                     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">入行时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="entry_time" id="entry_time_add" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">身份证号</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="id_card" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">从业资格证编号</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="id_cert" value=''>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                        <label class="col-sm-3 control-label">个人简介</label>
+                        <div class="col-sm-9">
+                            <textarea style="height: 200px;" class="form-control" name="des"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group pt-20 pb-20">
                         <label class="col-sm-2 control-label">付费类型</label>
                         <div class="col-sm-9">
                             <label class="checkbox-inline pl-40">

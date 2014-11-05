@@ -1268,6 +1268,7 @@ if (!String.format) {
             },
             unique: true, 
             max: options.max,
+            inputPlaceholder: options.inputPlaceholder,
             plugins: {
                 autocomplete: {
                     minLength: 2, // 最小字符
