@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
 
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.conf import settings
+
+from www.misc import qiniu_client
 
 from common import page, utils
 from www.misc.decorators import common_ajax_response, member_required
@@ -158,6 +162,52 @@ def news_detail(request, news_id, template_name='kaihu/news_detail.html'):
     newses_related = nb.get_related_newses(news)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+@member_required
+def auth_custom_manager(request):
+    '''
+    @note: 申请验证客户经理
+    '''
+    
+    # 如果已经提交审核 或者 已经是客户经理了  则直接跳转到用户界面
+    if request.method == "GET":
+        if cmb.get_customer_manager_by_user_id(request.user.id):
+            return HttpResponseRedirect("%s/account/custom_manager" % settings.MAIN_DOMAIN)
+    
+    if request.method == "POST":
+        user_id = request.REQUEST.get('user_id')
+        department_id = request.REQUEST.get('belong_department')
+        vip_info = request.REQUEST.get('vip_info')
+        qq = request.REQUEST.get('qq')
+        entry_time = request.REQUEST.get('entry_time')
+        mobile = request.REQUEST.get('mobile')
+        real_name = request.REQUEST.get('real_name')
+        id_card = request.REQUEST.get('id_card')
+        id_cert = request.REQUEST.get('id_cert')
+        des = request.REQUEST.get('des')
+        pay_type = request.REQUEST.get('pay_type', 0)
+
+        img_name = ''
+        img = request.FILES.get('img')
+        if img:
+            flag, img_name = qiniu_client.upload_img(img, img_type='custom_manager')
+            img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
+
+        flag, msg = cmb.add_customer_manager(
+            user_id, department_id, datetime.datetime.now(), vip_info,
+            0, img=img_name, qq=qq, entry_time=entry_time, mobile=mobile, 
+            real_name=real_name, id_card=id_card, id_cert=id_cert, des=des,
+            pay_type=pay_type, state=False
+        )
+        
+        if flag == 0:
+            return HttpResponseRedirect("%s/account/custom_manager" % settings.MAIN_DOMAIN)
+        else:
+            error_msg = msg
+
+    return render_to_response("kaihu/auth_custom_manager.html", locals(), context_instance=RequestContext(request))
+
 # ===================================================ajax部分=================================================================#
 
 
@@ -191,17 +241,4 @@ def get_departments_by_name(request):
     return HttpResponse(json.dumps(result), mimetype='application/json')
     
 
-@member_required
-@common_ajax_response
-def auth_customer_manager(request):
-    '''
-    @note: 申请验证客户经理
-    '''
-    department_id = request.REQUEST.get('belong_department')
-    vip_info = request.REQUEST.get('vip_info', 1)
-    mobile = request.REQUEST.get('mobile', 1)
-    qq = request.REQUEST.get('qq', 1)
 
-    return cmb.auth_customer_manager(request.user.id, department_id, vip_info, qq, mobile)  
-    
-    

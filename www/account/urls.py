@@ -13,6 +13,7 @@ urlpatterns = patterns('www.account.views',
 
                        url(r'^user_settings/verify_email$', 'verify_email'),
                        url(r'^invitation', 'invitation'),
+                       url(r'^custom_manager', 'custom_manager'),
 
                        url(r'^get_user_info_by_id', 'get_user_info_by_id'),
                        url(r'^get_recommend_users', 'get_recommend_users'),

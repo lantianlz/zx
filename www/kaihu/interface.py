@@ -352,23 +352,30 @@ class CustomerManagerBase(object):
                              real_name=None, id_card=None, id_cert=None, des=None, pay_type=0, state=True):
         try:
             if not (user_id and department_id_or_obj and end_date):
+                transaction.rollback(using=KAIHU_DB)
                 return 99800, dict_err.get(99800)
 
             user = UserBase().get_user_by_id(user_id)
             if not user:
+                transaction.rollback(using=KAIHU_DB)
                 return 50100, dict_err.get(50100)
 
+            if self.get_customer_manager_by_user_id(user_id):
+                transaction.rollback(using=KAIHU_DB)
+                return 50107, dict_err.get(50107)
+                
             department = department_id_or_obj if isinstance(department_id_or_obj, Department) else DepartmentBase().get_department_by_id(department_id_or_obj)
 
             if not department:
+                transaction.rollback(using=KAIHU_DB)
                 return 50101, dict_err.get(50101)
 
-            cm = CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id,
+            cm = CustomerManager.objects.create(user_id=user_id, department=department, end_date=end_date, sort_num=sort_num, city_id=department.city_id, img=img,
                                                 qq=qq, entry_time=entry_time, mobile=mobile, vip_info=vip_info,
                                                 real_name=real_name, id_card=id_card, id_cert=id_cert, des=des, pay_type=pay_type, state=state)
 
             # 更新营业部冗余字段
-            department.cm_count += department.get_active_custom_managers_count()
+            department.cm_count = department.get_active_custom_managers_count()
             department.save()
 
             transaction.commit(using=KAIHU_DB)
@@ -413,7 +420,7 @@ class CustomerManagerBase(object):
             new_department.cm_count = new_department.get_active_custom_managers_count()
             new_department.save()
             
-            # 新营业部客户经理个数
+            # 旧营业部客户经理个数
             old_department = DepartmentBase().get_department_by_id(old_department_id)
             old_department.cm_count = old_department.get_active_custom_managers_count()
             old_department.save()
@@ -498,13 +505,6 @@ class CustomerManagerBase(object):
                 objs = objs.filter(city_id=city.id)
         
         return objs
-    
-    
-    def auth_customer_manager(self, user_id, department_id, vip_info, qq, mobile):
-        if not self.get_customer_manager_by_user_id(user_id):
-            return self.add_customer_manager(user_id, department_id, datetime.datetime.now(), vip_info=vip_info, qq=qq, mobile=mobile, state=False)
-        else:
-            return 50107, dict_err.get(50107)
 
 
 class FriendlyLinkBase(object):

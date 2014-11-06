@@ -81,18 +81,6 @@ $(document).ready(function(){
                     me.reset($.ZXUtils.dictMapParse(data, me._modelMaps))
                 }
             );
-        },
-        
-        authCustomerManager: function(data, callback){
-            ajaxSend(
-                "/kaihu/auth_customer_manager", 
-                data,
-                function(data){
-                    if(callback){
-                        callback(data);
-                    }
-                }
-            );
         }
     });
 
@@ -130,87 +118,8 @@ $(document).ready(function(){
     });
 
 
-    var AuthView = Backbone.View.extend({
-        el: 'body',
-
-        template: _.template($('#auth_customer_manager_template').html()),
-
-        departmentTextBox: null,
-        initDepartmentTextBox: function(){
-            this.departmentTextBox = $.ZXTextboxList.create('#belong_department_add', {
-                max: 1,
-                placeholder: '选择营业部',
-                inputPlaceholder: '',
-                url: '/kaihu/get_departments_by_name',
-                param: 'department_name',
-                loadPlaceholder: '正在加载...'
-            });
-
-        },
-
-        initDate: function(){
-            $('#end_date_add').datetimepicker({
-                format: 'yyyy-mm-dd',
-                language: 'zh-CN',
-                minView: 2,
-                autoclose: true
-            });
-        },
-
-        showPanel: function(userId){
-            var me = this;
-
-            me.render();
-
-        },
-
-        render: function(userId, userNick){
-            var me = this;
-
-            $('#auth_customer_manager_modal').remove();
-            
-            $('body').append(this.template());
-
-            // 绑定事件
-            $('#auth_customer_manager_modal .cancel').bind('click', function(){
-                $('#auth_customer_manager_modal').modal('hide');
-            });
-            $('#auth_customer_manager_modal .ok').bind('click', function(){
-                me.authCustomerManager();
-            });
-            
-            $('#auth_customer_manager_modal').modal({'show': true, 'backdrop': 'static'});
-
-
-            this.initDepartmentTextBox();
-            this.initDate();
-        },
-
-        authCustomerManager: function(){
-            var userId = this.$('form').data('user_id'),
-                me = this;
-
-            customerManagers.authCustomerManager($.ZXUtils.formToDict(me.$('form')), function(data){
-                if(data.errcode === 0){
-                    $('#auth_customer_manager_modal').modal('hide');
-                    $.ZXMsg.alert('提示', '申请成功!');
-                } else {
-                    $.ZXMsg.alert('提示', data.errmsg);
-                }
-            });
-        }
-
-    });
-    
-
-
     var customerManagers = new CustomerManagers(),
-        listView = new ListView({'collection': customerManagers}),
-        authView = new AuthView();
-        
-    $('.auth-cm').bind('click', function(){
-        authView.showPanel();
-    });
+        listView = new ListView({'collection': customerManagers});
     
 });
 </script>
@@ -235,7 +144,7 @@ $(document).ready(function(){
 <!-- 推荐客户经理 -->
 <div class="bottom-border bdc-zx pb-3 pl-10 mt-25">
     <span class="bgc-zx co3 pb-6 pt-5 pl-10 pr-10">推荐客户经理</span>
-    <a class="co8 pull-right f12 pr-5 auth-cm" href="#"><i class="fa fa-user f14 pr-3"></i>客户经理申请认证</a>
+    <a class="co8 pull-right f12 pr-5 auth-cm" href="{{MAIN_DOMAIN}}/auth_custom_manager"><i class="fa fa-user f14 pr-3"></i>客户经理申请认证</a>
 </div>
 {% if customer_managers %}
 <ul class="customer-managers list-inline row pl-20 pr-20 pt-5">
@@ -313,57 +222,6 @@ $(document).ready(function(){
 <% }) %>
 </script>
 
-<script type="text/template" id="auth_customer_manager_template">
-<div class="modal fade" id="auth_customer_manager_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header pb-5">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">申请认证客户经理</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" data-user_id="{{request.user.id}}" role="form" method="post" action="">
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">客户经理名称</label>
-                        <div class="col-sm-6">
-                            <p class="form-control-static">{{request.user.nick}}</p>
-                            <input type="hidden" name="user_id" value="{{request.user.id}}" />
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">所属营业部</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="belong_department" id="belong_department_add" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">认证信息</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="vip_info" placeholder="例如：投资顾问、投资经理等" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-                        <label class="col-sm-3 control-label">QQ</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name="qq" value=''>
-                        </div>
-                    </div>
-                    <div class="form-group pt-20 pb-20">
-                        <label class="col-sm-3 control-label">手机</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name="mobile" value=''>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default cancel">取消</button>
-                <button type="button" class="btn btn-primary ok">确定</button>
-            </div>
-        </div>
-    </div>
-</div>
-</script>
 
 <!-- 最新动态 -->
 {% if districts %}

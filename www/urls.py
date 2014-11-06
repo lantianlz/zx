@@ -40,6 +40,8 @@ urlpatterns = patterns('',
                        url(r'^stock/', include('www.stock.urls')),
                        url(r'^toutiao/', include('www.toutiao.urls')),
 
+                       url(r'^auth_custom_manager$', 'www.kaihu.views.auth_custom_manager'),
+                       url(r'^get_departments_by_name$', 'www.kaihu.views.get_departments_by_name'),
                        url(r'^baidu_map$', 'www.misc.views.baidu_map'),
                        url(r'^baidu_map.html$', 'www.misc.views.baidu_map'),
                        url(r'^sitemap.xml$', 'www.misc.views.sitemap'),

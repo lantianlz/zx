@@ -32,6 +32,12 @@
 	<a class="list-group-item {% if '/account/invitation' == request.path %} active {% endif %}" href="/account/invitation">
 		邀请注册
 	</a>
+	
+	{% if request.user.is_custom_manager %}
+	<a class="list-group-item {% if '/account/custom_manager' == request.path %} active {% endif %}" href="/account/custom_manager">
+		认证客户经理
+	</a>
+	{% endif %}
 {% endblock %}
 
 {% block split_main %}

@@ -99,6 +99,10 @@ class Profile(models.Model):
         获取用户权限
         '''
         return []
+    
+    def is_custom_manager(self):
+        from kaihu.interface import CustomerManagerBase
+        return True if CustomerManagerBase.get_customer_manager_by_user_id(self.id) else False
 
     def __unicode__(self):
         return u'%s, %s' % (self.id, self.nick)

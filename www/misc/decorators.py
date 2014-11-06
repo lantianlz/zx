@@ -11,7 +11,7 @@ import urllib
 import json
 from functools import wraps
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from djang.conf import settings
+from django.conf import settings
 
 from common import cache
 

@@ -1,0 +1,80 @@
+{% extends "account/base_settings.html" %}
+
+{% block title %}客户经理认证信息{% endblock %}
+
+{% block css %}{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block settings_main %}
+<form class="form-horizontal" role="form" method='post' action="">
+	<div class="form-group">
+		<label class="col-sm-2 control-label">真实照片</label>
+		<div class="col-sm-10">
+			<img class="avatar-75 avatar-circle mb-10" src="{{cm.img}}" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">真实姓名</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.real_name}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">QQ</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.qq}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">手机</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.mobile}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">入行时间</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.entry_time}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">所属营业部</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.department.name}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">认证信息</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.vip_info}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">身份证号</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.id_card}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 pl-0 control-label">从业资格证编号</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.id_cert}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">个人简介</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.des}}</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+		    {% if not cm.state %}
+			<button type="button" class="btn btn-default disabled">申请审核中...</button>
+			{% else %}
+			<button type="button" class="btn btn-info disabled">已认证客户经理</button>
+			{% endif %}
+		</div>
+	</div>
+</form>
+{% endblock %}

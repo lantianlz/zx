@@ -195,7 +195,6 @@ def modify_customer_manager(request):
         flag, img_name = qiniu_client.upload_img(img, img_type='custom_manager')
         img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
     
-    print img_name, '-----'
     
     flag, msg = CustomerManagerBase().modify_customer_manager(
         user_id, department_id=department_id, end_date=end_date, state=state,

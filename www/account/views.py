@@ -326,6 +326,12 @@ def test500(request):
     raise Exception, u'test500 for send error email'
 
 
+@member_required
+def custom_manager(request, template_name='account/custom_manager.html'):
+    from kaihu.interface import CustomerManagerBase
+    cm = CustomerManagerBase().get_customer_manager_by_user_id(request.user.id)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
 # ===================================================ajax部分=================================================================#
 @member_required
 def get_user_info_by_id(request):
