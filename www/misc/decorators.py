@@ -11,6 +11,7 @@ import urllib
 import json
 from functools import wraps
 from django.http import HttpResponse, HttpResponseRedirect, Http404
+from djang.conf import settings
 
 from common import cache
 
@@ -30,7 +31,7 @@ def member_required(func):
                     url = urllib.quote_plus(request.get_full_path())
                 except:
                     url = '/'
-                return HttpResponseRedirect("/login?next_url=%s" % url)
+                return HttpResponseRedirect("%s/login?next_url=%s" % (settings.MAIN_DOMAIN, url))
 
         return func(request, *args, **kwargs)
     return _decorator
