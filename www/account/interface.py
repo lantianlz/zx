@@ -100,7 +100,7 @@ class UserBase(object):
             return None
 
     def get_all_staffs(self):
-        return User.objects.filter(is_staff=True)
+        return User.objects.filter(state=2)
 
     def check_user_info(self, email, nick, password, mobilenumber):
         try:
