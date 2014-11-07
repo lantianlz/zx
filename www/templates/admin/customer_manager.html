@@ -485,6 +485,7 @@ $(document).ready(function(){
                     <th>真实姓名</th>
                     <th>所属营业部</th>
                     <th>排序</th>
+                    <th>收费</th>
                     <th>认证到期时间</th>
                     <th>状态</th>
                 </tr>
@@ -517,6 +518,13 @@ $(document).ready(function(){
             <td><%= customerManager.realName %></td>
             <td><%= customerManager.departmentName %></td>
             <td><%= customerManager.sort %></td>
+            <td>
+                <% if(customerManager.payType == '1'){ %>
+                <span class="glyphicon glyphicon-ok co-zx " title="普通收费"></span>
+                <% } else { %>
+                <span class="glyphicon glyphicon-remove co8" title="未收费"></span>
+                <% } %>
+            </td>
             <td><%= customerManager.endDate %></td>
             <td>
                 <% if(!customerManager.state){ %>
