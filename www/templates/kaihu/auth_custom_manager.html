@@ -16,21 +16,6 @@
 {% block javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#entry_time').datetimepicker({
-        format: 'yyyy-mm-dd',
-        language: 'zh-CN',
-        minView: 2,
-        autoclose: true
-    });
-    
-    $.ZXTextboxList.create('#belong_department', {
-        max: 1,
-        placeholder: '选择营业部',
-        inputPlaceholder: '',
-        url: '/get_departments_by_name',
-        param: 'department_name',
-        loadPlaceholder: '正在加载...'
-    });
     
     $('.auth-form').validate();
     
@@ -39,15 +24,27 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block kaihu-main %}
+<div class="row">
+    <div class="col-md-4 cl_white bgc-zx h70 text-center f20 line-height-70 bl-radius-4 tl-radius-4">
+        <i class="fa fa-file-text-o pr-5"></i><span>填写认证资料</span>
+    </div>
+    <div class="col-md-4 bgc-f1f1f1 co22 h70 text-center f20 line-height-70">
+        <i class="fa fa-user pr-5"></i><span>等待审核</span>
+    </div>
+    <div class="col-md-4 bgc-f1f1f1 co22 h70 text-center f20 line-height-70 br-radius-4 tr-radius-4">
+        <i class="fa fa-check-circle-o f22 pr-5"></i><span>审核通过</span>
+    </div>
+</div>
 <form class="form-horizontal auth-form" role="form" method="post" action="/auth_custom_manager" enctype="multipart/form-data">
     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-        <label class="col-sm-3 control-label">客户经理名称</label>
+        <label class="col-sm-3 control-label">智选呢称</label>
         <div class="col-sm-6">
             <p class="form-control-static">{{request.user.nick}}</p>
             <input type="hidden" name="user_id" value="{{request.user.id}}" />
         </div>
     </div>
     
+    <!--
     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
         <label class="col-sm-3 control-label">真实照片</label>
         <div class="col-sm-6">
@@ -55,6 +52,7 @@ $(document).ready(function(){
             <input name="img" required type="file" />图片尺寸为 75(宽) X 75(长)
         </div>
     </div>
+    -->
     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
         <label class="col-sm-3 control-label">真实姓名</label>
         <div class="col-sm-3">
@@ -73,44 +71,61 @@ $(document).ready(function(){
             <input type="text" required minlength='8' maxlength='11' class="form-control" name="mobile" value='{{mobile}}'>
         </div>
     </div>
+    <!--
     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
         <label class="col-sm-3 control-label">入行时间</label>
         <div class="col-sm-3">
             <input type="text" required maxlength='10' class="form-control date" name="entry_time" id="entry_time" value='{{entry_time}}'>
         </div>
     </div>
-    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-        <label class="col-sm-3 control-label">所属营业部</label>
+    -->
+    <div class="form-group pt-20 pb-10 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-3 control-label pl-0">所属证券公司及营业部</label>
         <div class="col-sm-9">
-            <input type="text" required class="form-control" name="belong_department" id="belong_department" value=''>
-        </div>
-    </div>
-    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
-        <label class="col-sm-3 control-label">认证信息</label>
-        <div class="col-sm-9">
-            <input type="text" required class="form-control" name="vip_info" placeholder="例如：投资顾问 或 投资经理等" value='{{vip_info}}'>
+            <input type="text" required class="form-control" name="des" id="belong_department" value='{{des}}'>
+            <p class="help-block">示例：安信证券成都领事馆路证券营业部</p>
         </div>
     </div>
     
     
+    <!--
     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
         <label class="col-sm-3 control-label">身份证号</label>
         <div class="col-sm-9">
             <input type="text" required minlength="15" maxlength="18" class="form-control" name="id_card" placeholder="请输入真实有效的身份证号" value='{{id_card}}'>
         </div>
     </div>
-    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+    -->
+    <div class="form-group pt-20 pb-10 mb-0 bottom-border bdc-eee">
         <label class="col-sm-3 control-label">从业资格证编号</label>
         <div class="col-sm-9">
             <input type="text" required class="form-control" name="id_cert" value='{{id_cert}}'>
+            <p class="help-block">示例：执业资格证书编号【Sxxxxxxxxxxxxx】<a href="http://person.sac.net.cn/pages/registration/sac-publicity-report.html">点击进入证券业协会查询网址</a></p>
         </div>
     </div>
+    
+    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+        <label class="col-sm-3 control-label">认证信息</label>
+        <div class="col-sm-9">
+            <!--<input type="text" required class="form-control" name="vip_info" placeholder="例如：投资顾问 或 投资经理等" value='{{vip_info}}'>-->
+            
+            <label class="checkbox-inline pl-0">
+                <input type="radio" name="vip_info" value="客户经理" checked="checked"> 客户经理
+            </label>
+            <label class="checkbox-inline pl-40">
+                <input type="radio" name="vip_info" value="投资顾问" > 投资顾问
+            </label>
+        </div>
+    </div>
+    
+    <!--
     <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
         <label class="col-sm-3 control-label">个人简介</label>
         <div class="col-sm-9">
             <textarea style="height: 200px;" class="form-control" name="des" placeholder="一句话介绍下自己">{{des}}</textarea>
         </div>
     </div>
+    -->
     <div class="form-group pt-20 pb-20 mb-0">
         <div class="col-xs-12 text-right">
             {% if flag == 0 %}
@@ -123,4 +138,18 @@ $(document).ready(function(){
 </form>
 {% endblock %}
 
-{% block kaihu-right %}{% endblock %}
+{% block kaihu-right %}
+    <p class="f16">1.填写认证资料</p>
+    <p class="co8">
+    请认真如实的填写证券从业信息，将加快审核速度。
+    </p>
+    <br/>
+    
+    <p class="f16">2.等待审核</p>
+    <p class="co8">提交申请之后，我们在24小时内审核您填写的资料。</p>
+    <br/>
+    
+    <p class="f16">3.审核通过</p>
+    <p class="co8">资料核实无误后，您的申请即可通过，对应的城市开户页面会显示您的联系方式，潜在客户会直接联系您。</p>
+    <br/>
+{% endblock %}

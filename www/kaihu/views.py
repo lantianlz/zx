@@ -177,13 +177,13 @@ def auth_custom_manager(request):
     
     if request.method == "POST":
         user_id = request.REQUEST.get('user_id')
-        department_id = request.REQUEST.get('belong_department')
+        #department_id = request.REQUEST.get('belong_department')
         vip_info = request.REQUEST.get('vip_info')
         qq = request.REQUEST.get('qq')
-        entry_time = request.REQUEST.get('entry_time')
+        #entry_time = request.REQUEST.get('entry_time')
         mobile = request.REQUEST.get('mobile')
         real_name = request.REQUEST.get('real_name')
-        id_card = request.REQUEST.get('id_card')
+        #id_card = request.REQUEST.get('id_card')
         id_cert = request.REQUEST.get('id_cert')
         des = request.REQUEST.get('des')
         pay_type = request.REQUEST.get('pay_type', 0)
@@ -195,9 +195,9 @@ def auth_custom_manager(request):
             img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
         flag, msg = cmb.add_customer_manager(
-            user_id, department_id, datetime.datetime.now(), vip_info,
-            0, img=img_name, qq=qq, entry_time=entry_time, mobile=mobile, 
-            real_name=real_name, id_card=id_card, id_cert=id_cert, des=des,
+            user_id, '1990', datetime.datetime.now(), vip_info,
+            0, img=img_name, qq=qq, mobile=mobile, id_cert=id_cert,
+            real_name=real_name, des=des,
             pay_type=pay_type, state=False
         )
         
