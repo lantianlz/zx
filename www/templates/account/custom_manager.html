@@ -7,12 +7,14 @@
 
 {% block settings_main %}
 <form class="form-horizontal" role="form" method='post' action="">
+	<!--
 	<div class="form-group">
 		<label class="col-sm-2 control-label">真实照片</label>
 		<div class="col-sm-10">
 			<img class="avatar-75 avatar-circle mb-10" src="{{cm.img}}" />
 		</div>
 	</div>
+	-->
 	<div class="form-group">
 		<label class="col-sm-2 control-label">真实姓名</label>
 		<div class="col-sm-10">
@@ -31,28 +33,18 @@
 			<p class="form-control-static">{{cm.mobile}}</p>
 		</div>
 	</div>
+	<!--
 	<div class="form-group">
 		<label class="col-sm-2 control-label">入行时间</label>
 		<div class="col-sm-10">
 			<p class="form-control-static">{{cm.entry_time}}</p>
 		</div>
 	</div>
+	-->
 	<div class="form-group">
 		<label class="col-sm-2 control-label">所属营业部</label>
 		<div class="col-sm-10">
-			<p class="form-control-static">{{cm.department.name}}</p>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-2 control-label">认证信息</label>
-		<div class="col-sm-10">
-			<p class="form-control-static">{{cm.vip_info}}</p>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-2 control-label">身份证号</label>
-		<div class="col-sm-10">
-			<p class="form-control-static">{{cm.id_card}}</p>
+			<p class="form-control-static">{% if cm.state %} {{cm.department.name}} {% else %} {{cm.des}} {% endif %}</p>
 		</div>
 	</div>
 	<div class="form-group">
@@ -62,11 +54,27 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label class="col-sm-2 control-label">认证信息</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.vip_info}}</p>
+		</div>
+	</div>
+	<!--
+	<div class="form-group">
+		<label class="col-sm-2 control-label">身份证号</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{cm.id_card}}</p>
+		</div>
+	</div>
+	-->
+	<!--
+	<div class="form-group">
 		<label class="col-sm-2 control-label">个人简介</label>
 		<div class="col-sm-10">
 			<p class="form-control-static">{{cm.des}}</p>
 		</div>
 	</div>
+	-->
 	<div class="form-group">
 		<div class="col-sm-12">
 		    {% if not cm.state %}
