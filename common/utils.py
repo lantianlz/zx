@@ -365,3 +365,17 @@ def get_city_by_ip_from_taobao(ip):
             pass
         break
     return data
+
+
+def get_family_name(name):
+    """
+    @note: 获取姓氏
+    """
+    name = name.strip()
+    ks = [u"欧阳", u"太史", u"端木", u"上官", u"司马", u"东方", u"独孤", u"南宫", u"夏侯", u"诸葛", u"尉迟", u"皇甫", u"公孙",
+          u"慕容", u"钟离", u"长孙", u"宇文", u"司徒", u"百里", u"呼延", u"轩辕", u"东郭", u"司空", u"闾丘", u"令狐"]
+
+    for key in ks:
+        if key in name:
+            return key
+    return name[0]
