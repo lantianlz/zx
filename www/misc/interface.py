@@ -36,16 +36,23 @@ def generate_sitemap(must_update_cache=False):
 def get_sitemap_url():
     from www.question.interface import TopicBase
     from www.question.models import Question
-    from www.stock.models import StockFeed
+    from www.stock.models import StockFeed, Stock
+    from www.toutiao.models import Article
 
     data = []
     for question in Question.objects.filter(state=True).order_by('-id'):
-        data.append([u'%s/question/%s\n' % (settings.MAIN_DOMAIN, question.id), question.last_answer_time])
+        data.append([u'%s/question/%s' % (settings.MAIN_DOMAIN, question.id), question.last_answer_time])
 
     for topic in TopicBase().get_all_topics_for_show():
-        data.append([u'%s/topic/%s\n' % (settings.MAIN_DOMAIN, topic.domain), datetime.datetime.now().strftime('%Y-%m-%d')])
+        data.append([u'%s/topic/%s' % (settings.MAIN_DOMAIN, topic.domain), datetime.datetime.now().strftime('%Y-%m-%d')])
+
+    for stock in Stock.objects.filter(state=True).order_by("-id"):
+        data.append([u'%s%s' % (settings.MAIN_DOMAIN, stock.get_url()), datetime.datetime.now().strftime('%Y-%m-%d')])
 
     for stock_feed in StockFeed.objects.filter(state=True).order_by("-create_time")[:2000]:
-        data.append([u'%s%s\n' % (settings.MAIN_DOMAIN, stock_feed.get_url()), stock_feed.create_time.strftime('%Y-%m-%d')])
+        data.append([u'%s%s' % (settings.MAIN_DOMAIN, stock_feed.get_url()), stock_feed.create_time.strftime('%Y-%m-%d')])
+
+    for article in Article.objects.filter(state=True).order_by("-id")[:2000]:
+        data.append([u'%s%s' % (settings.MAIN_DOMAIN, article.get_url()), article.create_time.strftime('%Y-%m-%d')])
 
     return data
