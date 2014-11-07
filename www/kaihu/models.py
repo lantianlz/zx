@@ -59,12 +59,13 @@ class Department(models.Model):
 
     def get_short_name(self):
         return self.name.replace(self.company.name, self.company.get_short_name()).replace(u"证券营业部", u"营业部")
-        
+
     def get_active_custom_managers_count(self):
         '''
         获取此营业部下有效的客户经理数量
         '''
-        return self.custom_managers.all().filter(state=True, end_date__gt=datetime.datetime.now()).count()
+        return self.custom_managers.all().filter(state=True).count()
+        # return self.custom_managers.all().filter(state=True, end_date__gt=datetime.datetime.now()).count()
 
 
 class City(models.Model):

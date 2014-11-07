@@ -99,6 +99,9 @@ class UserBase(object):
         except (Profile.DoesNotExist, User.DoesNotExist):
             return None
 
+    def get_all_staffs(self):
+        return User.objects.filter(is_staff=True)
+
     def check_user_info(self, email, nick, password, mobilenumber):
         try:
             validators.vemail(email)

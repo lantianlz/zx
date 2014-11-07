@@ -126,6 +126,13 @@ class UnreadCountBase(object):
         UnreadCountBase().update_unread_count(user_id, code='system_message')
         return notice
 
+    def send_system_message_to_staffs(self, content):
+        """
+        @note: 给所有内部成员发送通知
+        """
+        for user in UserBase().get_all_staffs():
+            self.add_system_message(user.id, content)
+
 
 class InviteAnswerBase(object):
 

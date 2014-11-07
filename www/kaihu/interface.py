@@ -8,6 +8,7 @@ from common import cache, debug, utils
 from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
+from www.message.interface import UnreadCountBase
 from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article, News, Jfzcm
 
 
@@ -57,7 +58,7 @@ class CityBase(object):
                 data_citys.append([ap, province_citys])
             data.append([area, data_citys])
         return data
-    
+
     def get_citys_by_province(self, province_id):
         return self.get_all_citys().filter(province=province_id)
 
@@ -323,6 +324,11 @@ class CustomerManagerBase(object):
     def __init__(self):
         pass
 
+    def get_cm_nick_show(self, real_name, nick):
+        if real_name:
+            return u"%s经理" % utils.get_family_name(real_name)
+        return nick
+
     def format_customer_managers(self, objs):
         for obj in objs:
             obj.user = UserBase().get_user_by_id(obj.user_id)
@@ -335,10 +341,10 @@ class CustomerManagerBase(object):
         for obj in objs:
             if not obj:
                 continue
-            
+
             user = UserBase().get_user_by_id(obj.user_id)
             user_count_info = UserCountBase().get_user_count_info(obj.user_id)
-            data.append(dict(user_id=user.id, user_nick=user.nick, user_avatar=user.get_avatar_100(),
+            data.append(dict(user_id=user.id, user_nick=self.get_cm_nick_show(obj.real_name, user.nick), user_avatar=user.get_avatar_100(),
                              department_name=obj.department.get_short_name(), company_short_name=obj.department.company.get_short_name(),
                              department_id=obj.department.id, city_id=obj.city_id,
                              sort_num=obj.sort_num, vip_info=obj.vip_info, qq=obj.qq, mobile=obj.mobile, pay_type=obj.pay_type,
@@ -363,7 +369,7 @@ class CustomerManagerBase(object):
             if self.get_customer_manager_by_user_id(user_id):
                 transaction.rollback(using=KAIHU_DB)
                 return 50107, dict_err.get(50107)
-                
+
             department = department_id_or_obj if isinstance(department_id_or_obj, Department) else DepartmentBase().get_department_by_id(department_id_or_obj)
 
             if not department:
@@ -375,8 +381,14 @@ class CustomerManagerBase(object):
                                                 real_name=real_name, id_card=id_card, id_cert=id_cert, des=des, pay_type=pay_type, state=state)
 
             # 更新营业部冗余字段
-            department.cm_count = department.get_active_custom_managers_count()
-            department.save()
+            if state:
+                # department.cm_count = department.get_active_custom_managers_count()
+                department.cm_count += 1
+                department.save()
+            else:
+                # 发送系统通知
+                content = u'收到一个客户经理认证请求 <a href="/admin/user/customer_manager#modify/%s">立即处理</a>' % (user_id, )
+                UnreadCountBase().send_system_message_to_staffs(content)
 
             transaction.commit(using=KAIHU_DB)
             return 0, cm
@@ -397,34 +409,41 @@ class CustomerManagerBase(object):
         customer_manager = self.get_customer_manager_by_user_id(user_id)
         if not customer_manager:
             return 50102, dict_err.get(50102)
-        
+
         # 如果修改了营业部，所属城市也要一并修改
         department_id = kwargs.get('department_id')
         old_department_id = customer_manager.department.id
-        
+
         if department_id:
             temp = DepartmentBase().get_department_by_id(department_id)
             if not temp:
                 return 50101, dict_err.get(50101)
             else:
                 kwargs.update({'city_id': temp.city_id})
-                
+
         try:
+            if kwargs.get("state") and customer_manager.state is False:
+                # 通过审核发送通知
+                content = u'你的客户经理认证请求已经通过 <a href="/account/custom_manager">立即查看</a>'
+                UnreadCountBase().add_system_message(user_id, content)
+
             for k, v in kwargs.items():
                 setattr(customer_manager, k, v)
-            
+
             customer_manager.save()
-            
+
             # 新营业部客户经理个数
             new_department = DepartmentBase().get_department_by_id(department_id)
             new_department.cm_count = new_department.get_active_custom_managers_count()
+            # new_department.cm_count += 1
             new_department.save()
-            
+
             # 旧营业部客户经理个数
             old_department = DepartmentBase().get_department_by_id(old_department_id)
             old_department.cm_count = old_department.get_active_custom_managers_count()
+            # old_department.cm_count -= 1
             old_department.save()
-            
+
             transaction.commit(using=KAIHU_DB)
         except Exception, e:
             debug.get_debug_detail(e)
@@ -472,10 +491,11 @@ class CustomerManagerBase(object):
             if obj:
                 # 更新营业部冗余字段
                 department = obj.department
-                
+
                 obj.delete()
-                
-                department.cm_count = department.get_active_custom_managers_count()
+
+                # department.cm_count = department.get_active_custom_managers_count()
+                department.cm_count -= 1
                 department.save()
 
                 transaction.commit(using=KAIHU_DB)
@@ -487,23 +507,22 @@ class CustomerManagerBase(object):
             debug.get_debug_detail(e)
             transaction.rollback(using=KAIHU_DB)
             return 99900, dict_err.get(99900)
-            
-    
+
     def get_custom_managers_for_admin(self, nick, city_name, state=True):
         objs = self.get_all_customer_managers(False, state)
-        
+
         if nick:
             user = UserBase().get_user_by_nick(nick)
             if user:
                 temp = self.get_customer_manager_by_user_id(user.id)
                 if temp:
-                    return [temp,]
-        
+                    return [temp, ]
+
         if city_name:
             city = CityBase().get_one_city_by_name(city_name)
             if city:
                 objs = objs.filter(city_id=city.id)
-        
+
         return objs
 
 
