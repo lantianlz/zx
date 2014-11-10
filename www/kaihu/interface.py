@@ -388,7 +388,7 @@ class CustomerManagerBase(object):
                 department.save()
             else:
                 # 发送系统通知
-                content = u'收到一个客户经理认证请求 <a href="%s/admin/user/customer_manager#modify/%s">立即处理</a>' % (settings.MAIN_DOMAIN, user_id)
+                content = u'收到一个客户经理 (%s) 认证请求 <a href="%s/admin/user/customer_manager#modify/%s">立即处理</a>' % (real_name, settings.MAIN_DOMAIN, user_id)
                 UnreadCountBase().send_system_message_to_staffs(content)
 
             transaction.commit(using=KAIHU_DB)

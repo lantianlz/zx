@@ -19,14 +19,16 @@ class Company(models.Model):
 
     def get_short_name(self):
         import re
+
+        result = self.name.replace(u"中国", "")
         p = re.compile(u'.+?证券', re.DOTALL | re.IGNORECASE)
-        names = p.findall(self.name or "")
+        names = p.findall(result or "")
         if names:
             name = names[0]
             if len(name) > 5:
                 name = name.replace(u"证券", u"")
             return name
-        return self.name
+        return result
 
 
 class Department(models.Model):
