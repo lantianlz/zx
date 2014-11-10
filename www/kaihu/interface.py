@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 
@@ -387,7 +388,7 @@ class CustomerManagerBase(object):
                 department.save()
             else:
                 # 发送系统通知
-                content = u'收到一个客户经理认证请求 <a href="/admin/user/customer_manager#modify/%s">立即处理</a>' % (user_id, )
+                content = u'收到一个客户经理认证请求 <a href="%s/admin/user/customer_manager#modify/%s">立即处理</a>' % (settings.MAIN_DOMAIN, user_id)
                 UnreadCountBase().send_system_message_to_staffs(content)
 
             transaction.commit(using=KAIHU_DB)
@@ -424,8 +425,8 @@ class CustomerManagerBase(object):
         try:
             if kwargs.get("state") and customer_manager.state is False:
                 # 通过审核发送通知
-                content = u'你的客户经理认证请求已经通过 <a href="/account/custom_manager">立即查看</a>'
-                UnreadCountBase().add_system_message(user_id, content)
+                content = u'你的客户经理认证请求已经通过 <a href="%s/account/custom_manager">立即查看</a>' % settings.MAIN_DOMAIN
+                UnreadCountBase().add_system_message(user_id, content, send_email=True)
 
             for k, v in kwargs.items():
                 setattr(customer_manager, k, v)

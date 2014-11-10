@@ -121,9 +121,18 @@ class UnreadCountBase(object):
     def get_system_message(self, user_id):
         return Notice.objects.filter(user_id=user_id)
 
-    def add_system_message(self, user_id, content, source=0):
+    def add_system_message(self, user_id, content, source=0, send_email=False):
+        user = UserBase().get_user_by_id(user_id)
+        if not user:
+            return
         notice = Notice.objects.create(user_id=user_id, content=content, source=source)
         UnreadCountBase().update_unread_count(user_id, code='system_message')
+
+        if send_email:
+            # 发送提醒邮件
+            context = dict(user=user, content=content)
+            async_send_email(user.email, u'智选系统通知', utils.render_email_template('email/common_msg.html', context), 'html')
+
         return notice
 
     def send_system_message_to_staffs(self, content):
@@ -131,7 +140,7 @@ class UnreadCountBase(object):
         @note: 给所有内部成员发送通知
         """
         for user in UserBase().get_all_staffs():
-            self.add_system_message(user.id, content)
+            self.add_system_message(user.id, content, send_email=True)
 
 
 class InviteAnswerBase(object):
