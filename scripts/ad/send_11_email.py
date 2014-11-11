@@ -25,10 +25,16 @@ def main():
             continue
         print user.email
 
-        context = dict(user=user)
-        async_send_email_worker(user.email, u'智选双十一活动，一场属于证券客户经理的狂欢', utils.render_email_template('email/ad/11_email.html', context), 'html')
         print count
         count += 1
+        if count < 43:
+            continue
+
+        context = dict(user=user)
+        try:
+            async_send_email_worker(user.email, u'智选双十一活动，一场属于证券客户经理的狂欢', utils.render_email_template('email/ad/11_email.html', context), 'html')
+        except Exception, e:
+            print e
 
 
 if __name__ == '__main__':
