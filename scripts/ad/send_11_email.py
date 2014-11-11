@@ -13,7 +13,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'www.settings'
 
 
 def main():
-    from www.tasks import async_send_email
+    from www.tasks import async_send_email_worker
     from common import utils
     from www.kaihu.models import CustomerManager
     from www.account.interface import UserBase
@@ -26,7 +26,7 @@ def main():
         print user.email
 
         context = dict(user=user)
-        async_send_email(user.email, u'智选双十一活动，一场属于证券客户经理的狂欢', utils.render_email_template('email/ad/11_email.html', context), 'html')
+        async_send_email_worker(user.email, u'智选双十一活动，一场属于证券客户经理的狂欢', utils.render_email_template('email/ad/11_email.html', context), 'html')
         print count
         count += 1
 
