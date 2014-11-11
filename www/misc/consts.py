@@ -149,4 +149,7 @@ PERMISSIONS = [
     {'code': 'query_external_cm', 'name': u'查询外部客户经理', 'parent': 'external_cm_manage'},
     {'code': 'modify_external_cm', 'name': u'修改外部客户经理', 'parent': 'external_cm_manage'},
     #{'code': 'remove_customer_manager', 'name': u'删除客户经理', 'parent': 'external_cm_manage'},
+    
+    {'code': 'invitation_manage', 'name': u'邀请注册管理', 'parent': None},
+    {'code': 'query_invitation', 'name': u'查询邀请注册信息', 'parent': 'invitation_manage'},
 ]

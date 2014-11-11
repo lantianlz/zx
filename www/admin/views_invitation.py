@@ -16,7 +16,7 @@ from account.interface import InvitationBase, UserBase
 def invitation(request, template_name='admin/invitation.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-@verify_permission('')
+@verify_permission('query_invitation')
 def search(request):
     
     data = {
