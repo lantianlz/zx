@@ -88,6 +88,13 @@ urlpatterns += patterns('www.admin.views_external_cm',
                         url(r'^user/externalCM$', 'external_cm'),
                         )
 
+# 外部客户经理
+urlpatterns += patterns('www.admin.views_invitation',
+
+                        url(r'^user/invitation/search$', 'search'),
+                        url(r'^user/invitation$', 'invitation'),
+                        )
+
 
 # 友情链接
 urlpatterns += patterns('www.admin.views_friendly_link',

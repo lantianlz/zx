@@ -22,6 +22,7 @@ dict_err = {
     50105: u'城市拼音重复',
     50106: u'城市拼音简写重复',
     50107: u'已经是客户经理，无法重复申请',
+    50108: u'从业资格证编号已经存在',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -410,6 +411,11 @@ class CustomerManagerBase(object):
         customer_manager = self.get_customer_manager_by_user_id(user_id)
         if not customer_manager:
             return 50102, dict_err.get(50102)
+
+        temp = CustomerManager.objects.filter(id_cert=kwargs.get('id_cert'))
+        if temp and temp[0].user_id != user_id:
+            transaction.rollback(using=KAIHU_DB)
+            return 50108, dict_err.get(50108)
 
         # 如果修改了营业部，所属城市也要一并修改
         department_id = kwargs.get('department_id')

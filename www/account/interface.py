@@ -539,7 +539,15 @@ class InvitationBase(object):
 
     def get_invitation_user(self, user_id):
         return InvitationUser.objects.select_related('invitation').filter(invitation__user_id=user_id)
+    
+    def get_invite_by_who(self, user_id):
+        obj = InvitationUser.objects.filter(user_id=user_id)
+        if obj:
+            uid = obj[0].invitation.user_id
+            
+            return UserBase().get_user_by_id(uid)
 
+        return None
 
 def user_profile_required(func):
     '''

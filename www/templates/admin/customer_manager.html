@@ -435,6 +435,9 @@ $(document).ready(function(){
  
     Backbone.history.start();
 
+    if(window.location.href.indexOf('?') > -1){
+        $.ZXNotice.ErrorTopNotice(decodeURI(window.location.search).substring(1));
+    }
 });
 
 </script>
