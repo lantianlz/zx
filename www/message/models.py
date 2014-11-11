@@ -46,7 +46,7 @@ class Notice(models.Model):
     source_choices = ((0, u'默认消息'), (1, u''))
 
     user_id = models.CharField(max_length=32, db_index=True, null=True)  # 用户外键，可以为空，系统通知类
-    content = models.CharField(max_length=128)  # 通知对应的内容
+    content = models.CharField(max_length=1024)  # 通知对应的内容
     source = models.CharField(max_length=32, choices=source_choices, default=0)  # 来源
     process_result = models.CharField(max_length=32, default='')  # 处理结果
     create_time = models.DateTimeField(auto_now_add=True, db_index=True)  # 创建时间
