@@ -187,5 +187,11 @@ def kaihu_ad(context):
     """
     @note: 头条最新热榜
     """
+    from common import utils
+
+    city_abbr = utils.get_sub_domain_from_http_host(context['request'].META.get('HTTP_HOST', ''))
+    dict_ads = {"mz": ["ad_mz.jpg", "8655809", u"梅州"], }
+    default = ["ad_common.jpg", "403897485", u"通用"]
+    ad_img = dict_ads.get(city_abbr, default)
 
     return render_to_response('kaihu/_kaihu_ad.html', locals(), context_instance=context).content
