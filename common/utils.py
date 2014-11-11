@@ -77,12 +77,15 @@ def send_email(emails, title, content, type='text'):
         emails = [emails, ]
 
     emails = [email for email in emails if not 'mrzhixuan' in email]
-    if type != 'html':
-        send_mail(title, content, settings.EMAIL_FROM, emails, fail_silently=True)
-    else:
-        msg = EmailMessage(title, content, settings.EMAIL_FROM, emails)
-        msg.content_subtype = "html"  # Main content is now text/html
-        msg.send()
+    try:
+        if type != 'html':
+            send_mail(title, content, settings.EMAIL_FROM, emails, fail_silently=True)
+        else:
+            msg = EmailMessage(title, content, settings.EMAIL_FROM, emails)
+            msg.content_subtype = "html"  # Main content is now text/html
+            msg.send()
+    except:
+        pass
     return 0
 
 
