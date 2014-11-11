@@ -589,7 +589,7 @@ $(document).ready(function(){
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
             <label class="col-sm-2 control-label">认证到期时间</label>
             <div class="col-sm-2">
-                <input type="text" class="form-control" name='end_date' id="end_date_modify" value='<%= endDate %>'>
+                <input type="text" class="form-control" name='end_date' id="end_date_modify" value='<%= endDate?endDate:"2015-12-31" %>'>
             </div>
         </div>
         <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">

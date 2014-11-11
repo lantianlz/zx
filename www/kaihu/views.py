@@ -195,7 +195,7 @@ def auth_custom_manager(request):
             img_name = '%s/%s' % (settings.IMG0_DOMAIN, img_name)
 
         flag, msg = cmb.add_customer_manager(
-            user_id, '1990', datetime.datetime.now(), vip_info,
+            user_id, '1990', '2015-12-31', vip_info,
             0, img=img_name, qq=qq, mobile=mobile, id_cert=id_cert,
             real_name=real_name, des=des,
             pay_type=pay_type, state=False
