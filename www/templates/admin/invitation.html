@@ -39,7 +39,7 @@ $(document).ready(function(){
                     var inviteHtml = "";
                 
                     $.map(invite, function(o){
-                        inviteHtml += String.format('<li class="text-center"><a href="{{MAIN_DOMAIN}}/p/{0}" class=""><img class="avatar avatar-circle avatar-45" src="{1}" title="{2}" /><div class="w70">{3}</div></a></li>', 
+                        inviteHtml += String.format('<li class="text-center pt-5 pb-5"><a href="{{MAIN_DOMAIN}}/p/{0}" class=""><img class="avatar avatar-circle avatar-45" src="{1}" title="{2}" /><div class="w70">{3}</div></a></li>', 
                         o['id'], 
                         o['avatar'], 
                         o['name'], 

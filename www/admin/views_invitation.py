@@ -40,7 +40,9 @@ def search(request):
         # 邀请的人
         for iu in InvitationBase().get_invitation_user(user.id):
             temp = UserBase().get_user_by_id(iu.user_id)
-            
+            if temp == "":
+                continue
+                
             data["invite"].append({
                 "id": temp.id,
                 "name": temp.nick,
