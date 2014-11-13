@@ -83,7 +83,8 @@ def get_shanghai_feed():
             code = re_code.findall(question_content)[0]
             stock = interface.StockBase().get_stock_by_code(code, state=None)
             if not stock:
-                raise Exception, u"can not find stock:%s" % code
+                # raise Exception, u"can not find stock:%s" % code
+                print u"can not find stock:%s" % code
 
             # 若果已经连续命中200个以上，break，上海动态原始数据存在时间有误的问题，需要剔除
             exist_stock_feeds = list(StockFeed.objects.filter(question_content=question_content, stock=stock))

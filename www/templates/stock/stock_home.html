@@ -32,14 +32,14 @@ $(document).ready(function(){
         <a href="{{stock_feed.stock.get_url}}"><img class="pa avatar-45 avatar-square" title="{{stock_feed.stock.name}}" alt="{{stock_feed.stock.name}}" src="{{stock_feed.stock.img}}"></a>
         <div class="pl-55 pt-3">
             <div class="">
-                <a class="f14 black-blue fb" href="{{stock_feed.get_url}}">{{stock_feed.question_content}}</a>
+                <a class="f14 black-blue fb" href="{{stock_feed.get_url}}">{{stock_feed.question_content|safe}}</a>
             </div>
             <div class="co8 f12 pt-5">
                 <a href="{{stock_feed.stock.get_url}}" class="">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
                 <span class="f12 pull-right">{{stock_feed.create_time|time_format}}</span>
             </div>
             <div class="pt-15 f13 line-height-22 {% if stock_feed.answer_content_length > 150 %}pointer show-detail{% endif %}" data-content="{{stock_feed.answer_content}}">
-                {{stock_feed.answer_content|str_display:150}}
+                {{stock_feed.answer_content|str_display:150|safe}}
                 {% if stock_feed.answer_content_length > 150 %}
                 <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a>
                 {% endif %}

@@ -37,19 +37,31 @@ def init_stock_shenzhen_feed():
 
     start_time = time.time()
     for stock in Stock.objects.filter(belong_market=1).order_by("id"):
-        url = "http://irm.cninfo.com.cn/ircs/interaction/lastRepliesforSzseSsgs.do?condition.type=1&condition.stockcode=%s&condition.stocktype=S" % stock.code
-        resp = requests.get(url)
-        text = resp.text
-        jq = pq(text)
-        page_total = int(jq(".sabrosus #pageNo_f").prev().prev().prev().html())
-        print (u"总页数:%s" % page_total).encode("utf8")
+        print stock.name.encode("utf8")
+        # url = "http://irm.cninfo.com.cn/ircs/interaction/lastRepliesforSzseSsgs.do?condition.type=1&condition.stockcode=%s&condition.stocktype=S" % stock.code
+        # for i in range(3):
+        #     try:
+        #         resp = requests.get(url, timeout=10)
+        #         break
+        #     except:
+        #         pass
+        # text = resp.text
+        # jq = pq(text)
+        # page_total = int(jq(".sabrosus #pageNo_f").prev().prev().prev().html())
+        # print (u"总页数:%s" % page_total).encode("utf8")
 
+        page_total = 1
         feed_count = 0
         for i in range(1, page_total + 1):
             url = "http://irm.cninfo.com.cn/ircs/interaction/lastRepliesforSzseSsgs.do?condition.type=1&condition.stockcode=%s&condition.stocktype=S" % stock.code
             data = {"condition.searchType": "code", "pageNo": i, "pageSize": 10, "requestMethod": "GET", "requestUri": "/ircs/interaction/lastRepliesforSzseSsgs.do", "source": "2"}
-            resp = requests.post(url, data=data)
-            text = resp.text
+            for i in range(3):
+                try:
+                    resp1 = requests.post(url, data=data, timeout=10)
+                    break
+                except:
+                    pass
+            text = resp1.text
             # print text.encode("utf8")
 
             jq = pq(text)
@@ -65,14 +77,35 @@ def init_stock_shenzhen_feed():
                 href = feed(".dtwz_text1:eq(0)>p:eq(1)>a").attr("href")
                 origin_id = href.split("questionId=")[1].split("&")[0]
 
+                if question_content.endswith("...") or answer_content.endswith("..."):
+                    print "go on"
+                    url = "http://irm.cninfo.com.cn/ircs/interaction/viewQuestionForSzseSsgs.do?questionId=%s&condition.replyOrderType=1&condition.searchRange=0" % origin_id
+                    for i in range(3):
+                        try:
+                            text = requests.get(url, timeout=10).text
+                            break
+                        except:
+                            pass
+                    jq = pq(text)
+                    question_content = _replace_html_tag(jq(".msgBox:eq(0)>div>div").html().split("</a>")[-1]).strip()
+                    answer_content = _replace_html_tag(jq(".answerBox:eq(0)>div").html().split("</a>")[-1].split(":", 1)[-1]).strip()
+
                 # print question_content.encode("utf8")
                 # print answer_content.encode("utf8")
                 # print question_time, answer_time
                 # print origin_id
 
-                interface.StockFeedBase().create_feed(stock, question_content, answer_content, belong_market=1, create_time=answer_time,
-                                                      create_question_time=question_time, origin_id=origin_id)
+                try:
+                    if not StockFeed.objects.filter(origin_id=origin_id):
+                        interface.StockFeedBase().create_feed(stock, question_content, answer_content, belong_market=1, create_time=answer_time,
+                                                              create_question_time=question_time, origin_id=origin_id)
+                    else:
+                        break
+                except:
+                    pass
                 feed_count += 1
+            break
+        # break
         print (u"处理完成，%s, 共%s条" % (stock.name, feed_count)).encode("utf8")
     end_time = time.time()
     print (u"耗时：%s秒" % int(end_time - start_time)).encode("utf8")
