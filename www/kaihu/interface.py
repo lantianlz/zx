@@ -751,14 +751,18 @@ class NewsBase(object):
             return None
 
     def get_next_news(self, news):
-        newses = News.objects.filter(id__lt=news.id)
-        if newses:
-            return newses[0]
+        try:
+            newse = News.objects.filter(id__lt=news.id)[0]
+            return newse
+        except:
+            pass
 
     def get_pre_news(self, news):
-        newses = News.objects.filter(id__gt=news.id).order_by("id")
-        if newses:
-            return newses[0]
+        try:
+            newse = News.objects.filter(id__gt=news.id).order_by("id")[0]
+            return newse
+        except:
+            pass
 
     def get_related_newses(self, news):
         return News.objects.filter(id__lt=news.id)[:3]

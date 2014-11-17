@@ -51,6 +51,9 @@ def toutiao_detail(request, article_id, template_name='toutiao/toutiao_detail.ht
         raise Http404
     article = ab.format_articles([article, ])[0]
     newsest_articles = ab.get_newsest_articles_related(article)[:5]
-    ab.add_article_view_count(article_id)
+
+    user_agent = request.META.get("HTTP_USER_AGENT", "").lower()
+    if not("baidu" in user_agent or "spider" in user_agent):
+        ab.add_article_view_count(article_id)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
