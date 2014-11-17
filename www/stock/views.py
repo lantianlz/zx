@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# import json
+import json
 
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
@@ -66,3 +66,26 @@ def stock_search(request, template_name='stock/stock_search.html'):
     stocks = sb.search_stocks(stock_key_words)[:20]
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+def get_stock_info_by_id(request):
+    '''
+    @note: 根据股票id获取名片信息
+    '''
+    stock_id = request.REQUEST.get('stock_id', '').strip()
+
+    infos = {}
+    if stock_id:
+        stock = sb.get_stock_by_id(stock_id)
+        if stock:
+            infos = {
+                "id": stock.id,
+                "name": stock.name,
+                "code": stock.code,
+                "des": stock.des,
+                "img": stock.img,
+                "url": stock.get_url(),
+                "feed_count": stock.feed_count,
+                "following_count": stock.following_count,
+                "is_following": False
+            }
+    return HttpResponse(json.dumps(infos), mimetype='application/json')

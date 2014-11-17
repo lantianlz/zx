@@ -1144,6 +1144,149 @@ if (!String.format) {
     };
 
     /*
+        股票名片
+        自动将class为 zx-stocktips 的元素注册弹出名片
+        需要设置 data-user_id 属性为用户id
+
+        用例:
+        $.ZXTooltipster.StockCard();
+    */
+    $.ZXTooltipster.StockCard = function(){
+        var cardtipsHtml = [
+            '<div class="stocktips f12">',
+                '<div class="profile row f14">',
+                    '<div class="col-md-3">',
+                        '<a href="{0}"><img class="avatar avatar-55 avatar-square ml-10 mt-5" src="{1}"></a>',
+                    '</div>',
+                    '<div class="col-md-9">',
+                        '<div class="pt-10 pb-5"><a href="{2}">{3}</a></div>',
+                        '<div class="pt-5">',
+                            '<span>动态</span><span class="fb pl-3">{4}</span>',
+                            '<span class="pl-10">关注者</span><span class="fb pl-3">{5}</span>',
+                        '</div>',
+                    '</div>',
+                '</div>',
+                '<div class="desc pl-10 pt-5 w300 co6">{6}</div>',
+                '<div class="tools top-border bdc-eee pt-5 mt-5 text-right">',
+                    '<button type="button" class="btn btn-primary btn-xs follow ml-10 mr-5 {7}" data-stock_id="{9}">添加关注</button>',
+                    '<button type="button" class="btn btn-default btn-xs unfollow mr-5 {8}" data-stock_id="{10}">取消关注</button>',
+                '</div>',
+            '</div>'
+        ].join('');
+
+        // 手机访问不要设置弹出名片
+        if($.ZXUtils.isPhone()){
+            return;
+        }
+
+        // 未登录不弹出名片
+        if(!CURRENT_USER_ID){
+            return;
+        }
+
+        // 设置插件
+        $('.zx-stocktips').tooltipster({
+            animation: 'swing',
+            delay: 150,
+            trigger: 'hover',
+            theme: 'tooltipster-shadow',
+            interactive: true,
+            interactiveTolerance: 300,
+            speed: 350,
+            updateAnimation: false,
+            autoClose: true,
+            //content: cardtipsHtml,
+            contentAsHTML: true,
+            content: '名片加载中...',
+            functionBefore: function(origin, continueTooltip) {
+
+                // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+                continueTooltip();
+                
+                // next, we want to check if our data has already been cached
+                if (origin.data('ajax') !== 'cached') {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/stock/get_stock_info_by_id?stock_id=' + origin.data('stock_id'),
+                        success: function(data) {
+                            if(data.id){
+                                origin.tooltipster('content', String.format(
+                                    cardtipsHtml,
+                                    data.url,
+                                    data.img,
+                                    data.url,
+                                    data.name,
+                                    data.feed_count,
+                                    data.following_count,
+                                    data.des,
+                                    data.is_following ? "none" : "",
+                                    data.is_following ? "" : "none",
+                                    data.id,
+                                    data.id
+                                )).data('ajax', 'cached');
+                                
+                                // 监听清除缓存事件
+                                $.ZXEvent.on('removeStockCardCache', function(){
+                                    origin.data('ajax', '');
+                                });
+                            } else {
+                                origin.tooltipster('content', '加载名片失败');
+                            }
+                        }
+                    });
+                }
+            },
+
+            functionReady: function(origin, tooltip){
+                
+                // 诡异！！
+                setTimeout(function(){
+                    
+                    // 关注事件
+                    tooltip.find('.follow').bind('click', function(){
+                        var me = $(this), 
+                            stockId = me.data('stock_id');
+                        
+                        $.ZXMsg.alert('关注股票', stockId);
+                        // g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        // $.ZXOperation.followPeople(target.data('user_id'), function(){
+                        //     target.children('.unfollow').show(1, function(){
+                        //         me.hide(1);
+                                
+                        //         // 关注之后需要清除名片的缓存
+                        //         $.ZXEvent.trigger("removePersonCardCache");
+                        //     });
+                        // });
+                        
+                    });
+
+                    // 取消关注事件
+                    tooltip.find('.unfollow').bind('click', function(){
+                        var me = $(this), 
+                            stockId = me.data('stock_id');
+                        
+                        $.ZXMsg.alert('取消关注', stockId);
+                        // g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        // $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
+                        //     target.children('.follow').show(1, function(){
+                        //         me.hide(1);
+                                
+                        //         // 取消关注之后需要清除名片的缓存
+                        //         $.ZXEvent.trigger("removePersonCardCache");
+                        //     });
+                        // });
+
+                    });
+
+                }, 500);
+                
+            }
+        });
+    };
+
+
+    /*
         事件对象
     */
     $.ZXEvent = {};
@@ -1901,6 +2044,7 @@ $(document).ready(function(){
     // 初始化名片
     $.ZXTooltipster.PersonCard();
     $.ZXTooltipster.TopicCard();
+    $.ZXTooltipster.StockCard();
 
 
     // 鼠标移动到导航条登录用户名时自动弹出下拉框

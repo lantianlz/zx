@@ -7,13 +7,31 @@
 
 {% block title %}{{stock.name}}最新消息,{{stock.name}}({{stock.code}})公告新闻汇总{% endblock title %}
 
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.follow-stock').bind('click', function(){
+        var stockId = $(this).data("stock_id");
+        alert("关注股票" + stockId);
+    });
+
+    $('.unfollow-stock').bind('click', function(){
+        var stockId = $(this).data("stock_id");
+        alert("取消关注股票" + stockId);
+    });
+});
+</script>
+{% endblock %}
+
 {% block stock_main %}
 <div class="bottom-border bdc-bbb pl-10 mb-10 mt-5">
     <img class="pa avatar-65 avatar-square" title="{{stock.name}}" alt="{{stock.name}}" src="{{stock.img}}">
     <div class="pl-80 pb-10 pt-5">
         <h4>{{stock.name}}({{stock.code}})</h4>
         <div class="co8 f12">
-            <span>共 {{stock.feed_count}} 条动态</span>
+            {{stock.feed_count}} 条动态<span class="pl-5 pr-5">•</span>{{stock.following_count}} 人关注
+            <button class="btn btn-xs btn-primary pull-right mr-10 follow-stock" data-stock_id="{{stock.id}}">添加关注</button>
+            <button class="btn btn-xs btn-default pull-right mr-10 unfollow-stock" data-stock_id="{{stock.id}}">取消关注</button>
         </div>
     </div>
 </div>

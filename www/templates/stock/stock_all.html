@@ -7,6 +7,22 @@
 
 {% block title %}股票一览表{% endblock title %}
 
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.follow-stock').bind('click', function(){
+        var stockId = $(this).data("stock_id");
+        alert("关注股票" + stockId);
+    });
+
+    $('.unfollow-stock').bind('click', function(){
+        var stockId = $(this).data("stock_id");
+        alert("取消关注股票" + stockId);
+    });
+});
+</script>
+{% endblock %}
+
 {% block stock_main%}
 <div class="bottom-border bdc-bbb pt-10 pb-5 pl-15">
         <span class="f16 fb">股票一览表</span>
@@ -18,7 +34,9 @@
         <a href="{{stock.get_url}}"><img class="pa avatar-65 avatar-square" alt="{{stock.name}}" src="{{stock.img}}"></a>
         <div class="pl-75 row pr-10">
             <div class="col-md-12 col-xs-12">
-                <a href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
+                <a class="zx-stocktips" data-stock_id="1" href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
+                <button class="btn btn-xs btn-primary pull-right mr-10 follow-stock" data-stock_id="{{stock.id}}">添加关注</button>
+                <button class="btn btn-xs btn-default pull-right mr-10 unfollow-stock none" data-stock_id="{{stock.id}}">取消关注</button>
             </div>
             <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{stock.des|default:"暂无简介"|str_display:32}}</div>
         </div>

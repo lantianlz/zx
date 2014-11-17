@@ -181,10 +181,9 @@ $(document).ready(function(){
         render: function(data){
             this.$el.append(this.template({'feeds': data}));
 
-            
-
             // 初始化名片
             $.ZXTooltipster.PersonCard();
+            $.ZXTooltipster.StockCard();
         },
 
         renderGetMore: function(feedId){
