@@ -12,12 +12,20 @@
 $(document).ready(function(){
     $('.follow-stock').bind('click', function(){
         var stockId = $(this).data("stock_id");
-        alert("关注股票" + stockId);
+
+        $.ZXOperation.followStock(stockId, function(){
+            $('.unfollow-stock').show();
+            $('.follow-stock').hide();
+        });
     });
 
     $('.unfollow-stock').bind('click', function(){
         var stockId = $(this).data("stock_id");
-        alert("取消关注股票" + stockId);
+        
+        $.ZXOperation.unfollowStock(stockId, function(){
+            $('.unfollow-stock').hide();
+            $('.follow-stock').show();
+        });
     });
 });
 </script>
@@ -30,8 +38,9 @@ $(document).ready(function(){
         <h4>{{stock.name}}({{stock.code}})</h4>
         <div class="co8 f12">
             {{stock.feed_count}} 条动态<span class="pl-5 pr-5">•</span>{{stock.following_count}} 人关注
-            <button class="btn btn-xs btn-primary pull-right mr-10 follow-stock" data-stock_id="{{stock.id}}">添加关注</button>
-            <button class="btn btn-xs btn-default pull-right mr-10 unfollow-stock" data-stock_id="{{stock.id}}">取消关注</button>
+            
+            <button class="btn btn-xs btn-primary pull-right mr-10 follow-stock {% if is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">添加关注</button>
+            <button class="btn btn-xs btn-default pull-right mr-10 unfollow-stock {% if not is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">取消关注</button>
         </div>
     </div>
 </div>
