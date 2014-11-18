@@ -34,7 +34,7 @@ $(document).ready(function(){
         <a href="{{stock.get_url}}"><img class="pa avatar-65 avatar-square" alt="{{stock.name}}" src="{{stock.img}}"></a>
         <div class="pl-75 row pr-10">
             <div class="col-md-12 col-xs-12">
-                <a class="zx-stocktips" data-stock_id="1" href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
+                <a class="zx-stocktips" data-stock_id="{{stock.id}}" href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
                 <!-- 
                 <button class="btn btn-xs btn-primary pull-right mr-10 follow-stock" data-stock_id="{{stock.id}}">添加关注</button>
                 <button class="btn btn-xs btn-default pull-right mr-10 unfollow-stock none" data-stock_id="{{stock.id}}">取消关注</button>

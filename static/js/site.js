@@ -1274,36 +1274,36 @@ if (!String.format) {
                     // 关注事件
                     tooltip.find('.follow').bind('click', function(){
                         var me = $(this), 
-                            stockId = me.data('stock_id');
+                            stockId = me.data('stock_id'),
+                            target = me.parents('.tools').eq(0);
                         
-                        $.ZXMsg.alert('关注股票', stockId);
-                        // g_ajax_processing_obj_id = me.setUUID().attr('id');
-                        // $.ZXOperation.followStock(stockId, function(){
-                        //     target.children('.unfollow').show(1, function(){
-                        //         me.hide(1);
+                        g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        $.ZXOperation.followStock(stockId, function(){
+                            target.children('.unfollow').show(1, function(){
+                                me.hide(1);
                                 
-                        //         // 关注之后需要清除名片的缓存
-                        //         $.ZXEvent.trigger("removeStockCardCache");
-                        //     });
-                        // });
+                                // 关注之后需要清除名片的缓存
+                                $.ZXEvent.trigger("removeStockCardCache");
+                            });
+                        });
                         
                     });
 
                     // 取消关注事件
                     tooltip.find('.unfollow').bind('click', function(){
                         var me = $(this), 
-                            stockId = me.data('stock_id');
+                            stockId = me.data('stock_id'),
+                            target = me.parents('.tools').eq(0);
                         
-                        $.ZXMsg.alert('取消关注', stockId);
-                        // g_ajax_processing_obj_id = me.setUUID().attr('id');
-                        // $.ZXOperation.unfollowPeople(stockId, function(){
-                        //     target.children('.follow').show(1, function(){
-                        //         me.hide(1);
+                        g_ajax_processing_obj_id = me.setUUID().attr('id');
+                        $.ZXOperation.unfollowStock(stockId, function(){
+                            target.children('.follow').show(1, function(){
+                                me.hide(1);
                                 
-                        //         // 取消关注之后需要清除名片的缓存
-                        //         $.ZXEvent.trigger("removeStockCardCache");
-                        //     });
-                        // });
+                                // 取消关注之后需要清除名片的缓存
+                                $.ZXEvent.trigger("removeStockCardCache");
+                            });
+                        });
 
                     });
 
