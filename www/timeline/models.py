@@ -18,7 +18,7 @@ class UserFollow(models.Model):
 
 
 class Feed(models.Model):
-    feed_type_choices = ((1, u'提问'), (2, u'赞'), (3, u'回答'))
+    feed_type_choices = ((1, u'提问'), (2, u'赞'), (3, u'回答'), (4, u"股票动态"))
     source_choices = ((0, u'关注的用户产生内容'), (1, u'关注话题产生的内容'))
     state_choices = ((0, u'已删除'), (1, u'系统发布'), (2, u'用户发布'))
 

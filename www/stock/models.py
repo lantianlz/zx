@@ -47,3 +47,16 @@ class StockFeed(models.Model):
 
     def get_url(self):
         return u'/stock/feed/%s' % self.id
+
+
+class StockFollow(models.Model):
+    source_choices = ((0, u'站内直接关注'), (1, u''))
+
+    user_id = models.CharField(max_length=32, db_index=True)
+    stock = models.ForeignKey(Stock)
+    source = models.IntegerField(default=0, choices=source_choices)
+    create_time = models.DateTimeField(db_index=True, auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user_id", "stock")
+        ordering = ['-id']

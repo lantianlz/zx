@@ -35,8 +35,10 @@ $(document).ready(function(){
         <div class="pl-75 row pr-10">
             <div class="col-md-12 col-xs-12">
                 <a class="zx-stocktips" data-stock_id="1" href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a>
+                <!-- 
                 <button class="btn btn-xs btn-primary pull-right mr-10 follow-stock" data-stock_id="{{stock.id}}">添加关注</button>
                 <button class="btn btn-xs btn-default pull-right mr-10 unfollow-stock none" data-stock_id="{{stock.id}}">取消关注</button>
+                 -->
             </div>
             <div class="col-md-12 col-xs-12 f12 pt-5 pb-15 min-h55">{{stock.des|default:"暂无简介"|str_display:32}}</div>
         </div>

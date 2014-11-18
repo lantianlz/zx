@@ -7,9 +7,12 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import page
+from www.misc.decorators import member_required, common_ajax_response
 from www.stock import interface
+
 sb = interface.StockBase()
 sfb = interface.StockFeedBase()
+sfollowb = interface.StockFollowBase()
 
 
 def stock_home(request, template_name='stock/stock_home.html'):
@@ -66,6 +69,21 @@ def stock_search(request, template_name='stock/stock_search.html'):
     stocks = sb.search_stocks(stock_key_words)[:20]
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+# ===================================================ajax部分=================================================================#
+
+@member_required
+@common_ajax_response
+def follow_people(request, stock_id):
+    return sfollowb.follow_stock(stock_id, request.user.id)
+
+
+@member_required
+@common_ajax_response
+def unfollow_people(request, stock_id):
+    return sfollowb.unfollow_stock(stock_id, request.user.id)
+
 
 def get_stock_info_by_id(request):
     '''

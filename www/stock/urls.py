@@ -9,5 +9,8 @@ urlpatterns = patterns('www.stock.views',
                        url(r'^(?P<stock_code>\d+)$', 'stock_detail'),
                        url(r'^feed/(?P<stock_feed_id>\d+)$', 'stock_feed'),
                        url(r'^search$', 'stock_search'),
+
+                       url(r'^follow/(?P<stock_id>\d+)$', 'follow_stock'),
+                       url(r'^unfollow/(?P<stock_id>\d+)$', 'unfollow_stock'),
                        url(r'^get_stock_info_by_id$', 'get_stock_info_by_id'),
                        )

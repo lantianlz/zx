@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import logging
 from django.db import transaction
 
 from common import debug, utils
 from www.misc import consts
-from www.stock.models import Stock, StockFeed
+from www.account.interface import UserBase
+from www.timeline.interface import FeedBase
+from www.stock.models import Stock, StockFeed, StockFollow
 
+ub = UserBase()
 
 dict_err = {
     80100: u'股票不存在',
@@ -94,7 +98,7 @@ class StockBase(object):
     def modify_stock(self, stock_id, **kwargs):
 
         if not stock_id or not kwargs.get('name') or not kwargs.get('code') \
-            or not kwargs.get('belong_board') or not kwargs.get('belong_market'):
+                or not kwargs.get('belong_board') or not kwargs.get('belong_market'):
             return 99800, dict_err.get(99800)
 
         stock = self.get_stock_by_id(stock_id, None)
@@ -176,3 +180,65 @@ class StockFeedBase(object):
             return StockFeed.objects.select_related("stock").get(**ps)
         except StockFeed.DoesNotExist:
             pass
+
+
+class StockFollowBase(object):
+
+    def __init__(self):
+        pass
+
+    @stock_required
+    @transaction.commit_manually(using=DEFAULT_DB)
+    def follow_stock(self, stock, user_id):
+        try:
+            if not ub.get_user_by_id(user_id):
+                return 99600, dict_err.get(99600)
+
+            try:
+                uf = StockFollow.objects.create(user_id=user_id, stock=stock)
+            except:
+                transaction.rollback(using=DEFAULT_DB)
+                return 0, dict_err.get(0)
+
+            stock.following_count += 1
+            stock.save()
+
+            # 更新用户timeline，后续修改成异步的
+            FeedBase().get_user_timeline_feed_ids(user_id, must_update_cache=True)
+
+            transaction.commit(using=DEFAULT_DB)
+            return 0, uf
+        except Exception, e:
+            logging.error(debug.get_debug_detail(e))
+            transaction.rollback(using=DEFAULT_DB)
+            return 99900, dict_err.get(99900)
+
+    @stock_required
+    @transaction.commit_manually(using=DEFAULT_DB)
+    def unfollow_stock(self, stock, user_id):
+        try:
+            if not ub.get_user_by_id(user_id):
+                return 99600, dict_err.get(99600)
+
+            try:
+                uf = StockFollow.objects.get(stock=stock, user_id=user_id)
+            except StockFollow.DoesNotExist:
+                transaction.rollback(using=DEFAULT_DB)
+                return 0, dict_err.get(0)
+            uf.delete()
+
+            stock.following_count -= 1
+            stock.save()
+
+            # 更新用户timeline，后续修改成异步的
+            FeedBase().get_user_timeline_feed_ids(user_id, must_update_cache=True)
+
+            transaction.commit(using=DEFAULT_DB)
+            return 0, dict_err.get(0)
+        except Exception, e:
+            logging.error(debug.get_debug_detail(e))
+            transaction.rollback(using=DEFAULT_DB)
+            return 99900, dict_err.get(99900)
+
+    def check_is_follow(self, stock_id, user_id):
+        return True if StockFollow.objects.filter(stock=stock_id, user_id=user_id) else False

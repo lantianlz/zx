@@ -73,9 +73,9 @@ def question_detail(request, question_id, template_name='question/question_detai
 
     # 异步更新浏览次数
     from www.tasks import async_add_question_view_count
-    async_add_question_view_count(question.id)
-
-    # question_topics = tb.get_topics_by_question(question)
+    user_agent = request.META.get("HTTP_USER_AGENT", "").lower()
+    if not("baidu" in user_agent or "spider" in user_agent):
+        async_add_question_view_count(question.id)
 
     # 所有话题
     topics = json.dumps(tb.format_topics_for_ask_page(tb.get_all_topics_for_show()))
