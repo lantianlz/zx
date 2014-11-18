@@ -829,6 +829,34 @@ if (!String.format) {
         
     };
 
+    /*
+        关注股票
+        stockId: 股票id
+        callback: 回调函数
+
+        用例：
+        $.ZXOperation.followStock('1', function(){alert('1')})
+    */
+    $.ZXOperation.followStock = function(stockId, callback){
+        ajaxSend("/stock/follow/" + stockId, {}, callback, 'GET');
+    };
+
+    /*
+        取消关注用户
+        stockId: 股票id
+        callback: 回调函数
+
+        用例：
+        $.ZXOperation.unfollowStock('1', function(){alert('1')})
+    */
+    $.ZXOperation.unfollowStock = function(stockId, callback){
+        $.ZXMsg.confirm('提示', '确认要取消关注吗?', function(result){
+            if(result){
+                ajaxSend("/stock/unfollow/" + stockId, {}, callback, 'GET');
+            }
+        });
+    };
+
 
     /*
         名片操作
@@ -1250,12 +1278,12 @@ if (!String.format) {
                         
                         $.ZXMsg.alert('关注股票', stockId);
                         // g_ajax_processing_obj_id = me.setUUID().attr('id');
-                        // $.ZXOperation.followPeople(target.data('user_id'), function(){
+                        // $.ZXOperation.followStock(stockId, function(){
                         //     target.children('.unfollow').show(1, function(){
                         //         me.hide(1);
                                 
                         //         // 关注之后需要清除名片的缓存
-                        //         $.ZXEvent.trigger("removePersonCardCache");
+                        //         $.ZXEvent.trigger("removeStockCardCache");
                         //     });
                         // });
                         
@@ -1268,12 +1296,12 @@ if (!String.format) {
                         
                         $.ZXMsg.alert('取消关注', stockId);
                         // g_ajax_processing_obj_id = me.setUUID().attr('id');
-                        // $.ZXOperation.unfollowPeople(target.data('user_id'), function(){
+                        // $.ZXOperation.unfollowPeople(stockId, function(){
                         //     target.children('.follow').show(1, function(){
                         //         me.hide(1);
                                 
                         //         // 取消关注之后需要清除名片的缓存
-                        //         $.ZXEvent.trigger("removePersonCardCache");
+                        //         $.ZXEvent.trigger("removeStockCardCache");
                         //     });
                         // });
 
