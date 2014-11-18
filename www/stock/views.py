@@ -33,6 +33,8 @@ def stock_detail(request, stock_code, template_name='stock/stock_detail.html'):
     stock = sb.get_stock_by_code(stock_code)
     if not stock:
         raise Http404
+    is_follow = sfollowb.check_is_follow(stock, request.user.id) if request.user.is_authenticated else False
+
     stock_feeds = sfb.get_stock_feeds_by_stock(stock)
 
     # 分页
@@ -75,13 +77,13 @@ def stock_search(request, template_name='stock/stock_search.html'):
 
 @member_required
 @common_ajax_response
-def follow_people(request, stock_id):
+def follow_stock(request, stock_id):
     return sfollowb.follow_stock(stock_id, request.user.id)
 
 
 @member_required
 @common_ajax_response
-def unfollow_people(request, stock_id):
+def unfollow_stock(request, stock_id):
     return sfollowb.unfollow_stock(stock_id, request.user.id)
 
 
@@ -104,6 +106,6 @@ def get_stock_info_by_id(request):
                 "url": stock.get_url(),
                 "feed_count": stock.feed_count,
                 "following_count": stock.following_count,
-                "is_following": False
+                "is_following": sfollowb.check_is_follow(stock_id, request.user.id)
             }
     return HttpResponse(json.dumps(infos), mimetype='application/json')
