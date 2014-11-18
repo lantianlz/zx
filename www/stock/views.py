@@ -73,6 +73,19 @@ def stock_search(request, template_name='stock/stock_search.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
+@member_required
+def my_stocks(request, template_name='stock/my_stocks.html'):
+    stocks = sb.get_all_stocks()
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(stocks, count=20, page=page_num).info
+    stocks = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
 # ===================================================ajax部分=================================================================#
 
 @member_required

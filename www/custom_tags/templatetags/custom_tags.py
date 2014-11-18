@@ -162,6 +162,18 @@ def hot_stock(context):
 
 
 @register.simple_tag(takes_context=True)
+def my_stock(context):
+    """
+    @note: 我关注的股票
+    """
+    from www.stock.interface import StockFollowBase
+    stock_follows = StockFollowBase().get_stocks_by_user_id(context['request'].user.id)[:10]
+    stocks = [sf.stock for sf in stock_follows]
+
+    return render_to_response('stock/_my_stock.html', locals(), context_instance=context).content
+
+
+@register.simple_tag(takes_context=True)
 def toutiao_acticle_type_nav_display(context):
     """
     @note: 头条导航

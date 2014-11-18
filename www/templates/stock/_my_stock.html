@@ -1,0 +1,21 @@
+{% if request.user.is_authenticated %}
+<div class="pb-5 mt-10 pt-10 top-border bdc-eee pt-5">
+    <span class="f16 fb">我关注的股票</span>
+    <a href="/stock/my_stocks" class="f12 co8 pull-right more-topics">更多股票 »</a>
+</div>
+{% if stocks %}
+<ul class="list-group">
+    {% for stock in stocks %}
+    <li class="list-group-item no-l-r-bd bdc-eee pl-0">
+        <a href="{{stock.get_url}}"><img class="pa avatar-45 avatar-square" src="{{stock.img}}" alt="{{stock.name}}"></a>
+        <div class="pl-55">
+            <div class="f14 pt-5"><a class="zx-stocktips" data-stock_id="{{stock.id}}" href="{{stock.get_url}}">{{stock.name}}({{stock.code}})</a></div>
+            <div class="f12 co8 pt-3">{{stock.feed_count}} 条动态 <span class="pl-3 pr-3">•</span> {{stock.following_count}} 人关注</div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="alert alert-info popmsg box-shadow-224 border-radius-0">暂未关注股票</div>
+{% endif %}
+{% endif %}

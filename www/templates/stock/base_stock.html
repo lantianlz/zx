@@ -27,25 +27,9 @@
 
     {% block stock_right %}
 
-    <!-- 我关注的股票开始 -->
-    <div class="pb-5 mt-10 pt-10 top-border bdc-eee pt-5">
-        <span class="f16 fb">我关注的股票</span>
-        <a href="/stock/all" class="f12 co8 pull-right more-topics">更多股票 »</a>
-    </div>
-    <ul class="list-group">
-        
-        <li class="list-group-item no-l-r-bd bdc-eee pl-0">
-            <a href="/stock/610000"><img class="pa avatar-45 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600110.png" alt="智选科技"></a>
-            <div class="pl-55">
-                <div class="f14 pt-5"><a class="zx-stocktips" data-stock_id="1" href="/stock/610000">智选科技(610000)</a></div>
-                <div class="f12 co8 pt-3">1251 条动态 <span class="pl-3 pr-3">•</span> 325 人关注</div>
-            </div>
-        </li>
-        
-    </ul>
-    <!-- 我关注的股票结束 -->
-
+    {% my_stock %}
     {% hot_stock %}
+
     <!-- 百度站内搜索 
     <script type="text/javascript">document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E%3Cscript charset="utf-8" src="http://rp.baidu.com/rp3w/3w.js?sid=6625555038042837712') + '&t=' + (Math.ceil(new Date()/3600000)) + unescape('"%3E%3C/script%3E'));</script>
     -->

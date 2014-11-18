@@ -17,6 +17,7 @@ dict_err = {
     80101: u'股票名称或者代码已经存在',
     80102: u'股票名称已经存在',
     80103: u'股票代码已经存在',
+    80104: u'最多关注10支股票',
 }
 dict_err.update(consts.G_DICT_ERROR)
 DEFAULT_DB = "default"
@@ -192,7 +193,12 @@ class StockFollowBase(object):
     def follow_stock(self, stock, user_id):
         try:
             if not ub.get_user_by_id(user_id):
+                transaction.rollback(using=DEFAULT_DB)
                 return 99600, dict_err.get(99600)
+
+            if StockFollow.objects.filter(user_id=user_id).count >= 1:
+                transaction.rollback(using=DEFAULT_DB)
+                return 80104, dict_err.get(80104)
 
             try:
                 uf = StockFollow.objects.create(user_id=user_id, stock=stock)
@@ -218,6 +224,7 @@ class StockFollowBase(object):
     def unfollow_stock(self, stock, user_id):
         try:
             if not ub.get_user_by_id(user_id):
+                transaction.rollback(using=DEFAULT_DB)
                 return 99600, dict_err.get(99600)
 
             try:
@@ -242,3 +249,6 @@ class StockFollowBase(object):
 
     def check_is_follow(self, stock_id, user_id):
         return True if StockFollow.objects.filter(stock=stock_id, user_id=user_id) else False
+
+    def get_stocks_by_user_id(self, user_id):
+        return StockFollow.objects.select_related("stock").filter(user_id=user_id, stock__state=True)
