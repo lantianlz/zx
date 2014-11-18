@@ -618,7 +618,7 @@ class AnswerBase(object):
             user = answer.get_from_user()
             answer_summary = dict(answer_id=answer.id, question_id=answer.question.id, question_title=answer.question.title,
                                   answer_summary=answer.get_summary(), answer_like_count=answer.like_count, answer_user_id=user.id,
-                                  answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=str_display(user.des or '', 17))
+                                  answer_user_avatar=user.get_avatar_65(), answer_user_nick=user.nick, answer_user_des=str_display(user.des or '', 36))
         return answer_summary
 
     def get_answers_by_range_date(self, start_date, end_date):
