@@ -182,7 +182,7 @@ class FeedBase(object):
 
     def pop_feed_from_follower(self, user_id, feed_id):
         '''
-        @note: 推送feed到粉丝的队列中
+        @note: 从粉丝的队列中推出feed
         '''
         followers = UserFollowBase().get_followers_by_user_id(user_id)
         for follower in followers:

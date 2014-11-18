@@ -6,7 +6,7 @@
 
 {% block description %}智选（www.zhixuan.com）提供最新股票消息动态：上市公司动态、个股问答、公司新闻、最热股票等股票行情信息。{% endblock description %}
 
-{% block title %}最新股票消息动态{% endblock title %}
+{% block title %}{% if '/stock/' == request.path %}最新股票消息动态{% else %}我关注的股票消息动态{% endif %}{% endblock title %}
 
 {% block javascript %}
 <script type="text/javascript">
@@ -23,9 +23,9 @@ $(document).ready(function(){
 
 {% block stock_main%}
 <div class="bottom-border bdc-bbb pt-10 pb-5 pl-10">
-    <a href="/stock/my_stock_feed"><span class="f15 fb co18">我关注的股票动态</span></a>
+    <a href="/stock/"><span class="f15 fb {% if '/stock/' != request.path %}co18{% endif %}">最新股票动态</span></a>
     <span class="co8 pl-5 pr-5">|</span>
-    <a href="/stock/"><span class="f15 fb">所有股票动态</span></a>
+    <a href="/stock/my_stock_feeds"><span class="f15 fb {% if '/stock/my_stock_feeds' != request.path %}co18{% endif %}">我关注的股票动态</span></a>
 </div>
 
 <ul class="list-group">

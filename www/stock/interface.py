@@ -182,6 +182,11 @@ class StockFeedBase(object):
         except StockFeed.DoesNotExist:
             pass
 
+    def get_stock_feeds_by_user_id(self, user_id):
+        stock_ids = [sf.stock.id for sf in StockFollowBase().get_stocks_by_user_id(user_id)]
+        feeds = StockFeed.objects.select_related("stock").filter(stock__id__in=stock_ids)
+        return feeds
+
 
 class StockFollowBase(object):
 
@@ -196,7 +201,7 @@ class StockFollowBase(object):
                 transaction.rollback(using=DEFAULT_DB)
                 return 99600, dict_err.get(99600)
 
-            if StockFollow.objects.filter(user_id=user_id).count >= 1:
+            if StockFollow.objects.filter(user_id=user_id).count() >= 10:
                 transaction.rollback(using=DEFAULT_DB)
                 return 80104, dict_err.get(80104)
 

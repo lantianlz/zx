@@ -16,7 +16,21 @@ sfollowb = interface.StockFollowBase()
 
 
 def stock_home(request, template_name='stock/stock_home.html'):
-    stock_feeds = sfb.get_all_stock_feeds()
+    stock_feeds = sfb.get_all_stock_feeds()[:500]
+
+    # 分页
+    page_num = int(request.REQUEST.get('page', 1))
+    page_objs = page.Cpt(stock_feeds, count=10, page=page_num).info
+    stock_feeds = page_objs[0]
+    page_params = (page_objs[1], page_objs[4])
+
+    stock_feeds = sfb.format_stock_feeds(stock_feeds)
+
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def my_stock_feeds(request, template_name='stock/stock_home.html'):
+    stock_feeds = sfb.get_stock_feeds_by_user_id(request.user.id)[:100]
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
@@ -75,14 +89,15 @@ def stock_search(request, template_name='stock/stock_search.html'):
 
 @member_required
 def my_stocks(request, template_name='stock/my_stocks.html'):
-    stocks = sb.get_all_stocks()
+    stock_follows = sfollowb.get_stocks_by_user_id(request.user.id)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))
-    page_objs = page.Cpt(stocks, count=20, page=page_num).info
-    stocks = page_objs[0]
+    page_objs = page.Cpt(stock_follows, count=20, page=page_num).info
+    stock_follows = page_objs[0]
     page_params = (page_objs[1], page_objs[4])
 
+    stocks = [sf.stock for sf in stock_follows]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
