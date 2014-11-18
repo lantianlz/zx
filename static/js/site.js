@@ -786,7 +786,15 @@ if (!String.format) {
         $.ZXOperation.followPeople('1', function(){alert('1')})
     */
     $.ZXOperation.followPeople = function(userId, callback){
-        ajaxSend("/timeline/follow/" + userId, {}, callback, 'GET');
+        ajaxSend("/timeline/follow/" + userId, {}, function(data){
+            if(data.errcode == 0){
+                if(callback){
+                    callback(data);
+                }
+            } else {
+                $.ZXNotice.WarningTopNotice(data.errmsg);
+            }
+        }, 'GET');
     };
 
     /*
@@ -800,7 +808,15 @@ if (!String.format) {
     $.ZXOperation.unfollowPeople = function(userId, callback){
         $.ZXMsg.confirm('提示', '确认要取消关注吗?', function(result){
             if(result){
-                ajaxSend("/timeline/unfollow/" + userId, {}, callback, 'GET');
+                ajaxSend("/timeline/unfollow/" + userId, {}, function(data){
+                    if(data.errcode == 0){
+                        if(callback){
+                            callback(data);
+                        }
+                    } else {
+                        $.ZXNotice.WarningTopNotice(data.errmsg);
+                    }
+                }, 'GET');
             }
         });
     };
@@ -838,7 +854,17 @@ if (!String.format) {
         $.ZXOperation.followStock('1', function(){alert('1')})
     */
     $.ZXOperation.followStock = function(stockId, callback){
-        ajaxSend("/stock/follow/" + stockId, {}, callback, 'GET');
+        ajaxSend("/stock/follow/" + stockId, {}, function(data){
+            
+            if(data.errcode == 0){
+                if(callback){
+                    callback(data);
+                }
+            } else {
+                $.ZXNotice.WarningTopNotice(data.errmsg);
+            }
+            
+        }, 'GET');
     };
 
     /*
@@ -852,7 +878,15 @@ if (!String.format) {
     $.ZXOperation.unfollowStock = function(stockId, callback){
         $.ZXMsg.confirm('提示', '确认要取消关注吗?', function(result){
             if(result){
-                ajaxSend("/stock/unfollow/" + stockId, {}, callback, 'GET');
+                ajaxSend("/stock/unfollow/" + stockId, {}, function(data){
+                    if(data.errcode == 0){
+                        if(callback){
+                            callback(data);
+                        }
+                    } else {
+                        $.ZXNotice.WarningTopNotice(data.errmsg);
+                    }
+                }, 'GET');
             }
         });
     };
