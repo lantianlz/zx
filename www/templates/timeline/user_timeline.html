@@ -92,23 +92,7 @@
 <script type="text/template" id="feed-template">
     <% _.each(feeds, function(feed){ %>
 
-        <li class="list-group-item no-l-r-bd bdc-eee pl-0 none">
-            <a href="/stock/610000"><img class="pa avatar-45 avatar-square" alt="盾安环境" src="http://irm.p5w.net/ssgs/S300344/images/300344.gif"></a>
-            <div class="pl-55 row">
-                <div class="co8 f12 col-xs-11">
-                    <a class="f14 black-blue fb" href="/stock/feed/56349">兰州京陇节能建材有限公司当前正处在施工建设阶段，将视后期施工进度安排试生产任务。——————几年来一直这形式主义的回答！按照交易所规定和上市公司准则要求，应该回答具体建设进度情况，如主体厂房建设建设情况？设备开始安装了吗等？</a>
-                </div>
-                <div class="co8 f12 pt-5 col-xs-12">
-                    <a href="/stock/300344" class="zx-stocktips" data-stock_id="1">太空板业(300344)</a>
-                    <span class="f12 pull-right">4分钟前</span>
-                </div>
-                <div class="pt-15 f13 line-height-22 col-xs-12" data-content="您好，感谢您对公司的关注。京陇节能建材有限公司目前尚处施工建设阶段，由于兰州京陇非募投项目，根据相关规定并不必然需要披露详细进度情况，公司会适时在公司官网披露各子公司情况，请投资者留意。">
-                    您好，感谢您对公司的关注。京陇节能建材有限公司目前尚处施工建设阶段，由于兰州京陇非募投项目，根据相关规定并不必然需要披露详细进度情况，公司会适时在公司官网披露各子公司情况，请投资者留意。
-                </div>
-                <span class="pa img-circle avatar-45 fa fa-line-chart line-height-45 text-center f20  bdc-ddd co17" style="right: 10px; top: 5px;" title="股票"></span>
-            </div>
-        </li>
-
+        
         <% if(feed.feedType == 1){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0 none">
             <a href="/p/<%= feed.userId %>"><img class="pa avatar-45 avatar-circle" alt="<%= feed.userName %>" src="<%= feed.userAvatar %>"></a>
@@ -178,6 +162,31 @@
             </div>
         </li>
         <% } %>
+
+        <% if(feed.feedType == 4){ %>
+        <li class="list-group-item no-l-r-bd bdc-eee pl-0 none">
+            <a href="<%= feed.stockUrl %>"><img class="pa avatar-45 avatar-square" alt="<%= feed.stockName %>" src="<%= feed.stockImg %>"></a>
+            <div class="pl-55 row">
+                <div class="co8 f12 col-xs-11">
+                    <a class="f14 black-blue fb" href="<%= feed.stockFeedUrl %>"><%= feed.stockFeedQuestionContent %></a>
+                </div>
+                <div class="co8 f12 pt-5 col-xs-12">
+                    <a href="<%= feed.stockUrl %>" class="zx-stocktips" data-stock_id="<%= feed.stockId %>"><%= feed.stockName %>(<%= feed.stockCode %>)</a>
+                    <span class="f12 pull-right"><%= feed.feedDate %></span>
+                </div>
+                <div class="pt-15 f13 line-height-22 col-xs-12 <% if(feed.stockFeedAnswerContent != stockFeedAnswerContentShort){ %>pointer show-stock-feed-detail<% } %>" data-content="<%= feed.stockFeedAnswerContent %>">
+                    <% if(feed.stockFeedAnswerContent != stockFeedAnswerContentShort){ %>
+                        <%= feed.stockFeedAnswerContentShort %>
+                        <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a>
+                    <% } else { %>
+                        <%= feed.stockFeedAnswerContent %>
+                    <% } %>
+                </div>
+                <span class="pa img-circle avatar-45 fa fa-line-chart line-height-45 text-center f20  bdc-ddd co17" style="right: 10px; top: 5px;" title="股票"></span>
+            </div>
+        </li>
+        <% } %>
+
     <% }) %>
 </script>
 

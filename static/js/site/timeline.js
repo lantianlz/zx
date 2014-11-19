@@ -56,7 +56,17 @@ $(document).ready(function(){
             'answerUserName': '',   // 回答者名字
             'answerUserAvatar': '', // 回答者头像
             'answerUserDesc': '',   // 回答者个人简介
-            'answerLikeCount': 0    // 回答获赞个数
+            'answerLikeCount': 0,   // 回答获赞个数
+            'stockId': '',          // 股票ID
+            'stockCode': '',        // 股票代码
+            'stockUrl': '',         // 股票URL
+            'stockName': '',        // 股票名称
+            'stockImg': '',         // 股票图片
+            'stockFeedUrl': '',     // 股票动态URL
+            'stockFeedQuestionContent': '',     // 股票动态提问内容
+            'stockFeedCreateTime': '',          // 股票动态创建时间
+            'stockFeedAnswerContent': '',       // 股票动态回答内容
+            'stockFeedAnswerContentShort': ''   // 股票动态回答内容截断后的内容
         }
     });
     var User = Backbone.Model.extend({
@@ -96,7 +106,16 @@ $(document).ready(function(){
             'answerUserName': 'answer_user_nick',   
             'answerUserAvatar': 'answer_user_avatar', 
             'answerUserDesc': 'answer_user_des',   
-            'answerLikeCount': 'answer_like_count'    
+            'answerLikeCount': 'answer_like_count',
+            'stockId': 'stock_id',
+            'stockCode': 'stock_code',
+            'stockUrl': 'stock_url',
+            'stockName': 'stock_name',
+            'stockImg': 'stock_img',
+            'stockFeedUrl': 'stock_feed_url',
+            'stockFeedQuestionContent': 'stock_feed_question_content',
+            'stockFeedAnswerContent': 'stock_feed_answer_content'
+            'stockFeedAnswerContentShort': 'stock_feed_answer_content_short'
         },
 
         // 获得最后一个feedId
@@ -292,4 +311,13 @@ $(document).ready(function(){
         users = new Users(),
         feedView = new FeedView({'collection': feeds}),
         recommendUsersView = new RecommendUsersView({'collection': users});
+
+
+    $('.show-stock-feed-detail').one('click', function(){
+        var me = $(this);
+
+        me.html(me.data('content'));
+        me.removeClass('pointer show-stock-feed-detail');
+    });
+
 });
