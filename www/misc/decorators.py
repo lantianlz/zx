@@ -48,7 +48,7 @@ def staff_required(func):
             if request.is_ajax():
                 return HttpResponse('need_staff')
             else:
-                HttpResponse(u'需要管理员权限才可')
+                return HttpResponse(u'需要管理员权限才可')
 
         return func(request, *args, **kwargs)
     return _decorator
