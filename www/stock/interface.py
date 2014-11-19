@@ -6,8 +6,8 @@ from django.db import transaction
 
 from common import debug, utils
 from www.misc import consts
+from www.misc.decorators import cache_required
 from www.account.interface import UserBase
-from www.timeline.interface import FeedBase
 from www.stock.models import Stock, StockFeed, StockFollow
 
 ub = UserBase()
@@ -141,6 +141,7 @@ class StockFeedBase(object):
     def create_feed(self, stock_id_or_object, question_content, answer_content,
                     belong_market, origin_id=None, create_time=None, create_question_time=None):
         try:
+            from www.timeline.interface import FeedBase
             try:
                 assert stock_id_or_object and question_content and answer_content
                 assert belong_market is not None
@@ -157,7 +158,11 @@ class StockFeedBase(object):
             stock.feed_count += 1
             stock.save()
 
+            # 产生feed
+            FeedBase().create_feed(stock.id, feed.id, feed_type=4)
+
             transaction.commit(using=DEFAULT_DB)
+
             return 0, feed
         except Exception, e:
             debug.get_debug_detail(e)
@@ -183,9 +188,26 @@ class StockFeedBase(object):
             pass
 
     def get_stock_feeds_by_user_id(self, user_id):
-        stock_ids = [sf.stock.id for sf in StockFollowBase().get_stocks_by_user_id(user_id)]
+        stock_ids = [sf.stock.id for sf in StockFollowBase().get_stock_follows_by_user_id(user_id)]
         feeds = StockFeed.objects.select_related("stock").filter(stock__id__in=stock_ids)
         return feeds
+
+    @cache_required(cache_key='stock_feed_summary_%s', expire=3600)
+    def get_stock_feed_summary_by_id(self, stock_feed_id_or_object, must_update_cache=False):
+        '''
+        @note: 获取股票动态摘要信息，用于feed展现
+        '''
+        from www.custom_tags.templatetags.custom_filters import str_display
+        stock_feed = self.get_stock_feed_by_id(stock_feed_id_or_object, state=None) if not isinstance(stock_feed_id_or_object, StockFeed) else stock_feed_id_or_object
+        stock_feed_summary = {}
+
+        if stock_feed:
+            stock = stock_feed.stock
+            stock_feed_summary = dict(stock_id=stock.id, stock_code=stock.code, stock_url=stock.get_url(), stock_name=stock.name,
+                                      stock_img=stock.img, stock_feed_url=stock_feed.get_url(), stock_feed_question_content=stock_feed.question_content,
+                                      stock_feed_answer_content=stock_feed.answer_content,
+                                      stock_feed_answer_content_short=str_display(stock_feed.answer_content, 150))
+        return stock_feed_summary
 
 
 class StockFollowBase(object):
@@ -197,6 +219,7 @@ class StockFollowBase(object):
     @transaction.commit_manually(using=DEFAULT_DB)
     def follow_stock(self, stock, user_id):
         try:
+            from www.timeline.interface import FeedBase
             if not ub.get_user_by_id(user_id):
                 transaction.rollback(using=DEFAULT_DB)
                 return 99600, dict_err.get(99600)
@@ -228,6 +251,7 @@ class StockFollowBase(object):
     @transaction.commit_manually(using=DEFAULT_DB)
     def unfollow_stock(self, stock, user_id):
         try:
+            from www.timeline.interface import FeedBase
             if not ub.get_user_by_id(user_id):
                 transaction.rollback(using=DEFAULT_DB)
                 return 99600, dict_err.get(99600)
@@ -255,5 +279,8 @@ class StockFollowBase(object):
     def check_is_follow(self, stock_id, user_id):
         return True if StockFollow.objects.filter(stock=stock_id, user_id=user_id) else False
 
-    def get_stocks_by_user_id(self, user_id):
+    def get_stock_follows_by_user_id(self, user_id):
         return StockFollow.objects.select_related("stock").filter(user_id=user_id, stock__state=True)
+
+    def get_followers_by_stock_id(self, stock_id):
+        return StockFollow.objects.select_related("stock").filter(stock=stock_id, stock__state=True)

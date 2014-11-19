@@ -37,7 +37,7 @@ $(document).ready(function(){
                 <a class="f14 black-blue fb" href="{{stock_feed.get_url}}">{{stock_feed.question_content|safe}}</a>
             </div>
             <div class="co8 f12 pt-5">
-                <a href="{{stock_feed.stock.get_url}}" class="zx-stocktips" data-stock_id="1">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
+                <a href="{{stock_feed.stock.get_url}}" class="zx-stocktips" data-stock_id="{{stock_feed.stock.id}}">{{stock_feed.stock.name}}({{stock_feed.stock.code}})</a>
                 <span class="f12 pull-right">{{stock_feed.create_time|time_format}}</span>
             </div>
             <div class="pt-15 f13 line-height-22 {% if stock_feed.answer_content_length > 150 %}pointer show-detail{% endif %}" data-content="{{stock_feed.answer_content}}">

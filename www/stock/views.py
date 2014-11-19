@@ -89,7 +89,7 @@ def stock_search(request, template_name='stock/stock_search.html'):
 
 @member_required
 def my_stocks(request, template_name='stock/my_stocks.html'):
-    stock_follows = sfollowb.get_stocks_by_user_id(request.user.id)
+    stock_follows = sfollowb.get_stock_follows_by_user_id(request.user.id)
 
     # 分页
     page_num = int(request.REQUEST.get('page', 1))

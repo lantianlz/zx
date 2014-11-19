@@ -19,10 +19,10 @@ class UserFollow(models.Model):
 
 class Feed(models.Model):
     feed_type_choices = ((1, u'提问'), (2, u'赞'), (3, u'回答'), (4, u"股票动态"))
-    source_choices = ((0, u'关注的用户产生内容'), (1, u'关注话题产生的内容'))
+    source_choices = ((0, u'关注的用户产生内容'), (1, u'关注股票产生的内容'), (2, u'关注话题产生的内容'))
     state_choices = ((0, u'已删除'), (1, u'系统发布'), (2, u'用户发布'))
 
-    user_id = models.CharField(max_length=32, db_index=True)
+    user_id = models.CharField(max_length=32, db_index=True)  # 用户产生的内容的时候为user_id，股票产生的内容的时候为stock_id
     content = models.CharField(max_length=1024, null=True)
     obj_id = models.CharField(max_length=64, default=0)  # 对象的id
 

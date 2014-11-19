@@ -8,6 +8,7 @@ from www.misc.decorators import cache_required
 from www.misc import consts
 from www.message.interface import UnreadCountBase
 from www.account.interface import UserBase, UserCountBase
+from www.stock.interface import StockFollowBase
 from www.timeline.models import UserFollow, Feed
 
 
@@ -19,6 +20,7 @@ dict_err = {
 dict_err.update(consts.G_DICT_ERROR)
 
 TIMELINE_DB = 'timeline'
+MAX_TIMELINE_LEN = 100
 ub = UserBase()
 
 
@@ -142,17 +144,23 @@ class FeedBase(object):
 
     def format_feeds_by_id(self, feed_ids):
         from www.question.interface import QuestionBase, AnswerBase
+        from www.stock.interface import StockFeedBase
+
         feeds = []
         for feed_id in feed_ids:
             feed = self.get_feed_by_id(feed_id)
-            user = UserBase().get_user_by_id(feed.user_id)
-            dict_feed = dict(feed_id=feed.id, create_time=feed.create_time.strftime('%Y-%m-%d %H:%M:%S'), feed_type=feed.feed_type,
-                             user_id=feed.user_id, user_avatar=user.get_avatar_65(), user_nick=user.nick)
-            obj_info = {}
-            if feed.feed_type in (1,):
-                obj_info = QuestionBase().get_question_summary_by_id(feed.obj_id)
-            elif feed.feed_type in (2, 3):
-                obj_info = AnswerBase().get_answer_summary_by_id(feed.obj_id)
+            dict_feed = dict(feed_id=feed.id, create_time=feed.create_time.strftime('%Y-%m-%d %H:%M:%S'), feed_type=feed.feed_type)
+
+            if feed.source == 0:  # 用户产生的动态
+                user = UserBase().get_user_by_id(feed.user_id)
+                obj_info = dict(user_id=feed.user_id, user_avatar=user.get_avatar_65(), user_nick=user.nick)
+                if feed.feed_type in (1,):
+                    obj_info = QuestionBase().get_question_summary_by_id(feed.obj_id)
+                elif feed.feed_type in (2, 3):
+                    obj_info = AnswerBase().get_answer_summary_by_id(feed.obj_id)
+            if feed.source == 1:  # 股票产生的动态
+                obj_info = StockFeedBase().get_stock_feed_summary_by_id(feed.obj_id)
+
             dict_feed.update(obj_info)
             feeds.append(dict_feed)
 
@@ -161,24 +169,32 @@ class FeedBase(object):
     def create_feed(self, user_id, obj_id, feed_type, content=None):
         assert user_id and obj_id
 
-        feed = Feed.objects.create(user_id=user_id, feed_type=feed_type, obj_id=obj_id)
+        source = 1 if str(feed_type) == "4" else 0
+        feed = Feed.objects.create(user_id=user_id, feed_type=feed_type, obj_id=obj_id, source=source)
+
         # 更新订阅者timeline
-        self.push_feed_to_follower(user_id, feed.id)
+        self.push_feed_to_follower(user_id, feed)
         return 0, feed
 
-    def push_feed_to_follower(self, user_id, feed_id):
+    def push_feed_to_follower(self, user_id, feed):
         '''
         @note: 推送feed到粉丝的队列中
         '''
         # 推自己
-        # cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=100, time_out=3600 * 24 * 7).push(feed_id)
+        # cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=MAX_TIMELINE_LEN, time_out=3600 * 24 * 7).push(feed.id)
 
         # 推粉丝
-        followers = UserFollowBase().get_followers_by_user_id(user_id)
-        for follower in followers:
-            cache_queue = cache.CacheQueue(key='user_timeline_%s' % follower.from_user_id, max_len=100, time_out=3600 * 24 * 7)
+        if feed.source == 0:    # 取用户粉丝
+            followers = UserFollowBase().get_followers_by_user_id(user_id)
+            user_ids = [follower.from_user_id for follower in followers]
+        elif feed.source == 1:  # 取股票粉丝
+            followers = StockFollowBase().get_followers_by_stock_id(feed.user_id)
+            user_ids = [follower.user_id for follower in followers]
+
+        for user_id in user_ids:
+            cache_queue = cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=MAX_TIMELINE_LEN, time_out=3600 * 24 * 7)
             if cache_queue.exists():
-                cache_queue.push(feed_id)
+                cache_queue.push(feed.id)
 
     def pop_feed_from_follower(self, user_id, feed_id):
         '''
@@ -186,7 +202,7 @@ class FeedBase(object):
         '''
         followers = UserFollowBase().get_followers_by_user_id(user_id)
         for follower in followers:
-            cache_queue = cache.CacheQueue(key='user_timeline_%s' % follower.from_user_id, max_len=100, time_out=3600 * 24 * 7)
+            cache_queue = cache.CacheQueue(key='user_timeline_%s' % follower.from_user_id, max_len=MAX_TIMELINE_LEN, time_out=3600 * 24 * 7)
             if cache_queue.exists():
                 cache_queue.pop(feed_id)
 
@@ -202,7 +218,7 @@ class FeedBase(object):
         return self.format_feeds_by_id(feed_ids)
 
     def get_user_timeline_feed_ids(self, user_id, must_update_cache=False):
-        cache_queue = cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=100, time_out=3600 * 24 * 7)
+        cache_queue = cache.CacheQueue(key='user_timeline_%s' % user_id, max_len=MAX_TIMELINE_LEN, time_out=3600 * 24 * 7)
         feed_ids = []
         if not cache_queue.exists() or must_update_cache:
             feed_ids = self.get_user_timeline_feed_ids_from_db(user_id)
@@ -218,6 +234,7 @@ class FeedBase(object):
         '''
         assert user_id
         user_following_user_ids = [f.to_user_id for f in UserFollowBase().get_following_by_user_id(user_id)]
+        user_following_user_ids.extend([f.stock_id for f in StockFollowBase().get_stock_follows_by_user_id(user_id)])
         # user_following_user_ids.append(user_id)  # 包含自己产生的feed
 
         if user_following_user_ids:
