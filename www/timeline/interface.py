@@ -155,9 +155,9 @@ class FeedBase(object):
                 user = UserBase().get_user_by_id(feed.user_id)
                 obj_info = dict(user_id=feed.user_id, user_avatar=user.get_avatar_65(), user_nick=user.nick)
                 if feed.feed_type in (1,):
-                    obj_info = QuestionBase().get_question_summary_by_id(feed.obj_id)
+                    obj_info.update(QuestionBase().get_question_summary_by_id(feed.obj_id))
                 elif feed.feed_type in (2, 3):
-                    obj_info = AnswerBase().get_answer_summary_by_id(feed.obj_id)
+                    obj_info.update(AnswerBase().get_answer_summary_by_id(feed.obj_id))
             if feed.source == 1:  # 股票产生的动态
                 obj_info = StockFeedBase().get_stock_feed_summary_by_id(feed.obj_id)
 
@@ -238,7 +238,7 @@ class FeedBase(object):
         # user_following_user_ids.append(user_id)  # 包含自己产生的feed
 
         if user_following_user_ids:
-            feeds = Feed.objects.filter(user_id__in=user_following_user_ids)
+            feeds = Feed.objects.filter(user_id__in=user_following_user_ids)[:100]
             return [f.id for f in feeds]
         else:
             return []
