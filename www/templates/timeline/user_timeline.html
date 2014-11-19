@@ -91,7 +91,6 @@
 <!-- feed 模板 -->
 <script type="text/template" id="feed-template">
     <% _.each(feeds, function(feed){ %>
-
         
         <% if(feed.feedType == 1){ %>
         <li class="list-group-item no-l-r-bd bdc-eee pl-0 none">
@@ -172,15 +171,17 @@
                 </div>
                 <div class="co8 f12 pt-5 col-xs-12">
                     <a href="<%= feed.stockUrl %>" class="zx-stocktips" data-stock_id="<%= feed.stockId %>"><%= feed.stockName %>(<%= feed.stockCode %>)</a>
-                    <span class="f12 pull-right"><%= feed.feedDate %></span>
                 </div>
-                <div class="pt-15 f13 line-height-22 col-xs-12 <% if(feed.stockFeedAnswerContent != stockFeedAnswerContentShort){ %>pointer show-stock-feed-detail<% } %>" data-content="<%= feed.stockFeedAnswerContent %>">
-                    <% if(feed.stockFeedAnswerContent != stockFeedAnswerContentShort){ %>
+                <div class="pt-15 f13 line-height-22 col-xs-12 <% if(feed.stockFeedAnswerContent != feed.stockFeedAnswerContentShort){ %>pointer show-stock-feed-detail<% } %>" data-content="<%= feed.stockFeedAnswerContent %>">
+                    <% if(feed.stockFeedAnswerContent != feed.stockFeedAnswerContentShort){ %>
                         <%= feed.stockFeedAnswerContentShort %>
                         <a href="javascript:void(0);" class="pl-3 bgc-f1f1f1 f12">显示全部</a>
                     <% } else { %>
                         <%= feed.stockFeedAnswerContent %>
                     <% } %>
+                </div>
+                <div class="f12 co8 gray-a pt-5 col-xs-12">
+                    <span><%= feed.feedDate %></span>
                 </div>
                 <span class="pa img-circle avatar-45 fa fa-line-chart line-height-45 text-center f20  bdc-ddd co17" style="right: 10px; top: 5px;" title="股票"></span>
             </div>

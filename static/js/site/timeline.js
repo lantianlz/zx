@@ -313,7 +313,7 @@ $(document).ready(function(){
         recommendUsersView = new RecommendUsersView({'collection': users});
 
 
-    $('.show-stock-feed-detail').one('click', function(){
+    $('.show-stock-feed-detail').live('click', function(){
         var me = $(this);
 
         me.html(me.data('content'));
