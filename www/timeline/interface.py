@@ -238,7 +238,7 @@ class FeedBase(object):
         # user_following_user_ids.append(user_id)  # 包含自己产生的feed
 
         if user_following_user_ids:
-            feeds = Feed.objects.filter(user_id__in=user_following_user_ids)[:100]
+            feeds = Feed.objects.filter(user_id__in=user_following_user_ids)[:MAX_TIMELINE_LEN]
             return [f.id for f in feeds]
         else:
             return []
