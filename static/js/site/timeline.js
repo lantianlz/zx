@@ -114,7 +114,7 @@ $(document).ready(function(){
             'stockImg': 'stock_img',
             'stockFeedUrl': 'stock_feed_url',
             'stockFeedQuestionContent': 'stock_feed_question_content',
-            'stockFeedAnswerContent': 'stock_feed_answer_content'
+            'stockFeedAnswerContent': 'stock_feed_answer_content',
             'stockFeedAnswerContentShort': 'stock_feed_answer_content_short'
         },
 
