@@ -43,12 +43,12 @@ $(document).ready(function(){
         },
 
         // 查询
-        search: function(name, cityName, departmentName, state, pageIndex){
+        search: function(name, cityName, departmentName, state, qq, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/user/externalCM/search", 
-                {'name': name||'', 'city_name': cityName||'', 'department_name': departmentName||'', 'state':state||0, 'page_index': pageIndex||1}, 
+                {'name': name||'', 'city_name': cityName||'', 'department_name': departmentName||'', 'state':state||0, 'qq': qq||'', 'page_index': pageIndex||1}, 
                 function(data){
                     me.pageIndex = pageIndex||1;
                     me.pageCount = data.page_count;
@@ -56,6 +56,7 @@ $(document).ready(function(){
                     me.cityName = cityName||'';
                     me.departmentName = departmentName||'';
                     me.state = state||0;
+                    me.qq = qq||'';
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps));
                 }
@@ -126,7 +127,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.name + '/' + this.collection.cityName + '/' + this.collection.departmentName + '/' + this.collection.state
+                'search/' + this.collection.name + '/' + this.collection.cityName + '/' + this.collection.departmentName + '/' + this.collection.state + '/' + this.collection.qq
             );
         },
 
@@ -139,9 +140,10 @@ $(document).ready(function(){
             var departmentName = this.$('.key-word-department').val(),
                 name = this.$('.key-word').val(),
                 cityName = this.$('.key-word-city').val(),
-                state = this.$('.state').val();
+                state = this.$('.state').val(),
+                qq = this.$('.key-word-qq').val();
 
-            router.navigate(String.format('/search/{0}/{1}/{2}/{3}/1', name, cityName, departmentName, state), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/{2}/{3}/{4}/1', name, cityName, departmentName, state, qq), {trigger: true});
         },
 
         toggleState: function(sender){
@@ -190,12 +192,12 @@ $(document).ready(function(){
 
         routes: {
             "":                             "search",
-            "search/(:name)/(:cityName)/(:departmentName)/(:state)/:pageIndex":    "search",
+            "search/(:name)/(:cityName)/(:departmentName)/(:state)/(:qq)/:pageIndex":    "search",
         },
 
         // 查询
-        search: function(name, cityName, departmentName, state, pageIndex){
-            externalCMs.search(name||'', cityName||'', departmentName||'', state||0, pageIndex||1);
+        search: function(name, cityName, departmentName, state, qq, pageIndex){
+            externalCMs.search(name||'', cityName||'', departmentName||'', state||0, qq||'', pageIndex||1);
         },
 
         // 显示修改界面
@@ -242,6 +244,11 @@ $(document).ready(function(){
             <div class="pl-0 pr-0 pb-10 col-md-2">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control key-word-city" placeholder="输入城市名称">
+                </div>
+            </div>
+            <div class="pl-0 pr-0 pb-10 col-md-2">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control key-word-qq" placeholder="输入QQ号码">
                 </div>
             </div>
             <div class="pl-0 pb-10 col-md-3">

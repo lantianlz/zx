@@ -780,7 +780,7 @@ class ExternalCMBase(object):
     """
     """
 
-    def get_external_cm_for_admin(self, name, city_name, department_name, state=0):
+    def get_external_cm_for_admin(self, name, city_name, department_name, state=0, qq=""):
         objs = Jfzcm.objects.filter(state=state)
 
         if name:
@@ -791,6 +791,9 @@ class ExternalCMBase(object):
 
         if department_name:
             objs = objs.filter(department_name__contains=department_name)
+
+        if qq:
+            objs = objs.filter(qq__contains=qq)
 
         return objs
 

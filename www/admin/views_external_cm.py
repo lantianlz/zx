@@ -50,9 +50,10 @@ def search(request):
     city_name = request.REQUEST.get('city_name')
     department_name = request.REQUEST.get('department_name')
     state = request.REQUEST.get('state')
+    qq = request.REQUEST.get('qq')
     page_index = int(request.REQUEST.get('page_index'))
 
-    objs = ExternalCMBase().get_external_cm_for_admin(name, city_name, department_name, state)
+    objs = ExternalCMBase().get_external_cm_for_admin(name, city_name, department_name, state, qq)
 
     page_objs = page.Cpt(objs, count=20, page=page_index).info
 
