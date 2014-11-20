@@ -29,7 +29,7 @@ def main():
 
         context = dict(now_date=datetime.datetime.now().date(), email=user.email)
         try:
-            async_send_email_worker(user.email, u'财经微头条，你获取财经资讯的不二之选', utils.render_email_template('email/ad/weitoutiao_email.html', context), 'html')
+            async_send_email_worker(user.email, u'财经微头条，你获取财经资讯的最佳选择', utils.render_email_template('email/ad/weitoutiao_email.html', context), 'html')
         except Exception, e:
             print e
 
