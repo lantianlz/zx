@@ -29,6 +29,7 @@ def add_article(request):
     from_url = request.REQUEST.get('from_url', '')
     img = request.REQUEST.get('img')
     is_silence = request.REQUEST.get('is_silence')
+    is_silence = True if is_silence == "1" else False
     sort_num = request.REQUEST.get('sort_num')
 
     code, msg = ArticleBase().add_article(title, content, article_type, weixin_mp_id, from_url, img, sort_num, is_silence)
@@ -108,6 +109,7 @@ def modify_article(request):
     from_url = request.REQUEST.get('from_url', '')
     img = request.REQUEST.get('img')
     is_silence = request.REQUEST.get('is_silence')
+    is_silence = True if is_silence == "1" else False
     sort_num = request.REQUEST.get('sort_num')
     state = request.REQUEST.get('state')
     state = True if state == "1" else False
