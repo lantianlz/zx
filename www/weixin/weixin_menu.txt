@@ -1,6 +1,11 @@
 {
     "button": [
         {
+            "type": "view", 
+            "name": "财经头条", 
+            "url": "http://www.zhixuan.com/toutiao/"
+        }, 
+        {
             "type": "click", 
             "name": "最新干货", 
             "key": "hotest"
@@ -16,7 +21,7 @@
                 {
                     "type": "view", 
                     "name": "最新问答", 
-                    "url": "http://www.zhixuan.com/question"
+                    "url": "http://www.zhixuan.com/question/"
                 }
             ]
         }
