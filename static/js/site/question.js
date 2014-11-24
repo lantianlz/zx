@@ -26,10 +26,6 @@ $(document).ready(function(){
         questionEditor = createEditor('#question_editor'),
         editAnswerEditor = createEditor('#edit_answer_editor');
 
-    // 我要提问 IE 链接不过去问题，强制js跳转
-    $('.ask-question button').bind('click', function(){
-        window.location.href = '/question/ask_question';
-    });
     // 按钮点击事件 IE直接点还不行,非要js
     $('.not-login .btn-login').bind('click', function(){
         window.location.href = '/login';
