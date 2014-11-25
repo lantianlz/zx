@@ -509,6 +509,20 @@ class UserBase(object):
         return Profile.objects.filter(nick__icontains=nick)[:200]
 
 
+    def get_user_for_admin(self, user_nick="", order='id', email=""):
+        objs = None
+
+        if user_nick:
+            objs = self.get_user_by_nick(user_nick)
+            objs = [objs] if objs else []
+        elif email:
+            objs = self.get_user_by_email(email)
+            objs = [objs] if objs else []
+        else:
+            objs = UserCountBase().get_all_users_by_order_count(order)
+
+        return objs
+
 class InvitationBase(object):
 
     def format_invitation_user(self, invitation_users):
