@@ -26,23 +26,12 @@ def search(request):
     user_nick = request.REQUEST.get('user_nick')
     page_index = int(request.REQUEST.get('page_index', 1))
     order = request.REQUEST.get('order', 'register_date')
+    email = request.REQUEST.get('email')
 
-    data = []
     users = []
     ub = UserBase()
 
-    # 精确匹配
-    if user_nick:
-        users = ub.get_user_by_nick(user_nick)
-        users = [users] if users else []
-    else:
-        # 默认排序
-        if order == "register_date":
-            users = ub.get_all_users()
-        # 根据各种数量排序
-        else:
-            users = UserCountBase().get_all_users_by_order_count(order)
-
+    users = ub.get_user_for_admin(user_nick, order if order!="register_date" else "id", email)
     page_objs = page.Cpt(users, count=10, page=page_index).info
 
     # 格式化

@@ -63,18 +63,19 @@ $(document).ready(function(){
             'registerDate': 'register_date'
         },
 
-        search: function(userNick, order, pageIndex){
+        search: function(userNick, order, email, pageIndex){
             var me = this;
 
             ajaxSend(
                 "/admin/user/user/search", 
-                {'user_nick': userNick||'', 'order': order, 'page_index': pageIndex||1}, 
+                {'user_nick': userNick||'', 'order': order, 'email': email, 'page_index': pageIndex||1}, 
                 function(data){
                     
                     me.pageIndex = pageIndex;
                     me.pageCount = data.page_count;
                     me.userNick = userNick||'';
                     me.order = order||'register_date';
+                    me.email = email||'';
 
                     me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
                 }
@@ -151,7 +152,7 @@ $(document).ready(function(){
             this.pagination.render(
                 this.collection.pageIndex||1, 
                 this.collection.pageCount, 
-                'search/' + this.collection.userNick + '/' + this.collection.order
+                'search/' + this.collection.userNick + '/' + this.collection.order + '/' + this.collection.email
             );
         },
 
@@ -162,9 +163,10 @@ $(document).ready(function(){
 
         searchUser: function(){
             var userNick = this.$('.key-word').val(),
-                order = this.$('.order').val();
+                order = this.$('.order').val(),
+                email = this.$('.email').val();
 
-            router.navigate(String.format('/search/{0}/{1}/1', userNick, order), {trigger: true});
+            router.navigate(String.format('/search/{0}/{1}/{2}/1', userNick, order, email), {trigger: true});
         },
 
         modifyUser: function(sender){
@@ -291,13 +293,13 @@ $(document).ready(function(){
     var Router = Backbone.Router.extend({
         routes: {
             "":                                     "search",
-            "search/(:userNick)/:order/:pageIndex": "search",
+            "search/(:userNick)/:order/(:email)/:pageIndex": "search",
             "modify/:userId":                        "modify"
         },
 
         // 获取推荐用户
-        search: function(userNick, order, pageIndex){
-            users.search(userNick||'', order||'register_date', pageIndex||1);
+        search: function(userNick, order, email, pageIndex){
+            users.search(userNick||'', order||'register_date', email||'', pageIndex||1);
         },
 
         modify: function(userId){
@@ -339,6 +341,9 @@ $(document).ready(function(){
                     <option value="user_liked_count">按 获赞个数 排序</option>
                     <option value="follower_count">按 粉丝个数 排序</option>
                 </select>
+            </div>
+            <div class="pl-0 pb-10 col-md-2">
+                <input type="text" class="form-control email input-sm" placeholder="输入用户邮箱..." />
             </div>
             <div class="pl-0 pb-10 col-md-3">
                 <div class="input-group input-group-sm">
