@@ -188,7 +188,7 @@ class WexinBase(object):
 
     def get_weixin_access_token(self, app_key):
         # 本地调试模式不走缓存
-        if settings.LOCAL_FLAG:
+        if not settings.LOCAL_FLAG:
             key = 'weixin_access_token_for_%s' % app_key
             access_token = self.cache.get(key)
             if access_token is None:

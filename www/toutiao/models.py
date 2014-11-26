@@ -71,3 +71,6 @@ class BanKey(models.Model):
     @note：抓取禁止关键词维护
     """
     key = models.CharField(max_length=16, unique=True)
+
+    class Meta:
+        ordering = ["-id", ]
