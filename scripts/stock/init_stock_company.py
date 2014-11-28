@@ -58,8 +58,8 @@ def get_shanghai_company():
             else:
                 belong_board = 4
 
-            print uid, href, name.encode("utf8"), img, code
-            if not Stock.objects.filter(name=name):
+            # print uid, href, name.encode("utf8"), img, code
+            if not (Stock.objects.filter(name=name) or Stock.objects.filter(origin_uid=uid)):
                 Stock.objects.create(name=name, origin_uid=uid, img=img, code=code, belong_board=belong_board, belong_market=0)
 
 
@@ -82,7 +82,7 @@ def get_shenzhen_company():
         href = company[3]
         img = company[2] if "gif" in company[2] else ""
 
-        if not Stock.objects.filter(name=name):
+        if not (Stock.objects.filter(name=name) or Stock.objects.filter(origin_uid=uid)):
             # print name, img, href
             if code.startswith("000") or code.startswith("001"):
                 belong_board = 0
@@ -100,8 +100,8 @@ def get_shenzhen_company():
                 belong_board = 4
                 e += 1
             Stock.objects.create(name=name, origin_uid=uid, img=img, code=code, belong_board=belong_board, belong_market=1)
-        else:
-            print (u"exist a company: %s, name:%s" % (code, name)).encode("utf8")
+        # else:
+        #     print (u"exist a company: %s, name:%s" % (code, name)).encode("utf8")
         i += 1
     print i, a, b, c, d, e
 
