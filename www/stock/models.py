@@ -60,3 +60,23 @@ class StockFollow(models.Model):
     class Meta:
         unique_together = ("user_id", "stock")
         ordering = ['-id']
+
+
+class StockData(models.Model):
+    stock = models.ForeignKey("Stock")
+    date = models.DateField(db_index=True)
+    open_price = models.FloatField()
+    close_price = models.FloatField()
+    low_price = models.FloatField()
+    high_price = models.FloatField()
+    volume = models.FloatField(db_index=True)  # 成交数量
+    turnover = models.FloatField(db_index=True)  # 成交金额
+    turnover_rate_to_all = models.FloatField(db_index=True, default=0)  # 占总交易额的百分比
+    turnover_change_pre_day = models.FloatField(db_index=True, default=0)  # 相对于前一天的变化的百分比
+
+    class Meta:
+        unique_together = ("stock", "date")
+        ordering = ['-date', '-id']
+
+    def __unicode__(self):
+        return "%s:%s" % (self.id, self.date)
