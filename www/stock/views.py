@@ -100,7 +100,8 @@ def my_stocks(request, template_name='stock/my_stocks.html'):
     stocks = [sf.stock for sf in stock_follows]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-
+def chart(request, template_name='chart/chart.html'):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 # ===================================================ajax部分=================================================================#
 
 @member_required

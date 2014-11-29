@@ -1,0 +1,25 @@
+{% extends "base/base_home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block home_css %}
+{% block css %}{% endblock %}
+{% endblock %}
+
+{% block home_js%}
+<script type="text/javascript" src="{{MEDIA_URL}}js/echarts/echarts.js"></script>
+<script type="text/javascript">
+require.config({
+    paths: {
+        echarts: '{{MEDIA_URL}}js/echarts'
+    }
+});
+</script>
+{% block javascript %}{% endblock %}
+{% endblock %}
+
+{% block container_content %}
+<div class="col-md-12 row">
+    {% block chart_main%}{% endblock %}
+</div>
+{% endblock container_content %}

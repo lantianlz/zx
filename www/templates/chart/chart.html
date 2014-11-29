@@ -1,0 +1,122 @@
+{% extends "chart/base_chart.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block title %}走势图{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+var echarts,
+	myChart,
+	option = {
+		title: {
+			text: '今日成交额环比top 30'
+		},
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+	    legend: {
+	        data:['成交额比率']
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {show: true, type: ['line', 'bar']},
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+		calculable : false,
+		xAxis : [{
+	        type : 'value',
+	        splitArea : {show : true}
+	    }],
+	    yAxis : [{
+	    	type : 'category',
+	        data : [
+	        	'盾安环境1', '盾安环境', '盾安环境', '盾安环境', '盾安环境', '盾安环境',
+	        	'盾安环境', '盾安环境2', '盾安环境', '盾安环境', '盾安环境', '盾安环境',
+	        	'盾安环境', '盾安环境', '盾安环境3', '盾安环境', '盾安环境', '盾安环境',
+	        	'盾安环境', '盾安环境', '盾安环境', '盾安环境4', '盾安环境', '盾安环境',
+	        	'盾安环境', '盾安环境', '盾安环境', '盾安环境', '盾安环境5', '盾安环境'
+	        ]
+	        
+	    }],
+	    color: ['#428bca', '#428bca'],
+	    series : [{
+	        name:'成交额比率',
+	        type:'bar',
+	        data: (function(){
+	        	var d = [];
+
+	        	_.map(_.range(0, 30), function(){
+	        		d.push(Math.round(Math.random() * 10000) / 100)
+	        	})
+
+	        	return d.sort(function(a, b){ return b-a});
+	        })()
+	    }]
+	};
+
+require(
+	[
+		"echarts", 
+		"echarts/chart/line", 
+		"echarts/chart/bar"
+	],
+	function(ec){
+		echarts = ec;
+		myChart = echarts.init(document.getElementById('main'));
+		myChart.setOption(option);
+	}
+);
+
+$(document).ready(function(){
+
+});
+
+</script>
+{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.progress{
+	background-color: transparent;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	margin-bottom: 5px;
+}
+</style>
+{% endblock %}
+
+{% block chart_main%}
+<div class="col-md-12 pb-10">
+	<h3 class="text-center">今日成交额环比top 30</h3>
+</div>
+
+<ul class="list-group col-md-10">
+	<li class="list-group-item pr no-l-r-bd">
+		<img class="pa avatar-55 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600521.png" alt="华海药业">
+		<div class="pl-65">
+			<div class="pt-5">盾安环境(002011)</div>
+			<div class="progress mt-5">
+				<div class="progress-bar" style="width: 87%;">87%</div>
+			</div>
+		</div>
+	</li>
+
+	<li class="list-group-item pr no-l-r-bd">
+		<img class="pa avatar-55 avatar-square" src="http://rs.sns.sseinfo.com/resources/images/avatar/company/600521.png" alt="华海药业">
+		<div class="pl-65">
+			<div class="pt-5">盾安环境(002011)</div>
+			<div class="progress mt-5">
+				<div class="progress-bar" style="width: 87%;">87%</div>
+			</div>
+		</div>
+	</li>
+</ul>
+
+
+{% endblock %}
