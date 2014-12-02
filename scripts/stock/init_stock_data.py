@@ -56,9 +56,13 @@ def init_stock_data():
             turnover = float(turnover.replace(",", "")) * 10000
 
             # print date, open_price, high_price, low_price, close_price, volume, turnover
+            if date < datetime.datetime.strptime("2014-11-01", "%Y-%m-%d"):
+                continue
             if not StockData.objects.filter(stock=stock, date=date):
                 StockData.objects.create(stock=stock, date=date, open_price=open_price, high_price=high_price,
                                          low_price=low_price, close_price=close_price, volume=volume, turnover=turnover)
+            else:
+                break
 
         if i % 100 == 0:
             print "%s:%s ok" % (datetime.datetime.now(), i)
@@ -66,12 +70,47 @@ def init_stock_data():
     print 'ok'
 
 
-def update_stock_data():
-    for stock_data in StockData.objects.select_related("stock").all():
-        stock_data_pre = StockData.objects.filter(stock=stock_data.stock, date__lt=stock_data.date)[:1]
-        print stock_data_pre
-        break
+def get_stock_total_by_day():
+    from django.db.models import Sum
+    from common.raw_sql import exec_sql
+
+    dates = exec_sql("select distinct(date) from stock_stockdata")
+    dates = [d[0] for d in dates]
+    stock_total = {}
+    for d in dates:
+        stock_total[d] = StockData.objects.filter(date=d).aggregate(Sum('turnover'))['turnover__sum']
+
+    return stock_total
+
+
+def update_stock_turnover_rate_to_all():
+    dict_stock_total = get_stock_total_by_day()
+    for i, stock_data in enumerate(StockData.objects.select_related("stock").all()):
+        stock_data_pres = StockData.objects.filter(stock=stock_data.stock, date__lt=stock_data.date)[:1]
+        if stock_data_pres:
+            if dict_stock_total.get(stock_data.date):
+                stock_data.turnover_rate_to_all = stock_data.turnover / dict_stock_total.get(stock_data.date)
+                stock_data.save()
+        if i % 1000 == 0:
+            print "%s:%s ok" % (datetime.datetime.now(), i)
+        # break
+
+
+def update_stock_turnover_change():
+    for i, stock_data in enumerate(StockData.objects.select_related("stock").all()):
+        stock_data_pres = StockData.objects.filter(stock=stock_data.stock, date__lt=stock_data.date)[:1]
+        if stock_data_pres:
+            stock_data_pre = stock_data_pres[0]
+
+            turnover_change_pre_day = (stock_data.turnover - stock_data_pre.turnover) / stock_data_pre.turnover * 100
+            stock_data.turnover_change_pre_day = turnover_change_pre_day
+
+            stock_data.save()
+        if i % 1000 == 0:
+            print "%s:%s ok" % (datetime.datetime.now(), i)
+        # break
 
 if __name__ == '__main__':
     # init_stock_data()
-    update_stock_data()
+    update_stock_turnover_rate_to_all()
+    update_stock_turnover_change()

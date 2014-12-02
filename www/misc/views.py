@@ -34,7 +34,7 @@ def txt_view(request, txt_file_name):
     file_name = os.path.abspath(os.path.join(settings.SITE_ROOT, '../static_local/%s.txt' % txt_file_name))
     if not os.path.exists(file_name):
         raise Http404
-    return HttpResponse(open(file_name))
+    return HttpResponse(open(file_name), mimetype='text/plain')
 
 
 def sitemap(request):

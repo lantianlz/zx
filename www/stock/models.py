@@ -69,9 +69,10 @@ class StockData(models.Model):
     close_price = models.FloatField()
     low_price = models.FloatField()
     high_price = models.FloatField()
-    volume = models.FloatField(db_index=True)  # 成交数量
+    volume = models.FloatField(db_index=True)  # 成交手数量
     turnover = models.FloatField(db_index=True)  # 成交金额
     turnover_rate_to_all = models.FloatField(db_index=True, default=0)  # 占总交易额的百分比
+    turnover_rate_to_all_change_per_day = models.FloatField(db_index=True, default=0)  # 占总比的变化
     turnover_change_pre_day = models.FloatField(db_index=True, default=0)  # 相对于前一天的变化的百分比
 
     class Meta:
