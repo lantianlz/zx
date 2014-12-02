@@ -202,7 +202,7 @@ def kaihu_ad(context):
     from common import utils
 
     city_abbr = utils.get_sub_domain_from_http_host(context['request'].META.get('HTTP_HOST', ''))
-    dict_ads = {"mz": ["ad_mz.jpg", "8655809", u"梅州"], }
+    dict_ads = {"mz": ["ad_mz.jpg", "8655809", u"梅州"], "my": ["ad_my.jpg", "1919994989", u"绵阳"],}
     default = ["ad_common.jpg", "403897485", u"通用"]
     ad_img = dict_ads.get(city_abbr, default)
 
