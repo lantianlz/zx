@@ -16,5 +16,7 @@ urlpatterns = patterns('www.stock.views',
                        url(r'^unfollow/(?P<stock_id>\d+)$', 'unfollow_stock'),
                        url(r'^get_stock_info_by_id$', 'get_stock_info_by_id'),
 
-                       url(r'^chart$', 'chart'),
+                       url(r'^chart_stock$', 'chart_stock'),
+                       url(r'^chart_industry$', 'chart_industry'),
+                       url(r'^chart_industry/(?P<industry_id>\d+)$', 'chart_industry_detail'),
                        )

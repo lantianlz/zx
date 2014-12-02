@@ -7,8 +7,24 @@
 
 {% block title %}{{stock.name}}最新消息,{{stock.name}}({{stock.code}})公告新闻汇总{% endblock title %}
 
+{% block css %}
+<style type="text/css">
+.active>span{
+    color: #222;
+}
+</style>
+{% endblock %}
+
 {% block javascript %}
+<script type="text/javascript" src="{{MEDIA_URL}}js/echarts/echarts.js"></script>
 <script type="text/javascript">
+
+require.config({
+    paths: {
+        echarts: '{{MEDIA_URL}}js/echarts'
+    }
+});
+
 $(document).ready(function(){
     $('.follow-stock').bind('click', function(){
         var stockId = $(this).data("stock_id");
@@ -27,34 +43,229 @@ $(document).ready(function(){
             $('.follow-stock').show();
         });
     });
+
+    $('.stock-chart-a').bind('click', function(){
+        $('.stock-info-a').removeClass('active');
+        $('.stock-info').hide();
+
+        $('.stock-chart-a').removeClass('active').addClass('active');
+        $('.stock-chart').show();
+    });
+
+    $('.stock-info-a').bind('click', function(){
+        $('.stock-chart-a').removeClass('active');
+        $('.stock-chart').hide();
+
+        $('.stock-info-a').removeClass('active').addClass('active');
+        $('.stock-info').show();
+    });
 });
+
+
+var echarts,
+    
+    // 今日个股成交额环比
+    renderChain = function(){
+        var chainChart = echarts.init(document.getElementById('chain'));
+
+        chainChart.setOption({
+            title: {
+                text: '历史成交额环比'
+            },
+            tooltip : {
+                trigger: 'axis',
+                formatter: '<b>{b}</b><br/>{a}: {c} %'
+            },
+            legend: {
+                data:['成交额环比'],
+                orient: 'horizontal',
+                x: 'right',
+                padding: [5, 40, 0, 0]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            dataZoom : {
+                show : true,
+                realtime : true,
+                start : 87.5,
+                end : 100
+            },
+            calculable : false,
+            xAxis : [{
+                type : 'category',
+                boundaryGap : false,
+                data : (function(){
+                    var d = [];
+
+                    _.map(_.range(0, 240), function(i){
+                        d.push('11-' + (i+1));
+                    });
+
+                    return d;
+                })(),
+                splitArea : {show : false}
+            }],
+            yAxis : [{
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value} %'
+                }
+            }],
+            color: ['#428bca', '#428bca'],
+            series : [{
+                name:'成交额环比',
+                type:'line',
+                data: (function(){
+                    var d = [];
+
+                    _.map(_.range(0, 240), function(){
+                        d.push(Math.round(Math.random() * 10000) / 100);
+                    });
+
+                    return d;
+                })()
+            }]
+        });
+    },
+    renderChainInTotal = function(){
+        var chainInTotalChart = echarts.init(document.getElementById('chain_in_total'));
+
+        chainInTotalChart.setOption({
+            title: {
+                text: '历史成交额占沪深总成交额环比'
+            },
+            tooltip : {
+                trigger: 'axis',
+                formatter: '<b>{b}</b><br/>{a}: {c} %'
+            },
+            legend: {
+                data:['成交额环比'],
+                orient: 'horizontal',
+                x: 'right',
+                padding: [5, 40, 0, 0]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            dataZoom : {
+                show : true,
+                realtime : true,
+                start : 87.5,
+                end : 100
+            },
+            calculable : false,
+            xAxis : [{
+                type : 'category',
+                boundaryGap : false,
+                data : (function(){
+                    var d = [];
+
+                    _.map(_.range(0, 240), function(i){
+                        d.push('11-' + (i+1));
+                    });
+
+                    return d;
+                })(),
+                splitArea : {show : false}
+            }],
+            yAxis : [{
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value} %'
+                }
+            }],
+            color: ['#428bca', '#428bca'],
+            series : [{
+                name:'成交额环比',
+                type:'line',
+                data: (function(){
+                    var d = [];
+
+                    _.map(_.range(0, 240), function(){
+                        d.push(Math.round(Math.random() * 10000) / 100);
+                    });
+
+                    return d;
+                })()
+            }]
+        });
+    };
+
+require(
+    [
+        "echarts", 
+        "echarts/chart/line", 
+        "echarts/chart/bar"
+    ],
+    function(ec){
+        echarts = ec;
+        renderChain();
+        renderChainInTotal();
+    }
+);
 </script>
 {% endblock %}
 
 {% block stock_main %}
 <div class="bottom-border bdc-bbb pl-10 mb-10 mt-5">
     <img class="pa avatar-65 avatar-square" title="{{stock.name}}" alt="{{stock.name}}" src="{{stock.img}}">
-    <div class="pl-80 pb-10 pt-5">
+    <div class="pl-80 pb-5 pt-5">
         <h4>{{stock.name}}({{stock.code}})</h4>
-        <div class="co8 f12">
-            {{stock.feed_count}} 条动态<span class="pl-5 pr-5">•</span>{{stock.following_count}} 人关注
-            
-            <button class="btn btn-xs btn-primary pull-right mr-10 follow-stock {% if is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">添加关注</button>
-            <button class="btn btn-xs btn-default pull-right mr-10 unfollow-stock {% if not is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">取消关注</button>
+        <div class="co8 f12 row">
+            <div class="col-md-6">
+                {{stock.feed_count}} 条动态<span class="pl-5 pr-5">•</span>{{stock.following_count}} 人关注
+                
+                <button class="btn btn-xs btn-primary ml-10 follow-stock {% if is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">添加关注</button>
+                <button class="btn btn-xs btn-default ml-10 unfollow-stock {% if not is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">取消关注</button>
+            </div>
+            <div class="col-md-6 text-right">
+                <a href="javascript:void(0)" class="active stock-chart-a"><span class="f14 fb">个股图表</span></a>
+                <span class="co8 pl-5 pr-5">|</span>
+                <a href="javascript:void(0)" class="stock-info-a"><span class="f14 fb">个股资讯</span></a>
+            </div>
         </div>
     </div>
 </div>
 
-<ul class="list-group">
-    {% for stock_feed in stock_feeds %}
-    <li class="list-group-item no-l-r-bd bdc-eee">
-        <div><a href="{{stock_feed.get_url}}" class="f14 black-blue fb">{{stock_feed.question_content|safe}}</a></div>
-        <div class="f13 pt-15 line-height-22">{{stock_feed.answer_content|safe}}</div>
-        <div class="pt-5 text-right"><span class="co8 f12">{{stock_feed.create_time}}</span></div>
-    </li>
-    {% endfor %}
-</ul>
-{{page_params|paging:request}}
+<!--图表-->
+<div class="stock-chart">
+    <ul class="list-inline col-md-10 col-xs-12 pt-20 pb-20 pl-0 none">
+        <li>
+            <a class="active border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">20交易日</a>
+        </li>
+        <li>
+            <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">60交易日</a>
+        </li>
+        <li>
+            <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">120交易日</a>
+        </li>
+        <li>
+            <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">250交易日</a>
+        </li>
+    </ul>
+    <div class="min-h400 mt-15" id="chain"></div>
+    <div class="min-h400 mt-15 pt-30" id="chain_in_total"></div>
+</div>
+<!--资讯-->
+<div class="stock-info none">
+    <ul class="list-group">
+        {% for stock_feed in stock_feeds %}
+        <li class="list-group-item no-l-r-bd bdc-eee">
+            <div><a href="{{stock_feed.get_url}}" class="f14 black-blue fb">{{stock_feed.question_content|safe}}</a></div>
+            <div class="f13 pt-15 line-height-22">{{stock_feed.answer_content|safe}}</div>
+            <div class="pt-5 text-right"><span class="co8 f12">{{stock_feed.create_time}}</span></div>
+        </li>
+        {% endfor %}
+    </ul>
+    {{page_params|paging:request}}
+</div>
 {% endblock stock_main %}
 
 {% block stock_right %}
