@@ -8,7 +8,7 @@ from common import debug, utils
 from www.misc import consts
 from www.misc.decorators import cache_required
 from www.account.interface import UserBase
-from www.stock.models import Stock, StockFeed, StockFollow
+from www.stock.models import Stock, StockFeed, StockFollow, StockData
 
 ub = UserBase()
 
@@ -284,3 +284,7 @@ class StockFollowBase(object):
 
     def get_followers_by_stock_id(self, stock_id):
         return StockFollow.objects.select_related("stock").filter(stock=stock_id, stock__state=True)
+
+
+class StockDataBase(object):
+    pass

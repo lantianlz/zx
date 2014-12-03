@@ -1,5 +1,4 @@
 User-agent: *
-Allow: /
 Disallow: /p/*
 Disallow: /message/*
 Disallow: /account/*
@@ -9,4 +8,10 @@ Disallow: /static/*
 Disallow: /500
 Disallow: /search
 Disallow: /logout
+Disallow: *password*
+Disallow: *set*
+Disallow: *cancel*
+Disallow: *remove*
+Disallow: *create*
+Allow: /
 Sitemap: <http://www.zhixuan.com/sitemap.xml>

@@ -102,8 +102,13 @@ def update_stock_turnover_change():
         if stock_data_pres:
             stock_data_pre = stock_data_pres[0]
 
-            turnover_change_pre_day = (stock_data.turnover - stock_data_pre.turnover) / stock_data_pre.turnover * 100
-            stock_data.turnover_change_pre_day = turnover_change_pre_day
+            if stock_data_pre.turnover > 0 and stock_data.turnover > 0:
+                turnover_change_pre_day = (stock_data.turnover - stock_data_pre.turnover) / stock_data_pre.turnover * 100
+                stock_data.turnover_change_pre_day = turnover_change_pre_day
+
+            if stock_data_pre.turnover_rate_to_all > 0 and stock_data.turnover_rate_to_all > 0:
+                turnover_rate_to_all_change_per_day = (stock_data.turnover_rate_to_all - stock_data_pre.turnover_rate_to_all) / stock_data_pre.turnover_rate_to_all * 100
+                stock_data.turnover_rate_to_all_change_per_day = turnover_rate_to_all_change_per_day
 
             stock_data.save()
         if i % 1000 == 0:
@@ -111,6 +116,6 @@ def update_stock_turnover_change():
         # break
 
 if __name__ == '__main__':
-    # init_stock_data()
+    init_stock_data()
     update_stock_turnover_rate_to_all()
     update_stock_turnover_change()
