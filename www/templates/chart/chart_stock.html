@@ -22,8 +22,19 @@ var echarts,
 			title: {
 				text: date + '日个股成交额环比增长率前10'
 			},
+			grid: {
+                x2: 50
+            },
 		    tooltip : {
 		        trigger: 'axis',
+		        axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
 		        formatter: '<b>{b}</b><br/>{a}: {c} %<br/>点击查看该股历史成交额环比'
 		    },
 		    legend: {
@@ -41,7 +52,7 @@ var echarts,
 			calculable : false,
 			xAxis : [{
 		        type : 'value',
-		        splitArea : {show : false}
+		        splitLine: {show : true}
 		    }],
 		    yAxis : [{
 		    	type : 'category',
@@ -50,6 +61,7 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
+		        splitLine: {show : false},
 		        data : xData
 		    }],
 		    color: ['#428bca', '#428bca'],
@@ -78,8 +90,19 @@ var echarts,
 			title: {
 				text: date+'日个股成交额占沪深总成交额环比增长率前10'
 			},
+			grid: {
+                x2: 50
+            },
 		    tooltip : {
 		        trigger: 'axis',
+		        axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
 		        formatter: '<b>{b}</b><br/>{a}: {c} %<br/>点击查看该股历史成交额环比'
 		    },
 		    legend: {
@@ -97,7 +120,7 @@ var echarts,
 			calculable : false,
 			xAxis : [{
 		        type : 'value',
-		        splitArea : {show : false}
+		        splitLine: {show : true}
 		    }],
 		    yAxis : [{
 		    	type : 'category',
@@ -106,8 +129,8 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
+		    	splitLine: {show : false},
 		        data: xData
-		        
 		    }],
 		    color: ['#428bca', '#428bca'],
 		    series : [{

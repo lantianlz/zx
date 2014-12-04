@@ -22,8 +22,19 @@ var echarts,
 			title: {
 				text: '今日行业成交额环比增长率前10'
 			},
+			grid: {
+                x2: 50
+            },
 		    tooltip : {
 		        trigger: 'axis',
+		        axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
 		        formatter: function(params){
 		        	return String.format(
 		        		'<b>{1}</b><br/>{0}: {2} %<br/>点击查看该股历史成交额环比', 
@@ -47,8 +58,7 @@ var echarts,
 		    },
 			calculable : false,
 			xAxis : [{
-		        type : 'value',
-		        splitArea : {show : false}
+		        type : 'value'
 		    }],
 		    yAxis : [{
 		    	type : 'category',
@@ -57,6 +67,7 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
+		    	splitLine : {show : false},
 		        data : [
 		        	'计算机(1)', '采掘(2)', '机械设备(3)', '纺织服装(4)', 
 		        	'房地产(5)', '电子(6)', '钢铁(7)', '传媒(8)', 
@@ -98,8 +109,19 @@ var echarts,
 			title: {
 				text: '今日行业成交额占沪深总成交额环比增长率前10'
 			},
+			grid: {
+                x2: 50
+            },
 		    tooltip : {
 		        trigger: 'axis',
+		        axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
 		        formatter: '<b>{b}</b><br/>{a}: {c} %<br/>点击查看该股历史成交额环比'
 		    },
 		    legend: {
@@ -117,7 +139,7 @@ var echarts,
 			calculable : false,
 			xAxis : [{
 		        type : 'value',
-		        splitArea : {show : false}
+		        splitLine : {show : true}
 		    }],
 		    yAxis : [{
 		    	type : 'category',
@@ -126,6 +148,7 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
+		    	splitLine : {show : false},
 		        data : [
 		        	'计算机(1)', '采掘(2)', '机械设备(3)', '纺织服装(4)', 
 		        	'房地产(5)', '电子(6)', '钢铁(7)', '传媒(8)', 

@@ -13,6 +13,18 @@ var echarts,
 		var stockCode = param.name.split('(')[1].split(')')[0];
 		window.open('/stock/' + stockCode, '_blank');
 	},
+
+	calculatePercent = function(length){
+        if(length <= 30){
+            return 0;
+        } else if(30 <= length && length <= 60){
+            return 50;
+        } else if(60 <= length && length <= 120){
+            return 75;
+        } else if(120 <= length && length <= 240){
+            return 87.5;
+        }
+    },
 	
 	// 今日个股成交额环比
 	renderLineChain = function(){
@@ -22,12 +34,23 @@ var echarts,
             title: {
                 text: '计算机行业历史成交额环比'
             },
+            grid: {
+                x2: 50
+            },
             tooltip : {
                 trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
                 formatter: '<b>{b}</b><br/>{a}: {c} %'
             },
             legend: {
-                data:['成交额环比'],
+                data:['成交额环比', '成交额占总额环比'],
                 orient: 'horizontal',
                 x: 'right',
                 padding: [5, 40, 0, 0]
@@ -57,7 +80,7 @@ var echarts,
 
                     return d;
                 })(),
-                splitArea : {show : false}
+                splitLine: {show: false},
             }],
             yAxis : [{
                 type : 'value',
@@ -65,9 +88,21 @@ var echarts,
                     formatter: '{value} %'
                 }
             }],
-            color: ['#428bca', '#428bca'],
+            color: ['#428bca', '#E02C41'],
             series : [{
                 name:'成交额环比',
+                type:'line',
+                data: (function(){
+                    var d = [];
+
+                    _.map(_.range(0, 240), function(){
+                        d.push(Math.round(Math.random() * 10000) / 100);
+                    });
+
+                    return d;
+                })()
+            }, {
+                name:'成交额占总额环比',
                 type:'line',
                 data: (function(){
                     var d = [];
@@ -81,72 +116,6 @@ var echarts,
             }]
         });
 
-	},
-	renderLineChainInTotal = function(){
-		var chainInTotalChart = echarts.init(document.getElementById('line_chain_in_total'));
-
-		chainInTotalChart.setOption({
-            title: {
-                text: '计算机行业历史成交额占沪深总成交额环比'
-            },
-            tooltip : {
-                trigger: 'axis',
-                formatter: '<b>{b}</b><br/>{a}: {c} %'
-            },
-            legend: {
-                data:['成交额环比'],
-                orient: 'horizontal',
-                x: 'right',
-                padding: [5, 40, 0, 0]
-            },
-            toolbox: {
-                show : true,
-                feature : {
-                    saveAsImage : {show: true}
-                }
-            },
-            dataZoom : {
-                show : true,
-                realtime : true,
-                start : 87.5,
-                end : 100
-            },
-            calculable : false,
-            xAxis : [{
-                type : 'category',
-                boundaryGap : false,
-                data : (function(){
-                    var d = [];
-
-                    _.map(_.range(0, 240), function(i){
-                        d.push('11-' + (i+1));
-                    });
-
-                    return d;
-                })(),
-                splitArea : {show : false}
-            }],
-            yAxis : [{
-                type : 'value',
-                axisLabel : {
-                    formatter: '{value} %'
-                }
-            }],
-            color: ['#428bca', '#428bca'],
-            series : [{
-                name:'成交额环比',
-                type:'line',
-                data: (function(){
-                    var d = [];
-
-                    _.map(_.range(0, 240), function(){
-                        d.push(Math.round(Math.random() * 10000) / 100);
-                    });
-
-                    return d;
-                })()
-            }]
-        });
 	},
 
 	renderBarChain = function(){
@@ -156,8 +125,19 @@ var echarts,
 			title: {
 				text: '今日计算机行业内个股成交额环比增长率前10'
 			},
-		    tooltip : {
-		        trigger: 'axis',
+		    grid: {
+                x2: 50
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
 		        formatter: '<b>{b}</b><br/>{a}: {c} %<br/>点击查看该股历史成交额环比'
 		    },
 		    legend: {
@@ -175,7 +155,7 @@ var echarts,
 			calculable : false,
 			xAxis : [{
 		        type : 'value',
-		        splitArea : {show : false}
+		        splitLine: {show: true}
 		    }],
 		    yAxis : [{
 		    	type : 'category',
@@ -184,6 +164,7 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
+		    	splitLine: {show : false},
 		        data : [
 		        	'盾安环境(000413)', '招商银行(600110)', '工商银行(600056)', '三一重工(600880)', 
 		        	'得利股份(600750)', '台基股份(600166)', '建设银行(600200)', '江中药业(600501)', 
@@ -225,8 +206,19 @@ var echarts,
 			title: {
 				text: '今日计算机行业内个股成交额占沪深总成交额环比增长率前10'
 			},
-		    tooltip : {
-		        trigger: 'axis',
+		    grid: {
+                x2: 50
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
 		        formatter: '<b>{b}</b><br/>{a}: {c} %<br/>点击查看该股历史成交额环比'
 		    },
 		    legend: {
@@ -244,7 +236,7 @@ var echarts,
 			calculable : false,
 			xAxis : [{
 		        type : 'value',
-		        splitArea : {show : false}
+		        splitLine : {show : true}
 		    }],
 		    yAxis : [{
 		    	type : 'category',
@@ -253,6 +245,7 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
+		    	splitLine : {show : false},
 		        data : [
 		        	'盾安环境(000413)', '招商银行(600110)', '工商银行(600056)', '三一重工(600880)', 
 		        	'得利股份(600750)', '台基股份(600166)', '建设银行(600200)', '江中药业(600501)', 
@@ -297,7 +290,6 @@ require(
 	function(ec){
 		echarts = ec;
 		renderLineChain();
-		renderLineChainInTotal();
 		renderBarChain();
 		renderBarChainInTotal();
 	}
@@ -370,9 +362,6 @@ $(document).ready(function(){
 	</li>
 </ul>
 <div class="col-md-10 min-h400 col-xs-12 pt-10" id="line_chain">
-</div>
-
-<div class="col-md-10 min-h400 col-xs-12 pt-30" id="line_chain_in_total">
 </div>
 
 <div class="col-md-10 min-h400 col-xs-12 pt-30" id="bar_chain">

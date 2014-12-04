@@ -84,8 +84,19 @@ var echarts,
             title: {
                 text: '历史成交额环比'
             },
+            grid: {
+                x2: 5
+            },
             tooltip : {
                 trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
                 formatter: '<b>{b}</b><br/>{a}: {c} %'
             },
             legend: {
@@ -111,7 +122,7 @@ var echarts,
                 type : 'category',
                 boundaryGap : false,
                 data: xData,
-                splitArea : {show : false}
+                splitLine: {show: false},
             }],
             yAxis: [{
                 type: 'value',
