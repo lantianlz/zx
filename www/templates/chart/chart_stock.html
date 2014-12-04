@@ -15,12 +15,12 @@ var echarts,
 	},
 	
 	// 今日个股成交额环比
-	renderChain = function(){
+	renderChain = function(date, xData, yData){
 		var chainChart = echarts.init(document.getElementById('chain'));
-
+		
 		chainChart.setOption({
 			title: {
-				text: '今日个股成交额环比增长率前10'
+				text: date + '日个股成交额环比增长率前10'
 			},
 		    tooltip : {
 		        trigger: 'axis',
@@ -50,12 +50,7 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
-		        data : [
-		        	'盾安环境(000413)', '招商银行(600110)', '工商银行(600056)', '三一重工(600880)', 
-		        	'得利股份(600750)', '台基股份(600166)', '建设银行(600200)', '江中药业(600501)', 
-		        	'华润双鹤(600503)', '天龙光电(600804)'
-		        ]
-		        
+		        data : xData
 		    }],
 		    color: ['#428bca', '#428bca'],
 		    series : [{
@@ -70,26 +65,18 @@ var echarts,
 		        		}
 		        	}
 		        },
-		        data: (function(){
-		        	var d = [];
-
-		        	_.map(_.range(0, 10), function(){
-		        		d.push(Math.round(Math.random() * 10000) / 100)
-		        	})
-
-		        	return d.sort(function(a, b){ return a-b});
-		        })()
+		        data: yData
 		    }]
 		});
 
 		chainChart.on(ecConfig.EVENT.CLICK, clickFun);
 	},
-	renderChainInTotal = function(){
+	renderChainInTotal = function(date, xData, yData){
 		var chainInTotalChart = echarts.init(document.getElementById('chain_in_total'));
 
 		chainInTotalChart.setOption({
 			title: {
-				text: '今日个股成交额占沪深总成交额环比增长率前10'
+				text: date+'日个股成交额占沪深总成交额环比增长率前10'
 			},
 		    tooltip : {
 		        trigger: 'axis',
@@ -119,11 +106,7 @@ var echarts,
 		    			return v.split('(')[0]
 		    		}
 		    	},
-		        data : [
-		        	'盾安环境(000413)', '招商银行(600110)', '工商银行(600056)', '三一重工(600880)', 
-		        	'得利股份(600750)', '台基股份(600166)', '建设银行(600200)', '江中药业(600501)', 
-		        	'华润双鹤(600503)', '天龙光电(600804)'
-		        ]
+		        data: xData
 		        
 		    }],
 		    color: ['#428bca', '#428bca'],
@@ -139,19 +122,45 @@ var echarts,
 		        		}
 		        	}
 		        },
-		        data: (function(){
-		        	var d = [];
-
-		        	_.map(_.range(0, 10), function(){
-		        		d.push(Math.round(Math.random() * 10000) / 100)
-		        	})
-
-		        	return d.sort(function(a, b){ return a-b});
-		        })()
+		        data: yData
 		    }]
 		});
 
 		chainInTotalChart.on(ecConfig.EVENT.CLICK, clickFun);
+	},
+	getStockChainData = function(date){
+
+		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
+
+		ajaxSend(
+            "/stock/get_stock_chain_data", 
+            {'date': date}, 
+            function(response){
+            	if(response.x_data.length <= 0){
+            		$.ZXNotice.InfoTopNotice('没有可用的数据');
+            		return;
+            	}
+
+            	renderChain(date, response.x_data, response.y_data);
+            }
+        );
+	},
+	getStockChainInTotalData = function(date){
+
+		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
+
+		ajaxSend(
+            "/stock/get_stock_chain_in_total_data", 
+            {'date': date}, 
+            function(response){
+            	if(response.x_data.length <= 0){
+            		$.ZXNotice.InfoTopNotice('没有可用的数据');
+            		return;
+            	}
+
+            	renderChainInTotal(date, response.x_data, response.y_data);
+            }
+        );
 	};
 
 require(
@@ -162,13 +171,26 @@ require(
 	],
 	function(ec){
 		echarts = ec;
-		renderChain();
-		renderChainInTotal();
+		
+		getStockChainData($('#search_date').val());
+		getStockChainInTotalData($('#search_date').val());
 	}
 );
 ecConfig = require('echarts/config');
 
 $(document).ready(function(){
+	$('#search_date').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: 'zh-CN',
+        minView: 2,
+        autoclose: true,
+        daysOfWeekDisabled: [0, 6]
+    });
+
+	$('#search_date').bind('change', function(){
+		getStockChainData($('#search_date').val());
+		getStockChainInTotalData($('#search_date').val());
+	});
 
 });
 
@@ -189,26 +211,40 @@ $(document).ready(function(){
 		<a href="/stock/chart_industry"><span class="f15 fb">行业数据</span></a>
 	</div>
 </div>
-<ul class="list-inline col-md-10 col-xs-12 pt-20 pb-10">
-	<li>
-		<a class="active border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">全部</a>
-	</li>
-	<li>
-		<a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">0-50亿市值</a>
-	</li>
-	<li>
-		<a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">50-100亿市值</a>
-	</li>
-	<li>
-		<a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">100-200亿市值</a>
-	</li>
-	<li>
-		<a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">200-300亿市值</a>
-	</li>
-	<li>
-		<a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">300亿市值以上</a>
-	</li>
-</ul>
+
+<div class="form-group col-md-10">
+	<label for="search_date" class="col-md-1 control-label pt-10 pl-0 pr-0">市值划分</label>
+	<div class="col-md-11 pl-0 pr-0">
+		<ul class="list-inline col-md-12 col-xs-12 pt-10 pb-10">
+			<li>
+				<a class="active border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">全部</a>
+			</li>
+			<li>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">0-50亿市值</a>
+			</li>
+			<li>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">50-100亿市值</a>
+			</li>
+			<li>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">100-200亿市值</a>
+			</li>
+			<li>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">200-300亿市值</a>
+			</li>
+			<li>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">300亿市值以上</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="form-group col-md-10 bottom-border bdc-eee pb-15">
+	<label for="search_date" class="col-md-1 control-label pt-5 pl-0 pr-0">选择日期</label>
+	<div class="col-md-2">
+		<input type="text" readonly class="form-control input-sm" id="search_date" placeholder="输入日期" value="{{today}}">
+	</div>
+	<div class="col-md-1 loading"></div>
+</div>
+
 <div class="col-md-10 min-h400 col-xs-12 pt-10" id="chain">
 </div>
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json
+import json, datetime
 
 from django.http import Http404, HttpResponse
 from django.template import RequestContext
@@ -101,6 +101,7 @@ def my_stocks(request, template_name='stock/my_stocks.html'):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 def chart_stock(request, template_name='chart/chart_stock.html'):
+    today = str(datetime.datetime.now())[:10]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 def chart_industry(request, template_name='chart/chart_industry.html'):
@@ -144,3 +145,71 @@ def get_stock_info_by_id(request):
                 "is_following": sfollowb.check_is_follow(stock_id, request.user.id)
             }
     return HttpResponse(json.dumps(infos), mimetype='application/json')
+
+
+def get_stock_chain_data(request):
+    date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
+
+    x_data = []
+    y_data = []
+
+    for x in interface.StockDataBase().get_stock_chain_data(date):
+        x_data.append('%s(%s)' % (x.stock.name, x.stock.code))
+        y_data.append(round(x.turnover_change_pre_day, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_stock_chain_in_total_data(request):
+    date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
+
+    x_data = []
+    y_data = []
+
+    for x in interface.StockDataBase().get_stock_chain_in_total_data(date):
+        x_data.append('%s(%s)' % (x.stock.name, x.stock.code))
+        y_data.append(round(x.turnover_rate_to_all_change_per_day, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_stock_history_chain_data(request):
+
+    stock_id = request.REQUEST.get('stock_id')
+
+    x_data = []
+    y_data = []
+    y_data2 = []
+
+    for x in interface.StockDataBase().get_stock_history_chain_data(stock_id):
+        x_data.append(str(x.date)[:10])
+        y_data.append(round(x.turnover_change_pre_day, 2))
+        y_data2.append(round(x.turnover_rate_to_all_change_per_day, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+    y_data2.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data,
+        'y_data2': y_data2,
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')

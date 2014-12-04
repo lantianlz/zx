@@ -64,8 +64,20 @@ $(document).ready(function(){
 
 var echarts,
     
+    calculatePercent = function(length){
+        if(length <= 30){
+            return 0;
+        } else if(30 <= length && length <= 60){
+            return 50;
+        } else if(60 <= length && length <= 120){
+            return 75;
+        } else if(120 <= length && length <= 240){
+            return 87.5;
+        }
+    },
+
     // 今日个股成交额环比
-    renderChain = function(){
+    renderChain = function(xData, yData, yData2){
         var chainChart = echarts.init(document.getElementById('chain'));
 
         chainChart.setOption({
@@ -77,7 +89,7 @@ var echarts,
                 formatter: '<b>{b}</b><br/>{a}: {c} %'
             },
             legend: {
-                data:['成交额环比'],
+                data:['成交额环比', '成交额占总额环比'],
                 orient: 'horizontal',
                 x: 'right',
                 padding: [5, 40, 0, 0]
@@ -91,111 +103,49 @@ var echarts,
             dataZoom : {
                 show : true,
                 realtime : true,
-                start : 87.5,
+                start : calculatePercent(xData.length),
                 end : 100
             },
             calculable : false,
-            xAxis : [{
+            xAxis: [{
                 type : 'category',
                 boundaryGap : false,
-                data : (function(){
-                    var d = [];
-
-                    _.map(_.range(0, 240), function(i){
-                        d.push('11-' + (i+1));
-                    });
-
-                    return d;
-                })(),
+                data: xData,
                 splitArea : {show : false}
             }],
-            yAxis : [{
-                type : 'value',
-                axisLabel : {
+            yAxis: [{
+                type: 'value',
+                axisLabel: {
                     formatter: '{value} %'
                 }
             }],
-            color: ['#428bca', '#428bca'],
+            color: ['#428bca', '#E02C41'],
             series : [{
                 name:'成交额环比',
                 type:'line',
-                data: (function(){
-                    var d = [];
-
-                    _.map(_.range(0, 240), function(){
-                        d.push(Math.round(Math.random() * 10000) / 100);
-                    });
-
-                    return d;
-                })()
+                data: yData
+            }, {
+                name:'成交额占总额环比',
+                type:'line',
+                data: yData2
             }]
         });
     },
-    renderChainInTotal = function(){
-        var chainInTotalChart = echarts.init(document.getElementById('chain_in_total'));
+    
+    getStockHistoryChainData = function(){
 
-        chainInTotalChart.setOption({
-            title: {
-                text: '历史成交额占沪深总成交额环比'
-            },
-            tooltip : {
-                trigger: 'axis',
-                formatter: '<b>{b}</b><br/>{a}: {c} %'
-            },
-            legend: {
-                data:['成交额环比'],
-                orient: 'horizontal',
-                x: 'right',
-                padding: [5, 40, 0, 0]
-            },
-            toolbox: {
-                show : true,
-                feature : {
-                    saveAsImage : {show: true}
+        ajaxSend(
+            "/stock/get_stock_history_chain_data", 
+            {'stock_id': {{stock.id}} }, 
+            function(response){
+                if(response.x_data.length <= 0){
+                    $.ZXNotice.InfoTopNotice('没有可用的数据');
+                    return;
                 }
-            },
-            dataZoom : {
-                show : true,
-                realtime : true,
-                start : 87.5,
-                end : 100
-            },
-            calculable : false,
-            xAxis : [{
-                type : 'category',
-                boundaryGap : false,
-                data : (function(){
-                    var d = [];
 
-                    _.map(_.range(0, 240), function(i){
-                        d.push('11-' + (i+1));
-                    });
-
-                    return d;
-                })(),
-                splitArea : {show : false}
-            }],
-            yAxis : [{
-                type : 'value',
-                axisLabel : {
-                    formatter: '{value} %'
-                }
-            }],
-            color: ['#428bca', '#428bca'],
-            series : [{
-                name:'成交额环比',
-                type:'line',
-                data: (function(){
-                    var d = [];
-
-                    _.map(_.range(0, 240), function(){
-                        d.push(Math.round(Math.random() * 10000) / 100);
-                    });
-
-                    return d;
-                })()
-            }]
-        });
+                renderChain(response.x_data, response.y_data, response.y_data2);
+            }
+        );
     };
 
 require(
@@ -206,8 +156,7 @@ require(
     ],
     function(ec){
         echarts = ec;
-        renderChain();
-        renderChainInTotal();
+        getStockHistoryChainData();
     }
 );
 </script>
@@ -219,42 +168,33 @@ require(
     <div class="pl-80 pb-5 pt-5">
         <h4>{{stock.name}}({{stock.code}})</h4>
         <div class="co8 f12 row">
-            <div class="col-md-6">
+            <div class="{% if request.user and request.user.is_custom_manager %} col-md-6 {% else %} col-md-12 {% endif %} ">
                 {{stock.feed_count}} 条动态<span class="pl-5 pr-5">•</span>{{stock.following_count}} 人关注
                 
-                <button class="btn btn-xs btn-primary ml-10 follow-stock {% if is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">添加关注</button>
-                <button class="btn btn-xs btn-default ml-10 unfollow-stock {% if not is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">取消关注</button>
+                <span class="{% if request.user and request.user.is_custom_manager %} a {% else %} pull-right {% endif %}">
+
+                    <button class="btn btn-xs btn-primary ml-10 follow-stock {% if is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">添加关注</button>
+                    <button class="btn btn-xs btn-default ml-10 unfollow-stock {% if not is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">取消关注</button>
+
+                </span>
             </div>
+            {% if request.user and request.user.is_custom_manager %} 
             <div class="col-md-6 text-right">
                 <a href="javascript:void(0)" class="active stock-chart-a"><span class="f14 fb">个股图表</span></a>
                 <span class="co8 pl-5 pr-5">|</span>
                 <a href="javascript:void(0)" class="stock-info-a"><span class="f14 fb">个股资讯</span></a>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
 <!--图表-->
-<div class="stock-chart">
-    <ul class="list-inline col-md-10 col-xs-12 pt-20 pb-20 pl-0 none">
-        <li>
-            <a class="active border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">20交易日</a>
-        </li>
-        <li>
-            <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">60交易日</a>
-        </li>
-        <li>
-            <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">120交易日</a>
-        </li>
-        <li>
-            <a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/topics">250交易日</a>
-        </li>
-    </ul>
+<div class="stock-chart {% if not request.user or not request.user.is_custom_manager %} none {% endif %}">
     <div class="min-h400 mt-15" id="chain"></div>
-    <div class="min-h400 mt-15 pt-30" id="chain_in_total"></div>
 </div>
 <!--资讯-->
-<div class="stock-info none">
+<div class="stock-info {% if request.user and request.user.is_custom_manager %} none {% endif %}">
     <ul class="list-group">
         {% for stock_feed in stock_feeds %}
         <li class="list-group-item no-l-r-bd bdc-eee">

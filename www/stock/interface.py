@@ -287,4 +287,21 @@ class StockFollowBase(object):
 
 
 class StockDataBase(object):
-    pass
+    
+    def get_stock_chain_data(self, date, page_count=10):
+        """
+        获取个股成交额环比增长率
+        """
+        objs = StockData.objects.select_related('stock').filter(date=date).order_by('-turnover_change_pre_day')
+        return objs[:page_count]
+
+    def get_stock_chain_in_total_data(self, date, page_count=10):
+        """
+        获取个股成交额占沪深总成交额环比增长率
+        """
+        objs = StockData.objects.select_related('stock').filter(date=date).order_by('-turnover_rate_to_all_change_per_day')
+        return objs[:page_count]
+
+    def get_stock_history_chain_data(self, stock_id, page_count=240):
+        objs = StockData.objects.filter(stock_id=stock_id).order_by('-date')
+        return objs[:page_count]

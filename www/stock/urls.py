@@ -19,4 +19,11 @@ urlpatterns = patterns('www.stock.views',
                        url(r'^chart_stock$', 'chart_stock'),
                        url(r'^chart_industry$', 'chart_industry'),
                        url(r'^chart_industry/(?P<industry_id>\d+)$', 'chart_industry_detail'),
+
+                       # 个股前十
+                       url(r'^get_stock_chain_data$', 'get_stock_chain_data'),
+                       url(r'^get_stock_chain_in_total_data$', 'get_stock_chain_in_total_data'),
+
+                       # 个股历史
+                       url(r'^get_stock_history_chain_data$', 'get_stock_history_chain_data'),
                        )
