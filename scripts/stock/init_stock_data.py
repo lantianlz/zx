@@ -115,6 +115,7 @@ def update_stock_turnover_change():
             print "%s:%s ok" % (datetime.datetime.now(), i)
         # break
 
+
 if __name__ == '__main__':
     init_stock_data()
     update_stock_turnover_rate_to_all()

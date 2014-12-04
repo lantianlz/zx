@@ -113,7 +113,30 @@ def update_stock_turnover_change_today():
         # break
 
 
+def update_stock_market_value():
+
+    for i, stock_data in enumerate(StockData.objects.select_related("stock").filter(date=now_date)):
+        stock = stock_data.stock
+        url = "http://xueqiu.com/S/%s%s" % (["SH", "SZ"][stock.belong_market], stock.code)
+        resp = requests.get(url, timeout=30, headers=headers)
+        text = resp.text
+
+        jq = pq(text)
+        try:
+            data = jq('.seperateBottom td:eq(1) span')
+            market_value = float(data.html().replace(u"亿", ""))
+            stock_data.market_value = market_value
+            stock_data.save()
+        except Exception, e:
+            print e
+            print url
+
+        if i % 100 == 0:
+            print "%s:%s ok" % (datetime.datetime.now(), i)
+
+
 if __name__ == '__main__':
     sync_stock_data()
     update_stock_turnover_rate_to_all_today()
     update_stock_turnover_change_today()
+    update_stock_market_value()

@@ -32,7 +32,7 @@ def update_stock_des():
     total = 0
     for stock in Stock.objects.filter(des=None).order_by("code"):
         url = "http://xueqiu.com/S/%s%s" % (["SH", "SZ"][stock.belong_market], stock.code)
-        resp = requests.get(url)
+        resp = requests.get(url, timeout=30)
         text = resp.text
 
         jq = pq(text)
