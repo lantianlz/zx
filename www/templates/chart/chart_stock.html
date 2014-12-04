@@ -13,6 +13,10 @@ var echarts,
 		var stockCode = param.name.split('(')[1].split(')')[0];
 		window.open('/stock/' + stockCode, '_blank');
 	},
+
+	getMarketValue = function(){
+		return $('.markets a').filter('.active').data('market');
+	},
 	
 	// 今日个股成交额环比
 	renderChain = function(date, xData, yData){
@@ -151,13 +155,14 @@ var echarts,
 
 		chainInTotalChart.on(ecConfig.EVENT.CLICK, clickFun);
 	},
-	getStockChainData = function(date){
+	getStockChainData = function(){
 
 		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
-
+		var date = $('#search_date').val();
+		
 		ajaxSend(
             "/stock/get_stock_chain_data", 
-            {'date': date}, 
+            {'date': date, 'market_value': getMarketValue()}, 
             function(response){
             	if(response.x_data.length <= 0){
             		$.ZXNotice.InfoTopNotice('没有可用的数据');
@@ -171,10 +176,11 @@ var echarts,
 	getStockChainInTotalData = function(date){
 
 		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
+		var date = $('#search_date').val();
 
 		ajaxSend(
             "/stock/get_stock_chain_in_total_data", 
-            {'date': date}, 
+            {'date': date, 'market_value': getMarketValue()}, 
             function(response){
             	if(response.x_data.length <= 0){
             		$.ZXNotice.InfoTopNotice('没有可用的数据');
@@ -195,8 +201,8 @@ require(
 	function(ec){
 		echarts = ec;
 		
-		getStockChainData($('#search_date').val());
-		getStockChainInTotalData($('#search_date').val());
+		getStockChainData();
+		getStockChainInTotalData();
 	}
 );
 ecConfig = require('echarts/config');
@@ -210,9 +216,19 @@ $(document).ready(function(){
         daysOfWeekDisabled: [0, 6]
     });
 
+	// 时间过滤
 	$('#search_date').bind('change', function(){
-		getStockChainData($('#search_date').val());
-		getStockChainInTotalData($('#search_date').val());
+		getStockChainData();
+		getStockChainInTotalData();
+	});
+
+	// 市值过滤
+	$('.markets a').bind('click', function(){
+		$('.markets a').removeClass('active');
+		$(this).addClass('active');
+
+		getStockChainData();
+		getStockChainInTotalData();
 	});
 
 });
@@ -238,24 +254,24 @@ $(document).ready(function(){
 <div class="form-group col-md-10">
 	<label for="search_date" class="col-md-1 control-label pt-10 pl-0 pr-0">市值划分</label>
 	<div class="col-md-11 pl-0 pr-0">
-		<ul class="list-inline col-md-12 col-xs-12 pt-10 pb-10">
+		<ul class="list-inline col-md-12 col-xs-12 pt-10 pb-10 markets">
 			<li>
-				<a class="active border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">全部</a>
+				<a class="active border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="0" href="#">全部</a>
 			</li>
 			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">0-50亿市值</a>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="1" href="#">0-50亿市值</a>
 			</li>
 			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">50-100亿市值</a>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="2" href="#">50-100亿市值</a>
 			</li>
 			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">100-200亿市值</a>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="3" href="#">100-200亿市值</a>
 			</li>
 			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">200-300亿市值</a>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="4" href="#">200-300亿市值</a>
 			</li>
 			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" href="#">300亿市值以上</a>
+				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="5" href="#">300亿市值以上</a>
 			</li>
 		</ul>
 	</div>

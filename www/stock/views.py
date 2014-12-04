@@ -149,11 +149,21 @@ def get_stock_info_by_id(request):
 
 def get_stock_chain_data(request):
     date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
+    
+    market_value = request.REQUEST.get('market_value', '1')
+    market_value_dict = {
+        '0': [0, 999999],
+        '1': [0, 50],
+        '2': [50, 100],
+        '3': [100, 200],
+        '4': [200, 300],
+        '5': [300, 999999]
+    }
 
     x_data = []
     y_data = []
 
-    for x in interface.StockDataBase().get_stock_chain_data(date):
+    for x in interface.StockDataBase().get_stock_chain_data(date, market_value_dict[market_value]):
         x_data.append('%s(%s)' % (x.stock.name, x.stock.code))
         y_data.append(round(x.turnover_change_pre_day, 2))
     
@@ -171,10 +181,20 @@ def get_stock_chain_data(request):
 def get_stock_chain_in_total_data(request):
     date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
 
+    market_value = request.REQUEST.get('market_value', '1')
+    market_value_dict = {
+        '0': [0, 999999],
+        '1': [0, 50],
+        '2': [50, 100],
+        '3': [100, 200],
+        '4': [200, 300],
+        '5': [300, 999999]
+    }
+
     x_data = []
     y_data = []
 
-    for x in interface.StockDataBase().get_stock_chain_in_total_data(date):
+    for x in interface.StockDataBase().get_stock_chain_in_total_data(date, market_value_dict[market_value]):
         x_data.append('%s(%s)' % (x.stock.name, x.stock.code))
         y_data.append(round(x.turnover_rate_to_all_change_per_day, 2))
     

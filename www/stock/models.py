@@ -65,7 +65,7 @@ class StockFollow(models.Model):
 class StockData(models.Model):
     stock = models.ForeignKey("Stock")
     date = models.DateField(db_index=True)
-    market_value = models.FloatField()
+    market_value = models.FloatField(default=0)
     open_price = models.FloatField()
     close_price = models.FloatField()
     low_price = models.FloatField()
