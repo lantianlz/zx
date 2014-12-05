@@ -22,8 +22,10 @@ urlpatterns = patterns('www.stock.views',
 
                        # 个股前十
                        url(r'^get_stock_chain_data$', 'get_stock_chain_data'),
-                       url(r'^get_stock_chain_in_total_data$', 'get_stock_chain_in_total_data'),
+                       url(r'^get_stock_percent_in_total_data$', 'get_stock_percent_in_total_data'),
 
                        # 个股历史
                        url(r'^get_stock_history_chain_data$', 'get_stock_history_chain_data'),
+                       url(r'^get_stock_history_percent_in_total_data$', 'get_stock_history_percent_in_total_data'),
+                       
                        )

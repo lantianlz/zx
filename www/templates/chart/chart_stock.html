@@ -24,7 +24,7 @@ var echarts,
 		
 		chainChart.setOption({
 			title: {
-				text: date + '日个股成交额环比增长率前10'
+				text: date + '日个股成交额环比增长率'
 			},
 			grid: {
                 x2: 50
@@ -87,12 +87,12 @@ var echarts,
 
 		chainChart.on(ecConfig.EVENT.CLICK, clickFun);
 	},
-	renderChainInTotal = function(date, xData, yData){
-		var chainInTotalChart = echarts.init(document.getElementById('chain_in_total'));
+	renderPercentInTotal = function(date, xData, yData){
+		var percentInTotalChart = echarts.init(document.getElementById('percent_in_total'));
 
-		chainInTotalChart.setOption({
+		percentInTotalChart.setOption({
 			title: {
-				text: date+'日个股成交额占沪深总成交额环比增长率前10'
+				text: date+'日个股成交额占沪深总成交额比率'
 			},
 			grid: {
                 x2: 50
@@ -107,10 +107,10 @@ var echarts,
                       type: 'solid'
                     }
                 },
-		        formatter: '<b>{b}</b><br/>{a}: {c} %<br/>点击查看该股历史成交额环比'
+		        formatter: '<b>{b}</b><br/>{a}: {c} ‱<br/>点击查看该股历史成交额占比'
 		    },
 		    legend: {
-		        data:['成交额环比增长率'],
+		        data:['成交额比率'],
 		        orient: 'horizontal',
 				x: 'right',
 				padding: [5, 40, 0, 0]
@@ -138,14 +138,14 @@ var echarts,
 		    }],
 		    color: ['#428bca', '#428bca'],
 		    series : [{
-		        name:'成交额环比增长率',
+		        name:'成交额比率',
 		        type:'bar',
 		        itemStyle: {
 		        	normal: {
 		        		label: {
 		        			show: true,	// 每行数值
 		        			position: 'right',
-		        			formatter: "{c} %"
+		        			formatter: "{c} ‱"
 		        		}
 		        	}
 		        },
@@ -153,13 +153,13 @@ var echarts,
 		    }]
 		});
 
-		chainInTotalChart.on(ecConfig.EVENT.CLICK, clickFun);
+		percentInTotalChart.on(ecConfig.EVENT.CLICK, clickFun);
 	},
 	getStockChainData = function(){
 
 		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
 		var date = $('#search_date').val();
-		
+
 		ajaxSend(
             "/stock/get_stock_chain_data", 
             {'date': date, 'market_value': getMarketValue()}, 
@@ -173,13 +173,13 @@ var echarts,
             }
         );
 	},
-	getStockChainInTotalData = function(date){
+	getStockPercentInTotalData = function(date){
 
 		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
 		var date = $('#search_date').val();
 
 		ajaxSend(
-            "/stock/get_stock_chain_in_total_data", 
+            "/stock/get_stock_percent_in_total_data", 
             {'date': date, 'market_value': getMarketValue()}, 
             function(response){
             	if(response.x_data.length <= 0){
@@ -187,7 +187,7 @@ var echarts,
             		return;
             	}
 
-            	renderChainInTotal(date, response.x_data, response.y_data);
+            	renderPercentInTotal(date, response.x_data, response.y_data);
             }
         );
 	};
@@ -202,7 +202,7 @@ require(
 		echarts = ec;
 		
 		getStockChainData();
-		getStockChainInTotalData();
+		getStockPercentInTotalData();
 	}
 );
 ecConfig = require('echarts/config');
@@ -219,7 +219,7 @@ $(document).ready(function(){
 	// 时间过滤
 	$('#search_date').bind('change', function(){
 		getStockChainData();
-		getStockChainInTotalData();
+		getStockPercentInTotalData();
 	});
 
 	// 市值过滤
@@ -228,7 +228,7 @@ $(document).ready(function(){
 		$(this).addClass('active');
 
 		getStockChainData();
-		getStockChainInTotalData();
+		getStockPercentInTotalData();
 	});
 
 });
@@ -284,10 +284,10 @@ $(document).ready(function(){
 	<div class="col-md-1 loading"></div>
 </div>
 
-<div class="col-md-10 min-h400 col-xs-12 pt-10" id="chain">
+<div class="col-md-10 min-h1500 col-xs-12 pt-10" id="chain">
 </div>
 
-<div class="col-md-10 min-h400 col-xs-12 pt-10" id="chain_in_total">
+<div class="col-md-10 min-h1500 col-xs-12 pt-10" id="percent_in_total">
 </div>
 
 {% endblock %}

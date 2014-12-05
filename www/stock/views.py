@@ -178,7 +178,7 @@ def get_stock_chain_data(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-def get_stock_chain_in_total_data(request):
+def get_stock_percent_in_total_data(request):
     date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
 
     market_value = request.REQUEST.get('market_value', '1')
@@ -194,9 +194,9 @@ def get_stock_chain_in_total_data(request):
     x_data = []
     y_data = []
 
-    for x in interface.StockDataBase().get_stock_chain_in_total_data(date, market_value_dict[market_value]):
+    for x in interface.StockDataBase().get_stock_percent_in_total_data(date, market_value_dict[market_value]):
         x_data.append('%s(%s)' % (x.stock.name, x.stock.code))
-        y_data.append(round(x.turnover_rate_to_all_change_per_day, 2))
+        y_data.append(round(x.turnover_rate_to_all*100, 2))
     
     x_data.reverse()
     y_data.reverse()
@@ -215,21 +215,39 @@ def get_stock_history_chain_data(request):
 
     x_data = []
     y_data = []
-    y_data2 = []
 
     for x in interface.StockDataBase().get_stock_history_chain_data(stock_id):
         x_data.append(str(x.date)[:10])
         y_data.append(round(x.turnover_change_pre_day, 2))
-        y_data2.append(round(x.turnover_rate_to_all_change_per_day, 2))
     
     x_data.reverse()
     y_data.reverse()
-    y_data2.reverse()
 
     data = {
         'x_data': x_data,
-        'y_data': y_data,
-        'y_data2': y_data2,
+        'y_data': y_data
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_stock_history_percent_in_total_data(request):
+
+    stock_id = request.REQUEST.get('stock_id')
+
+    x_data = []
+    y_data = []
+
+    for x in interface.StockDataBase().get_stock_history_chain_data(stock_id):
+        x_data.append(str(x.date)[:10])
+        y_data.append(round(x.turnover_rate_to_all*100, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data
     }
 
     return HttpResponse(json.dumps(data), mimetype='application/json')
