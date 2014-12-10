@@ -23,6 +23,7 @@ dict_err = {
     50106: u'城市拼音简写重复',
     50107: u'已经是客户经理，无法重复申请',
     50108: u'从业资格证编号已经存在',
+    50109: u'营业部名称重复',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -303,6 +304,10 @@ class DepartmentBase(object):
     def add_department(self, company_id, name, des, addr, tel, city_id, district_id, sort_num=0):
         if None in (company_id, name):
             return 99800, dict_err.get(99800)
+
+        if len(self.get_departments_by_name(name)) > 0:
+            return 50109, dict_err.get(50109)
+
         import time
         try:
             obj = Department.objects.create(
