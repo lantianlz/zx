@@ -49,7 +49,7 @@ def sync_stock_data():
         volume = datas[8]
         turnover = datas[9]
 
-        if date < datetime.datetime.now().date() or turnover < 100:
+        if date < datetime.datetime.now().date() or float(turnover) < 100:
             continue
         # print date, open_price, high_price, low_price, close_price, volume, turnover
         sds = list(StockData.objects.filter(stock=stock, date=date))

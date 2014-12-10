@@ -51,7 +51,7 @@ class WexinBase(object):
         </xml>
         '''
 
-    def get_base_base_news_response(self, items=None):
+    def get_base_news_response(self, items=None):
         '''
         @note: 图文信息模板
         '''
@@ -107,7 +107,7 @@ class WexinBase(object):
             items += (self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
                                                                 hrefurl='%s%s' % (settings.MAIN_DOMAIN, question.get_url())))
 
-        base_xml = self.get_base_base_news_response(items)
+        base_xml = self.get_base_news_response(items)
         return base_xml % dict(to_user=from_user, from_user=to_user, timestamp=int(time.time()), articles_count=4)
 
     def format_input_xml(self, xml):
@@ -151,7 +151,7 @@ class WexinBase(object):
                 items = self.get_base_news_item_response() % dict(title=question.iq_title.replace('%', '%%'), des='', picurl=question.img,
                                                                   hrefurl='%s%s' % (settings.MAIN_DOMAIN, question.get_url()))
 
-                return self.get_base_base_news_response(items) % dict(to_user=from_user, from_user=to_user, timestamp=int(time.time()), articles_count=1)
+                return self.get_base_news_response(items) % dict(to_user=from_user, from_user=to_user, timestamp=int(time.time()), articles_count=1)
 
         # 文字识别
         msg_types = jq('msgtype')

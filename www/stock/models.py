@@ -82,3 +82,38 @@ class StockData(models.Model):
 
     def __unicode__(self):
         return "%s:%s" % (self.id, self.date)
+
+
+class Kind(models.Model):
+
+    """
+    @note: 行业分类
+    """
+    group_choices = ((0, u"行业"), (1, u"概念"))
+
+    name = models.CharField(max_length=64, unique=True)
+    group = models.IntegerField(db_index=True, default=0, choices=group_choices)
+    sort_num = models.IntegerField(default=0, db_index=True)
+    state = models.BooleanField(default=True, db_index=True)
+
+
+class StockKind(models.Model):
+
+    """
+    @note: 股票对应的行业
+    """
+    stock = models.ForeignKey("Stock")
+    kind = models.ForeignKey("Kind")
+
+
+class KindData(models.Model):
+    kind = models.ForeignKey("Kind")
+    date = models.DateField(db_index=True)
+    turnover = models.FloatField(db_index=True)  # 成交金额
+    turnover_rate_to_all = models.FloatField(db_index=True, default=0)  # 占总交易额的百分比
+    turnover_rate_to_all_change_per_day = models.FloatField(db_index=True, default=0)  # 占总比的变化
+    turnover_change_pre_day = models.FloatField(db_index=True, default=0)  # 相对于前一天的变化的百分比
+
+    class Meta:
+        unique_together = ("kind", "date")
+        ordering = ['-date', '-id']
