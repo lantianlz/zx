@@ -1,0 +1,344 @@
+{% extends "chart/base_chart.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block title %}计算机行业数据{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+var echarts,
+    ecConfig,
+
+    clickFun = function(param){
+        var stockCode = param.name.split('(')[1].split(')')[0];
+        window.open('/stock/' + stockCode, '_blank');
+    },
+
+    calculatePercent = function(length){
+        if(length <= 30){
+            return 0;
+        } else if(30 <= length && length <= 60){
+            return 50;
+        } else if(60 <= length && length <= 120){
+            return 75;
+        } else if(120 <= length && length <= 240){
+            return 87.5;
+        }
+    },
+    
+    // 今日个股成交额环比
+    renderLineChain = function(xData, yData, yData2){
+        var chainChart = echarts.init(document.getElementById('line_chain'));
+
+        chainChart.setOption({
+            title: {
+                text: '{{kind.name}}行业历史成交额环比'
+            },
+            grid: {
+                x2: 50
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
+                formatter: '<b>{b}</b><br/>{a}: {c} %'
+            },
+            legend: {
+                data:['成交额环比', '成交额占总额环比'],
+                orient: 'horizontal',
+                x: 'right',
+                padding: [5, 40, 0, 0]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            dataZoom : {
+                show : true,
+                realtime : true,
+                start : 87.5,
+                end : 100
+            },
+            calculable : false,
+            xAxis : [{
+                type: 'category',
+                boundaryGap: false,
+                data: xData,
+                splitLine: {show: false},
+            }],
+            yAxis : [{
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value} %'
+                }
+            }],
+            color: ['#428bca', '#E02C41'],
+            series : [{
+                name:'成交额环比',
+                type:'line',
+                smooth: true,
+                data: yData
+            }, {
+                name:'成交额占总额环比',
+                type:'line',
+                smooth: true,
+                data: yData2
+            }]
+        });
+
+    },
+
+    renderBarChain = function(xData, yData){
+        var chainChart = echarts.init(document.getElementById('bar_chain'));
+
+        chainChart.setOption({
+            title: {
+                text: '今日{{kind.name}}行业内个股成交额环比增长率前10'
+            },
+            grid: {
+                x2: 50
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
+                formatter: '<b>{b}</b><br/>{a}: {c} %<br/>点击查看该股历史成交额环比'
+            },
+            legend: {
+                data:['成交额环比增长率'],
+                orient: 'horizontal',
+                x: 'right',
+                padding: [5, 40, 0, 0]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : false,
+            xAxis : [{
+                type : 'value',
+                splitLine: {show: true}
+            }],
+            yAxis : [{
+                type : 'category',
+                axisLabel: {
+                    formatter: function(v){
+                        return v.split('(')[0]
+                    }
+                },
+                splitLine: {show : false},
+                data: xData
+                
+            }],
+            color: ['#428bca', '#428bca'],
+            series : [{
+                name:'成交额环比增长率',
+                type:'bar',
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true, // 每行数值
+                            position: 'right',
+                            formatter: "{c} %"
+                        }
+                    }
+                },
+                data: yData
+            }]
+        });
+
+        chainChart.on(ecConfig.EVENT.CLICK, clickFun);
+    },
+    renderBarPercentInTotal = function(xData, yData){
+        var percentInTotalChart = echarts.init(document.getElementById('bar_percent_in_total'));
+
+        percentInTotalChart.setOption({
+            title: {
+                text: '今日{{kind.name}}行业内个股成交额占沪深总成交额比率前10'
+            },
+            grid: {
+                x2: 50
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
+                formatter: '<b>{b}</b><br/>{a}: {c} ‱<br/>点击查看该股历史成交额环比'
+            },
+            legend: {
+                data:['成交额比率'],
+                orient: 'horizontal',
+                x: 'right',
+                padding: [5, 40, 0, 0]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : false,
+            xAxis : [{
+                type : 'value',
+                splitLine : {show : true}
+            }],
+            yAxis : [{
+                type : 'category',
+                axisLabel: {
+                    formatter: function(v){
+                        return v.split('(')[0]
+                    }
+                },
+                splitLine : {show : false},
+                data: xData
+                
+            }],
+            color: ['#428bca', '#428bca'],
+            series : [{
+                name:'成交额比率',
+                type:'bar',
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true, // 每行数值
+                            position: 'right',
+                            formatter: "{c} ‱"
+                        }
+                    }
+                },
+                data: yData
+            }]
+        });
+
+        percentInTotalChart.on(ecConfig.EVENT.CLICK, clickFun);
+    },
+
+    getLineChainData = function(){
+
+        ajaxSend(
+            "/stock/get_kind_history_chain_data", 
+            {kind_id: {{kind.id}} }, 
+            function(response){
+                if(response.x_data.length <= 0){
+                    $.ZXNotice.InfoTopNotice('没有可用的数据');
+                    return;
+                }
+
+                renderLineChain(response.x_data, response.y_data, response.y_data2);
+            }
+        );
+    },
+
+    getBarChainData = function(){
+        
+        ajaxSend(
+            "/stock/get_stock_chain_data_of_kind", 
+            {kind_id: {{kind.id}} }, 
+            function(response){
+                if(response.x_data.length <= 0){
+                    $.ZXNotice.InfoTopNotice('没有可用的数据');
+                    return;
+                }
+
+                renderBarChain(response.x_data, response.y_data);
+            }
+        );
+    },
+
+    getBarPercentInTotalData = function(){
+        
+        ajaxSend(
+            "/stock/get_stock_percent_in_total_data_of_kind", 
+            {kind_id: {{kind.id}} }, 
+            function(response){
+                if(response.x_data.length <= 0){
+                    $.ZXNotice.InfoTopNotice('没有可用的数据');
+                    return;
+                }
+
+                renderBarPercentInTotal(response.x_data, response.y_data);
+            }
+        );
+    };
+
+require(
+    [
+        "echarts", 
+        "echarts/chart/line", 
+        "echarts/chart/bar"
+    ],
+    function(ec){
+        echarts = ec;
+
+        getLineChainData();
+        getBarChainData();
+        getBarPercentInTotalData();
+
+        //renderLineChain();
+        //renderBarChain();
+        //renderBarPercentInTotal();
+    }
+);
+ecConfig = require('echarts/config');
+
+$(document).ready(function(){
+
+});
+
+</script>
+{% endblock %}
+
+{% block css %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block chart_main%}
+<div class="col-md-10 col-xs-12 pb-10">
+    <div class="bottom-border bdc-bbb pt-10 pb-5 pl-10">
+        <a href="/stock/chart_stock"><span class="f15 fb">个股数据</span></a>
+        <span class="co8 pl-5 pr-5">|</span>
+        <span class="f15 fb">行业数据</span>
+    </div>
+</div>
+<ul class="list-inline col-md-10 col-xs-12 pt-0 pb-10">
+    {% for per in kinds %}
+    <li class="mt-15">
+        <a class="{% if per.id == kind.id %}active{% endif %} border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/stock/chart_kind/{{per.id}}">{{per.name}}</a>
+    </li>
+    {% endfor %}
+    
+</ul>
+<div class="col-md-10 min-h400 col-xs-12 pt-10" id="line_chain">
+</div>
+
+<div class="col-md-10 min-h400 col-xs-12 pt-30" id="bar_chain">
+</div>
+
+<div class="col-md-10 min-h400 col-xs-12 pt-0" id="bar_percent_in_total">
+</div>
+
+{% endblock %}

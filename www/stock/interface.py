@@ -8,7 +8,7 @@ from common import debug, utils
 from www.misc import consts
 from www.misc.decorators import cache_required
 from www.account.interface import UserBase
-from www.stock.models import Stock, StockFeed, StockFollow, StockData
+from www.stock.models import Stock, StockFeed, StockFollow, StockData, Kind, StockKind, KindData
 
 ub = UserBase()
 
@@ -304,4 +304,47 @@ class StockDataBase(object):
 
     def get_stock_history_chain_data(self, stock_id, page_count=240):
         objs = StockData.objects.filter(stock_id=stock_id).order_by('-date')
+        return objs[:page_count]
+
+
+class KindBase(object):
+
+    def get_all_kind(self):
+        return Kind.objects.all()
+
+    def get_kind_by_id(self, kind_id):
+        return Kind.objects.get(id=kind_id)
+
+class KindDataBase(object):
+
+    def get_kind_chain_data(self, date, page_count=50):
+        """
+        获取行业成交额环比增长率
+        """
+        objs = KindData.objects.select_related('kind').filter(date=date).order_by('-turnover_change_pre_day')
+        return objs[:page_count]
+
+    def get_kind_percent_in_total_data(self, date, page_count=50):
+        """
+        获取行业成交额占沪深总成交额比率
+        """
+        objs = KindData.objects.select_related('kind').filter(date=date).order_by('-turnover_rate_to_all')
+        return objs[:page_count]
+
+    def get_kind_history_chain_data(self, kind_id, page_count=240):
+        objs = KindData.objects.filter(kind_id=kind_id).order_by('-date')
+        return objs[:page_count]
+
+    def get_stock_chain_data_of_kind(self, date, kind_id, page_count=10):
+        '''
+        获取板块下股票数据
+        '''
+        objs = StockData.objects.select_related('stock').filter(date=date, stock__stock_kind__kind__id=kind_id).order_by('-turnover_change_pre_day')
+        return objs[:page_count]
+
+    def get_stock_percent_in_total_data_of_kind(self, date, kind_id, page_count=10):
+        '''
+        获取板块下股票数据
+        '''
+        objs = StockData.objects.select_related('stock').filter(date=date, stock__stock_kind__kind__id=kind_id).order_by('-turnover_rate_to_all')
         return objs[:page_count]

@@ -2,7 +2,7 @@
 {% load custom_tags %}
 {% load custom_filters %}
 
-{% block title %}个股数据{% endblock %}
+{% block title %}行业数据{% endblock %}
 
 {% block javascript %}
 <script type="text/javascript">
@@ -10,12 +10,8 @@ var echarts,
 	ecConfig,
 
 	clickFun = function(param){
-		var stockCode = param.name.split('(')[1].split(')')[0];
-		window.open('/stock/' + stockCode, '_blank');
-	},
-
-	getMarketValue = function(){
-		return $('.markets a').filter('.active').data('market');
+		var kindId = param.name.split('(')[1].split(')')[0];
+		window.open('/stock/chart_kind/' + kindId, '_blank');
 	},
 	
 	// 今日个股成交额环比
@@ -24,7 +20,7 @@ var echarts,
 		
 		chainChart.setOption({
 			title: {
-				text: date + '日个股成交额环比增长率'
+				text: date + '日行业成交额环比增长率'
 			},
 			grid: {
                 x2: 50
@@ -87,12 +83,12 @@ var echarts,
 
 		chainChart.on(ecConfig.EVENT.CLICK, clickFun);
 	},
-	renderPercentInTotal = function(date, xData, yData){
+	renderChainInTotal = function(date, xData, yData){
 		var percentInTotalChart = echarts.init(document.getElementById('percent_in_total'));
 
 		percentInTotalChart.setOption({
 			title: {
-				text: date+'日个股成交额占沪深总成交额比率'
+				text: date + '日行业成交额占沪深总成交额比率'
 			},
 			grid: {
                 x2: 50
@@ -107,7 +103,7 @@ var echarts,
                       type: 'solid'
                     }
                 },
-		        formatter: '<b>{b}</b><br/>{a}: {c} ‱<br/>点击查看该股历史成交额占比'
+		        formatter: '<b>{b}</b><br/>{a}: {c} ‱<br/>点击查看该行业历史成交额占比'
 		    },
 		    legend: {
 		        data:['成交额比率'],
@@ -155,14 +151,15 @@ var echarts,
 
 		percentInTotalChart.on(ecConfig.EVENT.CLICK, clickFun);
 	},
-	getStockChainData = function(){
+
+	getKindChainData = function(){
 
 		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
 		var date = $('#search_date').val();
 
 		ajaxSend(
-            "/stock/get_stock_chain_data", 
-            {'date': date, 'market_value': getMarketValue()}, 
+            "/stock/get_kind_chain_data", 
+            {'date': date}, 
             function(response){
             	if(response.x_data.length <= 0){
             		$.ZXNotice.InfoTopNotice('没有可用的数据');
@@ -173,14 +170,14 @@ var echarts,
             }
         );
 	},
-	getStockPercentInTotalData = function(date){
+	getKindPercentInTotalData = function(date){
 
 		g_ajax_processing_obj_id = $('.loading').setUUID().attr('id');
 		var date = $('#search_date').val();
 
 		ajaxSend(
-            "/stock/get_stock_percent_in_total_data", 
-            {'date': date, 'market_value': getMarketValue()}, 
+            "/stock/get_kind_percent_in_total_data", 
+            {'date': date}, 
             function(response){
             	if(response.x_data.length <= 0){
             		$.ZXNotice.InfoTopNotice('没有可用的数据');
@@ -200,9 +197,8 @@ require(
 	],
 	function(ec){
 		echarts = ec;
-		
-		getStockChainData();
-		getStockPercentInTotalData();
+		getKindChainData();
+		getKindPercentInTotalData();
 	}
 );
 ecConfig = require('echarts/config');
@@ -218,19 +214,9 @@ $(document).ready(function(){
 
 	// 时间过滤
 	$('#search_date').bind('change', function(){
-		getStockChainData();
-		getStockPercentInTotalData();
+		getKindChainData();
+		getKindPercentInTotalData();
 	});
-
-	// 市值过滤
-	$('.markets a').bind('click', function(){
-		$('.markets a').removeClass('active');
-		$(this).addClass('active');
-
-		getStockChainData();
-		getStockPercentInTotalData();
-	});
-
 });
 
 </script>
@@ -245,37 +231,18 @@ $(document).ready(function(){
 {% block chart_main%}
 <div class="col-md-10 col-xs-12 pb-10">
 	<div class="bottom-border bdc-bbb pt-10 pb-5 pl-10">
-		<span class="f15 fb">个股数据</span>
+		<a href="/stock/chart_stock"><span class="f15 fb">个股数据</span></a>
 		<span class="co8 pl-5 pr-5">|</span>
-		<a href="/stock/chart_kind"><span class="f15 fb">行业数据</span></a>
+		<span class="f15 fb">行业数据</span>
 	</div>
 </div>
-
-<div class="form-group col-md-10">
-	<label for="search_date" class="col-md-1 control-label pt-10 pl-0 pr-0">市值划分</label>
-	<div class="col-md-11 pl-0 pr-0">
-		<ul class="list-inline col-md-12 col-xs-12 pt-10 pb-10 markets">
-			<li>
-				<a class="active border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="0" href="#">全部</a>
-			</li>
-			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="1" href="#">0-50亿市值</a>
-			</li>
-			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="2" href="#">50-100亿市值</a>
-			</li>
-			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="3" href="#">100-200亿市值</a>
-			</li>
-			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="4" href="#">200-300亿市值</a>
-			</li>
-			<li>
-				<a class="border-block-blue pl-10 pr-10 pt-3 pb-3" data-market="5" href="#">300亿市值以上</a>
-			</li>
-		</ul>
-	</div>
-</div>
+<ul class="list-inline col-md-10 col-xs-12 pt-0 pb-10">
+	{% for kind in kinds %}
+	<li class="mt-15">
+		<a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/stock/chart_kind/{{kind.id}}">{{kind.name}}</a>
+	</li>
+	{% endfor %}
+</ul>
 <div class="form-group col-md-10 bottom-border bdc-eee pb-15">
 	<label for="search_date" class="col-md-1 control-label pt-5 pl-0 pr-0">选择日期</label>
 	<div class="col-md-2">
@@ -284,10 +251,11 @@ $(document).ready(function(){
 	<div class="col-md-1 loading"></div>
 </div>
 
-<div class="col-md-10 min-h1500 col-xs-12 pt-10" id="chain">
+<div class="col-md-10 min-h400 col-xs-12 pt-10" id="chain">
 </div>
 
-<div class="col-md-10 min-h1500 col-xs-12 pt-10" id="percent_in_total">
+<div class="col-md-10 min-h400 col-xs-12 pt-10" id="percent_in_total">
 </div>
+
 
 {% endblock %}

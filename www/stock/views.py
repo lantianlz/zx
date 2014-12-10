@@ -104,10 +104,14 @@ def chart_stock(request, template_name='chart/chart_stock.html'):
     today = str(datetime.datetime.now())[:10]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def chart_industry(request, template_name='chart/chart_industry.html'):
+def chart_kind(request, template_name='chart/chart_kind.html'):
+    kinds = interface.KindBase().get_all_kind()
+    today = str(datetime.datetime.now())[:10]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def chart_industry_detail(request, industry_id, template_name='chart/chart_industry_detail.html'):
+def chart_kind_detail(request, kind_id, template_name='chart/chart_kind_detail.html'):
+    kinds = interface.KindBase().get_all_kind()
+    kind = interface.KindBase().get_kind_by_id(kind_id)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 # ===================================================ajax部分=================================================================#
 
@@ -148,6 +152,9 @@ def get_stock_info_by_id(request):
 
 
 def get_stock_chain_data(request):
+    '''
+    获取个股环比
+    '''
     date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
     
     market_value = request.REQUEST.get('market_value', '1')
@@ -179,6 +186,9 @@ def get_stock_chain_data(request):
 
 
 def get_stock_percent_in_total_data(request):
+    '''
+    获取个股占总额比
+    '''
     date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
 
     market_value = request.REQUEST.get('market_value', '1')
@@ -210,7 +220,9 @@ def get_stock_percent_in_total_data(request):
 
 
 def get_stock_history_chain_data(request):
-
+    '''
+    个股历史环比
+    '''
     stock_id = request.REQUEST.get('stock_id')
 
     x_data = []
@@ -232,7 +244,9 @@ def get_stock_history_chain_data(request):
 
 
 def get_stock_history_percent_in_total_data(request):
-
+    '''
+    个股占总额百分百
+    '''
     stock_id = request.REQUEST.get('stock_id')
 
     x_data = []
@@ -240,6 +254,132 @@ def get_stock_history_percent_in_total_data(request):
 
     for x in interface.StockDataBase().get_stock_history_chain_data(stock_id):
         x_data.append(str(x.date)[:10])
+        y_data.append(round(x.turnover_rate_to_all*100, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_kind_chain_data(request):
+    '''
+    行业环比
+    '''
+    date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
+    
+    x_data = []
+    y_data = []
+
+    for x in interface.KindDataBase().get_kind_chain_data(date):
+        x_data.append('%s(%s)' % (x.kind.name, x.kind.id))
+        y_data.append(round(x.turnover_change_pre_day, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_kind_percent_in_total_data(request):
+    '''
+    获取行业占总额比
+    '''
+    date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
+
+    x_data = []
+    y_data = []
+
+    for x in interface.KindDataBase().get_kind_percent_in_total_data(date):
+        x_data.append('%s(%s)' % (x.kind.name, x.kind.id))
+        y_data.append(round(x.turnover_rate_to_all*100, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_kind_history_chain_data(request):
+    '''
+    行业历史环比
+    '''
+    kind_id = request.REQUEST.get('kind_id')
+
+    x_data = []
+    y_data = []
+    y_data2 = []
+
+    for x in interface.KindDataBase().get_kind_history_chain_data(kind_id):
+        x_data.append(str(x.date)[:10])
+        y_data.append(round(x.turnover_change_pre_day, 2))
+        y_data2.append(round(x.turnover_rate_to_all_change_per_day, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+    y_data2.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data,
+        'y_data2': y_data2
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_stock_chain_data_of_kind(request):
+    '''
+    行业内个股环比
+    '''
+    kind_id = request.REQUEST.get('kind_id')
+    date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
+
+    x_data = []
+    y_data = []
+
+    for x in interface.KindDataBase().get_stock_chain_data_of_kind(date, kind_id):
+        x_data.append('%s(%s)' % (x.stock.name, x.stock.code))
+        y_data.append(round(x.turnover_change_pre_day, 2))
+    
+    x_data.reverse()
+    y_data.reverse()
+
+    data = {
+        'x_data': x_data,
+        'y_data': y_data
+    }
+
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_stock_percent_in_total_data_of_kind(request):
+    '''
+    行业内个股占总额比
+    '''
+    kind_id = request.REQUEST.get('kind_id')
+    date = request.REQUEST.get('date', str(datetime.datetime.now())[:10])
+
+    x_data = []
+    y_data = []
+
+    for x in interface.KindDataBase().get_stock_percent_in_total_data_of_kind(date, kind_id):
+        x_data.append('%s(%s)' % (x.stock.name, x.stock.code))
         y_data.append(round(x.turnover_rate_to_all*100, 2))
     
     x_data.reverse()

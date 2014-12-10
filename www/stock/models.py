@@ -102,7 +102,7 @@ class StockKind(models.Model):
     """
     @note: 股票对应的行业
     """
-    stock = models.ForeignKey("Stock")
+    stock = models.ForeignKey("Stock", related_name="stock_kind")
     kind = models.ForeignKey("Kind")
 
 
