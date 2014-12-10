@@ -76,6 +76,72 @@ var echarts,
         }
     },
 
+    renderKLine = function(xData, yData){
+        var kLineChart = echarts.init(document.getElementById('k_line'));
+
+        kLineChart.setOption({
+            title: {
+                text: '历史价格'
+            },
+            grid: {
+                x2: 5
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
+                formatter: function (params) {
+                    var res = params[0].seriesName + ' ' + params[0].name;
+                    res += '<br/>  开盘 : ' + params[0].value[0] + '  最高 : ' + params[0].value[3];
+                    res += '<br/>  收盘 : ' + params[0].value[1] + '  最低 : ' + params[0].value[2];
+                    return res;
+                }
+            },
+            legend: {
+                data:['价格'],
+                orient: 'horizontal',
+                x: 'right',
+                padding: [5, 40, 0, 0]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            dataZoom : {
+                show : true,
+                realtime : true,
+                start : calculatePercent(xData.length),
+                end : 100
+            },
+            calculable : false,
+            xAxis: [{
+                type : 'category',
+                boundaryGap : false,
+                data: xData,
+                splitLine: {show: false},
+            }],
+            yAxis: [{
+                type: 'value',
+                scale:true
+            }],
+            color: ['#428bca', '#E02C41'],
+            series : [{
+                name:'价格',
+                type:'k',
+                smooth: true,
+                data: yData
+            }]
+        });
+    },
+
     // 今日个股成交额环比
     renderChain = function(xData, yData){
         var chainChart = echarts.init(document.getElementById('chain'));
@@ -203,6 +269,22 @@ var echarts,
         });
     },
     
+    getStockKLineData = function(){
+
+        ajaxSend(
+            "/stock/get_stock_k_line_data", 
+            {'stock_id': {{stock.id}} }, 
+            function(response){
+                if(response.x_data.length <= 0){
+                    $.ZXNotice.InfoTopNotice('没有可用的数据');
+                    return;
+                }
+
+                renderKLine(response.x_data, response.y_data);
+            }
+        );
+    },
+
     getStockHistoryChainData = function(){
 
         ajaxSend(
@@ -239,10 +321,13 @@ require(
     [
         "echarts", 
         "echarts/chart/line", 
-        "echarts/chart/bar"
+        "echarts/chart/bar",
+        "echarts/chart/k"
     ],
     function(ec){
         echarts = ec;
+
+        getStockKLineData();
         getStockHistoryChainData();
         getStockHistoryPercentInTotalData();
     }
@@ -279,6 +364,8 @@ require(
 
 <!--图表-->
 <div class="stock-chart {% if not request.user or not request.user.is_custom_manager %} none {% endif %}">
+    <div class="min-h400 mt-15" id="k_line"></div>
+
     <div class="min-h400 mt-15" id="chain"></div>
 
     <div class="min-h400 mt-35" id="percent_in_total"></div>

@@ -83,7 +83,7 @@ var echarts,
 
 		chainChart.on(ecConfig.EVENT.CLICK, clickFun);
 	},
-	renderChainInTotal = function(date, xData, yData){
+	renderPercentInTotal = function(date, xData, yData){
 		var percentInTotalChart = echarts.init(document.getElementById('percent_in_total'));
 
 		percentInTotalChart.setOption({
@@ -236,7 +236,8 @@ $(document).ready(function(){
 		<span class="f15 fb">行业数据</span>
 	</div>
 </div>
-<ul class="list-inline col-md-10 col-xs-12 pt-0 pb-10">
+<ul class="list-inline col-md-10 col-xs-12 pt-0 pb-10 pl-80 pr">
+	<a class="active border-block-blue ml-5 pl-10 pr-10 pt-0 pb-0 pa" style="left: 20px; top: 12px; padding-top: 1px; padding-bottom: 1px;" href="/stock/chart_kind">全部</a>
 	{% for kind in kinds %}
 	<li class="mt-15">
 		<a class="border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/stock/chart_kind/{{kind.id}}">{{kind.name}}</a>
@@ -251,10 +252,10 @@ $(document).ready(function(){
 	<div class="col-md-1 loading"></div>
 </div>
 
-<div class="col-md-10 min-h400 col-xs-12 pt-10" id="chain">
+<div class="col-md-10 min-h900 col-xs-12 pt-10" id="chain">
 </div>
 
-<div class="col-md-10 min-h400 col-xs-12 pt-10" id="percent_in_total">
+<div class="col-md-10 min-h900 col-xs-12 pt-10" id="percent_in_total">
 </div>
 
 

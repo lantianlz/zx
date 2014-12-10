@@ -27,7 +27,7 @@ var echarts,
     },
     
     // 今日个股成交额环比
-    renderLineChain = function(xData, yData, yData2){
+    renderLineChain = function(xData, yData){
         var chainChart = echarts.init(document.getElementById('line_chain'));
 
         chainChart.setOption({
@@ -50,7 +50,7 @@ var echarts,
                 formatter: '<b>{b}</b><br/>{a}: {c} %'
             },
             legend: {
-                data:['成交额环比', '成交额占总额环比'],
+                data:['成交额环比'],
                 orient: 'horizontal',
                 x: 'right',
                 padding: [5, 40, 0, 0]
@@ -86,15 +86,73 @@ var echarts,
                 type:'line',
                 smooth: true,
                 data: yData
-            }, {
-                name:'成交额占总额环比',
-                type:'line',
-                smooth: true,
-                data: yData2
             }]
         });
 
     },
+
+    renderLinePercentInTotal = function(xData, yData){
+        var percentInTotalChart = echarts.init(document.getElementById('line_percent_in_total'));
+
+        percentInTotalChart.setOption({
+            title: {
+                text: '历史成交额占总额比率'
+            },
+            grid: {
+                x2: 50
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    lineStyle : {
+                      color: '#ddd',
+                      width: 1,
+                      type: 'solid'
+                    }
+                },
+                formatter: '<b>{b}</b><br/>{a}: {c} ‱'
+            },
+            legend: {
+                data:['成交额占比'],
+                orient: 'horizontal',
+                x: 'right',
+                padding: [5, 40, 0, 0]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    saveAsImage : {show: true}
+                }
+            },
+            dataZoom : {
+                show : true,
+                realtime : true,
+                start : calculatePercent(xData.length),
+                end : 100
+            },
+            calculable : false,
+            xAxis: [{
+                type : 'category',
+                boundaryGap : false,
+                data: xData,
+                splitLine: {show: false},
+            }],
+            yAxis: [{
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} ‱'
+                }
+            }],
+            color: ['#428bca', '#E02C41'],
+            series : [{
+                name:'成交额占比',
+                type:'line',
+                smooth: true,
+                data: yData
+            }]
+        });
+    }
 
     renderBarChain = function(xData, yData){
         var chainChart = echarts.init(document.getElementById('bar_chain'));
@@ -165,6 +223,7 @@ var echarts,
 
         chainChart.on(ecConfig.EVENT.CLICK, clickFun);
     },
+
     renderBarPercentInTotal = function(xData, yData){
         var percentInTotalChart = echarts.init(document.getElementById('bar_percent_in_total'));
 
@@ -246,7 +305,23 @@ var echarts,
                     return;
                 }
 
-                renderLineChain(response.x_data, response.y_data, response.y_data2);
+                renderLineChain(response.x_data, response.y_data);
+            }
+        );
+    },
+
+    getLinePercentInTotalData = function(){
+
+        ajaxSend(
+            "/stock/get_kind_history_percent_in_total_data", 
+            {kind_id: {{kind.id}} }, 
+            function(response){
+                if(response.x_data.length <= 0){
+                    $.ZXNotice.InfoTopNotice('没有可用的数据');
+                    return;
+                }
+
+                renderLinePercentInTotal(response.x_data, response.y_data);
             }
         );
     },
@@ -293,6 +368,7 @@ require(
         echarts = ec;
 
         getLineChainData();
+        getLinePercentInTotalData();
         getBarChainData();
         getBarPercentInTotalData();
 
@@ -324,7 +400,8 @@ $(document).ready(function(){
         <span class="f15 fb">行业数据</span>
     </div>
 </div>
-<ul class="list-inline col-md-10 col-xs-12 pt-0 pb-10">
+<ul class="list-inline col-md-10 col-xs-12 pt-0 pb-10 pr pl-80">
+    <a class="border-block-blue ml-5 pl-10 pr-10 pt-0 pb-0 pa" style="left: 20px; top: 12px; padding-top: 1px; padding-bottom: 1px;" href="/stock/chart_kind">全部</a>
     {% for per in kinds %}
     <li class="mt-15">
         <a class="{% if per.id == kind.id %}active{% endif %} border-block-blue ml-5 pl-10 pr-10 pt-3 pb-3" href="/stock/chart_kind/{{per.id}}">{{per.name}}</a>
@@ -333,6 +410,9 @@ $(document).ready(function(){
     
 </ul>
 <div class="col-md-10 min-h400 col-xs-12 pt-10" id="line_chain">
+</div>
+
+<div class="col-md-10 min-h400 col-xs-12 pt-10" id="line_percent_in_total">
 </div>
 
 <div class="col-md-10 min-h400 col-xs-12 pt-30" id="bar_chain">

@@ -25,6 +25,7 @@ urlpatterns = patterns('www.stock.views',
                        url(r'^get_stock_percent_in_total_data$', 'get_stock_percent_in_total_data'),
 
                        # 个股历史
+                       url(r'^get_stock_k_line_data$', 'get_stock_k_line_data'),
                        url(r'^get_stock_history_chain_data$', 'get_stock_history_chain_data'),
                        url(r'^get_stock_history_percent_in_total_data$', 'get_stock_history_percent_in_total_data'),
                        
@@ -33,6 +34,7 @@ urlpatterns = patterns('www.stock.views',
                        url(r'^get_kind_percent_in_total_data$', 'get_kind_percent_in_total_data'),
 
                        url(r'^get_kind_history_chain_data$', 'get_kind_history_chain_data'),
+                       url(r'^get_kind_history_percent_in_total_data$', 'get_kind_history_percent_in_total_data'),
                        url(r'^get_stock_chain_data_of_kind$', 'get_stock_chain_data_of_kind'),
                        url(r'^get_stock_percent_in_total_data_of_kind$', 'get_stock_percent_in_total_data_of_kind'),
                        )
