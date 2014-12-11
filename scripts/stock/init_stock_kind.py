@@ -68,12 +68,7 @@ def get_all_dates():
     return dates
 
 
-# def get_kind_turnover(kind, date):
-#     sks = StockKind.objects.filter(kind=kind)
-
-
 def init_stock_kind_data():
-
     dates = get_all_dates()
     dict_sk = {}
     for sk in StockKind.objects.select_related("stock", "kind").all():
