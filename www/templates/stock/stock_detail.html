@@ -124,19 +124,30 @@ var echarts,
             calculable : false,
             xAxis: [{
                 type : 'category',
-                boundaryGap : false,
+                boundaryGap : true,
                 data: xData,
-                splitLine: {show: false},
+                axisTick: {onGap:false},
+                splitLine: {show:false},
             }],
             yAxis: [{
                 type: 'value',
-                scale:true
+                scale: true,
+                boundaryGap: [0.01, 0.01]
             }],
-            color: ['#428bca', '#E02C41'],
             series : [{
                 name:'价格',
                 type:'k',
-                smooth: true,
+                itemStyle: {
+                    normal: {
+                        color: '#dd2909',
+                        color0: '#33aa11',
+                        lineStyle: {
+                            width: 2,
+                            color: '#dd2909',    // 阳线边框颜色
+                            color0: '#33aa11'     // 阴线边框颜色
+                        }
+                    }
+                },
                 data: yData
             }]
         });
