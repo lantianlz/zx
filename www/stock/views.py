@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from common import page
-from www.misc.decorators import member_required, common_ajax_response
+from www.misc.decorators import member_required, common_ajax_response, verify_permission
 from www.stock import interface
 
 sb = interface.StockBase()
@@ -100,15 +100,18 @@ def my_stocks(request, template_name='stock/my_stocks.html'):
     stocks = [sf.stock for sf in stock_follows]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+@verify_permission('query_stock_chart')
 def chart_stock(request, template_name='chart/chart_stock.html'):
     today = str(datetime.datetime.now())[:10]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+@verify_permission('query_stock_chart')
 def chart_kind(request, template_name='chart/chart_kind.html'):
     kinds = interface.KindBase().get_all_kind()
     today = str(datetime.datetime.now())[:10]
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+@verify_permission('query_stock_chart')
 def chart_kind_detail(request, kind_id, template_name='chart/chart_kind_detail.html'):
     kinds = interface.KindBase().get_all_kind()
     kind = interface.KindBase().get_kind_by_id(kind_id)
