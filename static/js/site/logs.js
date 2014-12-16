@@ -12,6 +12,10 @@ $(document).ready(function(){
 
         setData: function(){
             this.reset([
+                {'count': 8, 'year': '2014年', 'date': '12月12日', 'contents': _.map([
+                    '新增股票关注功能，从2000余只股票挑选出属于你的股票吧，关注后股票最新动态尽在你的掌握中'
+                ], function(content){return String.format('<li><p>{0}</p></li>', content)}).join('')},
+
                 {'count': 7, 'year': '2014年', 'date': '11月12日', 'contents': _.map([
                     '智选出品的第一款手机app上线，ios和Android齐发，各大应用商店搜索「股票开户宝」即可下载，欢迎踊跃评论'
                 ], function(content){return String.format('<li><p>{0}</p></li>', content)}).join('')},
