@@ -59,7 +59,7 @@ def get_shanghai_company():
                 belong_board = 4
 
             # print uid, href, name.encode("utf8"), img, code
-            if not (Stock.objects.filter(name=name) or Stock.objects.filter(origin_uid=uid)):
+            if not (Stock.objects.filter(name=name) or Stock.objects.filter(origin_uid=uid) or Stock.objects.filter(code=code)):
                 Stock.objects.create(name=name, origin_uid=uid, img=img, code=code, belong_board=belong_board, belong_market=0)
 
 
