@@ -86,7 +86,7 @@ def get_stock_total_by_day():
 def update_stock_turnover_rate_to_all():
     dict_stock_total = get_stock_total_by_day()
     i = 0
-    for stock_data in StockData.objects.select_related("stock").all():
+    for stock_data in StockData.objects.all():
         if dict_stock_total.get(stock_data.date):
             stock_data.turnover_rate_to_all = stock_data.turnover / dict_stock_total.get(stock_data.date)
             stock_data.save()
@@ -98,7 +98,7 @@ def update_stock_turnover_rate_to_all():
 
 def update_stock_turnover_change():
     i = 0
-    for stock_data in StockData.objects.select_related("stock").all():
+    for stock_data in StockData.objects.all():
         stock_data_pres = StockData.objects.filter(stock=stock_data.stock, date__lt=stock_data.date)[:1]
         if stock_data_pres:
             stock_data_pre = stock_data_pres[0]
