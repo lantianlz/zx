@@ -36,6 +36,10 @@ $(document).ready(function(){
     {% else %}
     <span class="f15 fb">我关注的股票动态</span>
     {% endif %}
+
+    {% if request.user and request.user.can_query_stock_chart %}
+    <a class="pull-right" target="_blank" href="/stock/chart_stock"><span class="f15 fb">股票图表分析</span></a>
+    {% endif %}
 </div>
 
 <ul class="list-group">

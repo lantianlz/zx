@@ -104,6 +104,10 @@ class Profile(models.Model):
         from kaihu.interface import CustomerManagerBase
         return True if CustomerManagerBase().get_customer_manager_by_user_id(self.id) else False
 
+    def can_query_stock_chart(self):
+        from www.admin.interface import PermissionBase
+        return True if 'query_stock_chart' in PermissionBase().get_user_permissions(self.id) else False
+
     def __unicode__(self):
         return u'%s, %s' % (self.id, self.nick)
 

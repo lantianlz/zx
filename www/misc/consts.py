@@ -152,4 +152,7 @@ PERMISSIONS = [
     
     {'code': 'invitation_manage', 'name': u'邀请注册管理', 'parent': None},
     {'code': 'query_invitation', 'name': u'查询邀请注册信息', 'parent': 'invitation_manage'},
+
+    {'code': 'stock_chart_manage', 'name': u'股票图表管理', 'parent': None},
+    {'code': 'query_stock_chart', 'name': u'查询股票图表', 'parent': 'stock_chart_manage'},
 ]

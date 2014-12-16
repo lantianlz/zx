@@ -81,10 +81,10 @@ var echarts,
 
         kLineChart.setOption({
             title: {
-                text: '历史价格'
+                text: '{{stock.name}}({{stock.code}})历史价格'
             },
             grid: {
-                x2: 5
+                x2: 10
             },
             tooltip : {
                 trigger: 'axis',
@@ -127,7 +127,7 @@ var echarts,
                 boundaryGap : true,
                 data: xData,
                 axisTick: {onGap:false},
-                splitLine: {show:false},
+                splitLine: {show:false}
             }],
             yAxis: [{
                 type: 'value',
@@ -159,10 +159,10 @@ var echarts,
 
         chainChart.setOption({
             title: {
-                text: '历史成交额环比'
+                text: '{{stock.name}}({{stock.code}})历史成交额环比'
             },
             grid: {
-                x2: 5
+                x2: 10
             },
             tooltip : {
                 trigger: 'axis',
@@ -199,7 +199,7 @@ var echarts,
                 type : 'category',
                 boundaryGap : false,
                 data: xData,
-                splitLine: {show: false},
+                splitLine: {show: false}
             }],
             yAxis: [{
                 type: 'value',
@@ -222,10 +222,10 @@ var echarts,
 
         percentInTotalChart.setOption({
             title: {
-                text: '历史成交额占总额比率'
+                text: '{{stock.name}}({{stock.code}})历史成交额占总额比率'
             },
             grid: {
-                x2: 5
+                x2: 10
             },
             tooltip : {
                 trigger: 'axis',
@@ -262,7 +262,7 @@ var echarts,
                 type : 'category',
                 boundaryGap : false,
                 data: xData,
-                splitLine: {show: false},
+                splitLine: {show: false}
             }],
             yAxis: [{
                 type: 'value',
@@ -338,9 +338,11 @@ require(
     function(ec){
         echarts = ec;
 
+        {% if request.user and request.user.can_query_stock_chart %}
         getStockKLineData();
         getStockHistoryChainData();
         getStockHistoryPercentInTotalData();
+        {% endif %}
     }
 );
 </script>
@@ -352,17 +354,17 @@ require(
     <div class="pl-80 pb-5 pt-5">
         <h4>{{stock.name}}({{stock.code}})</h4>
         <div class="co8 f12 row">
-            <div class="{% if request.user and request.user.is_custom_manager %} col-md-6 {% else %} col-md-12 {% endif %} ">
+            <div class="{% if request.user and request.user.can_query_stock_chart %} col-md-6 {% else %} col-md-12 {% endif %} ">
                 {{stock.feed_count}} 条动态<span class="pl-5 pr-5">•</span>{{stock.following_count}} 人关注
                 
-                <span class="{% if request.user and request.user.is_custom_manager %} a {% else %} pull-right {% endif %}">
+                <span class="{% if request.user and request.user.can_query_stock_chart %} a {% else %} pull-right {% endif %}">
 
                     <button class="btn btn-xs btn-primary ml-10 follow-stock {% if is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">添加关注</button>
                     <button class="btn btn-xs btn-default ml-10 unfollow-stock {% if not is_follow %}none{% endif %}" data-stock_id="{{stock.id}}">取消关注</button>
 
                 </span>
             </div>
-            {% if request.user and request.user.is_custom_manager %} 
+            {% if request.user and request.user.can_query_stock_chart %} 
             <div class="col-md-6 text-right">
                 <a href="javascript:void(0)" class="active stock-chart-a"><span class="f14 fb">个股图表</span></a>
                 <span class="co8 pl-5 pr-5">|</span>
@@ -374,7 +376,7 @@ require(
 </div>
 
 <!--图表-->
-<div class="stock-chart {% if not request.user or not request.user.is_custom_manager %} none {% endif %}">
+<div class="stock-chart {% if not request.user or not request.user.can_query_stock_chart %} none {% endif %}">
     <div class="min-h400 mt-15" id="k_line"></div>
 
     <div class="min-h400 mt-15" id="chain"></div>
@@ -382,7 +384,7 @@ require(
     <div class="min-h400 mt-35" id="percent_in_total"></div>
 </div>
 <!--资讯-->
-<div class="stock-info {% if request.user and request.user.is_custom_manager %} none {% endif %}">
+<div class="stock-info {% if request.user and request.user.can_query_stock_chart %} none {% endif %}">
     <ul class="list-group">
         {% for stock_feed in stock_feeds %}
         <li class="list-group-item no-l-r-bd bdc-eee">
