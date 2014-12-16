@@ -115,6 +115,6 @@ def update_stock_turnover_change():
 
 
 if __name__ == '__main__':
-    # init_stock_data()
+    init_stock_data()
     update_stock_turnover_rate_to_all()
     update_stock_turnover_change()
