@@ -98,7 +98,8 @@ def update_stock_turnover_rate_to_all():
 
 def update_stock_turnover_change():
     i = 0
-    for stock_data in StockData.objects.all():
+    for stock_data in StockData.objects.filter(turnover_change_pre_day=0).order_by("id"):
+        i += 1
         stock_data_pres = StockData.objects.filter(stock=stock_data.stock, date__lt=stock_data.date)[:1]
         if stock_data_pres:
             stock_data_pre = stock_data_pres[0]
@@ -114,11 +115,10 @@ def update_stock_turnover_change():
             stock_data.save()
         if i % 1000 == 0:
             print "%s:%s ok" % (datetime.datetime.now(), i)
-        i += 1
         # break
 
 
 if __name__ == '__main__':
     # init_stock_data()
-    update_stock_turnover_rate_to_all()
+    # update_stock_turnover_rate_to_all()
     update_stock_turnover_change()
