@@ -258,7 +258,7 @@ class UserBase(object):
         if errcode != 0:
             return errcode, errmsg
 
-        user = self.get_user_by_id(user_id)
+        # user = self.get_user_by_id(user_id)
         user.nick = nick
         user.gender = int(gender)
         user.birthday = birthday
@@ -266,14 +266,14 @@ class UserBase(object):
             user.des = utils.filter_script(des)[:128]
 
         if state is not None:
-            user_login = self.get_user_login_by_id(user.id)
+            user_login = User.objects.get(id=user.id)
             user_login.state = state
             user_login.save()
 
         user.save()
 
         # 更新缓存
-        self.get_user_by_id(user.id, must_update_cache=True)
+        self.get_user_by_id(user.id, state=[0, 1, 2], must_update_cache=True)
         return 0, user
 
     def change_pwd(self, user, old_password, new_password_1, new_password_2):
