@@ -80,9 +80,9 @@ class UserBase(object):
         except (Profile.DoesNotExist, User.DoesNotExist):
             return None
 
-    def get_user_by_email(self, email):
+    def get_user_by_email(self, email, state=[1, 2]):
         try:
-            user = User.objects.get(email=email, state__gt=0)
+            user = User.objects.get(email=email, state__in=state)
             profile = Profile.objects.get(id=user.id)
             self.set_profile_login_att(profile, user)
             return profile
@@ -513,10 +513,10 @@ class UserBase(object):
         objs = None
 
         if user_nick:
-            objs = self.get_user_by_nick(user_nick)
+            objs = self.get_user_by_nick(user_nick, state=[0, 1, 2])
             objs = [objs] if objs else []
         elif email:
-            objs = self.get_user_by_email(email)
+            objs = self.get_user_by_email(email, state=[0, 1, 2])
             objs = [objs] if objs else []
         else:
             objs = UserCountBase().get_all_users_by_order_count(order)
