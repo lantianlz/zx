@@ -169,6 +169,9 @@ class UserBase(object):
                     from www.timeline.interface import UserFollowBase
                     UserFollowBase().follow_people(profile.id, invitation.user_id)
 
+            # 初始化用户数据
+            UserCount.objects.get_or_create(user_id=user.id)
+
             transaction.commit(using=ACCOUNT_DB)
 
             # todo发送验证邮件
