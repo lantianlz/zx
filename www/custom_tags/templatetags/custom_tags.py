@@ -208,6 +208,8 @@ def kaihu_ad(context):
         "chengdu": ["ad_chengdu.jpg", "2277483400", u"成都"],
         "deyang": ["ad_deyang.jpg", "1547037393", u"德阳"],
         "gy": ["ad_gy.jpg", "342437260", u"广元"],
+        "fushun": ["ad_fushun.jpg", "1315946235", u"抚顺"],
+        "pj": ["ad_pj.jpg", "1315946235", u"盘锦"],
     }
     default = ["ad_common.jpg", "403897485", u"通用"]
     ad_img = dict_ads.get(city_abbr, default)
