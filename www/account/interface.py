@@ -80,9 +80,9 @@ class UserBase(object):
         except (Profile.DoesNotExist, User.DoesNotExist):
             return None
 
-    def get_user_by_email(self, email):
+    def get_user_by_email(self, email, state=[1, 2]):
         try:
-            user = User.objects.get(email=email, state__gt=0)
+            user = User.objects.get(email=email, state__in=state)
             profile = Profile.objects.get(id=user.id)
             self.set_profile_login_att(profile, user)
             return profile
@@ -168,6 +168,9 @@ class UserBase(object):
                     # 自动关注邀请者
                     from www.timeline.interface import UserFollowBase
                     UserFollowBase().follow_people(profile.id, invitation.user_id)
+
+            # 初始化用户数据
+            UserCount.objects.get_or_create(user_id=user.id)
 
             transaction.commit(using=ACCOUNT_DB)
 
@@ -258,7 +261,7 @@ class UserBase(object):
         if errcode != 0:
             return errcode, errmsg
 
-        user = self.get_user_by_id(user_id)
+        # user = self.get_user_by_id(user_id)
         user.nick = nick
         user.gender = int(gender)
         user.birthday = birthday
@@ -266,14 +269,14 @@ class UserBase(object):
             user.des = utils.filter_script(des)[:128]
 
         if state is not None:
-            user_login = self.get_user_login_by_id(user.id)
+            user_login = User.objects.get(id=user.id)
             user_login.state = state
             user_login.save()
 
         user.save()
 
         # 更新缓存
-        self.get_user_by_id(user.id, must_update_cache=True)
+        self.get_user_by_id(user.id, state=[0, 1, 2], must_update_cache=True)
         return 0, user
 
     def change_pwd(self, user, old_password, new_password_1, new_password_2):
@@ -513,10 +516,10 @@ class UserBase(object):
         objs = None
 
         if user_nick:
-            objs = self.get_user_by_nick(user_nick)
+            objs = self.get_user_by_nick(user_nick, state=[0, 1, 2])
             objs = [objs] if objs else []
         elif email:
-            objs = self.get_user_by_email(email)
+            objs = self.get_user_by_email(email, state=[0, 1, 2])
             objs = [objs] if objs else []
         else:
             objs = UserCountBase().get_all_users_by_order_count(order)

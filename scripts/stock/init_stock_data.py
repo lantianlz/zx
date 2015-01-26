@@ -22,7 +22,7 @@ headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:29.0) 
 
 def init_stock_data():
     for i, stock in enumerate(Stock.objects.all().order_by("code")):
-        print i, stock.id
+        # print i, stock.id
         for page in range(1, 9):
             url = "http://yahoo.compass.cn/stock/frames/frmHistoryDetail.php?code=%s%s&page=%s" % (["sh", "sz"][stock.belong_market], stock.code, page)
             # print url
@@ -85,17 +85,21 @@ def get_stock_total_by_day():
 
 def update_stock_turnover_rate_to_all():
     dict_stock_total = get_stock_total_by_day()
-    for i, stock_data in enumerate(StockData.objects.select_related("stock").all()):
+    i = 0
+    for stock_data in StockData.objects.all():
         if dict_stock_total.get(stock_data.date):
             stock_data.turnover_rate_to_all = stock_data.turnover / dict_stock_total.get(stock_data.date)
             stock_data.save()
         if i % 1000 == 0:
             print "%s:%s ok" % (datetime.datetime.now(), i)
+        i += 1
         # break
 
 
 def update_stock_turnover_change():
-    for i, stock_data in enumerate(StockData.objects.select_related("stock").all()):
+    i = 0
+    for stock_data in StockData.objects.filter(turnover_change_pre_day=0).order_by("id"):
+        i += 1
         stock_data_pres = StockData.objects.filter(stock=stock_data.stock, date__lt=stock_data.date)[:1]
         if stock_data_pres:
             stock_data_pre = stock_data_pres[0]
@@ -116,5 +120,5 @@ def update_stock_turnover_change():
 
 if __name__ == '__main__':
     # init_stock_data()
-    update_stock_turnover_rate_to_all()
+    # update_stock_turnover_rate_to_all()
     update_stock_turnover_change()
