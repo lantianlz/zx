@@ -221,3 +221,15 @@ class Jfzcm(models.Model):
     mobile = models.CharField(max_length=32, null=True)
     note = models.TextField(null=True)
     state = models.IntegerField(default=0, db_index=True)
+
+
+class Ad(models.Model):
+    """
+    @note: 开户广告
+    """
+    city_id = models.IntegerField(verbose_name=u'城市信息', db_index=True, unique=True)
+    img = models.CharField(verbose_name=u'广告图片', max_length=128)
+    qq = models.CharField(verbose_name=u'qq号码', max_length=32)
+    expire_time = models.DateField(verbose_name=u'过期时间', db_index=True)
+    state = models.IntegerField(verbose_name=u'状态', default=0, db_index=True)
+    create_time = models.DateTimeField(verbose_name=u'创建时间', default=datetime.datetime.now)

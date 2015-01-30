@@ -10,7 +10,7 @@ from www.misc.decorators import cache_required
 from www.misc import consts
 from www.account.interface import UserBase, UserCountBase
 from www.message.interface import UnreadCountBase
-from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article, News, Jfzcm
+from www.kaihu.models import Company, Department, City, CustomerManager, FriendlyLink, Article, News, Jfzcm, Ad
 
 
 dict_err = {
@@ -24,6 +24,7 @@ dict_err = {
     50107: u'已经是客户经理，无法重复申请',
     50108: u'从业资格证编号已经存在',
     50109: u'营业部名称重复',
+    50110: u'找不到指定广告',
 }
 dict_err.update(consts.G_DICT_ERROR)
 
@@ -820,3 +821,84 @@ class ExternalCMBase(object):
             return 99900, dict_err.get(99900)
 
         return 0, dict_err.get(0)
+
+class AdBase(object):
+
+    def get_ads(self):
+        
+        objs = Ad.objects.filter(expire_time__gte=datetime.datetime.now(), state=0)
+
+        return objs
+
+    def search_ads_for_admin(self, city_name):
+        objs = Ad.objects.all()
+
+        if city_name:
+            city = CityBase().get_one_city_by_name(city_name)
+
+            if city:
+                objs = objs.filter(city_id=city.id)
+            else:
+                objs = []
+
+        return objs
+
+    def get_ad_by_id(self, ad_id):
+        return Ad.objects.get(id=ad_id)
+
+    def modify_ad(self, ad_id, city_id, qq, expire_time, img):
+        try:
+            assert ad_id and city_id and qq and expire_time and img
+        except:
+            return 99800, dict_err.get(99800)
+
+        obj = self.get_ad_by_id(ad_id)
+
+        if not obj:
+            return 50110, dict_err.get(50110)
+
+        try:
+            obj.city_id = city_id
+            obj.qq = qq
+            obj.expire_time = expire_time
+            obj.img = img
+            obj.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, obj
+
+    def add_ad(self, city_id, qq, expire_time, img):
+        try:
+            assert city_id and qq and expire_time and img
+        except:
+            return 99800, dict_err.get(99800)
+
+        obj = None
+        try:
+            obj = Ad.objects.create(city_id=city_id, qq=qq, expire_time=expire_time, img=img)
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, obj
+
+    def remove_ad(self, ad_id):
+        try:
+            assert ad_id
+        except:
+            return 99800, dict_err.get(99800)
+
+        obj = self.get_ad_by_id(ad_id)
+
+        if not obj:
+            return 50110, dict_err.get(50110)
+
+        try:
+            obj.delete()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, obj

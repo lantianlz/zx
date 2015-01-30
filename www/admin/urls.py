@@ -147,6 +147,17 @@ urlpatterns += patterns('www.admin.views_article',
                         url(r'^kaihu/article$', 'article'),
                         )
 
+# 子站广告
+urlpatterns += patterns('www.admin.views_kaihu_ad',
+
+                        url(r'^kaihu/ad/remove_ad$', 'remove_ad'),
+                        url(r'^kaihu/ad/modify_ad$', 'modify_ad'),
+                        url(r'^kaihu/ad/get_ad_by_id$', 'get_ad_by_id'),
+                        url(r'^kaihu/ad/add_ad$', 'add_ad'),
+                        url(r'^kaihu/ad/search$', 'search'),
+                        url(r'^kaihu/ad$', 'ad'),
+                        )
+
 
 # 统计
 urlpatterns += patterns('www.admin.views_statistics',

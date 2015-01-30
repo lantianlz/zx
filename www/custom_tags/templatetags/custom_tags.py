@@ -200,6 +200,7 @@ def kaihu_ad(context):
     @note: 头条最新热榜
     """
     from common import utils
+    from www.kaihu.interface import AdBase, CityBase
 
     city_abbr = utils.get_sub_domain_from_http_host(context['request'].META.get('HTTP_HOST', ''))
     dict_ads = {
@@ -211,7 +212,16 @@ def kaihu_ad(context):
         "fushun": ["ad_fushun.jpg", "1508819430", u"抚顺"],
         "pj": ["ad_pj.jpg", "1315946235", u"盘锦"],
     }
-    default = ["ad_common.jpg", "403897485", u"通用"]
+
+    dict_ads = {}
+    for x in AdBase().get_ads():
+        city = CityBase().get_city_by_id(x.city_id)
+
+        dict_ads[city.pinyin_abbr] = [x.img, x.qq, city.city]
+
+    print 'dict_ads', dict_ads
+
+    default = ["http://static.zhixuan.com/img/kaihu/ad_common.jpg", "403897485", u""]
     ad_img = dict_ads.get(city_abbr, default)
 
     return render_to_response('kaihu/_kaihu_ad.html', locals(), context_instance=context).content

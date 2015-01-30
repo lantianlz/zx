@@ -1,0 +1,515 @@
+{% extends "admin/home.html" %}
+{% load custom_tags %}
+{% load custom_filters %}
+{% block title %}子站广告管理{% endblock %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+    // models
+    var Ad = Backbone.Model.extend({
+
+        // 默认值
+        defaults: {
+            'num': ''
+        }
+
+    });
+
+    // collections
+    var Ads = Backbone.Collection.extend({
+        model: Ad,
+
+        _modelMaps: {
+            'num': 'num',
+            'adId': 'ad_id',
+            'cityId': 'city_id',
+            'cityName': 'city_name',
+            'cityPinyin': 'city_pinyin_abbr',
+            'img': 'img',
+            'qq': 'qq',
+            'expireTime': 'expire_time',
+            'state': 'state'
+        },
+
+        // 查询
+        search: function(name, pageIndex){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/ad/search", 
+                {'name': name||'', 'page_index': pageIndex||1}, 
+                function(data){
+                    me.pageIndex = pageIndex||1;
+                    me.pageCount = data.page_count;
+                    me.name = name||'';
+
+                    me.reset($.ZXUtils.dictMapParse(data.data, me._modelMaps))
+                }
+            );
+        },
+
+        addAd: function(postData, callback){
+            ajaxSend(
+                "/admin/kaihu/ad/add_ad", 
+                postData,
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        // 获取一个提问的model
+        getOne: function(adId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/ad/get_ad_by_id", 
+                {'ad_id': adId},
+                function(data){
+                    if(callback){
+                        callback($.ZXUtils.dictMap(data, me._modelMaps));
+                    }
+                }
+            );
+        },
+
+        // 删除
+        removeAd: function(adId, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/ad/remove_ad", 
+                {'ad_id': adId},
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        },
+
+        //
+        modifyAd: function(postData, callback){
+            var me = this;
+
+            ajaxSend(
+                "/admin/kaihu/ad/modify_ad", 
+                postData,
+                function(data){
+                    if(callback){
+                        callback(data);
+                    }
+                }
+            );
+        }
+
+    });
+
+    // listView
+    var ListView = Backbone.View.extend({
+        el: '#ad_list',
+
+        pagination: new $.ZXPagination.PaginationView(),
+
+        template: _.template($('#ad_template').html()),
+
+        initialize: function(){
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
+        events: {
+            'click .search': 'searchAd',
+            'click .pointer': 'modifyAd'
+        },
+
+        // 渲染函数
+        render: function(){
+            var data = this.collection.toJSON();
+
+            this.showPanel();
+            this.$('tbody').html(this.template({'ads': data}));
+            this.pagination.render(
+                this.collection.pageIndex||1, 
+                this.collection.pageCount, 
+                'search/' + this.collection.name
+            );
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#ad_list"]').tab('show');
+        },
+
+        searchAd: function(){
+            var title = this.$('.key-word').val();
+
+            router.navigate(String.format('/search/{0}/1', title), {trigger: true});
+        },
+
+        modifyAd: function(sender){
+            var target = $(sender.currentTarget),
+                adId = target.data('ad_id');
+
+            router.navigate('/modify/' + adId, {trigger: true});
+        }
+
+    });
+
+    // modifyView
+    var ModifyView = Backbone.View.extend({
+        
+        el: '#modify_ad',
+
+        template: _.template($('#modify_ad_template').html()),
+
+        events: {
+            'click .save': 'save',
+            'click .remove': 'remove'
+        },
+
+        cityTextBox: null,
+        initCityTextBox: function(name, value){
+            this.cityTextBox = $.ZXTextboxList.create('#belong_city_modify', {
+                max: 1,
+                placeholder: '选择所属城市',
+                url: '/admin/user/customer_manager/get_citys_by_name',
+                param: 'city_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.cityTextBox.add(name, value)
+            }
+        },
+
+        initDate: function(){
+            $('#expire_time_modify').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        // 显示面板
+        showPanel: function(){
+            $('.zx-nav-pills a[href="#modify_ad"]').tab('show');
+        },
+
+        // 渲染
+        render: function(data){
+            this.$el.html(this.template(data));
+
+            this.initCityTextBox(data.cityName, data.cityId);
+            this.initDate();
+        },
+
+        // 显示提问信息
+        modifyAd: function(adId){
+            var me = this;
+
+            this.collection.getOne(adId, function(data){
+                if(data){
+                    me.render(data);
+                    me.showPanel();
+                } else {
+                    setTimeout(function(){history.go(-1);}, 3000);
+                    $.ZXMsg.alert('提示', '没有找到对应的文章!');
+                }
+            });
+        },
+
+        // 保存
+        save: function(){
+            this.$('form').submit();
+        },
+
+        // 删除
+        remove: function(){
+            var adId = this.$('form').data('ad_id'),
+                me = this;
+
+            $.ZXMsg.confirm('提示', '确认要删除此子站广告吗?', function(result){
+                
+                if(result){
+                    me.collection.removeAd(adId, function(data){
+                        if(data.errcode === 0){
+                            listView.searchAd();
+                        } else {
+                            $.ZXMsg.alert('提示', data.errmsg);
+                        }
+                    });
+                }
+                
+            });
+        }
+
+
+    });
+
+    
+    var AddView = Backbone.View.extend({
+        el: 'body',
+
+        template: _.template($('#add_ad_template').html()),
+
+        cityTextBox: null,
+        initCityTextBox: function(name, value){
+            this.cityTextBox = $.ZXTextboxList.create('#belong_city_add', {
+                max: 1,
+                placeholder: '选择所属城市',
+                url: '/admin/user/customer_manager/get_citys_by_name',
+                param: 'city_name',
+                loadPlaceholder: '正在加载...'
+            });
+
+            if(value){
+                this.cityTextBox.add(name, value);
+            }
+        },
+
+        initDate: function(){
+            $('#expire_time_add').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                minView: 2,
+                autoclose: true
+            });
+        },
+
+        showPanel: function(){
+            var me = this;
+
+            me.render();
+        },
+
+        render: function(){
+            var me = this;
+
+            $('#add_ad_modal').remove();
+            
+            $('body').append(this.template());
+
+            // 绑定事件
+            $('#add_ad_modal .cancel').bind('click', function(){
+                history.go(-1);
+            });
+            $('#add_ad_modal .ok').bind('click', function(){
+                me.addAd();
+            });
+            
+            $('#add_ad_modal').modal({'show': true, 'backdrop': 'static'});
+
+            me.initCityTextBox();
+            me.initDate();
+        },
+
+        addAd: function(){
+            this.$('form').submit();
+        }
+
+    });
+
+    // router
+    var Router = Backbone.Router.extend({
+
+        routes: {
+            "":                                     "search",
+            "modify/:adId":                       "modify",
+            "search/(:name)/:pageIndex":           "search",
+            "add":                                  "add"
+        },
+
+        // 查询
+        search: function(title, pageIndex){
+            ads.search(title||'', pageIndex||1);
+        },
+
+        // 显示修改界面
+        modify: function(adId){
+            modifyView.modifyAd(adId);
+        },
+
+        add: function(){
+            addView.showPanel();
+        }
+
+    });
+    
+    // 初始化
+    var ads = new Ads(),
+        listView = new ListView({'collection': ads}),
+        modifyView = new ModifyView({'collection': ads}),
+        addView = new AddView(),
+        router = new Router();
+ 
+    Backbone.history.start();
+
+    if(window.location.href.indexOf('?') > -1){
+        $.ZXNotice.ErrorTopNotice(decodeURI(window.location.search).substring(1));
+    }
+});
+
+</script>
+{% endblock %}
+
+{% block admin-right %}
+<ul class="nav nav-pills pt-15 zx-nav-pills">
+    <li class="active">
+        <a href="#ad_list" class="black-blue" data-toggle="pill">子站广告列表</a>
+    </li>
+    <li>
+        <a href="#modify_ad" class="black-blue" data-toggle="pill">修改子站广告信息</a>
+    </li>
+    <li class="pull-right">
+        <a href="#add" class="black-blue" >添加子站广告</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- 客户经理列表 -->
+    <div class="tab-pane fade pt-15 in active" id="ad_list">
+        <form action="." onsubmit="javascript: return false;">
+            <div class="pl-0 pr-0 pb-10 col-md-3">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control border-radius-0 key-word" placeholder="输入城市名称..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search" type="submit">查询</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>图片</th>
+                    <th>所属城市</th>
+                    <th>QQ</th>
+                    <th>过期时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <ul class="pagination pagination-sm zx-pagination">
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- 修改客户经理信息 -->
+    <div class="tab-pane fade" id="modify_ad">
+        
+    </div>
+</div>
+
+<!-- 客户经理列表 -->
+<script type="text/template" id="ad_template">
+    <% _.each(ads, function(ad){ %>
+        <tr class="pointer" data-ad_id="<%= ad.adId %>">
+            <td><%= ad.num %></td>
+            <td><img class="avatar-55" src="<%= ad.img %>" /></td>
+            <td><%= ad.cityName %></td>
+            <td><%= ad.qq %></td>
+            <td><%= ad.expireTime %></td>
+        </tr>
+    <% }) %>
+</script>
+
+<!-- 修改问题模板 -->
+<script type="text/template" id="modify_ad_template">
+<form class="form-horizontal" data-ad_id="<%= adId %>" role="form" method="post" action="/admin/kaihu/ad/modify_ad" enctype="multipart/form-data">
+        <input type="hidden" name="ad_id" value="<%= adId %>" />
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">广告图片</label>
+            <div class="col-sm-6">
+                <img class="mb-10" src="<%= img %>">
+                <input name="img" type="file">
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">所属城市</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="belong_city" id="belong_city_modify" value=''>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">qq</label>
+            <div class="col-sm-2">
+                <input type="text" name="qq" class="form-control" value='<%= qq %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <label class="col-sm-2 control-label">过期时间</label>
+            <div class="col-sm-2">
+                <input type="text" id="expire_time_modify" name="expire_time" class="form-control" value='<%= expireTime %>'>
+            </div>
+        </div>
+        <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary save">提交你的修改</button>
+                <button type="button" class="btn btn-danger ml-15 remove">删除此子站广告</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<!-- 添加问题模板 -->
+<script type="text/template" id="add_ad_template">
+<div class="modal fade" id="add_ad_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-5">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+                <h4 class="modal-title">添加子站广告</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" method="post" action="/admin/kaihu/ad/add_ad" enctype="multipart/form-data">
+                    <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                    <label class="col-sm-2 control-label">广告图片</label>
+                    <div class="col-sm-6">
+                        <img class="mb-10" src="">
+                        <input name="img" type="file">
+                    </div>
+                </div>
+                <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                    <label class="col-sm-2 control-label">所属城市</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="belong_city" id="belong_city_add" value=''>
+                    </div>
+                </div>
+                <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                    <label class="col-sm-2 control-label">qq</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="qq" class="form-control" value=''>
+                    </div>
+                </div>
+                <div class="form-group pt-20 pb-20 mb-0 bottom-border bdc-eee">
+                    <label class="col-sm-2 control-label">过期时间</label>
+                    <div class="col-sm-5">
+                        <input type="text" id="expire_time_add" name="expire_time" class="form-control" value=''>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary ok">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock admin-right %}
