@@ -89,7 +89,7 @@ class Kind(models.Model):
     """
     @note: 行业分类
     """
-    group_choices = ((0, u"行业"), (1, u"概念"))
+    group_choices = ((0, u"行业"), (1, u"概念"), (99, u"自定义"))
 
     name = models.CharField(max_length=64, unique=True)
     group = models.IntegerField(db_index=True, default=0, choices=group_choices)
@@ -103,7 +103,7 @@ class StockKind(models.Model):
     @note: 股票对应的行业
     """
     stock = models.ForeignKey("Stock", related_name="stock_kind")
-    kind = models.ForeignKey("Kind")
+    kind = models.ForeignKey("Kind", related_name="stocks")
 
 
 class KindData(models.Model):

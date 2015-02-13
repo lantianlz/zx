@@ -315,6 +315,89 @@ class KindBase(object):
     def get_kind_by_id(self, kind_id):
         return Kind.objects.get(id=kind_id)
 
+    def search_kind_for_admin(self, name):
+        objs = self.get_all_kind()
+
+        if name:
+            objs = objs.filter(name__icontains=name)
+        return objs
+
+    @transaction.commit_manually(using=DEFAULT_DB)
+    def add_kind(self, name, stocks, group=0, sort=0):
+        kind = None
+
+        if not name or not stocks:
+            return 99800, dict_err.get(99800)
+
+        try:
+            kind = Kind.objects.create(
+                name=name, group=group, sort_num=sort
+            )
+
+            for stock in stocks:
+                StockKind.objects.create(kind=kind, stock_id=stock)
+            
+            KindDataBase().update_kind_data(kind_id)
+
+            # 异步调用
+            # from www.tasks import async_update_kind_data
+            # async_update_kind_data.delay(kind_id)
+
+            transaction.commit(using=DEFAULT_DB)
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=DEFAULT_DB)
+            return 99900, dict_err.get(99900)
+
+        return 0, kind
+
+    @transaction.commit_manually(using=DEFAULT_DB)
+    def modify_kind(self, kind_id, name, stocks, group=0, sort=0):
+        
+
+        if not name or not stocks or not kind_id:
+            return 99800, dict_err.get(99800)
+
+        try:
+            kind = self.get_kind_by_id(kind_id)
+
+            kind.name = name
+            kind.group = group
+            kind.sort = sort
+            kind.save()
+
+            StockKind.objects.filter(kind_id=kind_id).delete()
+
+            for stock in stocks:
+                StockKind.objects.create(kind=kind, stock_id=stock)
+            
+            KindDataBase().update_kind_data(kind_id)
+
+            # 异步调用
+            # from www.tasks import async_update_kind_data
+            # async_update_kind_data.delay(kind_id)
+
+            transaction.commit(using=DEFAULT_DB)
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            transaction.rollback(using=DEFAULT_DB)
+            return 99900, dict_err.get(99900)
+
+        return 0, kind
+
+    def remove_kind(self, kind_id):
+        try:
+            Kind.objects.get(id=kind_id).delete()
+
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
+
 class KindDataBase(object):
 
     def get_kind_chain_data(self, date, page_count=50):
@@ -348,3 +431,78 @@ class KindDataBase(object):
         '''
         objs = StockData.objects.select_related('stock').filter(date=date, stock__stock_kind__kind__id=kind_id).order_by('-turnover_rate_to_all')
         return objs[:page_count]
+
+
+
+
+    def update_kind_data(self, kind_id):
+
+        def _init_stock_kind_data(now_date, kind):
+
+            # 获取每天股票的数据
+            stock_data = {}
+            for x in StockData.objects.filter(date=now_date):
+                stock_data[x.stock_id] = x.turnover
+
+            # 按照行业计算各行业总交易额
+            dict_kind_trunover = {}
+            for stock_kind in StockKind.objects.select_related("stock", "kind").filter(kind__id=kind):
+                if not dict_kind_trunover.has_key(stock_kind.kind_id):
+                    dict_kind_trunover[stock_kind.kind_id] = 0
+
+                dict_kind_trunover[stock_kind.kind_id] += stock_data.get(stock_kind.stock_id, 0)
+
+            for x in dict_kind_trunover:
+                if not KindData.objects.filter(kind__id=x, date=now_date) and dict_kind_trunover[x] > 0:
+                    KindData.objects.create(kind_id=x, date=now_date, turnover=dict_kind_trunover[x])
+
+
+        def _get_kind_total_by_day(now_date):
+            from django.db.models import Sum
+            kind_total = {}
+            kind_total[now_date] = KindData.objects.filter(date=now_date).aggregate(Sum('turnover'))['turnover__sum']
+
+            return kind_total
+
+        def _update_kind_turnover_rate_to_all_today(now_date, kind):
+            kind_total = _get_kind_total_by_day(now_date)
+            # pprint(kind_total)
+            for i, kind_data in enumerate(KindData.objects.select_related("kind").filter(date=now_date, kind__id=kind)):
+                if kind_total.get(kind_data.date):
+                    kind_data.turnover_rate_to_all = kind_data.turnover / kind_total.get(kind_data.date)
+                    kind_data.save()
+                # if i % 1000 == 0:
+                #     print "%s:%s ok" % (datetime.datetime.now(), i)
+                # break
+
+        def _update_kind_turnover_change_today(now_date, kind):
+            for i, kind_data in enumerate(KindData.objects.select_related("kind").filter(date=now_date, kind__id=kind)):
+                kind_data_pres = KindData.objects.filter(kind=kind_data.kind, date__lt=kind_data.date)[:1]
+                if kind_data_pres:
+                    kind_date_pre = kind_data_pres[0]
+
+                    if kind_date_pre.turnover > 0 and kind_data.turnover > 0:
+                        turnover_change_pre_day = (kind_data.turnover - kind_date_pre.turnover) / kind_date_pre.turnover * 100
+                        kind_data.turnover_change_pre_day = turnover_change_pre_day
+
+                    if kind_date_pre.turnover_rate_to_all > 0 and kind_data.turnover_rate_to_all > 0:
+                        turnover_rate_to_all_change_per_day = (kind_data.turnover_rate_to_all - kind_date_pre.turnover_rate_to_all) / kind_date_pre.turnover_rate_to_all * 100
+                        kind_data.turnover_rate_to_all_change_per_day = turnover_rate_to_all_change_per_day
+
+                    kind_data.save()
+                # if i % 1000 == 0:
+                #     print "%s:%s ok" % (datetime.datetime.now(), i)
+                # break
+
+
+
+        # 删除此行业的数据
+        KindData.objects.filter(kind__id=kind_id).delete()
+
+        # 计算出以前365天的数据
+        for i in range(365):
+            temp_date = datetime.datetime.now().date() - datetime.timedelta(364-i)
+
+            _init_stock_kind_data(temp_date, kind_id)
+            _update_kind_turnover_rate_to_all_today(temp_date, kind_id)
+            _update_kind_turnover_change_today(temp_date, kind_id)

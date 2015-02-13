@@ -3,6 +3,7 @@
 
 import sys
 import os
+import time
 
 # 引入父目录来引入其他模块
 SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -74,6 +75,9 @@ now_date = datetime.datetime.now().date()
 
 
 def get_stock_total_today():
+    """
+    计算当天所有股票的成交金额总和
+    """
     from django.db.models import Sum
     stock_total = {}
     stock_total[now_date] = StockData.objects.filter(date=now_date).aggregate(Sum('turnover'))['turnover__sum']
@@ -81,6 +85,9 @@ def get_stock_total_today():
 
 
 def update_stock_turnover_rate_to_all_today():
+    """
+    计算每支股票占总交易额的百分比
+    """
     dict_stock_total = get_stock_total_today()
     for i, stock_data in enumerate(StockData.objects.select_related("stock").filter(date=now_date)):
         if dict_stock_total.get(stock_data.date):
@@ -92,6 +99,9 @@ def update_stock_turnover_rate_to_all_today():
 
 
 def update_stock_turnover_change_today():
+    """
+    计算每支股票 占总比的变化 和 相对于前一天的变化的百分比
+    """
     for i, stock_data in enumerate(StockData.objects.select_related("stock").filter(date=now_date)):
         stock_data_pres = StockData.objects.filter(stock=stock_data.stock, date__lt=stock_data.date)[:1]
         if stock_data_pres:
@@ -113,24 +123,24 @@ def update_stock_turnover_change_today():
 
 def update_kind_data():
     def _init_stock_kind_data():
-        dict_sk = {}
-        for sk in StockKind.objects.select_related("stock", "kind").all():
-            dict_sk[sk.stock.id] = sk.kind
 
+        # 获取每天股票的数据
+        stock_data = {}
+        for x in StockData.objects.filter(date=now_date):
+            stock_data[x.stock_id] = x.turnover
+
+        # 按照行业计算各行业总交易额
         dict_kind_trunover = {}
-        sds = StockData.objects.filter(date=now_date)
-        for sd in sds:
-            if sd.stock_id not in dict_sk:
-                continue
-            kind = dict_sk[sd.stock_id]
-            if kind in dict_kind_trunover:
-                dict_kind_trunover[kind] += sd.turnover
-            else:
-                dict_kind_trunover[kind] = sd.turnover
-        for kind in dict_kind_trunover:
-            if not KindData.objects.filter(kind=kind, date=now_date):
-                KindData.objects.create(kind=kind, date=now_date, turnover=dict_kind_trunover[kind])
-        print u"%s: %s over" % (str(datetime.datetime.now()), str(now_date))
+        for stock_kind in StockKind.objects.select_related("stock", "kind").all():
+            if not dict_kind_trunover.has_key(stock_kind.kind_id):
+                dict_kind_trunover[stock_kind.kind_id] = 0
+
+            dict_kind_trunover[stock_kind.kind_id] += stock_data.get(stock_kind.stock_id, 0)
+
+        for x in dict_kind_trunover:
+            if not KindData.objects.filter(kind__id=x, date=now_date) and dict_kind_trunover[x] > 0:
+                KindData.objects.create(kind_id=x, date=now_date, turnover=dict_kind_trunover[x])
+
 
     def _get_kind_total_by_day():
         from django.db.models import Sum
@@ -176,6 +186,9 @@ def update_kind_data():
 
 def update_stock_market_value():
     for i, stock_data in enumerate(StockData.objects.select_related("stock").filter(date=now_date)):
+
+        time.sleep(1)
+
         stock = stock_data.stock
         url = "http://xueqiu.com/S/%s%s" % (["SH", "SZ"][stock.belong_market], stock.code)
 

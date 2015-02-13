@@ -64,7 +64,7 @@ var echarts,
             dataZoom : {
                 show : true,
                 realtime : true,
-                start : 87.5,
+                start : calculatePercent(xData.length),
                 end : 100
             },
             calculable : false,

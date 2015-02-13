@@ -147,3 +147,19 @@ def modify_stock(request):
         url = "/admin/stock/stock?%s#modify/%s" % (msg, obj.id)
 
     return HttpResponseRedirect(url)
+
+def get_stocks_by_name(request):
+    '''
+    根据名字查询股票
+    '''
+    stock_name = request.REQUEST.get('stock_name')
+
+    result = []
+
+    stocks = StockBase().get_stocks_by_name(stock_name, None)
+
+    if stocks:
+        for x in stocks:
+            result.append([x.id, x.name, None, x.name])
+
+    return HttpResponse(json.dumps(result), mimetype='application/json')
