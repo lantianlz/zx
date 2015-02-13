@@ -90,6 +90,12 @@ def api_get_custom_manager_list(request):
     page_objs = page.Cpt(custom_managers, count=page_count, page=page_num).info
     custom_managers = page_objs[0]
 
+    # 天津单独处理
+    if city.id == 23:
+        custom_managers = [x for x in custom_managers if x['id'] == 'd28fbb30b28711e4a95b00163e003240']
+
+        custom_managers_count = len(custom_managers)
+        
     return dict(custom_managers=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
 
 
