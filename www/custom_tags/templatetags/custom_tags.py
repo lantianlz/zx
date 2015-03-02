@@ -219,7 +219,7 @@ def kaihu_ad(context):
 
         dict_ads[city.pinyin_abbr] = [x.img, x.qq, city.city]
 
-    print 'dict_ads', dict_ads
+    # print 'dict_ads', dict_ads
 
     default = ["http://static.zhixuan.com/img/kaihu/ad_common.jpg", "403897485", u""]
     ad_img = dict_ads.get(city_abbr, default)
