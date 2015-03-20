@@ -119,6 +119,11 @@ class StockBase(object):
                 setattr(stock, k, v)
 
             stock.save()
+
+            state = kwargs.get('state', True)
+            # 修改股票动态记录的状态为false
+            StockFeed.objects.filter(stock__id=stock.id).update(state=state)
+
         except Exception, e:
             debug.get_debug_detail(e)
             return 99900, dict_err.get(99900)
@@ -170,10 +175,12 @@ class StockFeedBase(object):
             return 99900, dict_err.get(99900)
 
     def get_all_stock_feeds(self, state=True):
-        ps = dict(stock__state=True)
+        # ps = dict(stock__state=True)
+        ps = dict()
         if state is not None:
             ps.update(state=state)
-        return StockFeed.objects.select_related("stock").filter(**ps)
+        # return StockFeed.objects.select_related("stock").filter(**ps)
+        return StockFeed.objects.prefetch_related("stock").filter(**ps)
 
     def get_stock_feeds_by_stock(self, stock):
         return StockFeed.objects.select_related("stock").filter(stock=stock, state=True)
