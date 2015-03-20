@@ -228,7 +228,7 @@ $(document).ready(function(){
                     me.showPanel();
                 } else {
                     setTimeout(function(){history.go(-1);}, 3000);
-                    $.ZXMsg.alert('提示', '没有找到对应的城市!');
+                    $.ZXMsg.alert('提示', '没有找到对应的行业!');
                 }
             });
         },
@@ -238,7 +238,10 @@ $(document).ready(function(){
             var kindId = this.$('form').data('kind_id'),
                 me = this;
 
+            g_ajax_processing_obj_id = this.$('form .save').setUUID().attr('id');
+
             me.collection.modifyKind($.ZXUtils.formToDict(this.$('form')), function(data){
+                
                 if(data.errcode == "0"){
                     $.ZXNotice.SuccessTopNotice('操作成功!');
                     router.navigate('modify/' + kindId, {'trigger': true});
@@ -319,6 +322,8 @@ $(document).ready(function(){
         addKind: function(){
             var kindId = this.$('form').data('kind_id'),
                 me = this;
+
+            g_ajax_processing_obj_id = $('#add_kind_modal .ok').setUUID().attr('id');
 
             kinds.addKind($.ZXUtils.formToDict('#add_kind_modal form'), function(data){
                 if(data.errcode === 0){
