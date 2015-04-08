@@ -37,7 +37,7 @@ def async_add_question_view_count(question_id):
 @task(queue='www_worker', name='www_worker.update_kind_data')
 def async_update_kind_data(kind_id):
     '''
-    @note: 异步更新浏览次数
+    @note: 异步更新行业数据
     '''
     from www.stock.interface import KindDataBase
     KindDataBase().update_kind_data(kind_id)

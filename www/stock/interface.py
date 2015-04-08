@@ -344,11 +344,11 @@ class KindBase(object):
             for stock in stocks:
                 StockKind.objects.create(kind=kind, stock_id=stock)
             
-            KindDataBase().update_kind_data(kind.id)
+            # KindDataBase().update_kind_data(kind.id)
 
             # 异步调用
-            # from www.tasks import async_update_kind_data
-            # async_update_kind_data.delay(kind_id)
+            from www.tasks import async_update_kind_data
+            async_update_kind_data.delay(kind.id)
 
             transaction.commit(using=DEFAULT_DB)
 
@@ -379,11 +379,11 @@ class KindBase(object):
             for stock in stocks:
                 StockKind.objects.create(kind=kind, stock_id=stock)
             
-            KindDataBase().update_kind_data(kind_id)
+            # KindDataBase().update_kind_data(kind_id)
 
             # 异步调用
-            # from www.tasks import async_update_kind_data
-            # async_update_kind_data.delay(kind_id)
+            from www.tasks import async_update_kind_data
+            async_update_kind_data.delay(kind_id)
 
             transaction.commit(using=DEFAULT_DB)
 
