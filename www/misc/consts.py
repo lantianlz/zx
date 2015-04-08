@@ -155,4 +155,10 @@ PERMISSIONS = [
 
     {'code': 'stock_chart_manage', 'name': u'股票图表管理', 'parent': None},
     {'code': 'query_stock_chart', 'name': u'查询股票图表', 'parent': 'stock_chart_manage'},
+
+    {'code': 'kind_manage', 'name': u'股票行业管理', 'parent': None},
+    {'code': 'add_kind', 'name': u'添加行业', 'parent': 'kind_manage'},
+    {'code': 'query_kind', 'name': u'查询行业', 'parent': 'kind_manage'},
+    {'code': 'modify_kind', 'name': u'修改行业', 'parent': 'kind_manage'},
+    {'code': 'remove_kind', 'name': u'删除行业', 'parent': 'kind_manage'},
 ]

@@ -39,7 +39,7 @@ def format_kind(objs, num):
     return data
 
 
-@verify_permission('query_city')
+@verify_permission('query_kind')
 def search(request):
     data = []
 
@@ -61,7 +61,7 @@ def search(request):
     )
 
 
-@verify_permission('query_city')
+@verify_permission('query_kind')
 def get_kind_by_id(request):
     kind_id = request.REQUEST.get('kind_id')
 
@@ -70,7 +70,7 @@ def get_kind_by_id(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@verify_permission('modify_city')
+@verify_permission('modify_kind')
 @common_ajax_response
 def modify_kind(request):
     kind_id = request.REQUEST.get('kind_id')
@@ -84,7 +84,7 @@ def modify_kind(request):
         kind_id, name, stocks, group, sort
     )
 
-@verify_permission('modify_city')
+@verify_permission('remove_kind')
 @common_ajax_response
 def remove_kind(request):
     kind_id = request.REQUEST.get('kind_id')
@@ -92,7 +92,7 @@ def remove_kind(request):
     return KindBase().remove_kind(kind_id)
 
 
-@verify_permission('')
+@verify_permission('add_kind')
 @common_ajax_response
 def add_kind(request):
 
