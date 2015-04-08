@@ -34,7 +34,7 @@ def async_add_question_view_count(question_id):
     from www.question.interface import QuestionBase
     QuestionBase().add_question_view_count(question_id)
 
-@task(queue='www_worker', name='www_worker.update_kind_data')
+@task(queue='email_worker', name='email_worker.update_kind_data')
 def async_update_kind_data(kind_id):
     '''
     @note: 异步更新行业数据
