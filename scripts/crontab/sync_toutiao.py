@@ -67,7 +67,7 @@ def sync_toutiao():
 
             # print url
             # print img
-            # print title.encode("utf8")
+            # printlst_article title.encode("utf8")
             # print content.encode("utf8")
             # print create_time
 
@@ -77,6 +77,10 @@ def sync_toutiao():
             else:
                 break
             all_count += 1
+
+            # 防止调用过于频繁出现验证码
+            time.sleep(1)
+
         mp_count += 1
 
     end_time = time.time()
