@@ -49,45 +49,54 @@ def sync_toutiao():
 
     # 文章字数少于300的过滤，每天更新一次
     for mp in WeixinMp.objects.filter(state=True):
-        url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp.open_id
-        resp = requests.get(url, headers=headers, timeout=30, proxies=proxies)
-        text = resp.text
-        lst_article = eval(re.compile('gzh\((.+)\)').findall(text)[0])["items"]
+        try:
+            url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp.open_id
+            resp = requests.get(url, headers=headers, timeout=30, proxies=proxies)
+            text = resp.text
+            lst_article = eval(re.compile('gzh\((.+)\)').findall(text)[0])["items"]
 
-        for article in lst_article:
-            article = article.replace("\\", "")
-            url = re.compile('<url>(.+)</url>').findall(article)[0][9:-3]
-            timestamp = re.compile('<lastModified>(.+)</lastModified>').findall(article)[0]
-            img = re.compile('<imglink>(.+)</imglink>').findall(article)[0][9:-3]
-            create_time = datetime.datetime.fromtimestamp(float(timestamp))
+            for article in lst_article:
+                try:
+                    article = article.replace("\\", "")
+                    url = re.compile('<url>(.+)</url>').findall(article)[0][9:-3]
+                    timestamp = re.compile('<lastModified>(.+)</lastModified>').findall(article)[0]
+                    img = re.compile('<imglink>(.+)</imglink>').findall(article)[0][9:-3]
+                    create_time = datetime.datetime.fromtimestamp(float(timestamp))
 
-            article_detail = pq(requests.get(url, headers=headers, timeout=30, proxies=proxies).text)
-            title = article_detail("#activity-name").html().split("<em")[0].strip()
-            content = article_detail("#js_content").html()
-            format_content = _replace_html_tag(content).strip()
-            if len(format_content) < 300:
-                continue
+                    article_detail = pq(requests.get(url, headers=headers, timeout=30, proxies=proxies).text)
+                    title = article_detail("#activity-name").html().split("<em")[0].strip()
+                    content = article_detail("#js_content").html()
+                    format_content = _replace_html_tag(content).strip()
+                    if len(format_content) < 300:
+                        continue
 
-            if mp.is_silence == False and check_ban_key(title, ban_keys) == False:
-                continue
+                    if mp.is_silence == False and check_ban_key(title, ban_keys) == False:
+                        continue
 
-            # print url
-            # print img
-            # printlst_article title.encode("utf8")
-            # print content.encode("utf8")
-            # print create_time
+                    # print url
+                    # print img
+                    # printlst_article title.encode("utf8")
+                    # print content.encode("utf8")
+                    # print create_time
 
-            if not (Article.objects.filter(from_url=url) or Article.objects.filter(title=title)):
-                Article.objects.create(title=title, content=content, weixin_mp=mp, from_url=url, img=img,
-                                       create_time=create_time, is_silence=mp.is_silence, article_type=mp.article_type)
-            else:
-                break
-            all_count += 1
+                    if not (Article.objects.filter(from_url=url) or Article.objects.filter(title=title)):
+                        Article.objects.create(title=title, content=content, weixin_mp=mp, from_url=url, img=img,
+                                               create_time=create_time, is_silence=mp.is_silence, article_type=mp.article_type)
+                    else:
+                        break
+                    all_count += 1
 
-            # 防止调用过于频繁出现验证码
-            time.sleep(1)
+                    # 防止调用过于频繁出现验证码
+                    time.sleep(1)
+                except Exception, e:
+                    print e
+                    continue
 
-        mp_count += 1
+            mp_count += 1
+            
+        except Exception, e:
+            print e
+            continue
 
     end_time = time.time()
     print (u"耗时：%s秒" % int(end_time - start_time)).encode("utf8")
