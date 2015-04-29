@@ -90,12 +90,14 @@ def sync_toutiao():
                     time.sleep(1)
                 except Exception, e:
                     print e
+                    proxy = get_active_sougou_proxy()
                     continue
 
             mp_count += 1
-            
+
         except Exception, e:
             print e
+            proxy = get_active_sougou_proxy()
             continue
 
     end_time = time.time()
