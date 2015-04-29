@@ -382,3 +382,55 @@ def get_family_name(name):
         if key in name:
             return key
     return name[0]
+
+
+def is_active_sougou_proxy(proxy):
+
+    url = "http://weixin.sogou.com/gzhjs?openid=oIWsFtzU9XFaZY7vsx3qkvrDQ86A"
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"}
+    flag = False
+
+    try:
+        req = requests.get(
+            url, 
+            headers = headers, 
+            proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}, 
+            timeout = 7
+        )
+        flag = req.text.find('oIWsFtzU9XFaZY7vsx3qkvrDQ86A') > -1
+    except Exception, e:
+        flag = False
+
+    return flag
+
+
+def get_active_sougou_proxy():
+
+    import requests
+    from pyquery import PyQuery as pq
+
+    PROXY_URL = "http://proxy-list.org/english/search.php?search=CN.transparent&country=CN&type=transparent&port=any&ssl=any"
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"}
+
+    req = requests.get(PROXY_URL, headers=headers, timeout=15)
+    
+    dom = pq(req.text)
+
+    proxy = ''
+    for x in dom('.table').eq(0).find('li.proxy'):
+        proxy = x.text.strip()
+        if is_active_sougou_proxy(proxy):
+            break
+        else:
+            # print u'无效代理==>[ %s ]' % proxy
+            pass
+
+    return proxy
+
+    
+
+
+
+
+
+
