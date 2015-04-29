@@ -48,6 +48,7 @@ def sync_kaihu_news():
         print city.city.encode("utf8")
 
         for href in news_hrefs:
+            time.sleep(1)
             if href is not None:
                 href = pq(href).attr("href").strip()
                 news = pq(requests.get(href, headers=headers, timeout=30).text)
