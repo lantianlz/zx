@@ -54,7 +54,7 @@ def sync_toutiao():
             resp = requests.get(
                 url, 
                 headers = headers, 
-                timeout = 30, 
+                timeout = 15, 
                 proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
             )
             text = resp.text
@@ -71,7 +71,7 @@ def sync_toutiao():
                     article_detail = pq(requests.get(
                         url, 
                         headers = headers, 
-                        timeout = 30, 
+                        timeout = 15, 
                         proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
                     ).text)
                     title = article_detail("#activity-name").html().split("<em")[0].strip()
