@@ -45,13 +45,18 @@ def sync_toutiao():
     proxy = get_active_sougou_proxy()
     if proxy == "":
         return
-    proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
+    # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
 
     # 文章字数少于300的过滤，每天更新一次
     for mp in WeixinMp.objects.filter(state=True):
         try:
             url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp.open_id
-            resp = requests.get(url, headers=headers, timeout=30, proxies=proxies)
+            resp = requests.get(
+                url, 
+                headers = headers, 
+                timeout = 30, 
+                proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
+            )
             text = resp.text
             lst_article = eval(re.compile('gzh\((.+)\)').findall(text)[0])["items"]
 
@@ -63,7 +68,12 @@ def sync_toutiao():
                     img = re.compile('<imglink>(.+)</imglink>').findall(article)[0][9:-3]
                     create_time = datetime.datetime.fromtimestamp(float(timestamp))
 
-                    article_detail = pq(requests.get(url, headers=headers, timeout=30, proxies=proxies).text)
+                    article_detail = pq(requests.get(
+                        url, 
+                        headers=headers, 
+                        timeout=30, 
+                        proxies=proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
+                    ).text)
                     title = article_detail("#activity-name").html().split("<em")[0].strip()
                     content = article_detail("#js_content").html()
                     format_content = _replace_html_tag(content).strip()
