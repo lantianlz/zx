@@ -70,9 +70,9 @@ def sync_toutiao():
 
                     article_detail = pq(requests.get(
                         url, 
-                        headers=headers, 
-                        timeout=30, 
-                        proxies=proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
+                        headers = headers, 
+                        timeout = 30, 
+                        proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
                     ).text)
                     title = article_detail("#activity-name").html().split("<em")[0].strip()
                     content = article_detail("#js_content").html()
