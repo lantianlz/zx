@@ -41,10 +41,10 @@ def sync_toutiao():
     mp_count = 0
     ban_keys = list(BanKey.objects.all())
 
-    from common.utils import get_active_sougou_proxy
-    proxy = get_active_sougou_proxy()
-    if proxy == "":
-        return
+    # from common.utils import get_active_sougou_proxy
+    # proxy = get_active_sougou_proxy()
+    # if proxy == "":
+    #     return
     # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
 
     # 文章字数少于300的过滤，每天更新一次
@@ -52,10 +52,10 @@ def sync_toutiao():
         try:
             url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp.open_id
             resp = requests.get(
-                url, 
-                headers = headers, 
-                timeout = 15, 
-                proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
+                url,
+                headers = headers,
+                timeout = 15,
+                # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
             )
             text = resp.text
             lst_article = eval(re.compile('gzh\((.+)\)').findall(text)[0])["items"]
@@ -69,10 +69,10 @@ def sync_toutiao():
                     create_time = datetime.datetime.fromtimestamp(float(timestamp))
 
                     article_detail = pq(requests.get(
-                        url, 
-                        headers = headers, 
-                        timeout = 15, 
-                        proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
+                        url,
+                        headers = headers,
+                        timeout = 15,
+                        # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
                     ).text)
                     title = article_detail("#activity-name").html().split("<em")[0].strip()
                     content = article_detail("#js_content").html()
@@ -100,14 +100,14 @@ def sync_toutiao():
                     time.sleep(1)
                 except Exception, e:
                     print e
-                    proxy = get_active_sougou_proxy()
+                    # proxy = get_active_sougou_proxy()
                     continue
 
             mp_count += 1
 
         except Exception, e:
             print e
-            proxy = get_active_sougou_proxy()
+            # proxy = get_active_sougou_proxy()
             continue
 
     end_time = time.time()
