@@ -61,6 +61,8 @@ def sync_toutiao():
             lst_article = eval(re.compile('gzh\((.+)\)').findall(text)[0])["items"]
 
             for article in lst_article:
+                # 防止调用过于频繁出现验证码
+                time.sleep(1.5)
                 try:
                     article = article.replace("\\", "")
                     url = re.compile('<url>(.+)</url>').findall(article)[0][9:-3]
@@ -96,8 +98,7 @@ def sync_toutiao():
                         break
                     all_count += 1
 
-                    # 防止调用过于频繁出现验证码
-                    time.sleep(1)
+                    
                 except Exception, e:
                     print e
                     # proxy = get_active_sougou_proxy()
