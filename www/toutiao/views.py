@@ -57,3 +57,70 @@ def toutiao_detail(request, article_id, template_name='toutiao/toutiao_detail.ht
         ab.add_article_view_count(article_id)
 
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def get_mps(request):
+    from toutiao.models import WeixinMp
+    import json
+
+    data = []
+    for mp in WeixinMp.objects.filter(state=True):
+        data.append({
+            'open_id': mp.open_id,
+            'mp_id': mp.id
+        })
+
+    return HttpResponse(json.dumps(data))
+
+
+def check_ban_key(title, ban_keys):
+    for bk in ban_keys:
+        if bk.key in title:
+            return False
+    return True
+
+def sync_toutiao(request):
+    import json, traceback
+    from common import debug
+    from toutiao.models import WeixinMp, Article, BanKey
+    
+    mp_id = request.REQUEST.get('mp_id')
+    title = request.REQUEST.get('title')
+    content = request.REQUEST.get('content')
+    url = request.REQUEST.get('url')
+    img = request.REQUEST.get('img')
+    create_time = request.REQUEST.get('create_time')
+
+    # print url
+    # print img
+    # printlst_article title.encode("utf8")
+    # print content.encode("utf8")
+    # print create_time
+
+    try:
+        mp = wmb.get_weixin_mp_by_id(mp_id)
+
+        ban_keys = list(BanKey.objects.all())
+
+        if mp.is_silence == False and check_ban_key(title, ban_keys) == False:
+            return HttpResponse(json.dumps({'code': 1}))
+
+        if not (Article.objects.filter(from_url=url) or Article.objects.filter(title=title)):
+            Article.objects.create(
+                title = title, 
+                content = content, 
+                weixin_mp = mp, 
+                from_url = url, 
+                img = img,
+                create_time = create_time, 
+                is_silence = mp.is_silence, 
+                article_type = mp.article_type
+            )
+            return HttpResponse(json.dumps({'code': 0}))
+        else:
+            return HttpResponse(json.dumps({'code': 2}))
+    except Exception, e:
+        debug.get_debug_detail(e)
+        return HttpResponse(json.dumps({'code': 99}))
+
+
