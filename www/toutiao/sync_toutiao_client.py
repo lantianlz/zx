@@ -81,7 +81,7 @@ def get_active_sougou_proxy():
         # else:
         #     print u'无效代理==>[ %s ]' % proxy
         #     pass
-    print '代理===>%s' % proxies
+    print u'代理===>%s' % proxies
     return proxies
 
 
@@ -193,10 +193,10 @@ def sync():
 
                     result = json.loads(response.text)
                     if result['code'] == 0:
-                        print '成功!'
+                        print u'成功!'
                         success += 1
                     else:
-                        print '失败！！[%s]' % result['code']
+                        print u'失败！！[%s]' % result['code']
                 except Exception, e:
                     print e
                     continue
@@ -205,7 +205,7 @@ def sync():
             print traceback.print_exc()
             continue
 
-    print '成功更新[ %s ]条' % success
+    print u'成功更新[ %s ]条' % success
 
 
 def _get_weixin_list(proxy, url):
@@ -308,9 +308,9 @@ def sync_by_proxy():
                 result = json.loads(response.text)
                 if result['code'] == 0:
                     success += 1
-                    print '成功!'
+                    print u'成功!'
                 else:
-                    print '失败！！[%s]' % result['code']
+                    print u'失败！！[%s]' % result['code']
             except Exception, e:
                 print e
                 continue

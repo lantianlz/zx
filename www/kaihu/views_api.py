@@ -90,9 +90,9 @@ def api_get_custom_manager_list(request):
     page_objs = page.Cpt(custom_managers, count=page_count, page=page_num).info
     custom_managers = page_objs[0]
 
-    # 天津单独处理
-    if city.id == 23:
-        custom_managers = [x for x in custom_managers if x['user_id'] == 'd28fbb30b28711e4a95b00163e003240']
+    # 广州单独处理
+    if city.id == 1204:
+        custom_managers = [x for x in custom_managers if x['user_id'] == '5e46b030f23d11e4ab5f00163e003240']
 
         custom_managers_count = len(custom_managers)
         
