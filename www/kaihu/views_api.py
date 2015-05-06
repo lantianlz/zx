@@ -77,11 +77,17 @@ def api_get_custom_manager_list(request):
     city = cb.get_city_by_id(int(request.REQUEST.get('city_id', '0')) or 1974)
     if not city:
         raise Http404
-    custom_managers = cmb.get_customer_managers_by_city_id(city.id)
-    if not custom_managers:
-        defualt_user_id = "f762a6f5d2b711e39a09685b35d0bf16" if settings.DEBUG else "d1baa40e5f3a11e4813d00163e003240"
-        custom_managers = cmb.format_customer_managers_for_ajax([cmb.get_customer_manager_by_user_id(user_id=defualt_user_id), ])
-
+    # =============================下线所有客户经理====================================
+    # custom_managers = cmb.get_customer_managers_by_city_id(city.id)
+    # if not custom_managers:
+    #     defualt_user_id = "f762a6f5d2b711e39a09685b35d0bf16" if settings.DEBUG else "d1baa40e5f3a11e4813d00163e003240"
+    #     custom_managers = cmb.format_customer_managers_for_ajax([cmb.get_customer_manager_by_user_id(user_id=defualt_user_id), ])
+    # =============================只保留2个==========================================
+    custom_managers = cmb.format_customer_managers_for_ajax([
+        cmb.get_customer_manager_by_user_id(user_id="d1baa40e5f3a11e4813d00163e003240"), 
+        cmb.get_customer_manager_by_user_id(user_id="248eaf24aa7b11e3ac1c00163e003240"), 
+    ])
+    # ===============================================================================
     custom_managers_count = len(custom_managers)
 
     # 分页
@@ -92,7 +98,10 @@ def api_get_custom_manager_list(request):
 
     # 广州单独处理
     if city.id == 1204:
-        custom_managers = [x for x in custom_managers if x['user_id'] == '5e46b030f23d11e4ab5f00163e003240']
+        # custom_managers = [x for x in custom_managers if x['user_id'] == '5e46b030f23d11e4ab5f00163e003240']
+        custom_managers = cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="5e46b030f23d11e4ab5f00163e003240"), 
+        ])
 
         custom_managers_count = len(custom_managers)
         
