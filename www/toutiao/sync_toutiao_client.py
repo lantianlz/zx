@@ -229,6 +229,7 @@ def _get_weixin_list(proxy, url):
 
 
 def sync_by_proxy():
+    img_prefix = "http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl="
     proxies = get_active_sougou_proxy()
     
     mps = get_mps()
@@ -271,7 +272,7 @@ def sync_by_proxy():
                 article = article.replace("\\", "")
                 url = re.compile('<url>(.+)</url>').findall(article)[0][9:-3]
                 timestamp = re.compile('<lastModified>(.+)</lastModified>').findall(article)[0]
-                img = re.compile('<imglink>(.+)</imglink>').findall(article)[0][9:-3]
+                img = img_prefix + re.compile('<imglink>(.+)</imglink>').findall(article)[0][9:-3]
                 create_time = datetime.datetime.fromtimestamp(float(timestamp))
 
                 article_detail = pq(requests.get(
