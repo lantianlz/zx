@@ -124,4 +124,3 @@ def sync_toutiao(request):
         debug.get_debug_detail(e)
         return HttpResponse(json.dumps({'code': 99}))
 
-

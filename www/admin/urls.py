@@ -237,6 +237,7 @@ urlpatterns += patterns('www.admin.views_toutiao_type',
 # 微信号
 urlpatterns += patterns('www.admin.views_weixin_mp',
 
+                        url(r'^toutiao/weixin_mp/sync_ext_id$', 'sync_ext_id'),
                         url(r'^toutiao/weixin_mp/get_weixin_mp_by_name$', 'get_weixin_mp_by_name'),
                         url(r'^toutiao/weixin_mp/get_weixin_info$', 'get_weixin_info'),
                         url(r'^toutiao/weixin_mp/modify_weixin_mp$', 'modify_weixin_mp'),

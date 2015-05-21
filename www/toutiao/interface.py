@@ -231,6 +231,18 @@ class WeixinMpBase(object):
 
         return 0, dict_err.get(0)
 
+    def sync_ext_id(requests, ext_id_dict):
+        try:
+            for k, v in ext_id_dict.items():
+                temp = WeixinMp.objects.get(id=k)
+                temp.ext_id = v
+                temp.save()
+        except Exception, e:
+            debug.get_debug_detail(e)
+            return 99900, dict_err.get(99900)
+
+        return 0, dict_err.get(0)
+
 
 class ArticleBase(object):
 

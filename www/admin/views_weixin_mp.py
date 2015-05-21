@@ -152,3 +152,11 @@ def modify_weixin_mp(request):
         des=des, vip_info=vip_info, img=img, qrimg=qrimg, article_type_id=article_type,
         sort_num=sort_num, state=state, is_silence=is_silence
     )
+
+
+@verify_permission('modify_weixin_mp')
+@common_ajax_response
+def sync_ext_id(request):
+    ext_ids = request.REQUEST.get('ext_ids')
+
+    return WeixinMpBase().sync_ext_id(json.loads(ext_ids))
