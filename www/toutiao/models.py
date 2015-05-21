@@ -29,6 +29,7 @@ class WeixinMp(models.Model):
     sort_num = models.IntegerField(default=0, db_index=True)
     article_type = models.ForeignKey(ArticleType, null=True)
     state = models.BooleanField(default=True, db_index=True)
+    ext_id = models.CharField(max_length=250, null=True) # 搜狗加密之后的id
 
     class Meta:
         ordering = ["-sort_num", "-id"]

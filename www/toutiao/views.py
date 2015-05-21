@@ -67,7 +67,8 @@ def get_mps(request):
     for mp in WeixinMp.objects.filter(state=True):
         data.append({
             'open_id': mp.open_id,
-            'mp_id': mp.id
+            'mp_id': mp.id,
+            'ext_id': mp.ext_id
         })
 
     return HttpResponse(json.dumps(data))

@@ -219,7 +219,8 @@ def _get_weixin_list(proxy, url):
             timeout = 15
         )
 
-        lst_article = eval(re.compile('gzh\((.+)\)').findall(resp.text)[0])["items"]
+        # lst_article = eval(re.compile('gzh\((.+)\)').findall(resp.text)[0])["items"]
+        lst_article = eval(re.compile('gzhcb\((.+)\)').findall(resp.text)[0])["items"]
         
     except Exception, e:
         # traceback.print_exc()
@@ -239,7 +240,8 @@ def sync_by_proxy():
 
     for mp in mps:
         count += 1
-        url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp['open_id']
+        # url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp['open_id']
+        url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&" + mp['ext_id'] + "&page=1"
         lst_article = []
 
         for i in range(len(proxies)):
@@ -328,6 +330,6 @@ if __name__ == "__main__":
         time.sleep(5) 
         sync_by_proxy()
 
-    # while 1:
-    #     time.sleep(3)
-    #     sync()
+
+
+
