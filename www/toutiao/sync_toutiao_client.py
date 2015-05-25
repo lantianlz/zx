@@ -327,9 +327,11 @@ if __name__ == "__main__":
     # print random.choice(c)
 
     while 1:
-        time.sleep(5) 
-        sync_by_proxy()
-
+        try:
+            time.sleep(5) 
+            sync_by_proxy()
+        except Exception, e:
+            print e
 
 
 
