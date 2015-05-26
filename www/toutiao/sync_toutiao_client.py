@@ -241,7 +241,7 @@ def sync_by_proxy():
     for mp in mps:
         count += 1
         # url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp['open_id']
-        url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&" + mp['ext_id'] + "&page=1"
+        url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
         lst_article = []
 
         for i in range(len(proxies)):
@@ -314,6 +314,11 @@ def sync_by_proxy():
                     print u'成功!'
                 else:
                     print u'失败！！[%s]' % result['code']
+
+                    if result['code'] == 2:
+                        print u'此公众号暂无更新，跳过...'
+                        time.sleep(5)
+                        break
             except Exception, e:
                 print e
                 continue
@@ -328,7 +333,7 @@ if __name__ == "__main__":
 
     while 1:
         try:
-            time.sleep(5) 
+            time.sleep(900) 
             sync_by_proxy()
         except Exception, e:
             print e
