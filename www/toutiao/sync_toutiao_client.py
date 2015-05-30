@@ -317,7 +317,7 @@ def sync_by_proxy():
 
                     if result['code'] == 2:
                         print u'此公众号暂无更新，跳过...'
-                        time.sleep(5)
+                        time.sleep(15)
                         break
             except Exception, e:
                 print e
@@ -333,8 +333,8 @@ if __name__ == "__main__":
 
     while 1:
         try:
-            time.sleep(900) 
             sync_by_proxy()
+            time.sleep(900) 
         except Exception, e:
             print e
 

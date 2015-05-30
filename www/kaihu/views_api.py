@@ -20,8 +20,16 @@ nb = interface.NewsBase()
 def _format_api_departments(departments):
     results = []
     for department in departments:
-        results.append({"id": department.id, "short_name": department.get_short_name(), "cm_count": department.cm_count, "img": department.company.img,
-                        "tel": department.tel, "addr": department.addr, "company_name": department.company.get_short_name(), "des": department.des})
+        results.append({
+            "id": department.id, 
+            "short_name": department.get_short_name(), 
+            "cm_count": department.cm_count, 
+            "img": department.company.img,
+            "tel": "-", #department.tel, 
+            "addr": department.addr, 
+            "company_name": department.company.get_short_name(), 
+            "des": department.des
+        })
     return results
 
 
@@ -86,6 +94,7 @@ def api_get_custom_manager_list(request):
     custom_managers = cmb.format_customer_managers_for_ajax([
         cmb.get_customer_manager_by_user_id(user_id="d1baa40e5f3a11e4813d00163e003240"), 
         cmb.get_customer_manager_by_user_id(user_id="248eaf24aa7b11e3ac1c00163e003240"), 
+        cmb.get_customer_manager_by_user_id(user_id="5ac92f1c7aee11e4a27400163e003240"), 
     ])
     # ===============================================================================
     custom_managers_count = len(custom_managers)
