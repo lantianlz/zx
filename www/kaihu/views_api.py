@@ -94,7 +94,6 @@ def api_get_custom_manager_list(request):
     custom_managers = cmb.format_customer_managers_for_ajax([
         cmb.get_customer_manager_by_user_id(user_id="d1baa40e5f3a11e4813d00163e003240"), 
         cmb.get_customer_manager_by_user_id(user_id="248eaf24aa7b11e3ac1c00163e003240"), 
-        cmb.get_customer_manager_by_user_id(user_id="5ac92f1c7aee11e4a27400163e003240"), 
     ])
     # ===============================================================================
     custom_managers_count = len(custom_managers)
