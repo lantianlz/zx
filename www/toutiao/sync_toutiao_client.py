@@ -64,7 +64,7 @@ def is_active_sougou_proxy(proxy):
 def get_active_sougou_proxy():
 
     PROXY_URL = "http://proxy-list.org/english/search.php?search=CN.transparent&country=CN&type=transparent&port=any&ssl=any"
-    PROXY_URL = "http://proxy-list.org/chinese/index.php?p=1&setlang=chinese"
+    # PROXY_URL = "http://proxy-list.org/chinese/index.php?p=1&setlang=chinese"
     headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"}
 
     req = requests.get(PROXY_URL, headers=headers, timeout=10)
@@ -218,12 +218,13 @@ def _get_weixin_list(proxy, url):
             proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
             timeout = 15
         )
-
+        # print url
+        # print resp.text
         # lst_article = eval(re.compile('gzh\((.+)\)').findall(resp.text)[0])["items"]
         lst_article = eval(re.compile('gzhcb\((.+)\)').findall(resp.text)[0])["items"]
         
     except Exception, e:
-        # traceback.print_exc()
+        traceback.print_exc()
         pass
 
     return lst_article
@@ -317,10 +318,10 @@ def sync_by_proxy():
 
                     if result['code'] == 2:
                         print u'此公众号暂无更新，跳过...'
-                        time.sleep(15)
+                        time.sleep(200)
                         break
             except Exception, e:
-                print e
+                print traceback.print_exc()
                 continue
 
     print '成功更新[ %s ]条' % success
@@ -334,9 +335,8 @@ if __name__ == "__main__":
     while 1:
         try:
             sync_by_proxy()
-            time.sleep(900) 
+            time.sleep(2400) 
         except Exception, e:
             print e
-
 
 
