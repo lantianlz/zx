@@ -125,11 +125,15 @@ def api_get_custom_manager_list(request):
     
     # 上海单独处理
     if city.id == 473:
-        custom_managers.append(cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"))
+        custom_managers += cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+        ])
 
     # 北京单独处理
     if city.id == 3:
-        custom_managers.append(cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"))
+        custom_managers += cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+        ])
 
     custom_managers_count = len(custom_managers)
 
