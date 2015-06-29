@@ -135,6 +135,12 @@ def api_get_custom_manager_list(request):
             cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
         ])
 
+    # 整个四川单独处理
+    if city_id in [2052, 2064, 2074, 2081, 2092, 2098, 2106, 2115, 2120, 2125, 2139, 2158, 1974, 1994, 2001, 2007, 2015, 2022, 2032, 2040, 2046]:
+        custom_managers = cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="9945c0266fdf11e4b85000163e003240"), 
+        ]) + custom_managers
+
     custom_managers_count = len(custom_managers)
 
     return dict(custom_managers=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
