@@ -17,8 +17,8 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $.map($('.content_body img'), function(i){
-        var imgPrefix = "http://img01.store.sogou.com/net/a/04/link?appid=100520031&amp;w=145&amp;h=100&amp;url=";
-        imgPrefix = "http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl=";
+        var imgPrefix = "http://img01.store.sogou.com/net/a/04/link?appid=100520031&w=210&h=105&url=";
+        // imgPrefix = "http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl=";
         $(i).attr('src', imgPrefix + $(i).attr('src'));
     });
 });
