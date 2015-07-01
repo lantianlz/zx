@@ -232,7 +232,7 @@ def _get_weixin_list(proxy, url):
 
 def sync_by_proxy():
     img_prefix = "http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl="
-    img_prefix = "http://img01.store.sogou.com/net/a/04/link?appid=100520031&amp;w=145&amp;h=100&amp;url="
+    # img_prefix = "http://img01.store.sogou.com/net/a/04/link?appid=100520031&amp;w=145&amp;h=100&amp;url="
     proxies = get_active_sougou_proxy()
     
     mps = get_mps()
