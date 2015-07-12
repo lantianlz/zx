@@ -349,6 +349,6 @@ if __name__ == "__main__":
             sync_by_proxy()
             time.sleep(10) 
         except Exception, e:
-            print e
+            traceback.print_exc()
 
 

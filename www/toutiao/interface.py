@@ -331,8 +331,14 @@ class ArticleBase(object):
 
         return 0, obj
 
-    def search_article_for_admin(self, title, state, is_silence=False):
+    def search_article_for_admin(self, title, state, is_silence=False, mp_name=None):
+
         objs = self.get_all_articles(state=state).filter(is_silence=is_silence)
+
+        if mp_name:
+            mp = WeixinMpBase().search_weixin_mp_for_admin(mp_name)
+            if mp:
+                objs = objs.filter(weixin_mp=mp[0])
 
         if title:
             objs = objs.filter(title=title)
