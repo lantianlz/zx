@@ -50,6 +50,10 @@ def api_get_department_list(request):
     if city.id in [1974, 1994, 2001, 2007, 2015, 2022, 2032, 2040, 2046, 2052, 2064, 2074, 2081, 2092, 2098, 2106, 2115, 2120, 2125, 2139, 2158]:
         departments.insert(0, db.get_department_by_id(5105))
 
+    # 上海
+    if city.id == 473:
+        departments.insert(0, db.get_department_by_id(3417))
+        
     return dict(departments=_format_api_departments(departments), department_count=department_count)
 
 
