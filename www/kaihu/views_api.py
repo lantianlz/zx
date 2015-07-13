@@ -141,11 +141,29 @@ def api_get_custom_manager_list(request):
             cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
         ])
 
+    # =============== js 获取省份下面所有城市id ===============
+    # b = []
+    # a = $("tr").filter(function(i){return 304<=i&&i<=324})
+    # $.each(a, function(i){b.push(a.eq(i).children('td').eq(3).data('city_id'))})
+    # b.sort()
+    # ======================================================
     # 整个四川单独处理
     if city.id in [1974, 1994, 2001, 2007, 2015, 2022, 2032, 2040, 2046, 2052, 2064, 2074, 2081, 2092, 2098, 2106, 2115, 2120, 2125, 2139, 2158]:
         custom_managers = cmb.format_customer_managers_for_ajax([
             cmb.get_customer_manager_by_user_id(user_id="9945c0266fdf11e4b85000163e003240"), 
         ]) + custom_managers
+
+    # 整个广州单独处理
+    if city.id in [1217, 1235, 1239, 1253, 1261, 1271, 1278, 1287, 1293, 1302, 1307, 1314, 1319, 1328, 1329, 1330, 1334, 1340]:
+        custom_managers = cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+        ]) + custom_managers
+
+    # 整个湖南单独处理
+    if city.id in [1794, 1804, 1814, 1820, 1833, 1846, 1856, 1866, 1871, 1878, 1890, 1902, 1915, 1921]:
+        custom_managers = custom_managers + cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="b1f4299c296511e5b2b800163e003240"), 
+        ])
 
     custom_managers_count = len(custom_managers)
 
