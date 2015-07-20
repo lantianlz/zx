@@ -139,6 +139,7 @@ def api_get_custom_manager_list(request):
     if city.id == 3:
         custom_managers += cmb.format_customer_managers_for_ajax([
             cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+            cmb.get_customer_manager_by_user_id(user_id="a92af6808bd911e48d6a00163e003240"), 
         ])
 
     # =============== js 获取省份下面所有城市id ===============
