@@ -210,6 +210,7 @@ def sync():
 
 def _get_weixin_list(proxy, url):
     lst_article = []
+    cookies = None
 
     try:
         resp = requests.get(
@@ -222,12 +223,12 @@ def _get_weixin_list(proxy, url):
         # print resp.text
         # lst_article = eval(re.compile('gzh\((.+)\)').findall(resp.text)[0])["items"]
         lst_article = eval(re.compile('gzhcb\((.+)\)').findall(resp.text)[0])["items"]
-        
+        cookies = resp.cookies
     except Exception, e:
         # traceback.print_exc()
         pass
 
-    return lst_article
+    return lst_article, cookies
 
 
 def sync_by_proxy():
@@ -244,7 +245,9 @@ def sync_by_proxy():
         count += 1
         # url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp['open_id']
         url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
+        print url
         lst_article = []
+        cookies = None
         temp = []
 
         for i in range(len(proxies)):
@@ -253,7 +256,7 @@ def sync_by_proxy():
                 continue
 
             proxy = proxies[i]
-            lst_article = _get_weixin_list(proxy, url)
+            lst_article, cookies = _get_weixin_list(proxy, url)
             
             if lst_article:
                 print u'代理[ %s ]获取微信文章链接成功!!!' % proxy
@@ -285,7 +288,9 @@ def sync_by_proxy():
             time.sleep(4)
 
             try:
-                url = t['url']
+                url = u"http://weixin.sogou.com" + t['url']
+
+                print url
                 timestamp = t['timestamp']
                 img = t['img']
                 create_time = datetime.datetime.fromtimestamp(float(timestamp))
@@ -294,6 +299,7 @@ def sync_by_proxy():
                     url,
                     headers = headers,
                     timeout = 15,
+                    cookies = cookies
                     # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
                 ).text)
                 title = article_detail("#activity-name").html().split("<em")[0].strip()
@@ -330,7 +336,7 @@ def sync_by_proxy():
 
                     if result['code'] == 2:
                         print u'此公众号暂无更新，跳过...'
-                        time.sleep(80)
+                        time.sleep(55)
                         break
             except Exception, e:
                 print traceback.print_exc()
