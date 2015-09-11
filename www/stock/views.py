@@ -438,3 +438,51 @@ def get_stock_percent_in_total_data_of_kind(request):
     }
 
     return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def get_stock_json(request):
+    from stock.models import Stock
+    import json
+
+    data = []
+    for stock in Stock.objects.filter(state=True).order_by("code"):
+        data.append({
+            'id': stock.id,
+            'code': stock.code,
+            'market': ["sh", "sz"][stock.belong_market]
+        })
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+def sync_stock_data(request):
+
+    import json, traceback
+    from common import debug
+    from stock.models import Stock, StockData
+
+    stock_id = request.REQUEST.get('stock_id')
+    date = request.REQUEST.get('date')
+    open_price = request.REQUEST.get('open_price')
+    high_price = request.REQUEST.get('high_price')
+    low_price = request.REQUEST.get('low_price')
+    close_price = request.REQUEST.get('close_price')
+    volume = request.REQUEST.get('volume')
+    turnover = request.REQUEST.get('turnover')
+
+    sds = list(StockData.objects.filter(stock_id=stock_id, date=date))
+    if not sds:
+        StockData.objects.create(stock_id=stock_id, date=date, open_price=open_price, high_price=high_price,
+                                 low_price=low_price, close_price=close_price, volume=volume, turnover=turnover)
+    else:
+        sd = sds[0]
+        ps = dict(open_price=open_price, high_price=high_price,
+                  low_price=low_price, close_price=close_price, volume=volume, turnover=turnover)
+        for key in ps:
+            setattr(sd, key, ps[key])
+        sd.save()
+
+    return HttpResponse(json.dumps({'code': 0}), mimetype='application/json')
+
+
+
+
+

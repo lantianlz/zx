@@ -24,7 +24,9 @@ headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:29.0) 
 
 def sync_stock_data():
     for i, stock in enumerate(Stock.objects.all().order_by("code")):
+        time.sleep(5)
         url = "http://hq.sinajs.cn/list=%s%s" % (["sh", "sz"][stock.belong_market], stock.code)
+        resp = None
         for j in range(3):
             try:
                 resp = requests.get(url, timeout=10, headers=headers)
@@ -33,7 +35,7 @@ def sync_stock_data():
                 print stock, stock.id
                 print e
 
-        if not resp.status_code == 200:
+        if not resp or resp.status_code != 200:
             continue
         text = resp.text
         # pprint(datas)
@@ -216,7 +218,7 @@ def update_stock_market_value():
 
 
 if __name__ == '__main__':
-    sync_stock_data()
+    # sync_stock_data()
     update_stock_turnover_rate_to_all_today()
     update_stock_turnover_change_today()
     update_kind_data()

@@ -37,4 +37,7 @@ urlpatterns = patterns('www.stock.views',
                        url(r'^get_kind_history_percent_in_total_data$', 'get_kind_history_percent_in_total_data'),
                        url(r'^get_stock_chain_data_of_kind$', 'get_stock_chain_data_of_kind'),
                        url(r'^get_stock_percent_in_total_data_of_kind$', 'get_stock_percent_in_total_data_of_kind'),
+
+                       url(r'^get_stock_json$', 'get_stock_json'),
+                       url(r'^sync_stock_data$', 'sync_stock_data'),
                        )

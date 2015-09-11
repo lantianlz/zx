@@ -245,7 +245,7 @@ def sync_by_proxy():
         count += 1
         # url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp['open_id']
         url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
-        print url
+        # print url
         lst_article = []
         cookies = None
         temp = []
@@ -290,7 +290,7 @@ def sync_by_proxy():
             try:
                 url = u"http://weixin.sogou.com" + t['url']
 
-                print url
+                # print url
                 timestamp = t['timestamp']
                 img = t['img']
                 create_time = datetime.datetime.fromtimestamp(float(timestamp))
