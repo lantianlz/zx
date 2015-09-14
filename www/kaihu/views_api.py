@@ -166,6 +166,12 @@ def api_get_custom_manager_list(request):
             cmb.get_customer_manager_by_user_id(user_id="b1f4299c296511e5b2b800163e003240"), 
         ])
 
+    # 南通单独处理
+    if city.id == 549:
+        custom_managers += cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="07846d4668ae11e4a2c800163e003240"), 
+        ])
+
     custom_managers_count = len(custom_managers)
 
     return dict(custom_managers=_format_api_custom_managers(custom_managers), custom_managers_count=custom_managers_count)
