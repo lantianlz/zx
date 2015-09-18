@@ -248,6 +248,7 @@ def sync_by_proxy():
         # print url
         lst_article = []
         cookies = None
+        proxy = ""
         temp = []
 
         for i in range(len(proxies)):
@@ -299,9 +300,10 @@ def sync_by_proxy():
                     url,
                     headers = headers,
                     timeout = 15,
-                    cookies = cookies
-                    # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
+                    cookies = cookies,
+                    proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
                 ).text)
+                print url
                 title = article_detail("#activity-name").html().split("<em")[0].strip()
                 content = article_detail("#js_content").html()
                 format_content = _replace_html_tag(content).strip()
@@ -336,7 +338,7 @@ def sync_by_proxy():
 
                     if result['code'] == 2:
                         print u'此公众号暂无更新，跳过...'
-                        time.sleep(55)
+                        time.sleep(65)
                         break
             except Exception, e:
                 print traceback.print_exc()
