@@ -164,6 +164,7 @@ def api_get_custom_manager_list(request):
     if city.id in [1794, 1804, 1814, 1820, 1833, 1846, 1856, 1866, 1871, 1878, 1890, 1902, 1915, 1921]:
         custom_managers = custom_managers + cmb.format_customer_managers_for_ajax([
             cmb.get_customer_manager_by_user_id(user_id="b1f4299c296511e5b2b800163e003240"), 
+            cmb.get_customer_manager_by_user_id(user_id="f7957d0656b111e5aad300163e003240"), 
         ])
 
     # 南通单独处理
