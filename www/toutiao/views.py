@@ -68,6 +68,7 @@ def get_mps(request):
         data.append({
             'open_id': mp.open_id,
             'mp_id': mp.id,
+            'name': mp.name,
             'ext_id': mp.ext_id
         })
 
