@@ -208,16 +208,46 @@ def sync():
     print u'成功更新[ %s ]条' % success
 
 
-def _get_weixin_list(proxy, url):
+def _get_weixin_list(proxy, mp):
     lst_article = []
     cookies = None
 
     try:
         resp = requests.get(
-            url,
+            u'http://weixin.sogou.com/weixin?type=1&query=%s&ie=utf8' % mp['name'],
             headers = headers,
             proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
             timeout = 15
+        )
+
+        cookies = resp.cookies
+        temp = pq(resp.text)
+        href = temp('.wx-rb_v1').eq(0).attr('href')
+        ext = re.compile('ext=(.*)').search(href).groups()[0]
+        # print u'http://weixin.sogou.com/weixin?type=1&query=%s&ie=utf8' % mp['name']
+        # print href
+        # print ext
+        # print '1-1--1-1-1-1-1-1-1-1-1-1-1-1-1-1-1--1-1-1-1-1'
+
+        # temp = requests.get(
+        #     u'http://weixin.sogou.com' % href,
+        #     headers = headers,
+        #     proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
+        #     timeout = 15
+        # ).text
+        # weixin_gzh_openid_ext = re.compile("weixin_gzh_openid_ext = \"(.*)\";w").search(temp).groups()[0]
+        # print u'http://weixin.sogou.com' % href
+        # print weixin_gzh_openid_ext
+        # print '2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-'
+
+        # url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
+        url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=%s&ext=%s&gzhArtKeyWord=&%s&page=1" % (mp['open_id'], ext, mp['ext_id'])
+        resp = requests.get(
+            url,
+            headers = headers,
+            proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
+            timeout = 15,
+            cookies = cookies
         )
         # print url
         # print resp.text
@@ -244,7 +274,7 @@ def sync_by_proxy():
     for mp in mps:
         count += 1
         # url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp['open_id']
-        url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
+        # url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
         # print url
         lst_article = []
         cookies = None
@@ -257,7 +287,7 @@ def sync_by_proxy():
                 continue
 
             proxy = proxies[i]
-            lst_article, cookies = _get_weixin_list(proxy, url)
+            lst_article, cookies = _get_weixin_list(proxy, mp)
             
             if lst_article:
                 print u'代理[ %s ]获取微信文章链接成功!!!' % proxy
@@ -291,19 +321,23 @@ def sync_by_proxy():
             try:
                 url = u"http://weixin.sogou.com" + t['url']
 
-                # print url
+                print url
                 timestamp = t['timestamp']
                 img = t['img']
                 create_time = datetime.datetime.fromtimestamp(float(timestamp))
 
-                article_detail = pq(requests.get(
+                resp = requests.get(
                     url,
                     headers = headers,
                     timeout = 15,
                     cookies = cookies,
                     proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy}
-                ).text)
-                print url
+                )
+
+                print resp.text
+                
+                article_detail = pq(resp.text)
+                #print url
                 title = article_detail("#activity-name").html().split("<em")[0].strip()
                 content = article_detail("#js_content").html()
                 format_content = _replace_html_tag(content).strip()

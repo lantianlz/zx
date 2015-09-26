@@ -64,7 +64,7 @@ def get_mps(request):
     import json
 
     data = []
-    for mp in WeixinMp.objects.filter(state=True):
+    for mp in WeixinMp.objects.select_related('article_type').filter(state=True, article_type_id__in=(1,2,3,5)):
         data.append({
             'open_id': mp.open_id,
             'mp_id': mp.id,
