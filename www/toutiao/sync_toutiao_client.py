@@ -253,7 +253,7 @@ def _get_weixin_list(proxy, mp):
         # print resp.text
         # lst_article = eval(re.compile('gzh\((.+)\)').findall(resp.text)[0])["items"]
         lst_article = eval(re.compile('gzhcb\((.+)\)').findall(resp.text)[0])["items"]
-        cookies = resp.cookies
+        # cookies = resp.cookies
     except Exception, e:
         # traceback.print_exc()
         pass
@@ -264,7 +264,7 @@ def _get_weixin_list(proxy, mp):
 def sync_by_proxy():
     img_prefix = "http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl="
     img_prefix = "http://img01.store.sogou.com/net/a/04/link?appid=100520031&w=210&h=105&url="
-    proxies = get_active_sougou_proxy()
+    # proxies = get_active_sougou_proxy()
     
     mps = get_mps()
     count = 0
@@ -272,6 +272,7 @@ def sync_by_proxy():
     index = 0
 
     for mp in mps:
+        proxies = get_active_sougou_proxy()
         count += 1
         # url = u"http://weixin.sogou.com/gzhjs?openid=%s" % mp['open_id']
         # url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
@@ -372,7 +373,7 @@ def sync_by_proxy():
 
                     if result['code'] == 2:
                         print u'此公众号暂无更新，跳过...'
-                        time.sleep(65)
+                        time.sleep(20)
                         break
             except Exception, e:
                 print traceback.print_exc()
