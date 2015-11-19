@@ -141,6 +141,11 @@ def api_get_custom_manager_list(request):
             cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
         ])
 
+    if city.id == 1932:
+        custom_managers += cmb.format_customer_managers_for_ajax([
+            cmb.get_customer_manager_by_user_id(user_id="fd2a75aa8d9811e5912b00163e003240"), 
+        ])
+
     # =============== js 获取省份下面所有城市id ===============
     # b = []
     # a = $("tr").filter(function(i){return 304<=i&&i<=324})
