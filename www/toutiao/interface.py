@@ -275,20 +275,20 @@ class ArticleBase(object):
         ps = dict(is_silence=False)
         if state is not None:
             ps.update(dict(state=state))
-        return Article.objects.select_related("weixin_mp").filter(**ps)
+        return Article.objects.filter(**ps)
 
     def get_articles_by_type(self, article_type):
-        return Article.objects.select_related("weixin_mp").filter(article_type=article_type, state=True)
+        return Article.objects.filter(article_type=article_type, state=True)
 
     def get_articles_by_weixin_mp(self, weixin_mp):
-        return Article.objects.select_related("weixin_mp").filter(weixin_mp=weixin_mp, state=True)
+        return Article.objects.filter(weixin_mp=weixin_mp, state=True)
 
     def get_article_by_id(self, article_id, state=True):
         try:
             ps = dict(id=article_id)
             if state is not None:
                 ps.update(state=state)
-            return Article.objects.select_related("weixin_mp").get(**ps)
+            return Article.objects.get(**ps)
         except Article.DoesNotExist:
             return None
 
