@@ -249,6 +249,10 @@ class ArticleBase(object):
     def __init__(self):
         pass
 
+    def _warp_articles(self, objs):
+        # return objs.values('id', 'title', 'article_type_id', 'weixin_mp_id', 'from_url', 'is_silence', 'img', 'views_count', 'sort_num', 'state', 'create_time')
+        return objs.select_related('weixin_mp').defer('content')
+
     def format_articles(self, articles):
         for article in articles:
             article.content = article.content.replace("data-src=", "src=")
@@ -269,19 +273,19 @@ class ArticleBase(object):
         ps = dict()
         if state is not None:
             ps.update(dict(state=state))
-        return Article.objects.select_related("weixin_mp").filter(**ps)
+        return Article.objects.filter(**ps)
 
     def get_all_valid_articles(self, state=True):
         ps = dict(is_silence=False)
         if state is not None:
             ps.update(dict(state=state))
-        return Article.objects.filter(**ps)
+        return self._warp_articles(Article.objects.filter(**ps))
 
     def get_articles_by_type(self, article_type):
-        return Article.objects.filter(article_type=article_type, state=True)
+        return self._warp_articles(Article.objects.filter(article_type=article_type, state=True))
 
     def get_articles_by_weixin_mp(self, weixin_mp):
-        return Article.objects.filter(weixin_mp=weixin_mp, state=True)
+        return self._warp_articles(Article.objects.filter(weixin_mp=weixin_mp, state=True))
 
     def get_article_by_id(self, article_id, state=True):
         try:
@@ -294,11 +298,12 @@ class ArticleBase(object):
 
     def get_newsest_articles_related(self, article):
         ps = dict(weixin_mp=article.weixin_mp, state=True)
-        return Article.objects.filter(**ps).exclude(id=article.id).order_by("-create_time")
+        return self._warp_articles(Article.objects.filter(**ps).exclude(id=article.id).order_by("-create_time"))
 
     def get_hotest_articles(self):
         now = datetime.datetime.now()
-        return Article.objects.filter(create_time__gt=now - datetime.timedelta(hours=24), is_silence=False, state=True).order_by("-views_count", "-create_time")
+        objs = Article.objects.filter(create_time__gt=now - datetime.timedelta(hours=24), is_silence=False, state=True).order_by("-views_count", "-create_time")
+        return self._warp_articles(objs)
 
     def add_article_view_count(self, article_id):
         '''
