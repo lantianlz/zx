@@ -347,10 +347,13 @@ class CustomerManagerBase(object):
     def format_customer_managers_for_ajax(self, objs):
         data = []
         for obj in objs:
-            if obj == '':
+            if not obj:
                 continue
 
             user = UserBase().get_user_by_id(obj.user_id)
+            if user == "":
+                continue
+                
             user_count_info = UserCountBase().get_user_count_info(obj.user_id)
             data.append(dict(user_id=user.id, user_nick=self.get_cm_nick_show(obj.real_name, user.nick), user_avatar=user.get_avatar_100(),
                              department_name=obj.department.get_short_name(), company_short_name=obj.department.company.get_short_name(),
