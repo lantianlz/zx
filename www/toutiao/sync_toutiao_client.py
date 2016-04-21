@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import requests, re, json, time, datetime, traceback, random, base64
+import requests, re, json, time, datetime, traceback, random, base64, HTMLParser
 from pyquery import PyQuery as pq
 
 # host = "www.a.com:8000"
 host = "www.zhixuan.com"
 headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"}
+html_parser = HTMLParser.HTMLParser()
 
 def get_mps():
     
@@ -44,6 +45,7 @@ def get_active_sougou_proxy():
 def _get_weixin_list(proxy, mp):
     lst_article = []
     cookies = None
+    timestamp = time.time()
 
     try:
         resp = requests.get(
@@ -56,11 +58,11 @@ def _get_weixin_list(proxy, mp):
         cookies = resp.cookies
         temp = pq(resp.text)
         href = temp('.wx-rb_v1').eq(0).attr('href')
-        ext = re.compile('ext=(.*)').search(href).groups()[0]
-        # print u'http://weixin.sogou.com/weixin?type=1&query=%s&ie=utf8' % mp['name']
-        # print href
+        # ext = re.compile('ext=(.*)').search(href).groups()[0]
+        print u'http://weixin.sogou.com/weixin?type=1&query=%s&ie=utf8' % mp['name']
+        print href
         # print ext
-        # print '1-1--1-1-1-1-1-1-1-1-1-1-1-1-1-1-1--1-1-1-1-1'
+        print '1-1--1-1-1-1-1-1-1-1-1-1-1-1-1-1-1--1-1-1-1-1'
 
         # temp = requests.get(
         #     u'http://weixin.sogou.com' % href,
@@ -74,24 +76,37 @@ def _get_weixin_list(proxy, mp):
         # print '2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-'
 
         # url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+ mp['open_id'] +"&" + mp['ext_id'] + "&page=1"
-        url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=%s&ext=%s&gzhArtKeyWord=&%s&page=1" % (mp['open_id'], ext, mp['ext_id'])
-        resp = requests.get(
-            url,
+        # url = u"http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=%s&ext=%s&gzhArtKeyWord=&%s&page=1" % (mp['open_id'], ext, mp['ext_id'])
+        # resp = requests.get(
+        #     url,
+        #     headers = headers,
+        #     proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
+        #     timeout = 15,
+        #     cookies = cookies
+        # )
+        # print url
+        # print resp.text
+        # lst_article = eval(re.compile('gzh\((.+)\)').findall(resp.text)[0])["items"]
+        # lst_article = eval(re.compile('gzhcb\((.+)\)').findall(resp.text)[0])["items"]
+        # cookies = resp.cookies
+
+        temp = requests.get(
+            href,
             headers = headers,
             proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
             timeout = 15,
             cookies = cookies
-        )
-        # print url
-        # print resp.text
-        # lst_article = eval(re.compile('gzh\((.+)\)').findall(resp.text)[0])["items"]
-        lst_article = eval(re.compile('gzhcb\((.+)\)').findall(resp.text)[0])["items"]
-        # cookies = resp.cookies
+        ).text
+
+        json_str = re.compile("var msgList = '(.*)';").search(temp).groups()[0]
+        lst_article = eval(html_parser.unescape(json_str))
+        lst_article = lst_article['list'][0]['app_msg_ext_info']['multi_app_msg_item_list']
+        timestamp = obj['list'][0]['comm_msg_info']['datetime']
     except Exception, e:
-        # traceback.print_exc()
+        traceback.print_exc()
         pass
 
-    return lst_article, cookies
+    return lst_article, cookies, float(timestamp)
 
 
 def sync_by_proxy():
@@ -113,6 +128,7 @@ def sync_by_proxy():
         # print url
         lst_article = []
         cookies = None
+        timestamp = time.time()
         proxy = ""
         temp = []
 
@@ -122,7 +138,7 @@ def sync_by_proxy():
                 continue
 
             proxy = proxies[i]
-            lst_article, cookies = _get_weixin_list(proxy, mp)
+            lst_article, cookies, timestamp = _get_weixin_list(proxy, mp)
             
             if lst_article:
                 print u'代理[ %s ]获取微信文章链接成功!!!' % proxy
@@ -140,13 +156,11 @@ def sync_by_proxy():
 
         # 排序
         for article in lst_article:
-            article = article.replace("\\", "")
+            
             temp.append({
-                "url": re.compile('<url>(.+)</url>').findall(article)[0][9:-3],
-                "timestamp": float(re.compile('<lastModified>(.+)</lastModified>').findall(article)[0]),
-                "img": img_prefix + re.compile('<imglink>(.+)</imglink>').findall(article)[0][9:-3],
+                "url": article['content_url'].replace("\\", ""),
+                "img": img_prefix + article['cover'].replace("\\", ""),
             })
-        temp = sorted(temp, key=lambda x: x['timestamp'], reverse=True)
         # print temp
 
         for t in temp:
@@ -157,7 +171,7 @@ def sync_by_proxy():
                 url = u"http://weixin.sogou.com" + t['url']
 
                 print url
-                timestamp = t['timestamp']
+                
                 img = t['img']
                 create_time = datetime.datetime.fromtimestamp(float(timestamp))
 
