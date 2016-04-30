@@ -145,6 +145,15 @@ def sync_by_proxy():
                 "img": img_prefix + article['app_msg_ext_info']['cover'].replace("\\", ""),
             })
 
+            # 是否有多条
+            if article['app_msg_ext_info']['is_multi'] == 1:
+                for art in article['app_msg_ext_info']['multi_app_msg_item_list']:
+                    temp.append({
+                        "url": html_parser.unescape(art['content_url'].replace("\\", "")),
+                        "timestamp": article['comm_msg_info']['datetime'],
+                        "img": img_prefix + art['cover'].replace("\\", ""),
+                    })
+
         # print temp
         # print '3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3'
         # time.sleep(15)
