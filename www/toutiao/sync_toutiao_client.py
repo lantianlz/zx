@@ -7,7 +7,7 @@ from pyquery import PyQuery as pq
 host = "www.zhixuan.com"
 headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"}
 html_parser = HTMLParser.HTMLParser()
-use_proxy = False
+use_proxy = True
 
 def get_mps():
     

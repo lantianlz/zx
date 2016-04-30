@@ -1,5 +1,30 @@
 <div class="pl-0 pr-20">
     <a href="http://wpa.qq.com/msgrd?v=3&uin={{ad_img.1}}&site=qq&menu=yes" target="_blank">
-    	<img alt="{{ad_img.2}}股票开户" class="w h" src="{{ad_img.0}}">
+        <img alt="{{ad_img.2}}股票开户" class="w h kaihu-img" src="{{ad_img.0}}">
     </a>
 </div>
+
+{% if ad_img.2 == '' %}
+<div style="position: fixed;width: 150px;background: #E5F6FF;right: 10px;top: 90px; z-index: 10000;">
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=2476527648&site=qq&menu=yes" target="_blank">
+        <div class="text-center bgc-zx co3 pb-10 pt-10 f15">
+            股票开转户咨询
+        </div>
+        <div class="text-center">
+            <img src="{{MEDIA_URL}}img/kaihu/kefu.gif">
+        </div>
+        <div class="text-center" style="color: #428bca;">
+            <i class="fa fa-qq"></i><span style="padding: 5px; display: inline-block;">股票开户咨询</span>
+        </div>
+        <div class="text-center" style="color: #428bca;">
+            <i class="fa fa-qq"></i><span style="padding: 5px; display: inline-block;">股票转户咨询</span>
+        </div>
+        <div class="text-center" style="color: #428bca;">
+            <i class="fa fa-qq"></i><span style="padding: 5px; display: inline-block;">投资理财咨询</span>
+        </div>
+        <div class="text-center" style="color: #428bca;">
+            <i class="fa fa-phone"></i><span style="padding: 5px; display: inline-block;">18918667738</span>
+        </div>
+    </a>
+</div>
+{% endif %}
