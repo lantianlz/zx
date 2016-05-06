@@ -10,4 +10,6 @@ urlpatterns = patterns('www.toutiao.views',
 
                        url(r'^get_mps$', 'get_mps'),
                        url(r'^sync_toutiao$', 'sync_toutiao'),
+
+                       url(r'^get_img$', 'get_img'),
                        )

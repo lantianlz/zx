@@ -125,3 +125,14 @@ def sync_toutiao(request):
         debug.get_debug_detail(e)
         return HttpResponse(json.dumps({'code': 99}))
 
+
+def get_img(request):
+    import cStringIO, requests
+
+    url = request.REQUEST.get('url')
+
+    res = requests.get(url)
+    buf = cStringIO.StringIO(res.content)
+    
+    return HttpResponse(buf.getvalue(),'image/gif')
+
