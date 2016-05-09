@@ -130,9 +130,11 @@ def get_img(request):
     import cStringIO, requests
 
     url = request.REQUEST.get('url')
-
-    res = requests.get(url)
-    buf = cStringIO.StringIO(res.content)
-    
-    return HttpResponse(buf.getvalue(),'image/gif')
+    try:
+        res = requests.get(url)
+        buf = cStringIO.StringIO(res.content)
+        
+        return HttpResponse(buf.getvalue(),'image/gif')
+    except Exception, e:
+        return Http404
 
