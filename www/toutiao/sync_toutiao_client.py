@@ -68,7 +68,10 @@ def _get_weixin_list(proxy, mp):
 
         temp = requests.get(
             href,
-            headers = headers,
+            headers = {
+                'Referer': u'http://weixin.sogou.com/weixin?type=1&query=%s&ie=utf8' % mp['name'],
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'
+            },
             proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
             timeout = 15,
         )
