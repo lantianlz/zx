@@ -102,7 +102,7 @@ def department_list_by_district(request, district_id, template_name='kaihu/depar
 
 @_need_city_decorator
 def department_detail(request, department_id, template_name='kaihu/department_detail.html'):
-    department = db.get_department_by_id(department_id)
+    department = db.get_department_by_id(department_id, True)
     if not department:
         raise Http404
 

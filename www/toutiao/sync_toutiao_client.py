@@ -7,7 +7,7 @@ from pyquery import PyQuery as pq
 host = "www.zhixuan.com"
 headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"}
 html_parser = HTMLParser.HTMLParser()
-use_proxy = True
+use_proxy = False
 
 def get_mps():
     
@@ -55,7 +55,7 @@ def _get_weixin_list(proxy, mp):
         resp = requests.get(
             u'http://weixin.sogou.com/weixin?type=1&query=%s&ie=utf8' % mp['name'],
             headers = headers,
-            proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
+            # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
             timeout = 15
         )
 
@@ -72,7 +72,7 @@ def _get_weixin_list(proxy, mp):
                 'Referer': u'http://weixin.sogou.com/weixin?type=1&query=%s&ie=utf8' % mp['name'],
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'
             },
-            proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
+            # proxies = {'http': 'http://%s' % proxy, 'https': 'http://%s' % proxy},
             timeout = 15,
         )
         cookies = temp.cookies
@@ -83,9 +83,9 @@ def _get_weixin_list(proxy, mp):
         
         lst_article = lst_article['list']
         
-        # print '22-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2'
-        # print len(lst_article)
-        # time.sleep(15)
+        print '22-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2'
+        print len(lst_article)
+        time.sleep(15)
 
     except Exception, e:
         traceback.print_exc()
@@ -157,9 +157,9 @@ def sync_by_proxy():
                         "img": img_prefix + art['cover'].replace("\\", ""),
                     })
 
-        # print temp
-        # print '3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3'
-        # time.sleep(15)
+        print temp
+        print '3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3'
+        time.sleep(15)
 
         for t in temp:
 

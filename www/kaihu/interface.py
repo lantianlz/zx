@@ -226,8 +226,11 @@ class DepartmentBase(object):
     def __init__(self):
         pass
 
-    def get_all_departments(self):
-        return Department.objects.select_related('company').all()
+    def get_all_departments(self, state=None):
+        objs = Department.objects.select_related('company').all()
+        if state != None:
+            objs = objs.filter(state=state)
+        return objs
 
     def get_departments_by_city_id(self, city_id):
         return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None))
@@ -238,9 +241,9 @@ class DepartmentBase(object):
     def get_departments_by_random(self, city_id):
         return list(self.get_all_departments().filter(city_id=city_id).exclude(des=None).order_by('?'))
 
-    def get_department_by_id(self, department_id):
+    def get_department_by_id(self, department_id, state=None):
         try:
-            department = self.get_all_departments().filter(id=department_id)[0]
+            department = self.get_all_departments(state).filter(id=department_id)[0]
             department.city = CityBase().get_city_by_id(department.city_id)
             department.district = CityBase().get_district_by_id(department.district_id)
         except Exception:
