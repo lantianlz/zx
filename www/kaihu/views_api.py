@@ -97,7 +97,7 @@ def api_get_custom_manager_list(request):
     #     custom_managers = cmb.format_customer_managers_for_ajax([cmb.get_customer_manager_by_user_id(user_id=defualt_user_id), ])
     # =============================只保留2个==========================================
     custom_managers = cmb.format_customer_managers_for_ajax([
-        cmb.get_customer_manager_by_user_id(user_id="d1baa40e5f3a11e4813d00163e003240"), 
+        # cmb.get_customer_manager_by_user_id(user_id="d1baa40e5f3a11e4813d00163e003240"), 
         cmb.get_customer_manager_by_user_id(user_id="248eaf24aa7b11e3ac1c00163e003240"), 
         # cmb.get_customer_manager_by_user_id(user_id="b6d508867ad411e49ec800163e003240"), 
     ])
@@ -119,27 +119,31 @@ def api_get_custom_manager_list(request):
 
     # 深圳单独处理
     if city.id == 1228:
-        custom_managers = cmb.format_customer_managers_for_ajax([
-            cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
-        ])
+        # custom_managers = cmb.format_customer_managers_for_ajax([
+        #     cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+        # ])
+        pass
 
     # 佛山单独处理
     if city.id == 1247:
-        custom_managers = cmb.format_customer_managers_for_ajax([
-            cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
-        ])
+        # custom_managers = cmb.format_customer_managers_for_ajax([
+        #     cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+        # ])
+        pass
     
     # 上海单独处理
     if city.id == 473:
-        custom_managers += cmb.format_customer_managers_for_ajax([
-            cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
-        ])
+        # custom_managers += cmb.format_customer_managers_for_ajax([
+        #     cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+        # ])
+        pass
 
     # 北京单独处理
     if city.id == 3:
-        custom_managers += cmb.format_customer_managers_for_ajax([
-            cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
-        ])
+        # custom_managers += cmb.format_customer_managers_for_ajax([
+        #     cmb.get_customer_manager_by_user_id(user_id="fd3646d808d111e581ea00163e003240"), 
+        # ])
+        pass
 
     if city.id == 1932:
         custom_managers += cmb.format_customer_managers_for_ajax([
